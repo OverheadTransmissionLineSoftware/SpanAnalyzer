@@ -13,16 +13,13 @@ BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxFrame)
   EVT_BUTTON(XRCID("button_launch_cable_file_dialog"), SpanAnalyzerFrame::OnCableFileSelect)
   EVT_MENU(XRCID("menuitem_cable_edit"), SpanAnalyzerFrame::OnCableEdit)
   EVT_MENU(XRCID("menuitem_cable_new"), SpanAnalyzerFrame::OnCableNew)
-  EVT_MENU(XRCID("menuitem_weathercases_edit"), SpanAnalyzerFrame::OnWeatherCaseEdit)
-  EVT_MENU(wxID_EXIT, SpanAnalyzerFrame::OnExit)
+  EVT_MENU(XRCID("menuitem_exit"), SpanAnalyzerFrame::OnExit)
+  EVT_MENU(XRCID("menuitem_weathercase_edit"), SpanAnalyzerFrame::OnWeatherCaseEdit)
 END_EVENT_TABLE()
 
 SpanAnalyzerFrame::SpanAnalyzerFrame() {
   // loads dialog from virtual xrc file system
   wxXmlResource::Get()->LoadFrame(this, nullptr, "span_analyzer_frame");
-
-  // loads menu bar from virtual xrc file system
-  wxXmlResource::Get()->LoadMenuBar(this, "span_analyzer_menu");
 
   // initializes variables
   cable_ = new Cable();
@@ -35,7 +32,7 @@ void SpanAnalyzerFrame::OnCableEdit(wxCommandEvent& event) {
   // creates a cable editor dialog and shows
   CableEditorDialog editor(this, cable_, UnitSystem::Imperial);
   editor.ShowModal();
-  
+
   // if user accepts changes
   if (editor.ShowModal() == wxID_OK) {
     // generates a virtual XML document
@@ -49,7 +46,7 @@ void SpanAnalyzerFrame::OnCableEdit(wxCommandEvent& event) {
         wxEmptyString,
         "Cable File(*.cbl)|*.cbl",
          wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
-    
+
     if (selector->ShowModal() == wxID_OK) {
       if (!doc->Save(selector->GetPath(), 2)) {
         return;
@@ -66,7 +63,7 @@ void SpanAnalyzerFrame::OnCableNew(wxCommandEvent& event) {
   // creates a cable editor dialog and shows
   CableEditorDialog editor(this, &cable, UnitSystem::Imperial);
   editor.ShowModal();
-  
+
   // if user accepts changes
   if (editor.ShowModal() == wxID_OK) {
     // generates a virtual XML document
@@ -80,7 +77,7 @@ void SpanAnalyzerFrame::OnCableNew(wxCommandEvent& event) {
         wxEmptyString,
         "Cable File(*.cbl)|*.cbl",
          wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
-    
+
     // if user selects file
     if (selector->ShowModal() == wxID_OK) {
       if (!doc->Save(selector->GetPath(), 2)) {
@@ -115,7 +112,7 @@ void SpanAnalyzerFrame::OnCableFileSelect(wxCommandEvent& event) {
     }
 
     // updates textctrl to show cable
-    wxTextCtrl* textctrl_cable = XRCCTRL(*this, 
+    wxTextCtrl* textctrl_cable = XRCCTRL(*this,
                                          "textctrl_cable_name",
                                           wxTextCtrl);
     textctrl_cable->SetValue(cable_->name);

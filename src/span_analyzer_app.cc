@@ -27,18 +27,13 @@ bool SpanAnalyzerApp::OnInit() {
   };
 
   if (!wxXmlResource::Get()->LoadFile(
-      wxFileName("res/span_analyzer_menu.xrc"))) {
-    return false;
-  };
-
-  if (!wxXmlResource::Get()->LoadFile(
       wxFileName("res/weather_case_editor_dialog.xrc"))) {
     return false;
   };
-  
+
   // creates frame
   SpanAnalyzerFrame* frame = new SpanAnalyzerFrame();
   frame->Show(true);
-  
+
   return true;
 }
