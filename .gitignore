@@ -1,0 +1,28 @@
+# compiled source #
+###################
+*.o
+*.d
+*.so
+*.a
+*.lib
+*.dll
+
+# Code::Blocks temp files #
+###########################
+*.depend
+*.layout
+
+# doxygen generated files #
+###########################
+*.aux
+*.css
+*.dvi
+*.html
+*.js
+*.log
+*.png
+*.tex
+
+# generated executables #
+######################################
+*.exe
