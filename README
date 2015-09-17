@@ -1,0 +1,14 @@
+Span Analyzer
+========================
+
+OVERVIEW
+This repository contains an application that uses the TLS-Libraries sag-tension
+methods.
+
+CROSS-PLATFORM
+This application is built using the wxWidgets framework, and should be
+compatible on multiple platforms.
+
+CODING STYLE
+This project follows the Google style guidelines for C++ projects.
+https://google-styleguide.googlecode.com/svn/trunk/cppguide.html;
