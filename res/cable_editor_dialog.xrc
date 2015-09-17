@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
+	<object class="wxDialog" name="cable_editor_dialog">
+		<style>wxDEFAULT_DIALOG_STYLE</style>
+		<exstyle>wxWS_EX_VALIDATE_RECURSIVELY</exstyle>
+		<title>Cable Editor</title>
+		<object class="wxBoxSizer">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxEXPAND</flag>
+				<border>0</border>
+				<object class="wxFlexGridSizer">
+					<rows>8</rows>
+					<cols>3</cols>
+					<vgap>0</vgap>
+					<hgap>0</hgap>
+					<growablecols></growablecols>
+					<growablerows></growablerows>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxLEFT</flag>
+						<border>10</border>
+						<object class="wxStaticText" name="statictext_name">
+							<label>Name</label>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxLEFT|wxRIGHT</flag>
+						<border>10</border>
+						<object class="wxStaticText" name="statictext_name_units">
+							<label></label>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag></flag>
+						<border>0</border>
+						<object class="wxTextCtrl" name="textctrl_name">
+							<value></value>
+							<maxlength>0</maxlength>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxLEFT</flag>
+						<border>10</border>
+						<object class="wxStaticText" name="statictext_area_electrical">
+							<label>Electrical Area</label>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxLEFT|wxRIGHT</flag>
+						<border>10</border>
+						<object class="wxStaticText" name="statictext_area_electrical_units">
+							<label>[kcmil]</label>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag></flag>
+						<border>0</border>
+						<object class="wxTextCtrl" name="textctrl_area_electrical">
+							<value></value>
+							<maxlength>0</maxlength>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxLEFT</flag>
+						<border>10</border>
+						<object class="wxStaticText" name="statictext_area_physical">
+							<label>Physical Area</label>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxLEFT|wxRIGHT</flag>
+						<border>10</border>
+						<object class="wxStaticText" name="statictext_area_physical_units">
+							<label>[kcmil]</label>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag></flag>
+						<border>0</border>
+						<object class="wxTextCtrl" name="textctrl_area_physical">
+							<value></value>
+							<maxlength>0</maxlength>
+						</object>
+					</object>
+          <object class="sizeritem">
+						<option>0</option>
+						<flag>wxLEFT</flag>
+						<border>10</border>
+						<object class="wxStaticText" name="statictext_diameter">
+							<label>Diameter</label>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxLEFT|wxRIGHT</flag>
+						<border>10</border>
+						<object class="wxStaticText" name="statictext_diameter_units">
+							<label>[in]</label>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag></flag>
+						<border>0</border>
+						<object class="wxTextCtrl" name="textctrl_diameter">
+							<value></value>
+							<maxlength>0</maxlength>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxLEFT</flag>
+						<border>10</border>
+						<object class="wxStaticText" name="statictext_weight_unit">
+							<label>Unit Weight</label>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxLEFT|wxRIGHT</flag>
+						<border>10</border>
+						<object class="wxStaticText" name="statictext_weight_unit_units">
+							<label>[lb/ft]</label>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag></flag>
+						<border>0</border>
+						<object class="wxTextCtrl" name="textctrl_weight_unit">
+							<value></value>
+							<maxlength>0</maxlength>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxLEFT</flag>
+						<border>10</border>
+						<object class="wxStaticText" name="statictext_strength_rated">
+							<label>Rated Strength</label>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxLEFT|wxRIGHT</flag>
+						<border>10</border>
+						<object class="wxStaticText" name="statictext_strength_rated_units">
+							<label>[lbs]</label>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag></flag>
+						<border>0</border>
+						<object class="wxTextCtrl" name="textctrl_strength_rated">
+							<value></value>
+							<maxlength>0</maxlength>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxLEFT</flag>
+						<border>10</border>
+						<object class="wxStaticText" name="statictext_temperature_properties">
+							<label>Properties Temperature</label>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxLEFT|wxRIGHT</flag>
+						<border>10</border>
+						<object class="wxStaticText" name="statictext_temperature_properties_units">
+							<label>[deg F]</label>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag></flag>
+						<border>0</border>
+						<object class="wxTextCtrl" name="textctrl_temperature_properties">
+							<value></value>
+							<maxlength>0</maxlength>
+						</object>
+					</object>
+        </object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxEXPAND|wxLEFT|wxRIGHT</flag>
+				<border>5</border>
+				<object class="wxStaticBoxSizer">
+					<orient>wxVERTICAL</orient>
+					<label>Shell</label>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxEXPAND</flag>
+						<border>0</border>
+						<object class="wxFlexGridSizer">
+							<rows>2</rows>
+							<cols>3</cols>
+							<vgap>0</vgap>
+							<hgap>0</hgap>
+							<growablecols></growablecols>
+							<growablerows></growablerows>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxLEFT</flag>
+								<border>10</border>
+								<object class="wxStaticText" name="statictext_shell_coefficient_expansion_thermal">
+									<label>Thermal Expansion</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxLEFT</flag>
+								<border>10</border>
+								<object class="wxStaticText" name="statictext_shell_coefficient_expansion_thermal_units">
+									<label>[/deg]</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxLEFT</flag>
+								<border>10</border>
+								<object class="wxTextCtrl" name="textctrl_shell_coefficient_expansion_thermal">
+									<value></value>
+									<maxlength>0</maxlength>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>1</option>
+								<flag>wxLEFT</flag>
+								<border>10</border>
+								<object class="wxStaticText" name="statictext_shell_modulus_tension">
+									<label>Elastic Tension Modulus</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxLEFT</flag>
+								<border>10</border>
+								<object class="wxStaticText" name="statictext_shell_modulus_tension_units">
+									<label>[lbs]</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxLEFT</flag>
+								<border>10</border>
+								<object class="wxTextCtrl" name="textctrl_shell_modulus_tension">
+									<value></value>
+									<maxlength>0</maxlength>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxEXPAND</flag>
+						<border>0</border>
+						<object class="wxGridSizer">
+							<rows>2</rows>
+							<cols>5</cols>
+							<vgap>0</vgap>
+							<hgap>0</hgap>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALIGN_CENTER</flag>
+								<border>0</border>
+								<object class="wxStaticText" name="statictext_shell_a0">
+									<label>a0</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALIGN_CENTER</flag>
+								<border>0</border>
+								<object class="wxStaticText" name="statictext_shell_a1">
+									<label>a1</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALIGN_CENTER</flag>
+								<border>0</border>
+								<object class="wxStaticText" name="statictext_shell_a2">
+									<label>a2</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALIGN_CENTER</flag>
+								<border>0</border>
+								<object class="wxStaticText" name="statictext_shell_a3">
+									<label>a3</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALIGN_CENTER</flag>
+								<border>0</border>
+								<object class="wxStaticText" name="statictext_shell_a4">
+									<label>a4</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag></flag>
+								<border>0</border>
+								<object class="wxTextCtrl" name="textctrl_shell_a0">
+									<style>wxTE_CENTRE</style>
+									<value></value>
+									<maxlength>0</maxlength>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag></flag>
+								<border>0</border>
+								<object class="wxTextCtrl" name="textctrl_shell_a1">
+									<style>wxTE_CENTRE</style>
+									<value></value>
+									<maxlength>0</maxlength>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag></flag>
+								<border>0</border>
+								<object class="wxTextCtrl" name="textctrl_shell_a2">
+									<style>wxTE_CENTRE</style>
+									<value></value>
+									<maxlength>0</maxlength>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag></flag>
+								<border>0</border>
+								<object class="wxTextCtrl" name="textctrl_shell_a3">
+									<style>wxTE_CENTRE</style>
+									<value></value>
+									<maxlength>0</maxlength>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag></flag>
+								<border>0</border>
+								<object class="wxTextCtrl" name="textctrl_shell_a4">
+									<style>wxTE_CENTRE</style>
+									<value></value>
+									<maxlength>0</maxlength>
+								</object>
+							</object>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxEXPAND|wxLEFT|wxRIGHT</flag>
+				<border>5</border>
+				<object class="wxStaticBoxSizer">
+					<orient>wxVERTICAL</orient>
+					<label>Core</label>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxFlexGridSizer">
+							<rows>2</rows>
+							<cols>3</cols>
+							<vgap>0</vgap>
+							<hgap>0</hgap>
+							<growablecols></growablecols>
+							<growablerows></growablerows>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxLEFT</flag>
+								<border>10</border>
+								<object class="wxStaticText" name="statictext_core_coefficient_expansion_thermal">
+									<label>Thermal Coefficient</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxLEFT</flag>
+								<border>10</border>
+								<object class="wxStaticText" name="statictext_core_coefficient_expansion_thermal_units">
+									<label>[/deg]</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxLEFT</flag>
+								<border>10</border>
+								<object class="wxTextCtrl" name="textctrl_core_coefficient_expansion_thermal">
+									<value></value>
+									<maxlength>0</maxlength>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxLEFT</flag>
+								<border>10</border>
+								<object class="wxStaticText" name="statictext_core_modulus_tension">
+									<label>Elastic Tension Modulus</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxLEFT</flag>
+								<border>10</border>
+								<object class="wxStaticText" name="statictext_core_modulus_tension_units">
+									<label>[lbs]</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxLEFT</flag>
+								<border>10</border>
+								<object class="wxTextCtrl" name="textctrl_core_modulus_tension">
+									<value></value>
+									<maxlength>0</maxlength>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxEXPAND</flag>
+						<border>0</border>
+						<object class="wxGridSizer">
+							<rows>2</rows>
+							<cols>5</cols>
+							<vgap>0</vgap>
+							<hgap>0</hgap>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALIGN_CENTER</flag>
+								<border>0</border>
+								<object class="wxStaticText" name="statictext_core_a0">
+									<label>a0</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALIGN_CENTER</flag>
+								<border>0</border>
+								<object class="wxStaticText" name="statictext_core_a1">
+									<label>a1</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALIGN_CENTER</flag>
+								<border>0</border>
+								<object class="wxStaticText" name="statictext_core_a2">
+									<label>a2</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALIGN_CENTER</flag>
+								<border>0</border>
+								<object class="wxStaticText" name="statictext_core_a3">
+									<label>a3</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALIGN_CENTER</flag>
+								<border>0</border>
+								<object class="wxStaticText" name="statictext_core_a4">
+									<label>a4</label>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag></flag>
+								<border>0</border>
+								<object class="wxTextCtrl" name="textctrl_core_a0">
+									<style>wxTE_CENTRE</style>
+									<value></value>
+									<maxlength>0</maxlength>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag></flag>
+								<border>0</border>
+								<object class="wxTextCtrl" name="textctrl_core_a1">
+									<style>wxTE_CENTRE</style>
+									<value></value>
+									<maxlength>0</maxlength>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag></flag>
+								<border>0</border>
+								<object class="wxTextCtrl" name="textctrl_core_a2">
+									<style>wxTE_CENTRE</style>
+									<value></value>
+									<maxlength>0</maxlength>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag></flag>
+								<border>0</border>
+								<object class="wxTextCtrl" name="textctrl_core_a3">
+									<style>wxTE_CENTRE</style>
+									<value></value>
+									<maxlength>0</maxlength>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag></flag>
+								<border>0</border>
+								<object class="wxTextCtrl" name="textctrl_core_a4">
+									<style>wxTE_CENTRE</style>
+									<value></value>
+									<maxlength>0</maxlength>
+								</object>
+							</object>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALIGN_CENTER</flag>
+				<border>5</border>
+				<object class="wxBoxSizer">
+					<orient>wxHORIZONTAL</orient>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_OK">
+							<label>OK</label>
+							<default>1</default>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_CANCEL">
+							<label>Cancel</label>
+							<default>0</default>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+</resource>
+

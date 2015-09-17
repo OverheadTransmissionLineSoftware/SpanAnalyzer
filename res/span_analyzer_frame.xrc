@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
+	<object class="wxFrame" name="span_analyzer_frame">
+		<style>wxDEFAULT_FRAME_STYLE</style>
+		<title>SpanAnalyzer</title>
+    <object class="wxPanel" name="span_analyzer_panel">
+      <object class="wxBoxSizer">
+        <orient>wxVERTICAL</orient>
+        <object class="sizeritem">
+          <option>1</option>
+          <flag>wxEXPAND</flag>
+          <border>5</border>
+          <object class="wxStaticBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <label>Span Parameters</label>
+            <object class="sizeritem">
+              <option>1</option>
+              <flag>wxEXPAND</flag>
+              <border>5</border>
+              <object class="wxBoxSizer">
+                <orient>wxHORIZONTAL</orient>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxTextCtrl" name="textctrl_cable_name">
+                    <style>wxTE_LEFT|wxTE_READONLY</style>
+                    <value></value>
+                    <maxlength>0</maxlength>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxButton" name="button_launch_cable_file_dialog">
+                    <label>...</label>
+                    <default>1</default>
+                  </object>
+                </object>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>1</option>
+              <flag>wxEXPAND</flag>
+              <border>5</border>
+              <object class="wxBoxSizer">
+                <orient>wxHORIZONTAL</orient>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxTextCtrl" name="textctrl_constraint_limit">
+                    <value></value>
+                    <maxlength>0</maxlength>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxComboBox" name="combobox_constraint_type">
+                    <style>wxCB_DROPDOWN</style>
+                    <value></value>
+                    <content />
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxComboBox" name="combobox_constraint_case">
+                    <value></value>
+                    <content />
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxComboBox" name="combobox_constraint_condition">
+                    <value></value>
+                    <content />
+                  </object>
+                </object>
+              </object>
+            </object>
+          </object>
+        </object>
+        <object class="sizeritem">
+          <option>1</option>
+          <flag>wxEXPAND</flag>
+          <border>5</border>
+          <object class="wxStaticBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <label>Sag-Tension</label>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="button_launch_cable_editor">
+                <label>Blank</label>
+                <default>1</default>
+              </object>
+            </object>
+          </object>
+        </object>
+        <object class="sizeritem">
+          <option>1</option>
+          <flag>wxEXPAND</flag>
+          <border>5</border>
+          <object class="wxStaticBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <label>Catenary</label>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="button_launch_weather_case_editor">
+                <label>Blank</label>
+                <default>1</default>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+	</object>
+</resource>
+
