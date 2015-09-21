@@ -86,9 +86,8 @@
 									<option>0</option>
 									<flag>wxALL</flag>
 									<border>5</border>
-									<object class="wxComboBox" name="combobox_constraint_type">
-										<style>wxCB_DROPDOWN</style>
-										<value></value>
+									<object class="wxChoice" name="choice_constraint_type">
+										<selection>0</selection>
 										<content />
 									</object>
 								</object>
@@ -96,8 +95,8 @@
 									<option>0</option>
 									<flag>wxALL</flag>
 									<border>5</border>
-									<object class="wxComboBox" name="combobox_constraint_case">
-										<value></value>
+									<object class="wxChoice" name="choice_constraint_case">
+										<selection>0</selection>
 										<content />
 									</object>
 								</object>
@@ -105,9 +104,70 @@
 									<option>0</option>
 									<flag>wxALL</flag>
 									<border>5</border>
-									<object class="wxComboBox" name="combobox_constraint_condition">
-										<value></value>
+									<object class="wxChoice" name="choice_constraint_condition">
+										<selection>0</selection>
 										<content />
+									</object>
+								</object>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxGridSizer">
+								<rows>2</rows>
+								<cols>3</cols>
+								<vgap>0</vgap>
+								<hgap>0</hgap>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_spacing_horizontal">
+										<label>Horizontal</label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_spacing_horizontal_units">
+										<label></label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxTextCtrl" name="textctrl_spacing_horizontal">
+										<value></value>
+										<maxlength>0</maxlength>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_spacing_vertical">
+										<label>Vertical</label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_spacing_vertical_units">
+										<label></label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxTextCtrl" name="textctrl_spacing_vertical">
+										<value></value>
+										<maxlength>0</maxlength>
 									</object>
 								</object>
 							</object>
@@ -122,12 +182,136 @@
 						<orient>wxVERTICAL</orient>
 						<label>Sag-Tension</label>
 						<object class="sizeritem">
-							<option>0</option>
-							<flag>wxALL</flag>
+							<option>1</option>
+							<flag>wxEXPAND</flag>
 							<border>5</border>
-							<object class="wxButton" name="button_launch_cable_editor">
-								<label>Blank</label>
-								<default>1</default>
+							<object class="wxBoxSizer">
+								<orient>wxHORIZONTAL</orient>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxChoice" name="choice_sagtension_weathercase">
+										<selection>0</selection>
+										<content />
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxChoice" name="choice_sagtension_condition">
+										<selection>0</selection>
+										<content />
+									</object>
+								</object>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxGridSizer">
+								<rows>4</rows>
+								<cols>3</cols>
+								<vgap>0</vgap>
+								<hgap>0</hgap>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_tension_horizontal_label">
+										<label>Horizontal Tension</label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_tension_horizontal_units">
+										<label></label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_tension_horizontal_value">
+										<label></label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_catenary_constant_label">
+										<label>H/w</label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_catenary_constant_units">
+										<label></label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_catenary_constant_value">
+										<label></label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_tension_horizontal_shell_label">
+										<label>Shell Tension</label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_tension_horizontal_shell_units">
+										<label></label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_tension_horizontal_shell_value">
+										<label></label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_tension_horizontal_core_label">
+										<label>Core Tension</label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_tension_horizontal_core_units">
+										<label></label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_tension_horizontal_core_value">
+										<label></label>
+									</object>
+								</object>
 							</object>
 						</object>
 					</object>
@@ -139,15 +323,6 @@
 					<object class="wxStaticBoxSizer">
 						<orient>wxVERTICAL</orient>
 						<label>Catenary</label>
-						<object class="sizeritem">
-							<option>0</option>
-							<flag>wxALL</flag>
-							<border>5</border>
-							<object class="wxButton" name="button_launch_weather_case_editor">
-								<label>Blank</label>
-								<default>1</default>
-							</object>
-						</object>
 					</object>
 				</object>
 			</object>
