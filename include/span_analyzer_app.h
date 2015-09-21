@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef TLS_SPANANALYZER_SPANANALYZERAPP_H_
-#define TLS_SPANANALYZER_SPANANALYZERAPP_H_
+#ifndef OTLS_SPANANALYZER_SPANANALYZERAPP_H_
+#define OTLS_SPANANALYZER_SPANANALYZERAPP_H_
 
 #include "wx/wx.h"
 
@@ -18,4 +18,4 @@ class SpanAnalyzerApp : public wxApp {
 
 DECLARE_APP(SpanAnalyzerApp)
 
-#endif  // TLS_SPANANALYZER_SPANANALYZERAPP_H_
+#endif  // OTLS_SPANANALYZER_SPANANALYZERAPP_H_

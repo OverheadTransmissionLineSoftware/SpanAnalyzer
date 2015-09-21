@@ -1,12 +1,12 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef TLS_SPANANALYZER_CABLEXMLHANDLER_H_
-#define TLS_SPANANALYZER_CABLEXMLHANDLER_H_
+#ifndef OTLS_SPANANALYZER_CABLEXMLHANDLER_H_
+#define OTLS_SPANANALYZER_CABLEXMLHANDLER_H_
 
 #include <string>
 
-#include "transmissionline/cable.h"
+#include "models/transmissionline/cable.h"
 #include "wx/wx.h"
 #include "wx/xml/xml.h"
 
@@ -75,4 +75,4 @@ class CableXmlHandler {
   static bool ParseNodeV1(const wxXmlNode* node, Cable& cable);
 };
 
-#endif  // TLS_SPANANALYZER_CABLEXMLHANDLER_H_
+#endif  // OTLS_SPANANALYZER_CABLEXMLHANDLER_H_

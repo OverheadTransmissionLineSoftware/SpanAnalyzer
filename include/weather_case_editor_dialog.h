@@ -1,10 +1,10 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef TLS_SPANANALYZER_WEATHERCASEEDITORDIALOG_H_
-#define TLS_SPANANALYZER_WEATHERCASEEDITORDIALOG_H_
+#ifndef OTLS_SPANANALYZER_WEATHERCASEEDITORDIALOG_H_
+#define OTLS_SPANANALYZER_WEATHERCASEEDITORDIALOG_H_
 
-#include "transmissionline/weather_load_case.h"
+#include "models/transmissionline/weather_load_case.h"
 #include "wx/wx.h"
 
 class WeatherCaseEditorDialog : public wxDialog {
@@ -34,4 +34,4 @@ class WeatherCaseEditorDialog : public wxDialog {
   DECLARE_EVENT_TABLE()
 };
 
-#endif  // TLS_SPANANALYZER_WEATHERCASEEDITORDIALOG_H_
+#endif  // OTLS_SPANANALYZER_WEATHERCASEEDITORDIALOG_H_

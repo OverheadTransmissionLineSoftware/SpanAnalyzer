@@ -1,10 +1,10 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef TLS_SPANANALYZER_SPANANALYZERFRAME_H_
-#define TLS_SPANANALYZER_SPANANALYZERFRAME_H_
+#ifndef OTLS_SPANANALYZER_SPANANALYZERFRAME_H_
+#define OTLS_SPANANALYZER_SPANANALYZERFRAME_H_
 
-#include "transmissionline/cable.h"
+#include "models/transmissionline/cable.h"
 #include "wx/wx.h"
 
 class SpanAnalyzerFrame : public wxFrame {
@@ -24,4 +24,4 @@ class SpanAnalyzerFrame : public wxFrame {
   DECLARE_EVENT_TABLE()
 };
 
-#endif  // TLS_SPANANALYZER_SPANANALYZERFRAME_H_
+#endif  // OTLS_SPANANALYZER_SPANANALYZERFRAME_H_

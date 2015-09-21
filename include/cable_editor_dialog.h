@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef TLS_SPANANALYZER_CABLEEDITORDIALOG_H_
-#define TLS_SPANANALYZER_CABLEEDITORDIALOG_H_
+#ifndef OTLS_SPANANALYZER_CABLEEDITORDIALOG_H_
+#define OTLS_SPANANALYZER_CABLEEDITORDIALOG_H_
 
 //***** TEMPORARY
 enum class UnitSystem {
@@ -11,7 +11,7 @@ enum class UnitSystem {
 };
 //***** TEMPORARY
 
-#include "transmissionline/cable.h"
+#include "models/transmissionline/cable.h"
 #include "wx/wx.h"
 
 /// \par OVERVIEW
@@ -43,7 +43,7 @@ class CableEditorDialog : public wxDialog {
 
   /// \brief Destructor.
   ~CableEditorDialog() {};
-  
+
  private:
   /// \brief Handles the cancel button event.
   /// \param[in] event
@@ -69,11 +69,11 @@ class CableEditorDialog : public wxDialog {
   //void TransferControlsDataToCable();
 
   ///// \brief Transfers the cable data to the dialog controls.
-  ///// \param[in] 
+  ///// \param[in]
   //void TransferCableDataToControls();
 
   Cable* cable_;
-  
+
   wxString name_;
   wxString area_electrical_;
   wxString area_physical_;
@@ -86,4 +86,4 @@ class CableEditorDialog : public wxDialog {
   DECLARE_EVENT_TABLE()
 };
 
-#endif  // TLS_SPANANALYZER_CABLEEDITORDIALOG_H_
+#endif  // OTLS_SPANANALYZER_CABLEEDITORDIALOG_H_
