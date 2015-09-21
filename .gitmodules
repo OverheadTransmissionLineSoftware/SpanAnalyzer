@@ -1,6 +1,6 @@
-[submodule "external/TLS-Libraries"]
-	path = external/TLS-Libraries
-	url = https://github.com/Transmission-Line-Software/TLS-Libraries.git
+[submodule "external/models"]
+	path = external/models
+	url = https://github.com/OverheadTransmissionLineSoftware/Models.git
 [submodule "external/wxWidgets"]
 	path = external/wxWidgets
 	url = https://github.com/wxWidgets/wxWidgets.git
