@@ -29,30 +29,46 @@ SpanAnalyzerFrame::~SpanAnalyzerFrame() {
 }
 
 void SpanAnalyzerFrame::OnCableEdit(wxCommandEvent& event) {
-  // creates a cable editor dialog and shows
-  CableEditorDialog editor(this, cable_, UnitSystem::Imperial);
-  editor.ShowModal();
+  // creates a blank cable
+  Cable cable;
 
-  // if user accepts changes
+  // creates a cable file selector dialog and shows
+  wxFileDialog selector(this, "Open", wxEmptyString,
+                        wxEmptyString,
+                        "Cable File(*.cbl)|*.cbl",
+                        wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+  if (selector.ShowModal() == wxID_OK) {
+    // creates a virtual XML document
+    wxXmlDocument doc;
+    if (doc.Load(selector.GetFilename()) == false) {
+      wxMessageDialog message(this, "Invalid XML file");
+      message.ShowModal();
+    }
+
+    // parses the XML root and loads into the cable object
+    const wxXmlNode* root = doc.GetRoot();
+    if(CableXmlHandler::ParseNode(root, cable) == false) {
+      wxMessageDialog message(this, "Couldn't parse file");
+      message.ShowModal();
+    }
+  } else {
+    return;
+  }
+
+  // creates a cable editor dialog and shows
+  CableEditorDialog editor(this, &cable, UnitSystem::Imperial);
+
   if (editor.ShowModal() == wxID_OK) {
     // generates a virtual XML document
-    wxXmlDocument* doc = new wxXmlDocument();
-    wxXmlNode* root = CableXmlHandler::CreateNode(*cable_);
-    doc->SetRoot(root);
+    wxXmlDocument doc;
+    wxXmlNode* root = CableXmlHandler::CreateNode(cable);
+    doc.SetRoot(root);
 
-    // creates a dialog to select save file
-    wxFileDialog* selector = new wxFileDialog(
-        this, "Save As", wxEmptyString,
-        wxEmptyString,
-        "Cable File(*.cbl)|*.cbl",
-         wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
-
-    if (selector->ShowModal() == wxID_OK) {
-      if (!doc->Save(selector->GetPath(), 2)) {
-        return;
-      }
+    // saves virtual XML document to file
+    if (doc.Save(selector.GetPath(), 2) == false) {
+      return;
     }
-    delete doc;
   }
 }
 
@@ -62,29 +78,24 @@ void SpanAnalyzerFrame::OnCableNew(wxCommandEvent& event) {
 
   // creates a cable editor dialog and shows
   CableEditorDialog editor(this, &cable, UnitSystem::Imperial);
-  editor.ShowModal();
 
-  // if user accepts changes
   if (editor.ShowModal() == wxID_OK) {
     // generates a virtual XML document
-    wxXmlDocument* doc = new wxXmlDocument();
+    wxXmlDocument doc;
     wxXmlNode* root = CableXmlHandler::CreateNode(cable);
-    doc->SetRoot(root);
+    doc.SetRoot(root);
 
-    // creates a dialog to select save file
-    wxFileDialog* selector = new wxFileDialog(
-        this, "Save As", wxEmptyString,
-        wxEmptyString,
-        "Cable File(*.cbl)|*.cbl",
-         wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+    // creates a cable file selector dialog and shows
+    wxFileDialog selector(this, "Save As", wxEmptyString,
+                          wxEmptyString,
+                          "Cable File(*.cbl)|*.cbl",
+                          wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
-    // if user selects file
-    if (selector->ShowModal() == wxID_OK) {
-      if (!doc->Save(selector->GetPath(), 2)) {
+    if (selector.ShowModal() == wxID_OK) {
+      if (!doc.Save(selector.GetPath(), 2)) {
         return;
       }
     }
-    delete doc;
   }
 }
 
@@ -125,7 +136,10 @@ void SpanAnalyzerFrame::OnExit(wxCommandEvent& event) {
 
 void SpanAnalyzerFrame::OnWeatherCaseEdit(
     wxCommandEvent& event) {
+  // creates a blank weathercase
   WeatherLoadCase* weathercase = new WeatherLoadCase();
+
+  // creates a weathercase file selector dialog and shows
   WeatherCaseEditorDialog editor(this, weathercase);
 
   if (editor.ShowModal() == wxID_OK) {
