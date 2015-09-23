@@ -42,7 +42,7 @@
 						<label>Span Parameters</label>
 						<object class="sizeritem">
 							<option>1</option>
-							<flag>wxEXPAND</flag>
+							<flag></flag>
 							<border>5</border>
 							<object class="wxBoxSizer">
 								<orient>wxHORIZONTAL</orient>
@@ -61,6 +61,7 @@
 									<flag>wxALL</flag>
 									<border>5</border>
 									<object class="wxButton" name="button_launch_cable_file_dialog">
+										<style>wxBU_EXACTFIT</style>
 										<label>...</label>
 										<default>1</default>
 									</object>
@@ -113,13 +114,15 @@
 						</object>
 						<object class="sizeritem">
 							<option>1</option>
-							<flag>wxEXPAND</flag>
+							<flag></flag>
 							<border>5</border>
-							<object class="wxGridSizer">
+							<object class="wxFlexGridSizer">
 								<rows>2</rows>
 								<cols>3</cols>
 								<vgap>0</vgap>
 								<hgap>0</hgap>
+								<growablecols></growablecols>
+								<growablerows></growablerows>
 								<object class="sizeritem">
 									<option>0</option>
 									<flag>wxALL</flag>
@@ -209,13 +212,15 @@
 						</object>
 						<object class="sizeritem">
 							<option>1</option>
-							<flag>wxEXPAND</flag>
+							<flag></flag>
 							<border>5</border>
-							<object class="wxGridSizer">
+							<object class="wxFlexGridSizer">
 								<rows>4</rows>
 								<cols>3</cols>
 								<vgap>0</vgap>
 								<hgap>0</hgap>
+								<growablecols></growablecols>
+								<growablerows></growablerows>
 								<object class="sizeritem">
 									<option>0</option>
 									<flag>wxALL</flag>
@@ -323,6 +328,69 @@
 					<object class="wxStaticBoxSizer">
 						<orient>wxVERTICAL</orient>
 						<label>Catenary</label>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxFlexGridSizer">
+								<rows>2</rows>
+								<cols>3</cols>
+								<vgap>0</vgap>
+								<hgap>0</hgap>
+								<growablecols></growablecols>
+								<growablerows></growablerows>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_catenary_spacing_horizontal">
+										<label>Horizontal</label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_catenary_spacing_horizontal_units">
+										<label></label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxTextCtrl" name="textctrl_catenary_spacing_horizontal">
+										<value></value>
+										<maxlength>0</maxlength>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_catenary_spacing_vertical">
+										<label>Vertical</label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="statictext_catenary_spacing_vertical_units">
+										<label></label>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxTextCtrl" name="textctrl_catenary_spacing_vertical">
+										<value></value>
+										<maxlength>0</maxlength>
+									</object>
+								</object>
+							</object>
+						</object>
 					</object>
 				</object>
 			</object>
