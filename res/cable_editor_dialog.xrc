@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
 	<object class="wxDialog" name="cable_editor_dialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
@@ -55,7 +55,7 @@
 						<flag>wxLEFT|wxRIGHT</flag>
 						<border>10</border>
 						<object class="wxStaticText" name="statictext_area_electrical_units">
-							<label>[kcmil]</label>
+							<label></label>
 						</object>
 					</object>
 					<object class="sizeritem">
@@ -80,7 +80,7 @@
 						<flag>wxLEFT|wxRIGHT</flag>
 						<border>10</border>
 						<object class="wxStaticText" name="statictext_area_physical_units">
-							<label>[kcmil]</label>
+							<label></label>
 						</object>
 					</object>
 					<object class="sizeritem">
@@ -92,7 +92,7 @@
 							<maxlength>0</maxlength>
 						</object>
 					</object>
-          <object class="sizeritem">
+					<object class="sizeritem">
 						<option>0</option>
 						<flag>wxLEFT</flag>
 						<border>10</border>
@@ -105,7 +105,7 @@
 						<flag>wxLEFT|wxRIGHT</flag>
 						<border>10</border>
 						<object class="wxStaticText" name="statictext_diameter_units">
-							<label>[in]</label>
+							<label></label>
 						</object>
 					</object>
 					<object class="sizeritem">
@@ -130,7 +130,7 @@
 						<flag>wxLEFT|wxRIGHT</flag>
 						<border>10</border>
 						<object class="wxStaticText" name="statictext_weight_unit_units">
-							<label>[lb/ft]</label>
+							<label></label>
 						</object>
 					</object>
 					<object class="sizeritem">
@@ -155,7 +155,7 @@
 						<flag>wxLEFT|wxRIGHT</flag>
 						<border>10</border>
 						<object class="wxStaticText" name="statictext_strength_rated_units">
-							<label>[lbs]</label>
+							<label></label>
 						</object>
 					</object>
 					<object class="sizeritem">
@@ -180,7 +180,7 @@
 						<flag>wxLEFT|wxRIGHT</flag>
 						<border>10</border>
 						<object class="wxStaticText" name="statictext_temperature_properties_units">
-							<label>[deg F]</label>
+							<label></label>
 						</object>
 					</object>
 					<object class="sizeritem">
@@ -192,7 +192,7 @@
 							<maxlength>0</maxlength>
 						</object>
 					</object>
-        </object>
+				</object>
 			</object>
 			<object class="sizeritem">
 				<option>0</option>
@@ -225,7 +225,7 @@
 								<flag>wxLEFT</flag>
 								<border>10</border>
 								<object class="wxStaticText" name="statictext_shell_coefficient_expansion_thermal_units">
-									<label>[/deg]</label>
+									<label></label>
 								</object>
 							</object>
 							<object class="sizeritem">
@@ -250,7 +250,7 @@
 								<flag>wxLEFT</flag>
 								<border>10</border>
 								<object class="wxStaticText" name="statictext_shell_modulus_tension_units">
-									<label>[lbs]</label>
+									<label></label>
 								</object>
 							</object>
 							<object class="sizeritem">
@@ -398,7 +398,7 @@
 								<flag>wxLEFT</flag>
 								<border>10</border>
 								<object class="wxStaticText" name="statictext_core_coefficient_expansion_thermal_units">
-									<label>[/deg]</label>
+									<label></label>
 								</object>
 							</object>
 							<object class="sizeritem">
@@ -423,7 +423,7 @@
 								<flag>wxLEFT</flag>
 								<border>10</border>
 								<object class="wxStaticText" name="statictext_core_modulus_tension_units">
-									<label>[lbs]</label>
+									<label></label>
 								</object>
 							</object>
 							<object class="sizeritem">
