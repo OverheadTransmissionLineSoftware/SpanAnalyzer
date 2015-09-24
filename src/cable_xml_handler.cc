@@ -3,6 +3,31 @@
 
 #include "cable_xml_handler.h"
 
+#include "models/base/helper.h"
+#include "models/base/units.h"
+
+XmlHandler::XmlHandler() {
+}
+
+XmlHandler::~XmlHandler() {
+}
+
+wxXmlNode* XmlHandler::CreateElementNodeWithContent(
+    const std::string& name,
+    const std::string& content,
+    wxXmlAttribute* attribute) {
+  wxXmlNode* node_child = new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString,
+                                        content);
+  wxXmlNode* node = new wxXmlNode(wxXML_ELEMENT_NODE, name);
+  node->AddChild(node_child);
+
+  if (attribute != nullptr) {
+    node->AddAttribute(attribute);
+  }
+
+  return node;
+}
+
 CableComponentXmlHandler::CableComponentXmlHandler() {
 }
 
@@ -11,285 +36,400 @@ CableComponentXmlHandler::~CableComponentXmlHandler() {
 
 wxXmlNode* CableComponentXmlHandler::CreateNode(
     const CableComponent& component,
-    const std::string& name) {
-  // creates a node for the cable component
-  wxXmlNode* node_component = new wxXmlNode(wxXML_ELEMENT_NODE,
-                                            "cable_component");
-  node_component->AddAttribute("name", wxString(name));
-  node_component->AddAttribute("version", "1");
+    const std::string& name_cable,
+    const units::UnitSystem& units) {
+  // variables used to create XML node
+  double value_converted;
+  std::string name;
+  std::string content;
+  wxXmlAttribute* attribute = nullptr;
+  wxXmlNode* node_root = nullptr;
+  wxXmlNode* node_element = nullptr;
+  wxXmlNode* node_text = nullptr;
+
+  // creates a node for the cable component root
+  node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "cable_component");
+  node_root->AddAttribute("name", wxString(name_cable));
+  node_root->AddAttribute("version", "1");
 
   // adds child nodes for struct parameters
 
   // creates coefficient-expansion-linear-thermal node and adds to component
   // node
-  wxXmlNode* node_thermal_coefficient =
-      new wxXmlNode(wxXML_ELEMENT_NODE, "coefficient_expansion_linear_thermal");
-  wxXmlNode* data_thermal_coefficient = 
-      new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, std::to_string(
-                    component.coefficient_expansion_linear_thermal));
-  node_thermal_coefficient->AddChild(data_thermal_coefficient);
-  node_thermal_coefficient->AddAttribute("units", "/deg");
-  node_component->AddChild(node_thermal_coefficient);
+  name = "coefficient_expansion_linear_thermal";
+  if (units == units::UnitSystem::Metric) {
+    value_converted = 0;
+    content = "???";
+    attribute = new wxXmlAttribute("units", "???");
+  } else if (units == units::UnitSystem::Imperial) {
+    value_converted = component.coefficient_expansion_linear_thermal;
+    content = helper::DoubleToFormattedString(value_converted, 0);
+    attribute = new wxXmlAttribute("units", "deg F");
+  }
+  node_element = CreateElementNodeWithContent(name, content, attribute);
+  node_root->AddChild(node_element);
 
   // creates modulus-compression-elastic-area node and adds to component node
-  wxXmlNode* node_modulus_compression_elastic_area = 
-      new wxXmlNode(wxXML_ELEMENT_NODE, "modulus_compression_elastic_area");
-  wxXmlNode* data_modulus_compression_elastic_area =
-      new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, std::to_string(
-                    component.modulus_tension_elastic_area));
-  node_modulus_compression_elastic_area->AddChild(
-      data_modulus_compression_elastic_area);
-  node_modulus_compression_elastic_area->AddAttribute("units", "lbs");
-  node_component->AddChild(node_modulus_compression_elastic_area);
+  name = "modulus_compression_elastic_area";
+  if (units == units::UnitSystem::Metric) {
+    value_converted = 0;
+    content = "???";
+    attribute = new wxXmlAttribute("units", "???");
+  } else if (units == units::UnitSystem::Imperial) {
+    value_converted = component.modulus_compression_elastic_area;
+    content = helper::DoubleToFormattedString(value_converted, 0);
+    attribute = new wxXmlAttribute("units", "lbs");
+  }
+  node_element = CreateElementNodeWithContent(name, content, attribute);
+  node_root->AddChild(node_element);
 
   // creates modulus-tension-elastic-area node and adds to component node
-  wxXmlNode* node_modulus_tension_elastic_area = 
-      new wxXmlNode(wxXML_ELEMENT_NODE, "modulus_tension_elastic_area");
-  wxXmlNode* data_modulus_tension_elastic_area =
-      new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, std::to_string(
-                    component.modulus_tension_elastic_area));
-  node_modulus_tension_elastic_area->AddChild(
-      data_modulus_tension_elastic_area);
-  node_modulus_tension_elastic_area->AddAttribute("units", "lbs");
-  node_component->AddChild(node_modulus_tension_elastic_area);
+  name = "modulus_tension_elastic_area";
+  if (units == units::UnitSystem::Metric) {
+    value_converted = 0;
+    content = "???";
+    attribute = new wxXmlAttribute("units", "???");
+  } else if (units == units::UnitSystem::Imperial) {
+    value_converted = component.modulus_tension_elastic_area;
+    content = helper::DoubleToFormattedString(value_converted, 0);
+    attribute = new wxXmlAttribute("units", "lbs");
+  }
+  node_element = CreateElementNodeWithContent(name, content, attribute);
+  node_root->AddChild(node_element);
 
   // creates coefficients-loadstrain node and adds to component node
-  wxXmlNode* node_coefficients_loadstrain =
-      new wxXmlNode(wxXML_ELEMENT_NODE, "coefficients_loadstrain");
-  node_coefficients_loadstrain->AddAttribute("type", "loadstrain");
+  name = "coefficients_loadstrain";
+  node_element = new wxXmlNode(wxXML_ELEMENT_NODE, name);
+  node_element->AddAttribute("type", "loadstrain");
 
   for (size_t iter = 0; 
        iter < component.coefficients_polynomial_loadstrain.size();
        iter++ ) {
-
-    wxXmlNode* node_coefficient = new wxXmlNode();
-    node_coefficient->SetType(wxXML_ELEMENT_NODE);
+    wxXmlNode* subnode_element = nullptr;
 
     if (iter == 0) {
-        node_coefficient->SetName("a0");
+      name = "a0";
     } else if (iter == 1) {
-        node_coefficient->SetName("a1");
+      name = "a1";
     } else if (iter == 2) {
-        node_coefficient->SetName("a2");
+      name = "a2";
     } else if (iter == 3) {
-        node_coefficient->SetName("a3");
+      name = "a3";
     } else if (iter == 4) {
-        node_coefficient->SetName("a4");
+      name = "a4";
     }
 
-    wxXmlNode* data_coefficient =
-        new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, std::to_string(
-                      component.coefficients_polynomial_loadstrain.at(iter)));
-    node_coefficient->AddChild(data_coefficient);
-    node_coefficient->AddAttribute("units", "lbs");
-
-    node_coefficients_loadstrain->AddChild(node_coefficient);
+    if (units == units::UnitSystem::Metric) {
+      value_converted = 0;
+      content = "???";
+      attribute = new wxXmlAttribute("units", "???");
+    } else if (units == units::UnitSystem::Imperial) {
+      value_converted = component.coefficients_polynomial_loadstrain.at(iter);
+      content = helper::DoubleToFormattedString(value_converted, 1);
+      attribute = new wxXmlAttribute("units", "lbs");
+    }
+    subnode_element = CreateElementNodeWithContent(name, content, attribute);
+    node_element->AddChild(subnode_element);
   }
-  node_component->AddChild(node_coefficients_loadstrain);
+  node_root->AddChild(node_element);
 
   // creates load-limit-polynomial-loadstrain node and adds to component node
-  wxXmlNode* node_load_limit_polynomial_loadstrain = 
-      new wxXmlNode(wxXML_ELEMENT_NODE, "load_limit_polynomial_loadstrain");
-  wxXmlNode* data_load_limit_polynomial_loadstrain =
-      new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, std::to_string(
-                    component.modulus_tension_elastic_area));
-  node_load_limit_polynomial_loadstrain->AddChild(
-      data_load_limit_polynomial_loadstrain);
-  node_load_limit_polynomial_loadstrain->AddAttribute("units", "lbs");
-  node_component->AddChild(node_load_limit_polynomial_loadstrain);
+  name = "load_limit_polynomial_loadstrain";
+  if (units == units::UnitSystem::Metric) {
+    value_converted = component.load_limit_polynomial_loadstrain;
+    content = "???";
+    attribute = new wxXmlAttribute("units", "???");
+  } else if (units == units::UnitSystem::Imperial) {
+    value_converted = component.load_limit_polynomial_loadstrain;
+    content = helper::DoubleToFormattedString(value_converted, 1);
+    attribute = new wxXmlAttribute("units", "lbs");
+  }
+  node_element = CreateElementNodeWithContent(name, content, attribute);
+  node_root->AddChild(node_element);
 
   // creates coefficients-creep node and adds to component node
-  wxXmlNode* node_coefficients_creep =
-      new wxXmlNode(wxXML_ELEMENT_NODE, "coefficients_creep");
-  node_coefficients_creep->AddAttribute("type", "creep");
+  name = "coefficients_creep";
+  node_element = new wxXmlNode(wxXML_ELEMENT_NODE, "coefficients_creep");
+  node_element->AddAttribute("type", "creep");
 
   for (size_t iter = 0;
        iter < component.coefficients_polynomial_creep.size();
        iter++ ) {
-
-    wxXmlNode* node_coefficient = new wxXmlNode();
-    node_coefficient->SetType(wxXML_ELEMENT_NODE);
+    wxXmlNode* subnode_element = nullptr;
 
     if (iter == 0) {
-        node_coefficient->SetName("b0");
+      name = "b0";
     } else if (iter == 1) {
-        node_coefficient->SetName("b1");
+      name = "b1";
     } else if (iter == 2) {
-        node_coefficient->SetName("b2");
+      name = "b2";
     } else if (iter == 3) {
-        node_coefficient->SetName("b3");
+      name = "b3";
     } else if (iter == 4) {
-        node_coefficient->SetName("b4");
+      name = "b4";
     }
 
-    wxXmlNode* data_coefficient =
-        new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, std::to_string(
-                      component.coefficients_polynomial_creep.at(iter)));
-    node_coefficient->AddChild(data_coefficient);
-    node_coefficient->AddAttribute("units", "lbs");
-
-    node_coefficients_creep->AddChild(node_coefficient);
+    if (units == units::UnitSystem::Metric) {
+      value_converted = 0;
+      content = "???";
+      attribute = new wxXmlAttribute("units", "???");
+    } else if (units == units::UnitSystem::Imperial) {
+      value_converted = component.coefficients_polynomial_creep.at(iter);
+      content = helper::DoubleToFormattedString(value_converted, 1);
+      attribute = new wxXmlAttribute("units", "lbs");
+    }
+    subnode_element = CreateElementNodeWithContent(name, content, attribute);
+    node_element->AddChild(subnode_element);
   }
-  node_component->AddChild(node_coefficients_creep);
+  node_root->AddChild(node_element);
 
   // creates load-limit-polynomial-creep node and adds to component node
-  wxXmlNode* node_load_limit_polynomial_creep = 
-      new wxXmlNode(wxXML_ELEMENT_NODE, "load_limit_polynomial_creep");
-  wxXmlNode* data_load_limit_polynomial_creep =
-      new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, std::to_string(
-                    component.modulus_tension_elastic_area));
-  node_load_limit_polynomial_creep->AddChild(
-      data_load_limit_polynomial_creep);
-  node_load_limit_polynomial_creep->AddAttribute("units", "lbs");
-  node_component->AddChild(node_load_limit_polynomial_creep);
+  name = "load_limit_polynomial_creep";
+  if (units == units::UnitSystem::Metric) {
+    value_converted = component.load_limit_polynomial_creep;
+    content = "???";
+    attribute = new wxXmlAttribute("units", "???");
+  } else if (units == units::UnitSystem::Imperial) {
+    value_converted = component.load_limit_polynomial_creep;
+    content = helper::DoubleToFormattedString(value_converted, 1);
+    attribute = new wxXmlAttribute("units", "lbs");
+  }
+
+  node_element = CreateElementNodeWithContent(name, content, attribute);
+  node_root->AddChild(node_element);
 
   // returns node
-  return node_component;
+  return node_root;
 }
 
-bool CableComponentXmlHandler::ParseNode(const wxXmlNode* node, 
+int CableComponentXmlHandler::ParseNode(const wxXmlNode* root,
+                                         const units::UnitSystem& units,
                                          CableComponent& component) {
-  // checks for valid node
-  if (node->GetName() != "cable_component") {
-    return false;
+  // checks for valid root node
+  if (root->GetName() != "cable_component") {
+    return root->GetLineNumber();
   }
 
   // gets version attribute
   wxString version;
-  if (node->GetAttribute("version", &version) == false) {
-    return false;
+  if (root->GetAttribute("version", &version) == false) {
+    return root->GetLineNumber();
   }
 
   // sends to proper parsing function
-  bool success = false;
-
-  if ( version == "1" ) {
-    success = ParseNodeV1(node, component);
+  if (version == "1") {
+    return ParseNodeV1(root, units, component);
   }
   // <add more versions here as needed>
-
-  return success;
 }
 
-bool CableComponentXmlHandler::ParseNodeV1(const wxXmlNode* node,
-                                           CableComponent& component) {
-  // declares string versions of struct members
-  wxString coefficient_expansion_linear_thermal;
-  std::vector<wxString> coefficients_polynomial_creep (5);
-  std::vector<wxString> coefficients_polynomial_loadstrain (5);
-  wxString load_limit_polynomial_creep;
-  wxString load_limit_polynomial_loadstrain;
-  wxString modulus_compression_elastic_area;
-  wxString modulus_tension_elastic_area;
+int CableComponentXmlHandler::ParseNodeV1(const wxXmlNode* root,
+                                          const units::UnitSystem& units,
+                                          CableComponent& component) {
+  // variables used to parse XML node
+  wxString name;
+  wxString content;
+  double value_unconverted = -999999;
 
-  // gets strings from XML node
-  wxXmlNode* member = node->GetChildren();
-  while (member) {
-    if (member->GetName() == "coefficient_expansion_linear_thermal") {
-      coefficient_expansion_linear_thermal = 
-          member->GetChildren()->GetContent();
-    } else if (member->GetName() == "coefficients_creep") {
-      wxXmlNode* sub_member = member->GetChildren();
-      while (sub_member) {
-        if (sub_member->GetName() == "b0") {
-          coefficients_polynomial_creep.at(0) =
-              sub_member->GetChildren()->GetContent();
-        } else if (sub_member->GetName() == "b1") {
-          coefficients_polynomial_creep.at(1) =
-              sub_member->GetChildren()->GetContent();
-        } else if (sub_member->GetName() == "b2") {
-          coefficients_polynomial_creep.at(2) =
-              sub_member->GetChildren()->GetContent();
-        } else if (sub_member->GetName() == "b3") {
-          coefficients_polynomial_creep.at(3) =
-              sub_member->GetChildren()->GetContent();
-        } else if (sub_member->GetName() == "b4") {
-          coefficients_polynomial_creep.at(4) =
-              sub_member->GetChildren()->GetContent();
-        }
+  // evaluates each child node
+  wxXmlNode* node = root->GetChildren();
+  while (node != nullptr) {
+    name = node->GetName();
+    content = node->GetChildren()->GetContent();
 
-        sub_member = sub_member->GetNext();
+    if (name == "coefficient_expansion_linear_thermal") {
+      if (content.ToDouble(&value_unconverted) == false) {
+        return node->GetLineNumber();
       }
-    } else if (member->GetName() == "coefficients_loadstrain") {
-      wxXmlNode* sub_member = member->GetChildren();
-      while (sub_member) {
-        if (sub_member->GetName() == "a0") {
-          coefficients_polynomial_loadstrain.at(0) =
-              sub_member->GetChildren()->GetContent();
-        } else if (sub_member->GetName() == "a1") {
-          coefficients_polynomial_loadstrain.at(1) =
-              sub_member->GetChildren()->GetContent();
-        } else if (sub_member->GetName() == "a2") {
-          coefficients_polynomial_loadstrain.at(2) =
-              sub_member->GetChildren()->GetContent();
-        } else if (sub_member->GetName() == "a3") {
-          coefficients_polynomial_loadstrain.at(3) =
-              sub_member->GetChildren()->GetContent();
-        } else if (sub_member->GetName() == "a4") {
-          coefficients_polynomial_loadstrain.at(4) =
-              sub_member->GetChildren()->GetContent();
-        }
 
-        sub_member = sub_member->GetNext();
+      if (units == units::UnitSystem::Metric) {
+        component.coefficient_expansion_linear_thermal = 0;
+      } else if (units == units::UnitSystem::Imperial) {
+        component.coefficient_expansion_linear_thermal = value_unconverted;
       }
-    } else if (member->GetName() == "load_limit_polynomial_creep") {
-      load_limit_polynomial_creep = member->GetChildren()->GetContent();
-    } else if (member->GetName() == "load_limit_polynomial_loadstrain") {
-      load_limit_polynomial_loadstrain = member->GetChildren()->GetContent();
-    } else if (member->GetName() == "modulus_compression_elastic_area") {
-      modulus_compression_elastic_area = member->GetChildren()->GetContent();
-    } else if (member->GetName() == "modulus_tension_elastic_area") {
-      modulus_tension_elastic_area = member->GetChildren()->GetContent();
+
+    /// \todo possibly create a function to parse each coefficient
+    } else if (name == "coefficients_creep") {
+      wxXmlNode* subnode = node->GetChildren();
+      while (subnode != nullptr) {
+        name = subnode->GetName();
+        content = subnode->GetChildren()->GetContent();
+
+        if (name == "b0") {
+          if (content.ToDouble(&value_unconverted) == false) {
+            return node->GetLineNumber();
+          }
+
+          if (units == units::UnitSystem::Metric) {
+            component.coefficients_polynomial_creep.at(0) = 0;
+          } else if (units == units::UnitSystem::Imperial) {
+            component.coefficients_polynomial_creep.at(0) = value_unconverted;
+          }
+        } else if (name == "b1") {
+          if (content.ToDouble(&value_unconverted) == false) {
+            return node->GetLineNumber();
+          }
+
+          if (units == units::UnitSystem::Metric) {
+            component.coefficients_polynomial_creep.at(1) = 0;
+          } else if (units == units::UnitSystem::Imperial) {
+            component.coefficients_polynomial_creep.at(1) = value_unconverted;
+          }
+        } else if (name == "b2") {
+          if (content.ToDouble(&value_unconverted) == false) {
+            return node->GetLineNumber();
+          }
+
+          if (units == units::UnitSystem::Metric) {
+            component.coefficients_polynomial_creep.at(2) = 0;
+          } else if (units == units::UnitSystem::Imperial) {
+            component.coefficients_polynomial_creep.at(2) = value_unconverted;
+          }
+        } else if (name == "b3") {
+          if (content.ToDouble(&value_unconverted) == false) {
+            return node->GetLineNumber();
+          }
+
+          if (units == units::UnitSystem::Metric) {
+            component.coefficients_polynomial_creep.at(3) = 0;
+          } else if (units == units::UnitSystem::Imperial) {
+            component.coefficients_polynomial_creep.at(3) = value_unconverted;
+          }
+        } else if (name == "b4") {
+          if (content.ToDouble(&value_unconverted) == false) {
+            return node->GetLineNumber();
+          }
+
+          if (units == units::UnitSystem::Metric) {
+            component.coefficients_polynomial_creep.at(4) = 0;
+          } else if (units == units::UnitSystem::Imperial) {
+            component.coefficients_polynomial_creep.at(4) = value_unconverted;
+          }
+        } else {
+          // node is not recognized by the parser
+          return subnode->GetLineNumber();
+        }
+        subnode = subnode->GetNext();
+      }
+
+    /// \todo possibly create a function to parse each coefficient
+    } else if (name == "coefficients_loadstrain") {
+      wxXmlNode* subnode = node->GetChildren();
+      while (subnode != nullptr) {
+        name = subnode->GetName();
+        content = subnode->GetChildren()->GetContent();
+
+        if (name == "a0") {
+          if (content.ToDouble(&value_unconverted) == false) {
+            return node->GetLineNumber();
+          }
+
+          if (units == units::UnitSystem::Metric) {
+            component.coefficients_polynomial_loadstrain.at(0) = 0;
+          } else if (units == units::UnitSystem::Imperial) {
+            component.coefficients_polynomial_loadstrain.at(0) = value_unconverted;
+          }
+        } else if (name == "a1") {
+          if (content.ToDouble(&value_unconverted) == false) {
+            return node->GetLineNumber();
+          }
+
+          if (units == units::UnitSystem::Metric) {
+            component.coefficients_polynomial_loadstrain.at(1) = 0;
+          } else if (units == units::UnitSystem::Imperial) {
+            component.coefficients_polynomial_loadstrain.at(1) = value_unconverted;
+          }
+        } else if (name == "a2") {
+          if (content.ToDouble(&value_unconverted) == false) {
+            return node->GetLineNumber();
+          }
+
+          if (units == units::UnitSystem::Metric) {
+            component.coefficients_polynomial_loadstrain.at(2) = 0;
+          } else if (units == units::UnitSystem::Imperial) {
+            component.coefficients_polynomial_loadstrain.at(2) = value_unconverted;
+          }
+        } else if (name == "a3") {
+          if (content.ToDouble(&value_unconverted) == false) {
+            return node->GetLineNumber();
+          }
+
+          if (units == units::UnitSystem::Metric) {
+            component.coefficients_polynomial_loadstrain.at(3) = 0;
+          } else if (units == units::UnitSystem::Imperial) {
+            component.coefficients_polynomial_loadstrain.at(3) = value_unconverted;
+          }
+        } else if (name == "a4") {
+          if (content.ToDouble(&value_unconverted) == false) {
+            return node->GetLineNumber();
+          }
+
+          if (units == units::UnitSystem::Metric) {
+            component.coefficients_polynomial_loadstrain.at(4) = 0;
+          } else if (units == units::UnitSystem::Imperial) {
+            component.coefficients_polynomial_loadstrain.at(4) = value_unconverted;
+          }
+        } else {
+          // node is not recognized by the parser
+          return subnode->GetLineNumber();
+        }
+        subnode = subnode->GetNext();
+      }
+
+    } else if (name == "load_limit_polynomial_creep") {
+      if (content.ToDouble(&value_unconverted) == false) {
+        return node->GetLineNumber();
+      }
+
+      if (units == units::UnitSystem::Metric) {
+        component.load_limit_polynomial_creep = 0;
+      } else if (units == units::UnitSystem::Imperial) {
+        component.load_limit_polynomial_creep = value_unconverted;
+      }
+
+    } else if (name == "load_limit_polynomial_loadstrain") {
+      if (content.ToDouble(&value_unconverted) == false) {
+        return node->GetLineNumber();
+      }
+
+      if (units == units::UnitSystem::Metric) {
+        component.load_limit_polynomial_loadstrain = 0;
+      } else if (units == units::UnitSystem::Imperial) {
+        component.load_limit_polynomial_loadstrain = value_unconverted;
+      }
+
+    } else if (name == "modulus_compression_elastic_area") {
+      if (content.ToDouble(&value_unconverted) == false) {
+        return node->GetLineNumber();
+      }
+
+      if (units == units::UnitSystem::Metric) {
+        component.modulus_compression_elastic_area = 0;
+      } else if (units == units::UnitSystem::Imperial) {
+        component.modulus_compression_elastic_area = value_unconverted;
+      }
+
+    } else if (name == "modulus_tension_elastic_area") {
+      if (content.ToDouble(&value_unconverted) == false) {
+        return node->GetLineNumber();
+      }
+
+      if (units == units::UnitSystem::Metric) {
+        component.modulus_tension_elastic_area = 0;
+      } else if (units == units::UnitSystem::Imperial) {
+        component.modulus_tension_elastic_area = value_unconverted;
+      }
+
+    } else {
+      // node is not recognized by ther parser
+      return node->GetLineNumber();
     }
 
-    // gets next member of node
-    member = member->GetNext();
+    node = node->GetNext();
   }
 
-  // converts strings to appropriate data type and populates struct
-  if (coefficient_expansion_linear_thermal.ToDouble(
-      &component.coefficient_expansion_linear_thermal) == false) {
-    return false;
-  }
-
-  for (auto iter = 0; iter <= 4; iter++) {
-    wxString coefficient = coefficients_polynomial_creep.at(iter);
-    if (coefficient.ToDouble(
-        &component.coefficients_polynomial_creep.at(iter)) == false) {
-      return false;
-    }
-  }
-
-  for (auto iter = 0; iter <= 4; iter++) {
-    wxString coefficient = coefficients_polynomial_loadstrain.at(iter);
-    if (coefficient.ToDouble(
-        &component.coefficients_polynomial_loadstrain.at(iter)) == false) {
-      return false;
-    }
-  }
-
-  if (load_limit_polynomial_creep.ToDouble(
-      &component.load_limit_polynomial_creep) == false) {
-    return false;
-  }
-
-  if (load_limit_polynomial_loadstrain.ToDouble(
-      &component.load_limit_polynomial_loadstrain) == false) {
-    return false;
-  }
-
-  if (modulus_compression_elastic_area.ToDouble(
-      &component.modulus_compression_elastic_area) == false) {
-    return false;
-  }
-
-  if (modulus_tension_elastic_area.ToDouble(
-      &component.modulus_tension_elastic_area) == false) {
-    return false;
-  }
-
-  // no errors
-  return true;
+  // if it gets to this point, no errors were encountered
+  return 0;
 }
 
 CableXmlHandler::CableXmlHandler() {
@@ -298,180 +438,241 @@ CableXmlHandler::CableXmlHandler() {
 CableXmlHandler::~CableXmlHandler() {
 }
 
-wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable) {
-  // creates a node for the cable
-  wxXmlNode* node_cable = new wxXmlNode(wxXML_ELEMENT_NODE, "cable");
-  node_cable->AddAttribute("type", wxString(cable.type_construction));
-  node_cable->AddAttribute("name", wxString(cable.name));
-  node_cable->AddAttribute("version", "1");
+wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
+                                       const units::UnitSystem& units) {
+  // variables used to create XML node
+  double value_converted = -999999;
+  std::string name;
+  std::string content;
+  wxXmlAttribute* attribute = nullptr;
+  wxXmlNode* node_root = nullptr;
+  wxXmlNode* node_element = nullptr;
+
+  // creates a root node for the cable
+  node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "cable");
+  node_root->AddAttribute("type", wxString(cable.type_construction));
+  node_root->AddAttribute("name", wxString(cable.name));
+  node_root->AddAttribute("version", "1");
 
   // creates area-electrical node and adds to cable node
-  wxXmlNode* node_area_electrical =
-      new wxXmlNode(wxXML_ELEMENT_NODE, "area_electrical");
-  wxXmlNode* data_area_electrical =
-      new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString,
-                    std::to_string(cable.area_electrical));
-  node_area_electrical->AddChild(data_area_electrical);
-  node_area_electrical->AddAttribute("units", "kcmil");
-  node_cable->AddChild(node_area_electrical);
+  name = "area_electrical";
+  if (units == units::UnitSystem::Metric) {
+    value_converted = cable.area_electrical;
+    content = "???";
+    attribute = new wxXmlAttribute("units", "???");
+  } else if (units == units::UnitSystem::Imperial) {
+    value_converted = cable.area_electrical;
+    content = helper::DoubleToFormattedString(value_converted, 1);
+    attribute = new wxXmlAttribute("units", "kcmil");
+  }
+  node_element = CreateElementNodeWithContent(name, content, attribute);
+  node_root->AddChild(node_element);
 
   // creates area-physical node and adds to cable node
-  wxXmlNode* node_area_physical =
-      new wxXmlNode(wxXML_ELEMENT_NODE, "area_physical");
-  wxXmlNode* data_area_physical =
-      new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString,
-                    std::to_string(cable.area_physical));
-  node_area_physical->AddChild(data_area_physical);
-  node_area_physical->AddAttribute("units", "in^2");
-  node_cable->AddChild(node_area_physical);
+  name = "area_physical";
+  if (units == units::UnitSystem::Metric) {
+    value_converted = cable.area_physical;
+    content = "???";
+    attribute = new wxXmlAttribute("units", "???");
+  } else if (units == units::UnitSystem::Imperial) {
+    value_converted = units::Convert(cable.area_physical,
+                                     units::ConversionType::kFeetToInches,
+                                     2);
+    content = helper::DoubleToFormattedString(value_converted, 4);
+    attribute = new wxXmlAttribute("units", "in^2");
+  }
+  node_element = CreateElementNodeWithContent(name, content, attribute);
+  node_root->AddChild(node_element);
 
   // creates diameter node and adds to cable node
-  wxXmlNode* node_diameter = new wxXmlNode(wxXML_ELEMENT_NODE, "diameter");
-  wxXmlNode* data_diameter = new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString,
-                                           std::to_string(cable.diameter));
-  node_diameter->AddChild(data_diameter);
-  node_diameter->AddAttribute("units", "inches");
-  node_cable->AddChild(node_diameter);
+  name = "diameter";
+  if (units == units::UnitSystem::Metric) {
+    value_converted = cable.diameter;
+    content = "???";
+    attribute = new wxXmlAttribute("units", "???");
+  } else if (units == units::UnitSystem::Imperial) {
+    value_converted = units::Convert(cable.diameter,
+                                     units::ConversionType::kFeetToInches);
+    content = helper::DoubleToFormattedString(value_converted, 3);
+    attribute = new wxXmlAttribute("units", "in");
+  }
+  node_element = CreateElementNodeWithContent(name, content, attribute);
+  node_root->AddChild(node_element);
 
   // creates strength-rated node and adds to cable node
-  wxXmlNode* node_strength_rated =
-      new wxXmlNode(wxXML_ELEMENT_NODE, "strength_rated");
-  wxXmlNode* data_strength_rated =
-      new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString,
-                    std::to_string(cable.strength_rated));
-  node_strength_rated->AddChild(data_strength_rated);
-  node_strength_rated->AddAttribute("units", "lbs");
-  node_cable->AddChild(node_strength_rated);
+  name = "strength_rated";
+  if (units == units::UnitSystem::Metric) {
+    value_converted = cable.strength_rated;
+    content = "???";
+    attribute = new wxXmlAttribute("units", "???");
+  } else if (units == units::UnitSystem::Imperial) {
+    value_converted = cable.strength_rated;
+    content = helper::DoubleToFormattedString(value_converted, 0);
+    attribute = new wxXmlAttribute("units", "lbs");
+  }
+  node_element = CreateElementNodeWithContent(name, content, attribute);
+  node_root->AddChild(node_element);
 
   // creates temperature-component-properties node and adds to cable node
-  wxXmlNode* node_temperature_component_properties =
-      new wxXmlNode(wxXML_ELEMENT_NODE, "temperature_properties_components");
-  wxXmlNode* data_temperature_component_properties =
-      new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString,
-                    std::to_string(cable.strength_rated));
-  node_temperature_component_properties->AddChild(
-      data_temperature_component_properties);
-  node_temperature_component_properties->AddAttribute("units", "deg F");
-  node_cable->AddChild(node_temperature_component_properties);
+  name = "temperature_properties_components";
+  if (units == units::UnitSystem::Metric) {
+    value_converted = cable.temperature_properties_components;
+    content = "???";
+    attribute = new wxXmlAttribute("units", "???");
+  } else if (units == units::UnitSystem::Imperial) {
+    value_converted = cable.temperature_properties_components;
+    content = helper::DoubleToFormattedString(value_converted, 0);
+    attribute = new wxXmlAttribute("units", "deg F");
+  }
+  node_element = CreateElementNodeWithContent(name, content, attribute);
+  node_root->AddChild(node_element);
 
   // creates weight-unit node and adds to cable node
-  wxXmlNode* node_weight_unit = new wxXmlNode(wxXML_ELEMENT_NODE,
-                                              "weight_unit");
-  wxXmlNode* data_weight_unit =
-      new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString,
-                    std::to_string(cable.weight_unit));
-  node_weight_unit->AddChild(data_weight_unit);
-  node_weight_unit->AddAttribute("units", "lbs/ft");
-  node_cable->AddChild(node_weight_unit);
+  name = "weight_unit";
+  if (units == units::UnitSystem::Metric) {
+    value_converted = cable.weight_unit;
+    content = "???";
+    attribute = new wxXmlAttribute("units", "???");
+  } else if (units == units::UnitSystem::Imperial) {
+    value_converted = cable.weight_unit;
+    content = helper::DoubleToFormattedString(value_converted, 3);
+    attribute = new wxXmlAttribute("units", "lbs/feet");
+  }
+  node_element = CreateElementNodeWithContent(name, content, attribute);
+  node_root->AddChild(node_element);
 
   // creates component-shell node and adds to cable node
-  node_cable->AddChild(
-      CableComponentXmlHandler::CreateNode(cable.component_shell, "shell"));
+  node_root->AddChild(
+      CableComponentXmlHandler::CreateNode(cable.component_shell, "shell",
+                                           units));
 
   // creates component-core node and adds to cable node
-  node_cable->AddChild(
-      CableComponentXmlHandler::CreateNode(cable.component_core, "core"));
+  node_root->AddChild(
+      CableComponentXmlHandler::CreateNode(cable.component_core, "core",
+                                           units));
 
-  return node_cable;
+  return node_root;
 }
 
-bool CableXmlHandler::ParseNode(const wxXmlNode* node, Cable& cable) {
+int CableXmlHandler::ParseNode(const wxXmlNode* root,
+                                const units::UnitSystem& units,
+                                Cable& cable) {
   // checks for valid node
-  if (node->GetName() != "cable") {
-    return false;
+  if (root->GetName() != "cable") {
+    return root->GetLineNumber();
   }
 
   // gets version attribute
   wxString version;
-  if (node->GetAttribute("version", &version) == false) {
-    return false;
+  if (root->GetAttribute("version", &version) == false) {
+    return root->GetLineNumber();
   }
 
   // sends to proper parsing function
-  bool success = false;
-
-  if ( version == "1" ) {
-    success = CableXmlHandler::ParseNodeV1(node, cable);
+  if (version == "1") {
+    return CableXmlHandler::ParseNodeV1(root, units, cable);
   }
   // <add more versions here as needed>
-
-  return success;
 }
 
-bool CableXmlHandler::ParseNodeV1(const wxXmlNode* node, Cable& cable) {
-  // declares string versions of struct members
-  wxString type = node->GetAttribute("type");
-  wxString name = node->GetAttribute("name");
-  wxString area_electrical;
-  wxString area_physical;
-  wxString diameter;
-  wxString strength_rated;
-  wxString temperature_properties_components;
-  wxString weight_unit;
+int CableXmlHandler::ParseNodeV1(const wxXmlNode* root,
+                                 const units::UnitSystem& units,
+                                 Cable& cable) {
+  // variables used to parse XML node
+  wxString name;
+  wxString content;
+  double value_unconverted = -999999;
 
-  // gets strings from XML node
-  wxXmlNode* member = node->GetChildren();
-  while (member) {
-    if (member->GetName() == "area_electrical") {
-      area_electrical = member->GetChildren()->GetContent();
-    } else if (member->GetName() == "area_physical") {
-      area_physical = member->GetChildren()->GetContent();
-    } else if (member->GetName() == "diameter") {
-      diameter = member->GetChildren()->GetContent();
-    } else if (member->GetName() == "strength_rated") {
-      strength_rated = member->GetChildren()->GetContent();
-    } else if (member->GetName() == "temperature_properties_components") {
-      temperature_properties_components = member->GetChildren()->GetContent();
-    } else if (member->GetName() == "weight_unit") {
-      weight_unit = member->GetChildren()->GetContent();
-    } else if (member->GetName() == "cable_component") {
+  // evaluates each child node
+  wxXmlNode* node = root->GetChildren();
+  while (node != nullptr) {
+    name = node->GetName();
+    content = node->GetChildren()->GetContent();
+
+    if (name == "area_electrical") {
+      if (content.ToDouble(&value_unconverted) == false) {
+        return node->GetLineNumber();
+      }
+
+      if (units == units::UnitSystem::Metric) {
+        cable.area_electrical = 0;
+      } else if (units == units::UnitSystem::Imperial) {
+        cable.area_electrical = value_unconverted;
+      }
+    } else if (name == "area_physical") {
+      if (content.ToDouble(&value_unconverted) == false) {
+        return node->GetLineNumber();
+      }
+
+      if (units == units::UnitSystem::Metric) {
+        cable.area_physical = 0;
+      } else if (units == units::UnitSystem::Imperial) {
+        cable.area_physical = units::Convert(
+            value_unconverted, units::ConversionType::kInchesToFeet, 2);
+      }
+    } else if (name == "diameter") {
+      if (content.ToDouble(&value_unconverted) == false) {
+        return node->GetLineNumber();
+      }
+
+      if (units == units::UnitSystem::Metric) {
+        cable.diameter = 0;
+      } else if (units == units::UnitSystem::Imperial) {
+        cable.diameter = units::Convert(
+            value_unconverted, units::ConversionType::kInchesToFeet);
+      }
+    } else if (name == "strength_rated") {
+      if (content.ToDouble(&value_unconverted) == false) {
+        return node->GetLineNumber();
+      }
+
+      if (units == units::UnitSystem::Metric) {
+        cable.strength_rated = 0;
+      } else if (units == units::UnitSystem::Imperial) {
+        cable.strength_rated = value_unconverted;
+      }
+    } else if (name == "temperature_properties_components") {
+      if (content.ToDouble(&value_unconverted) == false) {
+        return node->GetLineNumber();
+      }
+
+      if (units == units::UnitSystem::Metric) {
+        cable.temperature_properties_components = 0;
+      } else if (units == units::UnitSystem::Imperial) {
+        cable.temperature_properties_components = value_unconverted;
+      }
+    } else if (name == "weight_unit") {
+      if (content.ToDouble(&value_unconverted) == false) {
+        return node->GetLineNumber();
+      }
+
+      if (units == units::UnitSystem::Metric) {
+        cable.weight_unit = 0;
+      } else if (units == units::UnitSystem::Imperial) {
+        cable.weight_unit = value_unconverted;
+      }
+    } else if (name == "cable_component") {
       // selects cable component type and passes off to cable component parser
-      wxString type_component = member->GetAttribute("name");
+      wxString type_component = node->GetAttribute("name");
       if (type_component == "shell" ) {
-        if(CableComponentXmlHandler::ParseNode(
-            member, cable.component_shell) == false) {
-          return false;
+        int line_number = CableComponentXmlHandler::ParseNode(
+            node, units, cable.component_shell);
+        if(line_number != 0) {
+          return line_number;
         }
       } else if (type_component == "core" ) {
-        if(CableComponentXmlHandler::ParseNode(
-            member, cable.component_core) == false) {
-          return false;
+        int line_number = CableComponentXmlHandler::ParseNode(
+            node, units, cable.component_core);
+        if(line_number != 0) {
+          return line_number;
         }
+
       }
     }
 
-    // gets next member of node
-    member = member->GetNext();
+    node = node->GetNext();
   }
 
-  // converts strings to appropriate data type and populates struct
-  cable.type_construction = type.ToStdString();
-  cable.name = name.ToStdString();
-  
-  if(area_electrical.ToDouble(&cable.area_electrical) == false) {
-    return false;
-  }
-
-  if(area_physical.ToDouble(&cable.area_physical) == false) {
-    return false;
-  }
-
-  if(diameter.ToDouble(&cable.diameter) == false) {
-    return false;
-  }
-
-  if (strength_rated.ToDouble(&cable.strength_rated) == false) {
-    return false;
-  }
-
-  if(temperature_properties_components.ToDouble(
-      &cable.temperature_properties_components) == false) {
-    return false;
-  }
-
-  if (weight_unit.ToDouble(&cable.weight_unit) == false) {
-    return false;
-  }
-
-  return true;
+  // if it gets to this point, no errors were encountered
+  return 0;
 }
