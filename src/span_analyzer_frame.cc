@@ -44,25 +44,31 @@ void SpanAnalyzerFrame::OnCableEdit(wxCommandEvent& event) {
     if (doc.Load(selector.GetFilename()) == false) {
       wxMessageDialog message(this, "Invalid XML file");
       message.ShowModal();
+      return;
     }
 
     // parses the XML root and loads into the cable object
     const wxXmlNode* root = doc.GetRoot();
-    if(CableXmlHandler::ParseNode(root, cable) == false) {
-      wxMessageDialog message(this, "Couldn't parse file");
+    int line_number = CableXmlHandler::ParseNode(root,
+                                                 units::UnitSystem::Imperial,
+                                                 cable);
+    if (line_number != 0) {
+      wxMessageDialog message(this, "Error at line <inser line>");
       message.ShowModal();
+      return;
     }
   } else {
     return;
   }
 
   // creates a cable editor dialog and shows
-  CableEditorDialog editor(this, &cable, UnitSystem::Imperial);
+  CableEditorDialog editor(this, &cable, units::UnitSystem::Imperial);
 
   if (editor.ShowModal() == wxID_OK) {
     // generates a virtual XML document
     wxXmlDocument doc;
-    wxXmlNode* root = CableXmlHandler::CreateNode(cable);
+    wxXmlNode* root = CableXmlHandler::CreateNode(cable,
+                                                  units::UnitSystem::Imperial);
     doc.SetRoot(root);
 
     // saves virtual XML document to file
@@ -77,12 +83,13 @@ void SpanAnalyzerFrame::OnCableNew(wxCommandEvent& event) {
   Cable cable;
 
   // creates a cable editor dialog and shows
-  CableEditorDialog editor(this, &cable, UnitSystem::Imperial);
+  CableEditorDialog editor(this, &cable, units::UnitSystem::Imperial);
 
   if (editor.ShowModal() == wxID_OK) {
     // generates a virtual XML document
     wxXmlDocument doc;
-    wxXmlNode* root = CableXmlHandler::CreateNode(cable);
+    wxXmlNode* root = CableXmlHandler::CreateNode(cable,
+                                                  units::UnitSystem::Imperial);
     doc.SetRoot(root);
 
     // creates a cable file selector dialog and shows
@@ -117,7 +124,8 @@ void SpanAnalyzerFrame::OnCableFileSelect(wxCommandEvent& event) {
 
     // parses the XML root and loads into the cable object
     const wxXmlNode* root = doc->GetRoot();
-    if(CableXmlHandler::ParseNode(root, *cable_) == false) {
+    if(CableXmlHandler::ParseNode(root, units::UnitSystem::Imperial,
+                                  *cable_) == false) {
       wxMessageDialog message(this, "Couldn't parse file");
       message.ShowModal();
     }
