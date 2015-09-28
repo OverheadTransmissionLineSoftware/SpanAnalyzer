@@ -11,28 +11,7 @@
 #include "wx/wx.h"
 #include "wx/xml/xml.h"
 
-/// \par OVERVIEW
-///
-/// This is the base class for XmlHandlers.
-class XmlHandler {
- public:
-  /// \brief Constructor.
-  XmlHandler();
-
-  /// \brief Destructor.
-  ~XmlHandler();
-
-  /// \brief Creates an 'element' type node with a child 'text' type node.
-  /// \param[in] name
-  ///   The name of the element node.
-  /// \param[in] content_child
-  ///   The content to be held in the child 'text' type node.
-  /// \return An 'element' type XML node.
-  static wxXmlNode* CreateElementNodeWithContent(
-      const std::string& name,
-      const std::string& child_content,
-      wxXmlAttribute* attribute = nullptr);
-};
+#include "xml_handler.h"
 
 /// \par OVERVIEW
 ///
@@ -85,7 +64,8 @@ class CableComponentXmlHandler : public XmlHandler {
   /// \return The file line number of the node if the content could not be
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
-  static int ParseNode(const wxXmlNode* root, const units::UnitSystem& units,
+  static int ParseNode(const wxXmlNode* root,
+                       const units::UnitSystem& units,
                        CableComponent& component);
 
  private:
