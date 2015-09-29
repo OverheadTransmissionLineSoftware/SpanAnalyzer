@@ -24,16 +24,9 @@
 /// new cable component nodes will only be generated with the most recent
 /// version.
 ///
-/// \par UNITS
+/// \par UNIT LABELS
 ///
-/// This class supports both Imperial and Metric unit systems. This class also
-/// supports similar-system unit conversions (ex: meters->millimeters). This is
-/// done so the user can input using preferred units while maintaining
-/// compatibility with the modeling libraries that require consistent units.
-/// The expected consistent units are:
-///   - Length = [meters or feet]
-///   - Load = [N or lbs]
-///   - Temperature = [deg C or deg F]
+/// This class supports labeling both Imperial and Metric unit systems.
 class CableComponentXmlHandler : public XmlHandler {
  public:
   /// \brief Constructor.
@@ -48,7 +41,7 @@ class CableComponentXmlHandler : public XmlHandler {
   /// \param[in] name
   ///   The name for the cable component XML node.
   /// \param[in] units
-  ///   The units to convert to/from.
+  ///   The unit attributes to add.
   /// \return An XML node for the cable component struct.
   static wxXmlNode* CreateNode(const CableComponent& component,
                                const std::string& name,
@@ -57,29 +50,24 @@ class CableComponentXmlHandler : public XmlHandler {
   /// \brief Parses an XML node and populates a cable component struct.
   /// \param[in] root
   ///   The XML root node for the cable component.
-  /// \param[in] units
-  ///   The units to convert to/from.
   /// \param[out] component
   ///   The cable component struct that is populated.
   /// \return The file line number of the node if the content could not be
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
   static int ParseNode(const wxXmlNode* root,
-                       const units::UnitSystem& units,
                        CableComponent& component);
 
  private:
   /// \brief Parses a version 1 XML node and populates a cable struct.
   /// \param[in] root
   ///   The XML root node for the cable component.
-  /// \param[in] units
-  ///   The units to convert to/from.
   /// \param[out] component
   ///   The cable component struct that is populated.
   /// \return The file line number of the node if the content could not be
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
-  static int ParseNodeV1(const wxXmlNode* root, const units::UnitSystem& units,
+  static int ParseNodeV1(const wxXmlNode* root,
                          CableComponent& component);
 };
 
@@ -93,16 +81,9 @@ class CableComponentXmlHandler : public XmlHandler {
 /// This class can parse all versions of the cable XML node. However, new cable
 /// nodes will only be generated with the most recent version.
 ///
-/// \par UNITS
+/// \par UNIT LABELS
 ///
-/// This class supports both Imperial and Metric unit systems. This class also
-/// supports similar-system unit conversions (ex: meters->millimeters). This is
-/// done so the user can input using preferred units while maintaining
-/// compatibility with the modeling libraries that require consistent units.
-/// The expected consistent units are:
-///   - Length = [meters or feet]
-///   - Load = [N or lbs]
-///   - Temperature = [deg C or deg F]
+/// This class supports labeling both Imperial and Metric unit systems.
 class CableXmlHandler : public XmlHandler {
  public:
   /// \brief Default constructor.
@@ -114,9 +95,8 @@ class CableXmlHandler : public XmlHandler {
   /// \brief Creates an XML node for a cable struct.
   /// \param[in] cable
   ///   The cable.
-  /// \return An XML node for the cable struct.
   /// \param[in] units
-  ///   The units to convert to/from.
+  ///   The unit attributes to add.
   /// \return An XML node for the cable struct.
   static wxXmlNode* CreateNode(const Cable& cable,
                                const units::UnitSystem& units);
@@ -124,28 +104,24 @@ class CableXmlHandler : public XmlHandler {
   /// \brief Parses an XML node and populates a cable struct.
   /// \param[in] root
   ///   The XML root node for the cable component.
-  /// \param[in] units
-  ///   The units to convert to/from.
   /// \param[out] cable
   ///   The cable struct that is populated.
   /// \return The file line number of the node if the content could not be
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
-  static int ParseNode(const wxXmlNode* root, const units::UnitSystem& units,
+  static int ParseNode(const wxXmlNode* root,
                        Cable& cable);
 
  private:
   /// \brief Parses a version 1 XML node and populates a cable struct.
   /// \param[in] root
   ///   The XML root node for the cable component.
-  /// \param[in] units
-  ///   The units to convert to/from.
   /// \param[out] cable
   ///   The cable struct that is populated.
   /// \return The file line number of the node if the content could not be
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
-  static int ParseNodeV1(const wxXmlNode* root, const units::UnitSystem& units,
+  static int ParseNodeV1(const wxXmlNode* root,
                          Cable& cable);
 };
 

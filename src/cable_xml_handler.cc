@@ -131,7 +131,6 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
 }
 
 int CableComponentXmlHandler::ParseNode(const wxXmlNode* root,
-                                         const units::UnitSystem& units,
                                          CableComponent& component) {
   // checks for valid root node
   if (root->GetName() != "cable_component") {
@@ -146,14 +145,13 @@ int CableComponentXmlHandler::ParseNode(const wxXmlNode* root,
 
   // sends to proper parsing function
   if (version == "1") {
-    return ParseNodeV1(root, units, component);
+    return ParseNodeV1(root, component);
   } else {
     return root->GetLineNumber();
   }
 }
 
 int CableComponentXmlHandler::ParseNodeV1(const wxXmlNode* root,
-                                          const units::UnitSystem& units,
                                           CableComponent& component) {
   // variables used to parse XML node
   wxString name;
@@ -343,7 +341,6 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
 }
 
 int CableXmlHandler::ParseNode(const wxXmlNode* root,
-                                const units::UnitSystem& units,
                                 Cable& cable) {
   // checks for valid node
   if (root->GetName() != "cable") {
@@ -358,14 +355,13 @@ int CableXmlHandler::ParseNode(const wxXmlNode* root,
 
   // sends to proper parsing function
   if (version == "1") {
-    return CableXmlHandler::ParseNodeV1(root, units, cable);
+    return CableXmlHandler::ParseNodeV1(root, cable);
   } else {
     return root->GetLineNumber();
   }
 }
 
 int CableXmlHandler::ParseNodeV1(const wxXmlNode* root,
-                                 const units::UnitSystem& units,
                                  Cable& cable) {
   // variables used to parse XML node
   wxString name;
@@ -423,13 +419,13 @@ int CableXmlHandler::ParseNodeV1(const wxXmlNode* root,
       wxString name_component = node->GetAttribute("name");
       if (name_component == "shell" ) {
         int line_number = CableComponentXmlHandler::ParseNode(
-            node, units, cable.component_shell);
+            node, cable.component_shell);
         if(line_number != 0) {
           return line_number;
         }
       } else if (name_component == "core" ) {
         int line_number = CableComponentXmlHandler::ParseNode(
-            node, units, cable.component_core);
+            node, cable.component_core);
         if(line_number != 0) {
           return line_number;
         }
