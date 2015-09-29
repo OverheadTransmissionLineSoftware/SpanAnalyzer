@@ -12,17 +12,6 @@
 ///
 /// This class is a transmission cable editor dialog.
 ///
-/// \par UNITS
-///
-/// This class supports both Imperial and Metric unit systems. This class also
-/// supports similar-system unit conversions (ex: meters->millimeters). This is
-/// done so the user can input using preferred units while maintaining
-/// compatibility with the modeling libraries that require consistent units.
-/// The expected consistent units are:
-///   - Length = [meters or feet]
-///   - Load = [N or lbs]
-///   - Temperature = [deg C or deg F]
-///
 /// \par GUI CONTROLS AND DATA TRANSFER
 ///
 /// The form controls and layout are defined in the XRC file. The values are
@@ -31,6 +20,8 @@
 class CableEditorDialog : public wxDialog {
  public:
   /// \brief Default constructor.
+  /// \param[in] parent
+  ///   The parent window.
   /// \param[in] cable
   ///   The cable to be modified with the dialog.
   /// \param[in] units
@@ -42,22 +33,6 @@ class CableEditorDialog : public wxDialog {
   ~CableEditorDialog() {};
 
  private:
-  /// \brief Converts the cable from consistent to dialog form units.
-  /// \param[in] cable_reference
-  ///   The reference cable, which should have dialog units.
-  /// \param[out] cable_converted
-  ///   The converted cable, which will have consistent units.
-  void ConvertCableToConsistentUnits(const Cable& cable_reference,
-                                     Cable& cable_converted);
-
-  /// \brief Converts the cable from consistent to dialog form units.
-  /// \param[in] cable_reference
-  ///   The reference cable, which should have consistent units.
-  /// \param[out] cable_converted
-  ///   The converted cable, which will have dialog units.
-  void ConvertCableToDialogUnits(const Cable& cable_reference,
-                                 Cable& cable_converted);
-
   /// \brief Handles the cancel button event.
   /// \param[in] event
   ///   The event.
@@ -76,7 +51,7 @@ class CableEditorDialog : public wxDialog {
   /// \brief Changes static text to display the desired unit system.
   /// \param[in] units
   ///   The unit system to display.
-  void SetUnitsStaticText(units::UnitSystem& units);
+  void SetUnitsStaticText(const units::UnitSystem& units);
 
   /// \brief Sets the control validators on the form.
   void SetValidators();
@@ -85,18 +60,13 @@ class CableEditorDialog : public wxDialog {
   ///   The cable that is edited.
   Cable* cable_;
 
-  /// \var cable_converted_
-  ///   The cable that contains the converted (dialog) units. The data stored
-  ///   in this is tied to the dialog controls.
-  Cable cable_converted_;
+  /// \var cable_modified_
+  ///   The cable that is modified and tied to the dialog controls.
+  Cable cable_modified_;
 
   /// \var name_
-  ///   The control data that contains the cable name.
+  ///   The wxString version of the cable name. This is tied to a form control.
   wxString name_;
-
-  /// \var units_
-  ///   The unit system to display and convert to/from.
-  units::UnitSystem units_;
 
   DECLARE_EVENT_TABLE()
 };

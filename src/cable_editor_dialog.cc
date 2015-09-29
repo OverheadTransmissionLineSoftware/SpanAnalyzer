@@ -7,6 +7,8 @@
 #include "wx/valnum.h"
 #include "wx/xrc/xmlres.h"
 
+#include "cable_unit_converter.h"
+
 BEGIN_EVENT_TABLE(CableEditorDialog, wxDialog)
   EVT_BUTTON(wxID_CANCEL, CableEditorDialog::OnCancel)
   EVT_BUTTON(wxID_OK, CableEditorDialog::OnOk)
@@ -20,62 +22,19 @@ CableEditorDialog::CableEditorDialog(wxWindow* parent,
   wxXmlResource::Get()->LoadDialog(this, parent, "cable_editor_dialog");
 
   // sets static text to display selected units
-  units_ = units;
-  SetUnitsStaticText(units_);
+  SetUnitsStaticText(units);
 
-  // transfers and converts cable data to controls data
+  // saves unmodified cable reference, and copies to modified cable
   cable_ = cable;
-  ConvertCableToDialogUnits(*cable_, cable_converted_);
+  cable_modified_ = Cable(*cable);
+
+  // sets variables not stored in modified cable
+  name_ = cable_modified_.name;
 
   // sets form validators to transfer between controls data and controls
   SetValidators();
 }
 
-void CableEditorDialog::ConvertCableToConsistentUnits(
-    const Cable& cable_reference,
-    Cable& cable_converted) {
-  // selects based on unit system
-  if (units_ == units::UnitSystem::Metric) {
-    /// \todo
-    ///   Need to convert metric units.
-  } else if (units_ == units::UnitSystem::Imperial) {
-    cable_converted.area_electrical = 0;
-    cable_converted.area_physical = units::Convert(
-        cable_reference.area_physical,
-        units::ConversionType::kInchesToFeet,
-        2);
-    cable_converted.diameter = units::Convert(
-        cable_reference.diameter,
-        units::ConversionType::kInchesToFeet);
-    cable_converted.weight_unit = cable_reference.weight_unit;
-    cable_converted.strength_rated = cable_reference.strength_rated;
-    cable_converted.temperature_properties_components =
-        cable_reference.temperature_properties_components;
-  }
-}
-
-void CableEditorDialog::ConvertCableToDialogUnits(
-    const Cable& cable_reference,
-    Cable& cable_converted) {
-  // selects based on unit system
-  if (units_ == units::UnitSystem::Metric) {
-    /// \todo
-    ///   Need to convert metric units.
-  } else if (units_ == units::UnitSystem::Imperial) {
-    cable_converted.area_electrical = 0;
-    cable_converted.area_physical = units::Convert(
-        cable_reference.area_physical,
-        units::ConversionType::kFeetToInches,
-        2);
-    cable_converted.diameter = units::Convert(
-        cable_reference.diameter,
-        units::ConversionType::kFeetToInches);
-    cable_converted.weight_unit = cable_reference.weight_unit;
-    cable_converted.strength_rated = cable_reference.strength_rated;
-    cable_converted.temperature_properties_components =
-        cable_reference.temperature_properties_components;
-  }
-}
 void CableEditorDialog::OnClose(wxCloseEvent &event) {
   EndModal(wxID_CLOSE);
 }
@@ -93,29 +52,29 @@ void CableEditorDialog::OnOk(wxCommandEvent &event) {
 
   // transfers data from dialog controls to converted cable
   this->TransferDataFromWindow();
-  cable_converted_.name = name_.ToStdString();
+  cable_modified_.name = name_.ToStdString();
 
-  //// validates model data
-  //// creates a temp cable for data validation
-  //Cable cable_temp;
-  //ConvertCableToConsistentUnits(cable_converted_, cable_temp);
-  //cable_temp.type_polynomial_active = CableComponent::PolynomialType::kLoadStrain; // TEMPORARY
-  //std::list<std::string> messages_error;
-  //if (cable_temp.Validate(true, &messages_error) == true) {
-  //  
-  //  // updates original data reference based on user form edits
-  //  ConvertCableToConsistentUnits(cable_converted_, *cable_);
+  // validates cable data
+  // creates a temp cable for data validation
+  cable_modified_.type_polynomial_active =
+      CableComponent::PolynomialType::kLoadStrain; // temporary
+  std::list<std::string> messages_error;
+  if (cable_modified_.Validate(true, &messages_error) == true) {
 
-  //  // ends modal by returning ok indicator
+    // updates original cable reference based on user form edits
+    *cable_ = Cable(cable_modified_);
+
+    // ends modal by returning ok indicator
     EndModal(wxID_OK);
-  //} else {
-  //  /// \todo
-  //  /// do something to notify user of the errors
-  //  wxMessageDialog message(this, "Errors present");
-  //}
+  } else {
+    /// \todo
+    /// do something to notify user of the errors
+    wxMessageDialog message(this, "Errors present");
+    message.ShowModal();
+  }
 }
 
-void CableEditorDialog::SetUnitsStaticText(units::UnitSystem& units) {
+void CableEditorDialog::SetUnitsStaticText(const units::UnitSystem& units) {
 
   if (units == units::UnitSystem::Metric) {
     /// \todo
@@ -133,13 +92,13 @@ void CableEditorDialog::SetUnitsStaticText(units::UnitSystem& units) {
     XRCCTRL(*this, "statictext_temperature_properties_units", wxStaticText)->
         SetLabel("???");
 
-    XRCCTRL(*this, "statictext_shell_coefficient_expansion_thermal_units", wxStaticText)->
-        SetLabel("???");
+    XRCCTRL(*this, "statictext_shell_coefficient_expansion_thermal_units",
+            wxStaticText)->SetLabel("???");
     XRCCTRL(*this, "statictext_shell_modulus_tension_units", wxStaticText)->
         SetLabel("???");
 
-    XRCCTRL(*this, "statictext_core_coefficient_expansion_thermal_units", wxStaticText)->
-        SetLabel("???");
+    XRCCTRL(*this, "statictext_core_coefficient_expansion_thermal_units",
+            wxStaticText)->SetLabel("???");
     XRCCTRL(*this, "statictext_core_modulus_tension_units", wxStaticText)->
         SetLabel("???");
   } else if (units == units::UnitSystem::Imperial) {
@@ -156,181 +115,192 @@ void CableEditorDialog::SetUnitsStaticText(units::UnitSystem& units) {
     XRCCTRL(*this, "statictext_temperature_properties_units", wxStaticText)->
         SetLabel("[degF]");
 
-    XRCCTRL(*this, "statictext_shell_coefficient_expansion_thermal_units", wxStaticText)->
-        SetLabel("[degF]");
+    XRCCTRL(*this, "statictext_shell_coefficient_expansion_thermal_units",
+            wxStaticText)->SetLabel("[degF]");
     XRCCTRL(*this, "statictext_shell_modulus_tension_units", wxStaticText)->
         SetLabel("[lb/in^2]");
 
-    XRCCTRL(*this, "statictext_core_coefficient_expansion_thermal_units", wxStaticText)->
-        SetLabel("[degF]");
+    XRCCTRL(*this, "statictext_core_coefficient_expansion_thermal_units",
+            wxStaticText)->SetLabel("[degF]");
     XRCCTRL(*this, "statictext_core_modulus_tension_units", wxStaticText)->
         SetLabel("[lb/in^2]");
   }
 }
 
 void CableEditorDialog::SetValidators() {
+  // variables used for creating validators
+  wxString name;
+  int style = 0;
+  wxString* value_str = nullptr;
+  double* value_num = nullptr;
+  int precision = 0;
+  wxTextCtrl* textctrl = nullptr;
+
   // cable name
-  wxTextValidator validator_name = wxTextValidator(wxFILTER_NONE,
-                                                   &name_);
-  XRCCTRL(*this, "textctrl_name", wxTextCtrl)->SetValidator(validator_name);
+  value_str = &name_;
+  style = wxFILTER_NONE;
+  textctrl = XRCCTRL(*this, "textctrl_name", wxTextCtrl);
+  textctrl->SetValidator(wxTextValidator(style, value_str));
 
   // area-electrical
-  wxFloatingPointValidator<double> validator_area_electrical(
-      0,
-      &cable_converted_.area_electrical,
-      wxNUM_VAL_NO_TRAILING_ZEROES);
-  XRCCTRL(*this, "textctrl_area_electrical", wxTextCtrl)->SetValidator(
-      validator_area_electrical);
+  precision = 1;
+  value_num = &cable_modified_.area_electrical;
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_area_electrical", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
   // area-physical
-  wxFloatingPointValidator<double> validator_area_physical(
-      4,
-      &cable_converted_.area_physical,
-      wxNUM_VAL_NO_TRAILING_ZEROES);
-  XRCCTRL(*this, "textctrl_area_physical", wxTextCtrl)->SetValidator(
-      validator_area_physical);
+  precision = 4;
+  value_num = &cable_modified_.area_physical;
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_area_physical", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
   // diameter
-  wxFloatingPointValidator<double> validator_diameter(
-      3,
-      &cable_converted_.diameter,
-      wxNUM_VAL_NO_TRAILING_ZEROES);
-  XRCCTRL(*this, "textctrl_diameter", wxTextCtrl)->SetValidator(
-      validator_diameter);
+  precision = 3;
+  value_num = &cable_modified_.diameter;
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_diameter", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
   // weight-unit
-  wxFloatingPointValidator<double> validator_weight_unit(
-      3,
-      &cable_converted_.weight_unit,
-      wxNUM_VAL_NO_TRAILING_ZEROES);
-  XRCCTRL(*this, "textctrl_weight_unit", wxTextCtrl)->SetValidator(
-      validator_weight_unit);
+  precision = 3;
+  value_num = &cable_modified_.weight_unit;
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_weight_unit", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
   // strength-rated
-  wxFloatingPointValidator<double> validator_strength_rated(
-      0,
-      &cable_converted_.strength_rated,
-      wxNUM_VAL_THOUSANDS_SEPARATOR);
-  XRCCTRL(*this, "textctrl_strength_rated", wxTextCtrl)->SetValidator(
-      validator_strength_rated);
+  precision = 0;
+  value_num = &cable_modified_.strength_rated;
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_strength_rated", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
   // temperature-properties
-  wxFloatingPointValidator<double> validator_temperature_properties(
-      0,
-      &cable_converted_.temperature_properties_components,
-      wxNUM_VAL_NO_TRAILING_ZEROES);
-  XRCCTRL(*this, "textctrl_temperature_properties", wxTextCtrl)->SetValidator(
-      validator_temperature_properties);
+  precision = 0;
+  value_num = &cable_modified_.temperature_properties_components;
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_temperature_properties", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
-  //// shell coefficient-expansion-thermal
-  //wxFloatingPointValidator<double> validator_shell_coefficient_expansion_thermal(
-  //    6,
-  //    &cable_->component_shell.coefficient_expansion_linear_thermal,
-  //    wxNUM_VAL_NO_TRAILING_ZEROES);
-  //XRCCTRL(*this, "textctrl_shell_coefficient_expansion_thermal", wxTextCtrl)
-  //    ->SetValidator(validator_shell_coefficient_expansion_thermal);
+  // shell coefficient-expansion-thermal
+  precision = 7;
+  value_num = &cable_->component_shell.coefficient_expansion_linear_thermal;
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_shell_coefficient_expansion_thermal",
+                     wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
-  //// shell modulus
-  //wxFloatingPointValidator<double> validator_shell_modulus_tension(
-  //    0,
-  //    &cable_->component_shell.modulus_tension_elastic_area,
-  //    wxNUM_VAL_THOUSANDS_SEPARATOR);
-  //XRCCTRL(*this, "textctrl_shell_modulus_tension", wxTextCtrl)->SetValidator(
-  //    validator_shell_modulus_tension);
+  // shell modulus
+  precision = 0;
+  value_num = &cable_->component_shell.modulus_tension_elastic_area;
+  style = wxNUM_VAL_THOUSANDS_SEPARATOR;
+  textctrl = XRCCTRL(*this, "textctrl_shell_modulus_tension", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
-  //// shell a0
-  //wxFloatingPointValidator<double> validator_shell_a0(
-  //    2,
-  //    &cable_->component_shell.coefficients_polynomial_loadstrain.at(0),
-  //    wxNUM_VAL_NO_TRAILING_ZEROES);
-  //XRCCTRL(*this, "textctrl_shell_a0", wxTextCtrl)->SetValidator(
-  //    validator_shell_a0);
+  // shell a0
+  precision = 1;
+  value_num = &cable_->component_shell.coefficients_polynomial_loadstrain.at(0);
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_shell_a0", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
-  //// shell a1
-  //wxFloatingPointValidator<double> validator_shell_a1(
-  //    2,
-  //    &cable_->component_shell.coefficients_polynomial_loadstrain.at(1),
-  //    wxNUM_VAL_NO_TRAILING_ZEROES);
-  //XRCCTRL(*this, "textctrl_shell_a1", wxTextCtrl)->SetValidator(
-  //    validator_shell_a1);
+  // shell a1
+  precision = 1;
+  value_num = &cable_->component_shell.coefficients_polynomial_loadstrain.at(1);
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_shell_a1", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
-  //// shell a2
-  //wxFloatingPointValidator<double> validator_shell_a2(
-  //    2,
-  //    &cable_->component_shell.coefficients_polynomial_loadstrain.at(2),
-  //    wxNUM_VAL_NO_TRAILING_ZEROES);
-  //XRCCTRL(*this, "textctrl_shell_a2", wxTextCtrl)->SetValidator(
-  //    validator_shell_a2);
+  // shell a2
+  precision = 1;
+  value_num = &cable_->component_shell.coefficients_polynomial_loadstrain.at(2);
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_shell_a2", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
-  //// shell a3
-  //wxFloatingPointValidator<double> validator_shell_a3(
-  //    2,
-  //    &cable_->component_shell.coefficients_polynomial_loadstrain.at(3),
-  //    wxNUM_VAL_NO_TRAILING_ZEROES);
-  //XRCCTRL(*this, "textctrl_shell_a3", wxTextCtrl)->SetValidator(
-  //    validator_shell_a3);
+  // shell a3
+  precision = 1;
+  value_num = &cable_->component_shell.coefficients_polynomial_loadstrain.at(3);
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_shell_a3", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
-  //// shell a4
-  //wxFloatingPointValidator<double> validator_shell_a4(
-  //    2,
-  //    &cable_->component_shell.coefficients_polynomial_loadstrain.at(4),
-  //    wxNUM_VAL_NO_TRAILING_ZEROES);
-  //XRCCTRL(*this, "textctrl_shell_a4", wxTextCtrl)->SetValidator(
-  //    validator_shell_a4);
+  // shell a4
+  precision = 1;
+  value_num = &cable_->component_shell.coefficients_polynomial_loadstrain.at(4);
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_shell_a4", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
-  //// core coefficient-expansion-thermal
-  //wxFloatingPointValidator<double> validator_core_coefficient_expansion_thermal(
-  //    6,
-  //    &cable_->component_core.coefficient_expansion_linear_thermal,
-  //    wxNUM_VAL_NO_TRAILING_ZEROES);
-  //XRCCTRL(*this, "textctrl_core_coefficient_expansion_thermal", wxTextCtrl)
-  //    ->SetValidator(validator_core_coefficient_expansion_thermal);
+  // core coefficient-expansion-thermal
+  precision = 7;
+  value_num = &cable_->component_core.coefficient_expansion_linear_thermal;
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_core_coefficient_expansion_thermal",
+                     wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
-  //// core elastic area modulus
-  //wxFloatingPointValidator<double> validator_core_modulus_tension(
-  //    0,
-  //    &cable_->component_core.modulus_tension_elastic_area,
-  //    wxNUM_VAL_THOUSANDS_SEPARATOR);
-  //XRCCTRL(*this, "textctrl_core_modulus_tension", wxTextCtrl)->SetValidator(
-  //    validator_core_modulus_tension);
+  // core elastic area modulus
+  precision = 0;
+  value_num = &cable_->component_core.modulus_tension_elastic_area;
+  style = wxNUM_VAL_THOUSANDS_SEPARATOR;
+  textctrl = XRCCTRL(*this, "textctrl_core_modulus_tension", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
-  //// core a0
-  //wxFloatingPointValidator<double> validator_core_a0(
-  //    2,
-  //    &cable_->component_core.coefficients_polynomial_loadstrain.at(0),
-  //    wxNUM_VAL_NO_TRAILING_ZEROES);
-  //XRCCTRL(*this, "textctrl_core_a0", wxTextCtrl)->SetValidator(
-  //    validator_core_a0);
+  // core a0
+  precision = 1;
+  value_num = &cable_->component_core.coefficients_polynomial_loadstrain.at(0);
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_core_a0", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
-  //// core a1
-  //wxFloatingPointValidator<double> validator_core_a1(
-  //    2,
-  //    &cable_->component_core.coefficients_polynomial_loadstrain.at(1),
-  //    wxNUM_VAL_NO_TRAILING_ZEROES);
-  //XRCCTRL(*this, "textctrl_core_a1", wxTextCtrl)->SetValidator(
-  //    validator_core_a1);
+  // core a1
+  precision = 1;
+  value_num = &cable_->component_core.coefficients_polynomial_loadstrain.at(1);
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_core_a1", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
-  //// core a2
-  //wxFloatingPointValidator<double> validator_core_a2(
-  //    2,
-  //    &cable_->component_core.coefficients_polynomial_loadstrain.at(2),
-  //    wxNUM_VAL_NO_TRAILING_ZEROES);
-  //XRCCTRL(*this, "textctrl_core_a2", wxTextCtrl)->SetValidator(
-  //    validator_core_a2);
+  // core a2
+  precision = 1;
+  value_num = &cable_->component_core.coefficients_polynomial_loadstrain.at(2);
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_core_a2", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
-  //// core a3
-  //wxFloatingPointValidator<double> validator_core_a3(
-  //    2,
-  //    &cable_->component_core.coefficients_polynomial_loadstrain.at(3),
-  //    wxNUM_VAL_NO_TRAILING_ZEROES);
-  //XRCCTRL(*this, "textctrl_core_a3", wxTextCtrl)->SetValidator(
-  //    validator_core_a3);
+  // core a3
+  precision = 1;
+  value_num = &cable_->component_core.coefficients_polynomial_loadstrain.at(3);
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_core_a3", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 
-  //// core a4
-  //wxFloatingPointValidator<double> validator_core_a4(
-  //    2,
-  //    &cable_->component_core.coefficients_polynomial_loadstrain.at(4),
-  //    wxNUM_VAL_NO_TRAILING_ZEROES);
-  //XRCCTRL(*this, "textctrl_core_a4", wxTextCtrl)->SetValidator(
-  //    validator_core_a4);
+  // core a4
+  precision = 1;
+  value_num = &cable_->component_core.coefficients_polynomial_loadstrain.at(4);
+  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  textctrl = XRCCTRL(*this, "textctrl_core_a4", wxTextCtrl);
+  textctrl->SetValidator(
+      wxFloatingPointValidator<double>(precision, value_num, style));
 }
