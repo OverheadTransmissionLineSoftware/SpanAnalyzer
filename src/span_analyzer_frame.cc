@@ -3,11 +3,13 @@
 
 #include "span_analyzer_frame.h"
 
-#include "cable_editor_dialog.h"
-#include "cable_xml_handler.h"
-#include "weather_case_editor_dialog.h"
 #include "wx/xml/xml.h"
 #include "wx/xrc/xmlres.h"
+
+#include "cable_editor_dialog.h"
+#include "cable_unit_converter.h"
+#include "cable_xml_handler.h"
+#include "weather_load_case_editor_dialog.h"
 
 BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxFrame)
   EVT_BUTTON(XRCID("button_launch_cable_file_dialog"), SpanAnalyzerFrame::OnCableFileSelect)
@@ -23,6 +25,9 @@ SpanAnalyzerFrame::SpanAnalyzerFrame() {
 
   // initializes variables
   cable_ = new Cable();
+
+  // fits the window around the sizers
+  this->Fit();
 }
 
 SpanAnalyzerFrame::~SpanAnalyzerFrame() {
@@ -37,7 +42,6 @@ void SpanAnalyzerFrame::OnCableEdit(wxCommandEvent& event) {
                         wxEmptyString,
                         "Cable File(*.cbl)|*.cbl",
                         wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-
   if (selector.ShowModal() == wxID_OK) {
     // creates a virtual XML document
     wxXmlDocument doc;
@@ -50,10 +54,9 @@ void SpanAnalyzerFrame::OnCableEdit(wxCommandEvent& event) {
     // parses the XML root and loads into the cable object
     const wxXmlNode* root = doc.GetRoot();
     int line_number = CableXmlHandler::ParseNode(root,
-                                                 units::UnitSystem::Imperial,
                                                  cable);
     if (line_number != 0) {
-      wxMessageDialog message(this, "Error at line <inser line>");
+      wxMessageDialog message(this, "Error at line <insert line>");
       message.ShowModal();
       return;
     }
@@ -63,12 +66,19 @@ void SpanAnalyzerFrame::OnCableEdit(wxCommandEvent& event) {
 
   // creates a cable editor dialog and shows
   CableEditorDialog editor(this, &cable, units::UnitSystem::Imperial);
-
   if (editor.ShowModal() == wxID_OK) {
+    // asks user to confirm file overwrite
+    wxMessageDialog message(this, "Ok to overwrite file?",
+                            "File Overwrite Warning", wxOK | wxCANCEL);
+    if (message.ShowModal() != wxID_OK) {
+      return;
+    }
+
     // generates a virtual XML document
     wxXmlDocument doc;
-    wxXmlNode* root = CableXmlHandler::CreateNode(cable,
-                                                  units::UnitSystem::Imperial);
+    wxXmlNode* root = CableXmlHandler::CreateNode(
+        cable,
+        units::UnitSystem::Imperial);
     doc.SetRoot(root);
 
     // saves virtual XML document to file
@@ -124,11 +134,19 @@ void SpanAnalyzerFrame::OnCableFileSelect(wxCommandEvent& event) {
 
     // parses the XML root and loads into the cable object
     const wxXmlNode* root = doc->GetRoot();
-    if(CableXmlHandler::ParseNode(root, units::UnitSystem::Imperial,
-                                  *cable_) == false) {
-      wxMessageDialog message(this, "Couldn't parse file");
+    int line_number = CableXmlHandler::ParseNode(root,
+                                                 *cable_);
+    if (line_number != 0) {
+      wxMessageDialog message(this, "Error at line <insert line>");
       message.ShowModal();
+      return;
     }
+
+    // converts cable to consistent units
+    CableUnitConverter::ConvertUnitStyle(units::UnitSystem::Imperial,
+                                         UnitStyle::kDifferent,
+                                         UnitStyle::kConsistent,
+                                         *cable_);
 
     // updates textctrl to show cable
     wxTextCtrl* textctrl_cable = XRCCTRL(*this,
@@ -148,7 +166,8 @@ void SpanAnalyzerFrame::OnWeatherCaseEdit(
   WeatherLoadCase* weathercase = new WeatherLoadCase();
 
   // creates a weathercase file selector dialog and shows
-  WeatherCaseEditorDialog editor(this, weathercase);
+  WeatherLoadCaseEditorDialog editor(this, weathercase,
+                                     units::UnitSystem::Imperial);
 
   if (editor.ShowModal() == wxID_OK) {
     wxMessageDialog message(this, "Woo");
