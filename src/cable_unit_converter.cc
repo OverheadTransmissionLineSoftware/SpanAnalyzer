@@ -79,7 +79,6 @@ void CableComponentUnitConverter::ConvertUnitSystem(
   /// \todo convert between unit systems
 }
 
-
 CableUnitConverter::CableUnitConverter() {
 }
 
