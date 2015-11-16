@@ -1,157 +1,169 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
-	<object class="wxDialog" name="weather_case_editor_dialog">
+	<object class="wxDialog" name="weather_load_case_editor_dialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<exstyle>wxWS_EX_VALIDATE_RECURSIVELY</exstyle>
 		<title>Weather Case Editor</title>
-		<object class="wxBoxSizer">
-			<orient>wxVERTICAL</orient>
-			<object class="sizeritem">
-				<option>0</option>
-				<flag></flag>
-				<border>0</border>
-				<object class="wxTextCtrl" name="textctrl_description">
-					<style>wxTE_LEFT</style>
-					<value></value>
-					<maxlength>0</maxlength>
-				</object>
-			</object>
-			<object class="sizeritem">
-				<option>1</option>
-				<flag>wxEXPAND</flag>
-				<border>5</border>
-				<object class="wxFlexGridSizer">
-					<rows>4</rows>
-					<cols>3</cols>
-					<vgap>0</vgap>
-					<hgap>0</hgap>
-					<growablecols></growablecols>
-					<growablerows></growablerows>
-					<object class="sizeritem">
-						<option>0</option>
-						<flag>wxALL</flag>
-						<border>5</border>
-						<object class="wxStaticText" name="statictext_thickness_ice">
-							<label>Ice Thickness</label>
-						</object>
-					</object>
-					<object class="sizeritem">
-						<option>0</option>
-						<flag>wxALL</flag>
-						<border>5</border>
-						<object class="wxStaticText" name="statictext_thickness_ice_units">
-							<label></label>
-						</object>
-					</object>
-					<object class="sizeritem">
-						<option>0</option>
-						<flag></flag>
-						<border>0</border>
-						<object class="wxTextCtrl" name="textctrl_thickness_ice">
-							<style>wxTE_LEFT</style>
-							<value></value>
-							<maxlength>0</maxlength>
-						</object>
-					</object>
-					<object class="sizeritem">
-						<option>0</option>
-						<flag>wxALL</flag>
-						<border>5</border>
-						<object class="wxStaticText" name="statictext_density_ice">
-							<label>Ice Density</label>
-						</object>
-					</object>
-					<object class="sizeritem">
-						<option>0</option>
-						<flag>wxALL</flag>
-						<border>5</border>
-						<object class="wxStaticText" name="statictext_density_ice_units">
-							<label></label>
-						</object>
-					</object>
-					<object class="sizeritem">
-						<option>0</option>
-						<flag></flag>
-						<border>0</border>
-						<object class="wxTextCtrl" name="textctrl_density_ice">
-							<style>wxTE_LEFT</style>
-							<value></value>
-							<maxlength>0</maxlength>
-						</object>
-					</object>
-					<object class="sizeritem">
-						<option>0</option>
-						<flag>wxALL</flag>
-						<border>5</border>
-						<object class="wxStaticText" name="statictext_pressure_wind">
-							<label>Wind Pressure</label>
-						</object>
-					</object>
-					<object class="sizeritem">
-						<option>0</option>
-						<flag>wxALL</flag>
-						<border>5</border>
-						<object class="wxStaticText" name="statictext_pressure_wind_units">
-							<label></label>
-						</object>
-					</object>
-					<object class="sizeritem">
-						<option>0</option>
-						<flag></flag>
-						<border>0</border>
-						<object class="wxTextCtrl" name="textctrl_pressure_wind">
-							<style>wxTE_LEFT</style>
-							<value></value>
-							<maxlength>0</maxlength>
-						</object>
-					</object>
-					<object class="sizeritem">
-						<option>0</option>
-						<flag>wxALL</flag>
-						<border>5</border>
-						<object class="wxStaticText" name="statictext_temperature_cable">
-							<label>Cable Temperature</label>
-						</object>
-					</object>
-					<object class="sizeritem">
-						<option>0</option>
-						<flag>wxALL</flag>
-						<border>5</border>
-						<object class="wxStaticText" name="statictext_temperature_cable_units">
-							<label></label>
-						</object>
-					</object>
-					<object class="sizeritem">
-						<option>0</option>
-						<flag></flag>
-						<border>0</border>
-						<object class="wxTextCtrl" name="textctrl_temperature_cable">
-							<style>wxTE_LEFT</style>
-							<value></value>
-							<maxlength>0</maxlength>
-						</object>
-					</object>
-					<object class="sizeritem">
-						<option>0</option>
-						<flag>wxALL</flag>
-						<border>5</border>
-						<object class="wxButton" name="wxID_OK">
-							<label>OK</label>
-							<default>1</default>
-						</object>
-					</object>
-					<object class="sizeritem">
-						<option>0</option>
-						<flag>wxALL</flag>
-						<border>5</border>
-						<object class="wxButton" name="wxID_CANCEL">
-							<label>Cancel</label>
-							<default>0</default>
-						</object>
-					</object>
-				</object>
-			</object>
-		</object>
+    <object class="wxPanel" name="weather_load_case_editor_panel">
+      <style>wxTAB_TRAVERSAL</style>
+      <object class="wxBoxSizer">
+        <orient>wxVERTICAL</orient>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxEXPAND|wxALL</flag>
+          <border>5</border>
+          <object class="wxTextCtrl" name="textctrl_description">
+            <style>wxTE_LEFT</style>
+            <value></value>
+            <maxlength>0</maxlength>
+          </object>
+        </object>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxEXPAND|wxALL</flag>
+          <border>5</border>
+          <object class="wxFlexGridSizer">
+            <rows>4</rows>
+            <cols>3</cols>
+            <vgap>0</vgap>
+            <hgap>0</hgap>
+            <flexibledirection>wxHORIZONTAL</flexibledirection>
+            <growablecols></growablecols>
+            <growablerows></growablerows>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxStaticText" name="statictext_thickness_ice">
+                <label>Ice Thickness</label>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxStaticText" name="statictext_thickness_ice_units">
+                <label>[in]</label>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag></flag>
+              <border>0</border>
+              <object class="wxTextCtrl" name="textctrl_thickness_ice">
+                <style>wxTE_LEFT</style>
+                <value></value>
+                <maxlength>0</maxlength>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxStaticText" name="statictext_density_ice">
+                <label>Ice Density</label>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxStaticText" name="statictext_density_ice_units">
+                <label>[lb/ft^3]</label>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag></flag>
+              <border>0</border>
+              <object class="wxTextCtrl" name="textctrl_density_ice">
+                <style>wxTE_LEFT</style>
+                <value></value>
+                <maxlength>0</maxlength>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxStaticText" name="statictext_pressure_wind">
+                <label>Wind Pressure</label>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxStaticText" name="statictext_pressure_wind_units">
+                <label>[lb/ft^2]</label>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag></flag>
+              <border>0</border>
+              <object class="wxTextCtrl" name="textctrl_pressure_wind">
+                <style>wxTE_LEFT</style>
+                <value></value>
+                <maxlength>0</maxlength>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxStaticText" name="statictext_temperature_cable">
+                <label>Cable Temperature</label>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxStaticText" name="statictext_temperature_cable_units">
+                <label>[deg F]</label>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag></flag>
+              <border>0</border>
+              <object class="wxTextCtrl" name="textctrl_temperature_cable">
+                <style>wxTE_LEFT</style>
+                <value></value>
+                <maxlength>0</maxlength>
+              </object>
+            </object>
+          </object>
+        </object>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxALIGN_CENTER</flag>
+          <border>5</border>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="wxID_OK">
+                <label>OK</label>
+                <default>1</default>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="wxID_CANCEL">
+                <label>Cancel</label>
+                <default>0</default>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
 	</object>
 </resource>
 
