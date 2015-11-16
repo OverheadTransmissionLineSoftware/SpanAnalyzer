@@ -7,7 +7,6 @@
 #include <string>
 
 #include "models/base/polynomial.h"
-#include "wx/wx.h"
 #include "wx/xml/xml.h"
 
 #include "xml_handler.h"
@@ -19,8 +18,13 @@
 ///
 /// \par VERSION
 ///
-/// This class can parse all versions of the polynomial XML node. However,
-/// new polynomial nodes will only be generated with the most recent version.
+/// This class can parse all versions of the XML node. However, new nodes will
+/// only be generated with the most recent version.
+///
+/// \par UNIT ATTRIBUTES
+///
+/// This class supports attributing the child XML nodes for various unit
+/// systems.
 class PolynomialXmlHandler : public XmlHandler {
  public:
   /// \brief Constructor.
@@ -33,10 +37,13 @@ class PolynomialXmlHandler : public XmlHandler {
   /// \param[in] polynomial
   ///   The polynomial.
   /// \param[in] name
-  ///   The name for the XML node.
+  ///   The name of the XML node. This will be an attribute for the created
+  ///   node. If empty, no attribute will be created.
+  /// \param[in] attribute_coefficients
+  ///   The attribute that will be created for each coefficient.
   /// \return An XML node for the polynomial.
   static wxXmlNode* CreateNode(const Polynomial& polynomial,
-                               const std::string& name_polynomial,
+                               const std::string& name,
                                const wxXmlAttribute& attribute_coefficients);
 
   /// \brief Parses an XML node and populates a polynomial.

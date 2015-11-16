@@ -13,16 +13,16 @@ PolynomialXmlHandler::~PolynomialXmlHandler() {
 
 wxXmlNode* PolynomialXmlHandler::CreateNode(
     const Polynomial& polynomial,
-    const std::string& name_polynomial,
+    const std::string& name,
     const wxXmlAttribute& attribute_coefficients) {
   // variables used to create XML node
-  std::string content;
   wxXmlNode* node_root = nullptr;
   wxXmlNode* node_element = nullptr;
+  std::string content;
 
   // creates a node for the polynomial root
   node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "polynomial");
-  node_root->AddAttribute("name", wxString(name_polynomial));
+  node_root->AddAttribute("name", wxString(name));
   node_root->AddAttribute("version", "1");
 
   // creates a child node for each coefficient
@@ -30,11 +30,10 @@ wxXmlNode* PolynomialXmlHandler::CreateNode(
   for (auto iter = coefficients->begin(); iter != coefficients->end(); iter++) {
     double coefficient = *iter;
     content = helper::DoubleToFormattedString(coefficient, 1);
-    wxXmlAttribute* attribute = new wxXmlAttribute(attribute_coefficients);
     node_element = XmlHandler::CreateElementNodeWithContent(
         "coefficient",
         content,
-        attribute); 
+        &attribute_coefficients); 
     node_root->AddChild(node_element);
   }
 
@@ -64,19 +63,17 @@ int PolynomialXmlHandler::ParseNode(const wxXmlNode* root,
 
 int PolynomialXmlHandler::ParseNodeV1(const wxXmlNode* root, 
                                       Polynomial& polynomial) {
-  // variables used to parse XML node
-  wxString name;
-  wxString content;
-  double coefficient = -999999;
+  // creates new coefficient vector
   std::vector<double>* coefficients = new std::vector<double>;
 
   // evaluates each child node and fills coefficients vector
   wxXmlNode* node = root->GetChildren();
   while (node != nullptr) {
-    name = node->GetName();
-    content = node->GetChildren()->GetContent();
+    const wxString title = node->GetName();
+    const wxString content = ParseElementNodeWithContent(node);
+    double coefficient = -999999;
 
-    if (name == "coefficient") {
+    if (title == "coefficient") {
       if (content.ToDouble(&coefficient) == true) {
         coefficients->push_back(coefficient);
       } else {

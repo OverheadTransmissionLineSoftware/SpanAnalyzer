@@ -11,7 +11,13 @@
 
 /// \par OVERVIEW
 ///
-/// This is the base class for XmlHandlers.
+/// This is the base class for XmlHandlers. This class helps create and parse
+/// 'element' type XML nodes which have a 'text' type XML node as a child. An
+/// attribute can optionally be assigned. The XML node be displayed as the
+/// following form:
+///   <title attribute="">content</title>
+/// where the 'element' node is the title, and the 'text' node is the content,
+/// and the attribute is in parenthesis.
 class XmlHandler {
  public:
   /// \brief Constructor.
@@ -21,15 +27,27 @@ class XmlHandler {
   ~XmlHandler();
 
   /// \brief Creates an 'element' type node with a child 'text' type node.
-  /// \param[in] name
-  ///   The name of the element node.
-  /// \param[in] content_child
+  /// \param[in] title
+  ///   The title of the element node.
+  /// \param[in] content
   ///   The content to be held in the child 'text' type node.
+  /// \param[in] attribute
+  ///   The attribute that is assigned to the node. The attribute that is
+  ///   attached to the node is allocated within the function. This parameter is
+  ///   only a pointer to make it optional.
   /// \return An 'element' type XML node.
   static wxXmlNode* CreateElementNodeWithContent(
-      const std::string& name,
-      const std::string& child_content,
-      wxXmlAttribute* attribute = nullptr);
+      const std::string& title,
+      const std::string& content,
+      const wxXmlAttribute* attribute = nullptr);
+
+  /// \brief Parses the content stored in a child 'text' type node.
+  /// \param[in] node
+  ///   The 'element' node that contains the text node.
+  /// \return A string containing the 'text' type node content.
+  /// If no text node is present, an empty string is returned. This helps
+  /// avoid runtime parsing errors.
+  static wxString ParseElementNodeWithContent(const wxXmlNode* node);
 };
 
 #endif  // OTLS_SPANANALYZER_XMLHANDLER_H_

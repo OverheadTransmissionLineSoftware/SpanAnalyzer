@@ -9,30 +9,6 @@
 
 /// \par OVERVIEW
 ///
-/// Unit styles can either be consistent or different.  When consistent, all
-/// values use one common unit for each measurement type. Ex: length/distance
-/// is always represented in meters. When different, values can be represented
-/// in the unit that is most measurable. Ex: length/distance can be measured
-/// in meters or millimeters, based on the size of the object.
-/// 
-/// This is needed because calculation libraries require consistent units, but
-/// user interface controls and generated XML files need to be in convenient,
-/// understandable units.
-///
-/// The consistent style units are as follows:
-///   - Length = [meters or feet]
-///   - Load = [N or lbs]
-///   - Temperature = [deg C or deg F]
-///
-/// The different style units vary for every struct, depending on how the user
-/// typically prefers to see the information represented.
-enum class UnitStyle {
-  kConsistent,
-  kDifferent
-};
-
-/// \par OVERVIEW
-///
 /// This class converts a cable component between unit systems as well as unit
 /// styles.
 class CableComponentUnitConverter {
@@ -82,8 +58,8 @@ class CableComponentUnitConverter {
   /// This function requires that the component be represented by loads, not
   /// stresses.
   static void ConvertUnitStyle(const units::UnitSystem& system,
-                               const UnitStyle& style_from,
-                               const UnitStyle& style_to,
+                               const units::UnitStyle& style_from,
+                               const units::UnitStyle& style_to,
                                CableComponent& component);
 
   /// \brief Changes the cable between unit systems.
@@ -124,11 +100,11 @@ class CableUnitConverter {
   ///  - area_physical = [??? or in^2]
   ///  - diameter = [??? or in]
   ///  - strength_rated = [??? or lbs]
-  ///  - temperature_properties_components = [??? or degF]
+  ///  - temperature_properties_components = [??? or deg F]
   ///  - weight_unit = [/// or lbs/ft]
   static void ConvertUnitStyle(const units::UnitSystem& system,
-                               const UnitStyle& style_from,
-                               const UnitStyle& style_to,
+                               const units::UnitStyle& style_from,
+                               const units::UnitStyle& style_to,
                                Cable& cable);
 
   /// \brief Changes the cable between unit systems.

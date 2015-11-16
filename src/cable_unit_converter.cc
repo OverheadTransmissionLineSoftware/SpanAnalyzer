@@ -14,13 +14,13 @@ void CableComponentUnitConverter::ConvertLoadToStress(
     CableComponent& component) {
   for (auto iter = component.coefficients_polynomial_creep.begin();
        iter != component.coefficients_polynomial_creep.end(); iter++) {
-    double coefficient = *iter;
+    double& coefficient = *iter;
     coefficient = coefficient / area_virtual;
   }
 
   for (auto iter = component.coefficients_polynomial_loadstrain.begin();
         iter != component.coefficients_polynomial_loadstrain.end(); iter++) {
-    double coefficient = *iter;
+    double& coefficient = *iter;
     coefficient = coefficient / area_virtual;
   }
 
@@ -37,16 +37,15 @@ void CableComponentUnitConverter::ConvertLoadToStress(
 void CableComponentUnitConverter::ConvertStressToLoad(
     const double& area_virtual,
     CableComponent& component) {
-
   for (auto iter = component.coefficients_polynomial_creep.begin();
        iter != component.coefficients_polynomial_creep.end(); iter++) {
-    double coefficient = *iter;
+    double& coefficient = *iter;
     coefficient = coefficient * area_virtual;
   }
 
   for (auto iter = component.coefficients_polynomial_loadstrain.begin();
         iter != component.coefficients_polynomial_loadstrain.end(); iter++) {
-    double coefficient = *iter;
+    double& coefficient = *iter;
     coefficient = coefficient * area_virtual;
   }
 
@@ -62,12 +61,12 @@ void CableComponentUnitConverter::ConvertStressToLoad(
 
 void CableComponentUnitConverter::ConvertUnitStyle(
     const units::UnitSystem& system,
-    const UnitStyle& style_from,
-    const UnitStyle& style_to,
+    const units::UnitStyle& style_from,
+    const units::UnitStyle& style_to,
     CableComponent& component) {
-  if (system == units::UnitSystem::Metric) {
+  if (system == units::UnitSystem::kMetric) {
     /// \todo need to convert metric units
-  } else if (system == units::UnitSystem::Imperial) {
+  } else if (system == units::UnitSystem::kImperial) {
     // nothing to do, consistent unit style = different unit style 
   }
 }
@@ -86,19 +85,19 @@ CableUnitConverter::~CableUnitConverter() {
 }
 
 void CableUnitConverter::ConvertUnitStyle(const units::UnitSystem& system,
-                                          const UnitStyle& style_from,
-                                          const UnitStyle& style_to,
+                                          const units::UnitStyle& style_from,
+                                          const units::UnitStyle& style_to,
                                           Cable& cable) {
   if (style_from == style_to) {
     return;
   }
   
   // selects based on unit system
-  if (system == units::UnitSystem::Metric) {
+  if (system == units::UnitSystem::kMetric) {
     /// \todo need to convert metric units
-  } else if (system == units::UnitSystem::Imperial) {
+  } else if (system == units::UnitSystem::kImperial) {
     
-    if (style_to == UnitStyle::kConsistent) {
+    if (style_to == units::UnitStyle::kConsistent) {
       // converts between load/stress
       // this is unique to cables, and due to industry standard polynomials
       CableComponentUnitConverter::ConvertStressToLoad(cable.area_physical,
@@ -114,7 +113,7 @@ void CableUnitConverter::ConvertUnitStyle(const units::UnitSystem& system,
       cable.diameter = units::Convert(
           cable.diameter,
           units::ConversionType::kInchesToFeet);
-    } else if (style_to == UnitStyle::kDifferent) {
+    } else if (style_to == units::UnitStyle::kDifferent) {
       cable.area_electrical = cable.area_electrical; /// \todo add conv here
       cable.area_physical = units::Convert(
           cable.area_physical,
