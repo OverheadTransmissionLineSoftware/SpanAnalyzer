@@ -4,23 +4,49 @@
 #ifndef OTLS_SPANANALYZER_SPANANALYZERFRAME_H_
 #define OTLS_SPANANALYZER_SPANANALYZERFRAME_H_
 
-#include "models/transmissionline/cable.h"
-#include "wx/wx.h"
+#include "wx/docview.h"
 
-class SpanAnalyzerFrame : public wxFrame {
+/// \par OVERVIEW
+///
+/// This is the top-level SpanAnalyzer application frame.
+class SpanAnalyzerFrame : public wxDocParentFrame {
  public:
-  SpanAnalyzerFrame();
+  /// \brief Constructor.
+  SpanAnalyzerFrame(wxDocManager* manager);
+
+  /// \brief Destructor.
   ~SpanAnalyzerFrame();
 
-  void OnCableEdit(wxCommandEvent& event);
-  void OnCableNew(wxCommandEvent& event);
-  void OnCableFileSelect(wxCommandEvent& event);
-  void OnExit(wxCommandEvent& event);
-  void OnWeatherCaseEdit(wxCommandEvent& event);
+  /// \brief Handles the edit->edit cable menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuEditCableEdit(wxCommandEvent& event);
+
+  /// \brief Handles the edit->new cable menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuEditCableNew(wxCommandEvent& event);
+
+  /// \brief Handles the edit->edit weather cases menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuEditWeatherCasesEdit(wxCommandEvent& event);
+
+  /// \brief Handles the file->exit menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuFileExit(wxCommandEvent& event);
+
+  /// \brief Handles the file->preferences menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuFilePreferences(wxCommandEvent& event);
+
+  // DEBUG
+  void OnMenuDebugEvent(wxCommandEvent& event);
+  // DEBUG
 
  private:
-  Cable* cable_;
-
   DECLARE_EVENT_TABLE()
 };
 

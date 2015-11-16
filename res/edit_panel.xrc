@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
+  <object class="wxPanel" name="edit_panel">
+    <style>wxTAB_TRAVERSAL</style>
+    <object class="wxBoxSizer">
+      <orient>wxHORIZONTAL</orient>
+      <object class="sizeritem">
+        <option>0</option>
+        <flag>wxALIGN_CENTER|wxLEFT|wxTOP|wxBOTTOM|wxEXPAND</flag>
+        <border>5</border>
+        <object class="wxTreeCtrl" name="treectrl_model">
+          <style>wxTR_DEFAULT_STYLE</style>
+          <size>250, 300</size>
+          <content />
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>
