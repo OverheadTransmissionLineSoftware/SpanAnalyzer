@@ -33,14 +33,17 @@ CableEditorDialog::CableEditorDialog(wxWindow* parent,
 
   // sets form validators to transfer between controls data and controls
   SetValidators();
-}
 
-void CableEditorDialog::OnClose(wxCloseEvent &event) {
-  EndModal(wxID_CLOSE);
+  // fits the dialog around the sizers
+  this->Fit();
 }
 
 void CableEditorDialog::OnCancel(wxCommandEvent &event) {
   EndModal(wxID_CANCEL);
+}
+
+void CableEditorDialog::OnClose(wxCloseEvent &event) {
+  EndModal(wxID_CLOSE);
 }
 
 void CableEditorDialog::OnOk(wxCommandEvent &event) {
@@ -56,10 +59,8 @@ void CableEditorDialog::OnOk(wxCommandEvent &event) {
 
   // validates cable data
   // creates a temp cable for data validation
-  cable_modified_.type_polynomial_active =
-      CableComponent::PolynomialType::kLoadStrain; // temporary
-  std::list<std::string> messages_error;
-  if (cable_modified_.Validate(true, &messages_error) == true) {
+  std::list<ErrorMessage> messages;
+  if (cable_modified_.Validate(true, &messages) == true) {
 
     // updates original cable reference based on user form edits
     *cable_ = Cable(cable_modified_);
@@ -75,56 +76,61 @@ void CableEditorDialog::OnOk(wxCommandEvent &event) {
 }
 
 void CableEditorDialog::SetUnitsStaticText(const units::UnitSystem& units) {
+  /// \todo
+  ///  wxWidgets seems to have a bug when editing labels. The StaticText
+  ///  controls are not re-sized
+  
+  //wxStaticText* statictext = nullptr;
 
-  if (units == units::UnitSystem::Metric) {
-    /// \todo
-    /// Need to include metric form labeling.
-    XRCCTRL(*this, "statictext_area_electrical_units", wxStaticText)->
-        SetLabel("???");
-    XRCCTRL(*this, "statictext_area_physical_units", wxStaticText)->
-        SetLabel("???");
-    XRCCTRL(*this, "statictext_diameter_units", wxStaticText)->
-        SetLabel("???");
-    XRCCTRL(*this, "statictext_weight_unit_units", wxStaticText)->
-        SetLabel("???");
-    XRCCTRL(*this, "statictext_strength_rated_units", wxStaticText)->
-        SetLabel("???");
-    XRCCTRL(*this, "statictext_temperature_properties_units", wxStaticText)->
-        SetLabel("???");
+  //if (units == units::UnitSystem::kMetric) {
+  //  /// \todo
+  //  /// Need to include metric form labeling.
+  //  XRCCTRL(*this, "statictext_area_electrical_units", wxStaticText)->
+  //      SetLabel("???");
+  //  XRCCTRL(*this, "statictext_area_physical_units", wxStaticText)->
+  //      SetLabel("???");
+  //  XRCCTRL(*this, "statictext_diameter_units", wxStaticText)->
+  //      SetLabel("???");
+  //  XRCCTRL(*this, "statictext_weight_unit_units", wxStaticText)->
+  //      SetLabel("???");
+  //  XRCCTRL(*this, "statictext_strength_rated_units", wxStaticText)->
+  //      SetLabel("???");
+  //  XRCCTRL(*this, "statictext_temperature_properties_units", wxStaticText)->
+  //      SetLabel("???");
 
-    XRCCTRL(*this, "statictext_shell_coefficient_expansion_thermal_units",
-            wxStaticText)->SetLabel("???");
-    XRCCTRL(*this, "statictext_shell_modulus_tension_units", wxStaticText)->
-        SetLabel("???");
+  //  XRCCTRL(*this, "statictext_shell_coefficient_expansion_thermal_units",
+  //          wxStaticText)->SetLabel("???");
+  //  XRCCTRL(*this, "statictext_shell_modulus_tension_units", wxStaticText)->
+  //      SetLabel("???");
 
-    XRCCTRL(*this, "statictext_core_coefficient_expansion_thermal_units",
-            wxStaticText)->SetLabel("???");
-    XRCCTRL(*this, "statictext_core_modulus_tension_units", wxStaticText)->
-        SetLabel("???");
-  } else if (units == units::UnitSystem::Imperial) {
-    XRCCTRL(*this, "statictext_area_electrical_units", wxStaticText)->
-        SetLabel("[kcmil]");
-    XRCCTRL(*this, "statictext_area_physical_units", wxStaticText)->
-        SetLabel("[in^2]");
-    XRCCTRL(*this, "statictext_diameter_units", wxStaticText)->
-        SetLabel("[in]");
-    XRCCTRL(*this, "statictext_weight_unit_units", wxStaticText)->
-        SetLabel("[lb/ft]");
-    XRCCTRL(*this, "statictext_strength_rated_units", wxStaticText)->
-        SetLabel("[lbs]");
-    XRCCTRL(*this, "statictext_temperature_properties_units", wxStaticText)->
-        SetLabel("[degF]");
+  //  XRCCTRL(*this, "statictext_core_coefficient_expansion_thermal_units",
+  //          wxStaticText)->SetLabel("???");
+  //  XRCCTRL(*this, "statictext_core_modulus_tension_units", wxStaticText)->
+  //      SetLabel("???");
+  //} else if (units == units::UnitSystem::kImperial) {
+  //  XRCCTRL(*this, "statictext_area_electrical_units", wxStaticText)->
+  //      SetLabel("[kcmil]");
+  //  XRCCTRL(*this, "statictext_area_physical_units", wxStaticText)->
+  //      SetLabel("[in^2]");
+  //  XRCCTRL(*this, "statictext_diameter_units", wxStaticText)->
+  //      SetLabel("[in]");
+  //  XRCCTRL(*this, "statictext_weight_unit_units", wxStaticText)->
+  //      SetLabel("[lb/ft]");
+  //  XRCCTRL(*this, "statictext_strength_rated_units", wxStaticText)->
+  //      SetLabel("[lbs]");
+  //  XRCCTRL(*this, "statictext_temperature_properties_units", wxStaticText)->
+  //      SetLabel("[degF]");
 
-    XRCCTRL(*this, "statictext_shell_coefficient_expansion_thermal_units",
-            wxStaticText)->SetLabel("[degF]");
-    XRCCTRL(*this, "statictext_shell_modulus_tension_units", wxStaticText)->
-        SetLabel("[lb/in^2]");
+  //  XRCCTRL(*this, "statictext_shell_coefficient_expansion_thermal_units",
+  //          wxStaticText)->SetLabel("[degF]");
+  //  XRCCTRL(*this, "statictext_shell_modulus_tension_units", wxStaticText)->
+  //      SetLabel("[lb/in^2]");
 
-    XRCCTRL(*this, "statictext_core_coefficient_expansion_thermal_units",
-            wxStaticText)->SetLabel("[degF]");
-    XRCCTRL(*this, "statictext_core_modulus_tension_units", wxStaticText)->
-        SetLabel("[lb/in^2]");
-  }
+  //  XRCCTRL(*this, "statictext_core_coefficient_expansion_thermal_units",
+  //          wxStaticText)->SetLabel("[degF]");
+  //  XRCCTRL(*this, "statictext_core_modulus_tension_units", wxStaticText)->
+  //      SetLabel("[lb/in^2]");
+  //}
 }
 
 void CableEditorDialog::SetValidators() {
@@ -177,7 +183,7 @@ void CableEditorDialog::SetValidators() {
   // strength-rated
   precision = 0;
   value_num = &cable_modified_.strength_rated;
-  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  style = wxNUM_VAL_DEFAULT;
   textctrl = XRCCTRL(*this, "textctrl_strength_rated", wxTextCtrl);
   textctrl->SetValidator(
       wxFloatingPointValidator<double>(precision, value_num, style));
@@ -185,7 +191,7 @@ void CableEditorDialog::SetValidators() {
   // temperature-properties
   precision = 0;
   value_num = &cable_modified_.temperature_properties_components;
-  style = wxNUM_VAL_NO_TRAILING_ZEROES;
+  style = wxNUM_VAL_DEFAULT;
   textctrl = XRCCTRL(*this, "textctrl_temperature_properties", wxTextCtrl);
   textctrl->SetValidator(
       wxFloatingPointValidator<double>(precision, value_num, style));
