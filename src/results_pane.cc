@@ -1,25 +1,25 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "results_panel.h"
+#include "results_pane.h"
 
 #include "models/base/helper.h"
 #include "wx/xrc/xmlres.h"
 
-#include "edit_panel.h"
+#include "edit_pane.h"
 #include "span.h"
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
 
-BEGIN_EVENT_TABLE(ResultsPanel, wxPanel)
-  EVT_CHOICE(XRCID("choice_sagtension_weathercase"), ResultsPanel::OnChoiceWeathercase)
-  EVT_CHOICE(XRCID("choice_sagtension_condition"), ResultsPanel::OnChoiceCondition)
+BEGIN_EVENT_TABLE(ResultsPane, wxPanel)
+  EVT_CHOICE(XRCID("choice_sagtension_weathercase"), ResultsPane::OnChoiceWeathercase)
+  EVT_CHOICE(XRCID("choice_sagtension_condition"), ResultsPane::OnChoiceCondition)
 END_EVENT_TABLE()
 
-ResultsPanel::ResultsPanel(wxWindow* parent, SpanAnalyzerView* view) {
+ResultsPane::ResultsPane(wxWindow* parent, SpanAnalyzerView* view) {
   // loads dialog from virtual xrc file system
-  wxXmlResource::Get()->LoadPanel(this, parent, "results_panel");
+  wxXmlResource::Get()->LoadPanel(this, parent, "results_pane");
 
   // saves view reference
   view_ = view;
@@ -30,10 +30,10 @@ ResultsPanel::ResultsPanel(wxWindow* parent, SpanAnalyzerView* view) {
   choice->Append("Final-Load");
 }
 
-ResultsPanel::~ResultsPanel() {
+ResultsPane::~ResultsPane() {
 }
 
-void ResultsPanel::Update(wxObject* hint) {
+void ResultsPane::Update(wxObject* hint) {
   if (hint == nullptr) {
     return;
   }
@@ -59,7 +59,7 @@ void ResultsPanel::Update(wxObject* hint) {
   choice->SetSelection(choice->FindString(str_choice));
 
   // gets activated span
-  Span* span = view_->panel_edit()->ActivatedSpan();
+  Span* span = view_->pane_edit()->ActivatedSpan();
   if (span != nullptr) {
     reloader_.set_line_cable(&span->linecable);
   }
@@ -68,7 +68,7 @@ void ResultsPanel::Update(wxObject* hint) {
   UpdateSagTensionResults();
 }
 
-void ResultsPanel::SetUnitsStaticText(const units::UnitSystem& units) {
+void ResultsPane::SetUnitsStaticText(const units::UnitSystem& units) {
   /// \todo
   ///  wxWidgets seems to have a bug when editing labels. The StaticText
   ///  controls are not re-sized
@@ -131,7 +131,7 @@ void ResultsPanel::SetUnitsStaticText(const units::UnitSystem& units) {
   //}
 }
 
-void ResultsPanel::OnChoiceWeathercase(wxCommandEvent& event) {
+void ResultsPane::OnChoiceWeathercase(wxCommandEvent& event) {
   // gets weathercases
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
   const std::vector<WeatherLoadCase>& weathercases = *doc->weathercases();
@@ -147,7 +147,7 @@ void ResultsPanel::OnChoiceWeathercase(wxCommandEvent& event) {
   UpdateSagTensionResults();
 }
 
-void ResultsPanel::OnChoiceCondition(wxCommandEvent& event) {
+void ResultsPane::OnChoiceCondition(wxCommandEvent& event) {
   // gets condition selection and updates reloader
   wxChoice* choice = XRCCTRL(*view_->GetFrame(),
                              "choice_sagtension_condition", wxChoice);
@@ -162,7 +162,7 @@ void ResultsPanel::OnChoiceCondition(wxCommandEvent& event) {
   UpdateSagTensionResults();
 }
 
-void ResultsPanel::UpdateSagTensionResults() {
+void ResultsPane::UpdateSagTensionResults() {
   wxStaticText* statictext = nullptr;
   double value = 0;
   wxString str;

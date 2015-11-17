@@ -5,9 +5,8 @@
 
 #include "span_analyzer_app.h"
 
-#include "edit_panel.h"
-#include "messages_panel.h"
-#include "results_panel.h"
+#include "edit_pane.h"
+#include "results_pane.h"
 
 IMPLEMENT_DYNAMIC_CLASS(SpanAnalyzerView, wxView)
 
@@ -38,8 +37,8 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   info = wxAuiPaneInfo();
   info.Name("Results");
   info.CenterPane();
-  panel_results_ = new ResultsPanel(frame, this);
-  manager_.AddPane(panel_results_, info);
+  pane_results_ = new ResultsPane(frame, this);
+  manager_.AddPane(pane_results_, info);
 
   info = wxAuiPaneInfo();
   info.Name("Edit");
@@ -47,8 +46,8 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   info.Left();
   info.Caption("Edit");
   info.CloseButton(false);
-  panel_edit_ = new EditPanel(frame, this);
-  manager_.AddPane(panel_edit_, info);
+  pane_edit_ = new EditPane(frame, this);
+  manager_.AddPane(pane_edit_, info);
 
   manager_.Update();
 
@@ -63,8 +62,8 @@ void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
   wxView::OnUpdate(sender, hint);
 
   // don't need to distinguish sender - all frames are grouped under one view
-  panel_edit_->Update(hint);
-  panel_results_->Update(hint);
+  pane_edit_->Update(hint);
+  pane_results_->Update(hint);
 }
 
 bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
@@ -73,13 +72,13 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
   }
 
   // detaches frames and un-init manager
-  manager_.DetachPane(panel_edit_);
-  manager_.DetachPane(panel_results_);
+  manager_.DetachPane(pane_edit_);
+  manager_.DetachPane(pane_results_);
   manager_.UnInit();
 
   // destroys frames
-  panel_edit_->Destroy();
-  panel_results_->Destroy();
+  pane_edit_->Destroy();
+  pane_results_->Destroy();
 
   // resets frame to document-less state
   SpanAnalyzerFrame* frame = wxGetApp().frame();
@@ -89,12 +88,12 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
   return true;
 }
 
-EditPanel* SpanAnalyzerView::panel_edit() {
-  return panel_edit_;
+EditPane* SpanAnalyzerView::pane_edit() {
+  return pane_edit_;
 }
 
-ResultsPanel* SpanAnalyzerView::panel_results() {
-  return panel_results_;
+ResultsPane* SpanAnalyzerView::pane_results() {
+  return pane_results_;
 }
 
 wxString SpanAnalyzerView::GetPerspective() {

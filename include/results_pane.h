@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_RESULTSPANEL_H_
-#define OTLS_SPANANALYZER_RESULTSPANEL_H_
+#ifndef OTLS_SPANANALYZER_RESULTSPANE_H_
+#define OTLS_SPANANALYZER_RESULTSPANE_H_
 
 #include "models/base/units.h"
 #include "models/sagtension/line_cable_reloader.h"
@@ -12,10 +12,10 @@
 #include "span_analyzer_view.h"
 
 /// \par OVERVIEW
-class ResultsPanel : public wxPanel {
+class ResultsPane : public wxPanel {
  public:
-  ResultsPanel(wxWindow* parent, SpanAnalyzerView* view);
-  ~ResultsPanel();
+  ResultsPane(wxWindow* parent, SpanAnalyzerView* view);
+  ~ResultsPane();
 
   void Update(wxObject* hint = nullptr);
 
@@ -31,4 +31,4 @@ class ResultsPanel : public wxPanel {
   DECLARE_EVENT_TABLE()
 };
 
-# endif //  OTLS_SPANANALYZER_RESULTSPANEL_H_
+# endif //  OTLS_SPANANALYZER_RESULTSPANE_H_

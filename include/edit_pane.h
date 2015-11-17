@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_EDITPANEL_H_
-#define OTLS_SPANANALYZER_EDITPANEL_H_
+#ifndef OTLS_SPANANALYZER_EDITPANE_H_
+#define OTLS_SPANANALYZER_EDITPANE_H_
 
 #include "wx/docview.h"
 #include "wx/treectrl.h"
@@ -31,10 +31,10 @@ class EditTreeItemData : public wxTreeItemData {
 };
 
 /// \par OVERVIEW
-class EditPanel : public wxPanel {
+class EditPane : public wxPanel {
  public:
-  EditPanel(wxWindow* parent, wxView* view);
-  ~EditPanel();
+  EditPane(wxWindow* parent, wxView* view);
+  ~EditPane();
 
   void OnClear(wxCommandEvent& event);
 
@@ -51,6 +51,7 @@ class EditPanel : public wxPanel {
  private:
   void ActivateSpan(const wxTreeItemId& id);
   void AddSpan();
+  void CopySpan(const wxTreeItemId& id);
   void DeleteSpan(const wxTreeItemId& id);
   void DeleteSpans();
 
@@ -66,4 +67,4 @@ class EditPanel : public wxPanel {
   DECLARE_EVENT_TABLE()
 };
 
-# endif //  OTLS_SPANANALYZER_EDITPANEL_H_
+# endif //  OTLS_SPANANALYZER_EDITPANE_H_

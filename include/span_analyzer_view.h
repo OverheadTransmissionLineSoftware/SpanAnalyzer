@@ -9,9 +9,9 @@
 #include "wx/aui/framemanager.h"
 #include "wx/docview.h"
 
-class EditPanel;
-class MessagesPanel;
-class ResultsPanel;
+class EditPane;
+class MessagesPane;
+class ResultsPane;
 
 class ViewUpdateHint : public wxObject {
  public:
@@ -49,9 +49,9 @@ class SpanAnalyzerView : public wxView {
   /// Called when the view is closed
   virtual bool OnClose(bool deleteWindow = true);
 
-  EditPanel* panel_edit();
+  EditPane* pane_edit();
 
-  ResultsPanel* panel_results();
+  ResultsPane* pane_results();
 
   wxString GetPerspective();
 
@@ -60,9 +60,8 @@ class SpanAnalyzerView : public wxView {
   ///   The AUI manager.
   wxAuiManager manager_;
 
-  EditPanel* panel_edit_;
-  MessagesPanel* panel_messages_;
-  ResultsPanel* panel_results_;
+  EditPane* pane_edit_;
+  ResultsPane* pane_results_;
 
   //std::list<wxCommandEvent> events_;
 

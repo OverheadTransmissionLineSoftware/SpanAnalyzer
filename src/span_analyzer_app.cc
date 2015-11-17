@@ -62,17 +62,12 @@ bool SpanAnalyzerApp::OnInit() {
   };
 
   if (!wxXmlResource::Get()->LoadFile(
-      wxFileName("res/edit_panel.xrc"))) {
+      wxFileName("res/edit_pane.xrc"))) {
     return false;
   };
 
   if (!wxXmlResource::Get()->LoadFile(
-      wxFileName("res/messages_panel.xrc"))) {
-    return false;
-  };
-
-  if (!wxXmlResource::Get()->LoadFile(
-      wxFileName("res/results_panel.xrc"))) {
+      wxFileName("res/results_pane.xrc"))) {
     return false;
   };
 
