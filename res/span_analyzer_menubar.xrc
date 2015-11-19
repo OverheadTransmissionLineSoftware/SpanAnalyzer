@@ -24,6 +24,7 @@
         <label>Save As</label>
         <help></help>
       </object>
+      <object class="separator" />
       <object class="wxMenuItem" name="menuitem_file_preferences">
         <label>Preferences</label>
         <help></help>
