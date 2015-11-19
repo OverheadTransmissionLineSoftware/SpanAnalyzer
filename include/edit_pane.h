@@ -4,6 +4,7 @@
 #ifndef OTLS_SPANANALYZER_EDITPANE_H_
 #define OTLS_SPANANALYZER_EDITPANE_H_
 
+#include "models/transmissionline/weather_load_case.h"
 #include "wx/docview.h"
 #include "wx/treectrl.h"
 #include "wx/wx.h"
@@ -14,6 +15,7 @@ class EditTreeItemData : public wxTreeItemData {
  public:
   enum class Type {
     kSpan,
+    kWeathercase
   };
 
   EditTreeItemData(Type type, const wxString& description) {
@@ -30,23 +32,31 @@ class EditTreeItemData : public wxTreeItemData {
   Type type_;
 };
 
-/// \par OVERVIEW
-class EditPane : public wxPanel {
+class WeathercaseTreeCtrl : public wxTreeCtrl {
  public:
-  EditPane(wxWindow* parent, wxView* view);
-  ~EditPane();
+  WeathercaseTreeCtrl(wxWindow* parent, wxView* view);
+  void Update(wxObject* hint);
 
-  void OnClear(wxCommandEvent& event);
-
+ private:
+  void AddWeathercase();
+  void CopyWeathercase(const wxTreeItemId& id);
+  void DeleteWeathercase(const wxTreeItemId& id);
+  void DeleteWeathercases();
+  void EditWeathercase(const wxTreeItemId& id);
+  void InitWeathercases();
   void OnContextMenuSelect(wxCommandEvent& event);
-
-  void OnItemActivate(wxTreeEvent& event);
-
   void OnItemMenu(wxTreeEvent& event);
 
-  Span* ActivatedSpan();
+  std::vector<WeatherLoadCase>* weathercases_;
+  wxView* view_;
 
-  void Update(wxObject* hint = nullptr);
+  DECLARE_EVENT_TABLE()
+};
+
+class SpanTreeCtrl : public wxTreeCtrl {
+ public:
+  SpanTreeCtrl(wxWindow* parent, wxView* view);
+  void Update(wxObject* hint);
 
  private:
   void ActivateSpan(const wxTreeItemId& id);
@@ -54,17 +64,33 @@ class EditPane : public wxPanel {
   void CopySpan(const wxTreeItemId& id);
   void DeleteSpan(const wxTreeItemId& id);
   void DeleteSpans();
-
   void EditSpan(const wxTreeItemId& id);
-
   void InitSpans();
+  void OnContextMenuSelect(wxCommandEvent& event);
+  void OnItemActivate(wxTreeEvent& event);
+  void OnItemMenu(wxTreeEvent& event);
 
+  std::vector<Span>* spans_;
+  wxView* view_;
+
+  DECLARE_EVENT_TABLE()
+};
+
+/// \par OVERVIEW
+class EditPane : public wxPanel {
+ public:
+  EditPane(wxWindow* parent, wxView* view);
+  ~EditPane();
+
+  Span* ActivatedSpan();
+  void Update(wxObject* hint = nullptr);
+
+ private:
   wxView* view_;
 
   /// \var
-  wxTreeCtrl* treectrl_doc_;
-
-  DECLARE_EVENT_TABLE()
+  SpanTreeCtrl* treectrl_spans_;
+  WeathercaseTreeCtrl* treectrl_weathercases_;
 };
 
 # endif //  OTLS_SPANANALYZER_EDITPANE_H_

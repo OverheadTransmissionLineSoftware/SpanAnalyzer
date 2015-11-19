@@ -5,13 +5,23 @@
     <object class="wxBoxSizer">
       <orient>wxHORIZONTAL</orient>
       <object class="sizeritem">
-        <option>0</option>
-        <flag>wxALIGN_CENTER|wxLEFT|wxTOP|wxBOTTOM|wxEXPAND</flag>
+        <option>1</option>
+        <flag>wxEXPAND | wxALL</flag>
         <border>5</border>
-        <object class="wxTreeCtrl" name="treectrl_model">
-          <style>wxTR_DEFAULT_STYLE</style>
-          <size>250, 300</size>
-          <content />
+        <object class="wxNotebook" name="notebook">
+          <style>wxNB_BOTTOM</style>
+          <object class="notebookpage">
+            <label>Spans</label>
+            <object class="wxPanel" name="panel_spans">
+              <style>wxTAB_TRAVERSAL</style>
+            </object>
+          </object>
+          <object class="notebookpage">
+            <label>Weathercases</label>
+            <object class="wxPanel" name="panel_weathercases">
+              <style>wxTAB_TRAVERSAL</style>
+            </object>
+          </object>
         </object>
       </object>
     </object>
