@@ -1,10 +1,6 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-/// \todo in treectrl, have reference to the vector being modified.
-///   The doc can be accessed through the view.
-
-
 #include "edit_pane.h"
 
 #include "wx/xrc/xmlres.h"
@@ -46,6 +42,9 @@ WeathercaseTreeCtrl::WeathercaseTreeCtrl(wxWindow* parent, wxView* view)
   // customizes treectrl
   SetIndent(2);
   AddRoot("Weathercases");
+}
+
+WeathercaseTreeCtrl::~WeathercaseTreeCtrl() {
 }
 
 void WeathercaseTreeCtrl::Update(wxObject* hint) {
@@ -280,6 +279,9 @@ SpanTreeCtrl::SpanTreeCtrl(wxWindow* parent, wxView* view)
   // customizes treectrl
   SetIndent(2);
   AddRoot("Spans");
+}
+
+SpanTreeCtrl::~SpanTreeCtrl() {
 }
 
 void SpanTreeCtrl::Update(wxObject* hint) {
