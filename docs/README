@@ -1,0 +1,3 @@
+Source documentation is provided through Doxygen.
+
+To generate the source documentation, run Doxygen using the config file.
