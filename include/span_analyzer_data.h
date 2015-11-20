@@ -14,8 +14,8 @@
 /// SpanAnalyzerDocument.
 struct SpanAnalyzerData {
  public:
-  /// \var cable_
-  ///   The cable.
+  /// \var cables
+  ///   The cables.
   std::vector<Cable> cables;
 };
 

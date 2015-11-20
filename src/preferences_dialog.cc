@@ -3,6 +3,7 @@
 
 #include "preferences_dialog.h"
 
+#include "wx/filepicker.h"
 #include "wx/stdpaths.h"
 #include "wx/xrc/xmlres.h"
 

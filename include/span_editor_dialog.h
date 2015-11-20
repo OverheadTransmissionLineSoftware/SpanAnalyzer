@@ -13,7 +13,7 @@
 
 /// \par OVERVIEW
 ///
-/// This class is a transmission cable editor dialog.
+/// This class is a span editor dialog.
 ///
 /// \par GUI CONTROLS AND DATA TRANSFER
 ///
@@ -25,13 +25,14 @@ class SpanEditorDialog : public wxDialog {
   /// \brief Default constructor.
   /// \param[in] parent
   ///   The parent window.
-  /// \param[in] linecable
-  ///   The line cable to be modified with the dialog.
+  /// \param[in] cables
+  ///   The cables available for reference.
+  /// \param[in] weathercases
+  ///   The weathercases available for reference.
   /// \param[in] units
   ///   The unit system to display on the form.
-
-  /// \todo re-order this so that the span is the last parameter
-  ///   span is [in,out]
+  /// \param[in] span
+  ///   The span to be modified with the dialog.
   SpanEditorDialog(wxWindow* parent,
                    const std::vector<Cable>* cables,
                    const std::vector<WeatherLoadCase>* weathercases,
@@ -65,22 +66,31 @@ class SpanEditorDialog : public wxDialog {
   /// \brief Sets the control validators on the form.
   void SetValidators();
 
+  /// \brief Initializes the choice controls on the form.
   void InitChoiceControls();
 
+  /// \brief Transfers data that isn't tied to a validator from the span object
+  ///   to the window.
   void TransferCustomDataToWindow();
 
+  /// \brief Transfers data that isn't tied to a validator from the window to
+  ///   the span object.
   void TransferCustomDataFromWindow();
 
+  /// \var weathercases_
+  ///   The weathercases.
   const std::vector<WeatherLoadCase>* weathercases_;
 
+  /// \var cables_
+  ///   The cables.
   const std::vector<Cable>* cables_;
 
-  /// \var linecable_
-  ///   The line cable that is edited.
+  /// \var span_
+  ///   The span that is edited.
   Span* span_;
 
-  /// \var linecable_modified_
-  ///   The cable that is modified and tied to the dialog controls.
+  /// \var span_modified_
+  ///   The span that is modified and tied to the dialog controls.
   Span span_modified_;
 
   DECLARE_EVENT_TABLE()

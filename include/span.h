@@ -9,6 +9,11 @@
 #include "models/base/error_message.h"
 #include "models/transmissionline/line_cable.h"
 
+/// \par OVERVIEW
+///
+/// This struct contains information for a cable in a single span. This class
+/// acts as an interface so that the SpanAnalyzer program can manipulate and use
+/// the LineCable class.
 struct Span {
  public:
   /// \brief Constructor.
@@ -27,8 +32,12 @@ struct Span {
   bool Validate(const bool& is_included_warnings = true,
                 std::list<ErrorMessage>* messages = nullptr) const;
 
+  /// \var linecable
+  ///   The line cable, which holds most of the cable data for the span.
   LineCable linecable;
 
+  /// \var name
+  ///   The name.
   std::string name;
 };
 

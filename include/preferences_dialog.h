@@ -5,10 +5,12 @@
 #define OTLS_SPANANALYZER_PREFERENCESDIALOG_H_
 
 #include "wx/wx.h"
-#include "wx/filepicker.h"
 
 #include "span_analyzer_config.h"
 
+/// \par OVERVIEW
+///
+/// This class is an application preferences editor dialog.
 class PreferencesDialog : public wxDialog {
  public:
   /// \brief Constructor.
@@ -33,8 +35,8 @@ class PreferencesDialog : public wxDialog {
   void OnClose(wxCloseEvent& event);
 
  private:
-  /// \brief config_
-  ///   The config data reference.
+  /// \var config_
+  ///   The application configuration data.
   SpanAnalyzerConfig* config_;
 
   DECLARE_EVENT_TABLE()

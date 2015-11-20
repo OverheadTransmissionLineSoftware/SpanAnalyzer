@@ -18,7 +18,7 @@ struct SpanAnalyzerConfig {
   ///   The directory to search for cable files.
   std::string cable_directory;
 
-  /// \var units_
+  /// \var units
   ///   The measurement unit system.
   units::UnitSystem units;
 
