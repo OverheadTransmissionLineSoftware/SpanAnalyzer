@@ -49,7 +49,13 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   pane_edit_ = new EditPane(frame, this);
   manager_.AddPane(pane_edit_, info);
 
-  manager_.Update();
+  // loads perspective and updates
+  std::string perspective = wxGetApp().config()->perspective;
+  if (perspective == "") {
+    manager_.Update();
+  } else {
+    manager_.LoadPerspective(wxGetApp().config()->perspective);
+  }
 
   return true;
 }
@@ -70,6 +76,9 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
   if (!GetDocument()->Close()) {
     return false;
   }
+
+  // saves AUI perspective
+  wxGetApp().config()->perspective = manager_.SavePerspective();
 
   // detaches frames and un-init manager
   manager_.DetachPane(pane_edit_);
