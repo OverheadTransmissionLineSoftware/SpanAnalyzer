@@ -14,12 +14,14 @@
             <label>Spans</label>
             <object class="wxPanel" name="panel_spans">
               <style>wxTAB_TRAVERSAL</style>
+              <size>500,-1</size>
             </object>
           </object>
           <object class="notebookpage">
             <label>Weathercases</label>
             <object class="wxPanel" name="panel_weathercases">
               <style>wxTAB_TRAVERSAL</style>
+              <size>500,-1</size>
             </object>
           </object>
         </object>
