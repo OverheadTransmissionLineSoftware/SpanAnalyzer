@@ -16,6 +16,154 @@ SpanAnalyzerDoc::SpanAnalyzerDoc() {
 SpanAnalyzerDoc::~SpanAnalyzerDoc() {
 }
 
+void SpanAnalyzerDoc::AppendSpan(const Span& span) {
+  spans_.push_back(span);
+  Modify(true);
+}
+
+void SpanAnalyzerDoc::AppendWeathercase(const WeatherLoadCase& weathercase) {
+  weathercases_.push_back(weathercase);
+  Modify(true);
+}
+
+bool SpanAnalyzerDoc::DeleteSpan(const unsigned int& index) {
+  // checks if index is valid
+  if (weathercases_.size() < (index + 1)) {
+    return false;
+  }
+
+  // deletes from span vector
+  auto iter = spans_.begin() + index;
+  spans_.erase(iter);
+
+  Modify(true);
+
+  return true;
+}
+
+bool SpanAnalyzerDoc::DeleteWeathercase(const unsigned int& index) {
+  // checks if index is valid
+  if (weathercases_.size() < (index + 1)) {
+    return false;
+  }
+
+  const WeatherLoadCase* weathercase = &weathercases_.at(index);
+
+  // searches all spans and sets reference to nullptr if address matches
+  for (auto iter = spans_.begin(); iter != spans_.end(); iter++) {
+    Span& span = *iter;
+    const WeatherLoadCase* weathercase_span = nullptr;
+
+    // compares constraint weathercase
+    weathercase_span = span.linecable.constraint.case_weather;
+    if (weathercase_span == weathercase) {
+      span.linecable.constraint.case_weather = nullptr;
+    }
+
+    // compares stretch-creep weathercase
+    weathercase_span = span.linecable.weathercase_stretch_creep;
+    if (weathercase_span == weathercase) {
+      span.linecable.weathercase_stretch_creep = nullptr;
+    }
+
+    // compares stretch-load weathercase
+    weathercase_span = span.linecable.weathercase_stretch_load;
+    if (weathercase_span == weathercase) {
+      span.linecable.weathercase_stretch_load = nullptr;
+    }
+  }
+
+  // deletes from weathercases vector
+  auto iter = weathercases_.begin() + index;
+  weathercases_.erase(iter);
+
+  Modify(true);
+
+  return true;
+}
+
+bool SpanAnalyzerDoc::InsertSpan(const unsigned int& index,
+                                 const Span& span) {
+  // checks if index is valid
+  if (weathercases_.size() < (index + 1)) {
+    return false;
+  }
+
+  // adds span to vector
+  auto iter = spans_.begin() + index;
+  spans_.insert(iter, span);
+
+  Modify(true);
+
+  return true;
+}
+
+bool SpanAnalyzerDoc::InsertWeathercase(const unsigned int& index,
+                                        const WeatherLoadCase& weathercase) {
+  // checks if index is valid
+  if (weathercases_.size() < (index + 1)) {
+    return false;
+  }
+
+  // adds weathercase to vector
+  auto iter = weathercases_.begin() + index;
+  weathercases_.insert(iter, weathercase);
+
+  Modify(true);
+
+  return true;
+}
+
+bool SpanAnalyzerDoc::IsReferencedWeathercase(
+    const WeatherLoadCase* weathercase) const {
+  // searches all spans to see if weathercase address matches
+  for (auto iter = spans_.cbegin(); iter != spans_.cend(); iter++) {
+    const Span& span = *iter;
+    const WeatherLoadCase* weathercase_span = nullptr;
+
+    // compares constraint weathercase
+    weathercase_span = span.linecable.constraint.case_weather;
+    if (weathercase_span == weathercase) {
+      return true;
+    }
+
+    // compares stretch-creep weathercase
+    weathercase_span = span.linecable.weathercase_stretch_creep;
+    if (weathercase_span == weathercase) {
+      return true;
+    }
+
+    // compares stretch-load weathercase
+    weathercase_span = span.linecable.weathercase_stretch_load;
+    if (weathercase_span == weathercase) {
+      return true;
+    }
+  }
+
+  // weathercase is not referenced
+  return false;
+}
+
+bool SpanAnalyzerDoc::IsUniqueWeathercase(const std::string& description,
+                                          const int& index_skip) const {
+  for (auto iter = weathercases_.cbegin(); iter != weathercases_.cend();
+       iter++) {
+    const WeatherLoadCase& weathercase = *iter;
+
+    const int index = iter - weathercases_.cbegin();
+    if (index != index_skip) {
+      if (description == weathercase.description) {
+        // existing weathercase description has been found
+        return false;
+      }
+    }
+  }
+
+  // no existing descriptions matched
+  return true;
+}
+
+/// \todo This needs to check for duplicates and remove them if necessary.
 wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   // attempts to load an xml document from the input stream
   wxXmlDocument doc_xml;
@@ -52,6 +200,38 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   return stream;
 }
 
+bool SpanAnalyzerDoc::ReplaceSpan(const unsigned int& index,
+                                  const Span& span) {
+  // checks if index is valid
+  if (spans_.size() < (index + 1)) {
+    return false;
+  }
+
+  // adds weathercase to vector
+  Span& span_index = spans_.at(index);
+  span_index = Span(span);
+
+  Modify(true);
+
+  return true;
+}
+
+bool SpanAnalyzerDoc::ReplaceWeathercase(const unsigned int& index,
+                                         const WeatherLoadCase& weathercase) {
+  // checks if index is valid
+  if (weathercases_.size() < (index + 1)) {
+    return false;
+  }
+
+  // adds weathercase to vector
+  WeatherLoadCase& weathercase_index = weathercases_.at(index);
+  weathercase_index = WeatherLoadCase(weathercase);
+
+  Modify(true);
+
+  return true;
+}
+
 wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
   // gets unit setting
   units::UnitSystem units = wxGetApp().config()->units;
@@ -67,10 +247,10 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
   return stream;
 }
 
-std::vector<Span>* SpanAnalyzerDoc::spans() {
-  return &spans_;
+const std::vector<Span>& SpanAnalyzerDoc::spans() const {
+  return spans_;
 }
 
-std::vector<WeatherLoadCase>* SpanAnalyzerDoc::weathercases() {
-  return &weathercases_;
+const std::vector<WeatherLoadCase>& SpanAnalyzerDoc::weathercases() const {
+  return weathercases_;
 }

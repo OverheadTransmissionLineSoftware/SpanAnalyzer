@@ -38,8 +38,8 @@ wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
   // creates weather load cases node
   title = "weather_load_cases";
   node_element = new wxXmlNode(wxXML_ELEMENT_NODE, title);
-  const std::vector<WeatherLoadCase>* weathercases = doc.weathercases();
-  for (auto iter = weathercases->cbegin(); iter != weathercases->cend();
+  const std::vector<WeatherLoadCase>& weathercases = doc.weathercases();
+  for (auto iter = weathercases.cbegin(); iter != weathercases.cend();
        iter++) {
     // copies weathercase
     WeatherLoadCase weathercase = *iter;
@@ -60,9 +60,8 @@ wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
   // creates spans node
   title = "spans";
   node_element = new wxXmlNode(wxXML_ELEMENT_NODE, title);
-  const std::vector<Span>* spans = doc.spans();
-  for (auto iter = spans->cbegin();
-       iter != spans->cend(); iter++) {
+  const std::vector<Span>& spans = doc.spans();
+  for (auto iter = spans.cbegin(); iter != spans.cend(); iter++) {
     const Span& span = *iter;
 
     // creates span node and adds to root
@@ -138,7 +137,7 @@ int SpanAnalyzerDocXmlHandler::ParseNodeV1(
                 units::UnitStyle::kDifferent,
                 units::UnitStyle::kConsistent,
                 weathercase);
-            doc.weathercases()->push_back(weathercase);
+            doc.AppendWeathercase(weathercase);
           } else {
             return line_number;
           }
@@ -155,9 +154,9 @@ int SpanAnalyzerDocXmlHandler::ParseNodeV1(
         } else {
           Span span;
           const int line_number = SpanXmlHandler::ParseNode(
-              sub_node, cables, doc.weathercases(), span);
+              sub_node, cables, &doc.weathercases(), span);
           if (line_number == 0) {
-            doc.spans()->push_back(span);
+            doc.AppendSpan(span);
           } else {
             return line_number;
           }
