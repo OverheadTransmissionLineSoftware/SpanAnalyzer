@@ -40,7 +40,7 @@ void ResultsPane::Update(wxObject* hint) {
 
   // gets weathercases
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
-  const std::vector<WeatherLoadCase>& weathercases = *doc->weathercases();
+  const std::vector<WeatherLoadCase>& weathercases = doc->weathercases();
 
   wxChoice* choice = nullptr;
   wxString str_choice;
@@ -59,7 +59,7 @@ void ResultsPane::Update(wxObject* hint) {
   choice->SetSelection(choice->FindString(str_choice));
 
   // gets activated span
-  Span* span = view_->pane_edit()->ActivatedSpan();
+  const Span* span = view_->pane_edit()->ActivatedSpan();
   if (span != nullptr) {
     reloader_.set_line_cable(&span->linecable);
   }
@@ -134,7 +134,7 @@ void ResultsPane::SetUnitsStaticText(const units::UnitSystem& units) {
 void ResultsPane::OnChoiceWeathercase(wxCommandEvent& event) {
   // gets weathercases
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
-  const std::vector<WeatherLoadCase>& weathercases = *doc->weathercases();
+  const std::vector<WeatherLoadCase>& weathercases = doc->weathercases();
 
   // gets selection and updates reloader
   wxChoice* choice = XRCCTRL(*view_->GetFrame(),
