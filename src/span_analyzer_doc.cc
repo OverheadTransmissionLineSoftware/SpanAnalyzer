@@ -197,6 +197,10 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
     }
   }
 
+  // resets modified status to false because the xml parser uses functions
+  // that mark it as modified
+  Modify(false);
+
   return stream;
 }
 
