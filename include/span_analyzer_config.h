@@ -23,7 +23,9 @@ struct SpanAnalyzerConfig {
   units::UnitSystem units;
 
   /// \var perspective
-  ///   The AUI perspective, which is based on the user layout of panes.
+  ///   The AUI perspective, which is based on the user layout of panes. The
+  ///   perspective is loaded/saved on application startup/exit, and modified
+  ///   on view open/close.
   std::string perspective;
 
   /// \var size_frame

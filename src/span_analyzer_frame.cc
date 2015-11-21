@@ -5,6 +5,7 @@
 
 #include "wx/xrc/xmlres.h"
 
+#include "file_handler.h"
 #include "preferences_dialog.h"
 #include "span_analyzer_app.h"
 
@@ -30,6 +31,9 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
 }
 
 SpanAnalyzerFrame::~SpanAnalyzerFrame() {
+  // saves UI configuration before frame closes
+  SpanAnalyzerConfig* config = wxGetApp().config();
+  FileHandler::SaveConfigFile(*config);
 }
 
 void SpanAnalyzerFrame::OnMenuEditCableEdit(wxCommandEvent& event) {

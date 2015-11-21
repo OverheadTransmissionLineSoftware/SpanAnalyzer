@@ -48,6 +48,12 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
   }
   node_root->AddChild(node_element);
 
+  // creates perspective node
+  title = "perspective";
+  content = config.perspective;
+  node_element = CreateElementNodeWithContent(title, content);
+  node_root->AddChild(node_element);
+
   // creates units node
   title = "units";
   if (config.units == units::UnitSystem::kMetric) {
@@ -110,6 +116,8 @@ int SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
         content_attr = node->GetAttribute("y");
         config.size_frame.SetHeight(std::stoi(content_attr));
       }
+    } else if (title == "perspective") {
+      config.perspective = content;
     } else if (title == "units") {
       if (content == "Metric") {
         config.units = units::UnitSystem::kMetric;
