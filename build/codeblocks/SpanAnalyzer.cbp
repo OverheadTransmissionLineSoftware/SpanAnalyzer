@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="SpanAnalyzer" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="debug">
+				<Option output="debug/bin/SpanAnalyzer" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../.." />
+				<Option object_output="debug/obj/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option parameters="--file=test/test.spananalyzer" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="$(MODELS)/build/codeblocks/debug/bin/libotlsmodels_sagtension.a" />
+					<Add library="$(MODELS)/build/codeblocks/debug/bin/libotlsmodels_transmissionline.a" />
+					<Add library="$(MODELS)/build/codeblocks/debug/bin/libotlsmodels_base.a" />
+				</Linker>
+			</Target>
+			<Target title="release">
+				<Option output="release/bin/SpanAnalyzer" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../.." />
+				<Option object_output="release/obj/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="$(MODELS)/build/codeblocks/release/bin/libotlsmodels_sagtension.a" />
+					<Add library="$(MODELS)/build/codeblocks/release/bin/libotlsmodels_transmissionline.a" />
+					<Add library="$(MODELS)/build/codeblocks/release/bin/libotlsmodels_base.a" />
+				</Linker>
+			</Target>
+			<Environment>
+				<Variable name="MODELS" value="/home/brett/github/Models" />
+				<Variable name="WXWIDGETS" value="/home/brett/wxWidgets/wxWidgets-3.0.2/build-gtk-debug" />
+			</Environment>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add option="-Wall" />
+			<Add option="`wx-config --cxxflags`" />
+			<Add directory="../../include" />
+			<Add directory="$(MODELS)/include" />
+			<Add directory="$(WXWIDGETS)/include" />
+		</Compiler>
+		<Linker>
+			<Add option="`wx-config --libs all`" />
+			<Add directory="../../../TLS-Libraries/build/codeblocks/debug/bin" />
+		</Linker>
+		<Unit filename="../../include/cable_constraint_xml_handler.h" />
+		<Unit filename="../../include/cable_editor_dialog.h" />
+		<Unit filename="../../include/cable_manager_dialog.h" />
+		<Unit filename="../../include/cable_unit_converter.h" />
+		<Unit filename="../../include/cable_xml_handler.h" />
+		<Unit filename="../../include/edit_pane.h" />
+		<Unit filename="../../include/file_handler.h" />
+		<Unit filename="../../include/line_cable_xml_handler.h" />
+		<Unit filename="../../include/messages_pane.h" />
+		<Unit filename="../../include/polynomial_xml_handler.h" />
+		<Unit filename="../../include/preferences_dialog.h" />
+		<Unit filename="../../include/results_pane.h" />
+		<Unit filename="../../include/span.h" />
+		<Unit filename="../../include/span_analyzer_app.h" />
+		<Unit filename="../../include/span_analyzer_config.h" />
+		<Unit filename="../../include/span_analyzer_config_xml_handler.h" />
+		<Unit filename="../../include/span_analyzer_data.h" />
+		<Unit filename="../../include/span_analyzer_doc.h" />
+		<Unit filename="../../include/span_analyzer_doc_xml_handler.h" />
+		<Unit filename="../../include/span_analyzer_frame.h" />
+		<Unit filename="../../include/span_analyzer_view.h" />
+		<Unit filename="../../include/span_editor_dialog.h" />
+		<Unit filename="../../include/span_xml_handler.h" />
+		<Unit filename="../../include/vector_xml_handler.h" />
+		<Unit filename="../../include/weather_load_case_editor_dialog.h" />
+		<Unit filename="../../include/weather_load_case_manager_dialog.h" />
+		<Unit filename="../../include/weather_load_case_unit_converter.h" />
+		<Unit filename="../../include/weather_load_case_xml_handler.h" />
+		<Unit filename="../../include/xml_handler.h" />
+		<Unit filename="../../res/cable_editor_dialog.xrc" />
+		<Unit filename="../../res/cable_manager_dialog.xrc" />
+		<Unit filename="../../res/edit_pane.xrc" />
+		<Unit filename="../../res/messages_pane.xrc" />
+		<Unit filename="../../res/results_pane.xrc" />
+		<Unit filename="../../res/span_analyzer_menubar.xrc" />
+		<Unit filename="../../res/span_analyzer_preferences_dialog.xrc" />
+		<Unit filename="../../res/span_editor_dialog.xrc" />
+		<Unit filename="../../res/weather_load_case_editor_dialog.xrc" />
+		<Unit filename="../../res/weather_load_case_manager_dialog.xrc" />
+		<Unit filename="../../spananalyzer.config" />
+		<Unit filename="../../src/cable_constraint_xml_handler.cc" />
+		<Unit filename="../../src/cable_editor_dialog.cc" />
+		<Unit filename="../../src/cable_manager_dialog.cc" />
+		<Unit filename="../../src/cable_unit_converter.cc" />
+		<Unit filename="../../src/cable_xml_handler.cc" />
+		<Unit filename="../../src/edit_pane.cc" />
+		<Unit filename="../../src/file_handler.cc" />
+		<Unit filename="../../src/line_cable_xml_handler.cc" />
+		<Unit filename="../../src/messages_pane.cc" />
+		<Unit filename="../../src/polynomial_xml_handler.cc" />
+		<Unit filename="../../src/preferences_dialog.cc" />
+		<Unit filename="../../src/results_pane.cc" />
+		<Unit filename="../../src/span.cc" />
+		<Unit filename="../../src/span_analyzer_app.cc" />
+		<Unit filename="../../src/span_analyzer_config_xml_handler.cc" />
+		<Unit filename="../../src/span_analyzer_doc.cc" />
+		<Unit filename="../../src/span_analyzer_doc_xml_handler.cc" />
+		<Unit filename="../../src/span_analyzer_frame.cc" />
+		<Unit filename="../../src/span_analyzer_view.cc" />
+		<Unit filename="../../src/span_editor_dialog.cc" />
+		<Unit filename="../../src/span_xml_handler.cc" />
+		<Unit filename="../../src/vector_xml_handler.cc" />
+		<Unit filename="../../src/weather_load_case_editor_dialog.cc" />
+		<Unit filename="../../src/weather_load_case_manager_dialog.cc" />
+		<Unit filename="../../src/weather_load_case_unit_converter.cc" />
+		<Unit filename="../../src/weather_load_case_xml_handler.cc" />
+		<Unit filename="../../src/xml_handler.cc" />
+		<Unit filename="../../test/test.spananalyzer" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
