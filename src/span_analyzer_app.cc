@@ -57,11 +57,6 @@ bool SpanAnalyzerApp::OnInit() {
   };
 
   if (!wxXmlResource::Get()->LoadFile(
-      wxFileName("res/cable_manager_dialog.xrc"))) {
-    return false;
-  };
-
-  if (!wxXmlResource::Get()->LoadFile(
       wxFileName("res/edit_pane.xrc"))) {
     return false;
   };
@@ -88,11 +83,6 @@ bool SpanAnalyzerApp::OnInit() {
 
   if (!wxXmlResource::Get()->LoadFile(
       wxFileName("res/weather_load_case_editor_dialog.xrc"))) {
-    return false;
-  };
-
-  if (!wxXmlResource::Get()->LoadFile(
-      wxFileName("res/weather_load_case_manager_dialog.xrc"))) {
     return false;
   };
 
