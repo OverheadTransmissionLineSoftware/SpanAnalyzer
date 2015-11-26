@@ -28,6 +28,10 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
     : wxDocParentFrame(manager, nullptr, wxID_ANY, "Span Analyzer") {
   // loads dialog from virtual xrc file system
   wxXmlResource::Get()->LoadMenuBar(this, "span_analyzer_menubar");
+
+  // sets the application icon
+  wxIcon icon("res/icon.xpm");
+  SetIcon(icon);
 }
 
 SpanAnalyzerFrame::~SpanAnalyzerFrame() {

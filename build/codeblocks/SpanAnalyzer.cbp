@@ -87,6 +87,7 @@
 		<Unit filename="../../res/cable_editor_dialog.xrc" />
 		<Unit filename="../../res/cable_manager_dialog.xrc" />
 		<Unit filename="../../res/edit_pane.xrc" />
+		<Unit filename="../../res/icon.xpm" />
 		<Unit filename="../../res/messages_pane.xrc" />
 		<Unit filename="../../res/results_pane.xrc" />
 		<Unit filename="../../res/span_analyzer_menubar.xrc" />
