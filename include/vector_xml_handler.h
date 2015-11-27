@@ -72,7 +72,7 @@ class Vector3dXmlHandler : public XmlHandler {
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
   static int ParseNodeV1(const wxXmlNode* root,
-                         Vector3d& constraint);
+                         Vector3d& vector);
 };
 
 #endif  // OTLS_SPANANALYZER_VECTORXMLHANDLER_H_

@@ -14,6 +14,10 @@
 class PreferencesDialog : public wxDialog {
  public:
   /// \brief Constructor.
+  /// \param[in] parent
+  ///   The parent window.
+  /// \param[in] config
+  ///   The application configuration settings.
   PreferencesDialog(wxWindow* parent, SpanAnalyzerConfig* config);
 
   /// \brief Destructor.

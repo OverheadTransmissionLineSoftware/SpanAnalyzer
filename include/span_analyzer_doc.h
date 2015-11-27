@@ -98,6 +98,9 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \brief Determines if the weathercase description is unique.
   /// \param[in] description
   ///   The description to check.
+  /// \param[in] skip
+  ///   The weathercase to skip. This is necessary if you are modifying an
+  ///   existing weathercase.
   /// \return If the description is unique.
   /// This function is meant to be used before adding a weathercase to the
   /// document.
@@ -166,6 +169,8 @@ class SpanAnalyzerDoc : public wxDocument {
   ///   or modified with a std container efficiently.
   std::list<WeatherLoadCase> weathercases_;
 
+  /// \brief This allows wxWidgets to create this class dynamically as part of
+  ///   the docview framework.
   wxDECLARE_DYNAMIC_CLASS(SpanAnalyzerDoc);
 };
 

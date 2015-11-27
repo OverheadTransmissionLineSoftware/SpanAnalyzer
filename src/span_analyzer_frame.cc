@@ -9,7 +9,7 @@
 #include "preferences_dialog.h"
 #include "span_analyzer_app.h"
 
-/// for debug event ONLY
+// for debug event ONLY
 #include "wx/xml/xml.h"
 #include "span_editor_dialog.h"
 #include "span_analyzer_config_xml_handler.h"

@@ -283,7 +283,7 @@ class EditPane : public wxPanel {
   /// \return The activated span.
   const Span* ActivatedSpan();
 
-  /// \brief Updates the treectrl.
+  /// \brief Updates the pane.
   /// \param[in] hint
   ///   The hint describing what kind of update is needed.
   /// This function is called as part of the view update process.

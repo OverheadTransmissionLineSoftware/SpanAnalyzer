@@ -41,6 +41,8 @@ class SpanAnalyzerApp : public wxApp {
 
   /// \brief Parses the command line options provided to the application on
   ///   startup.
+  /// \param[in] parser
+  ///   The command line parser, which is provided by wxWidgets.
   /// \return The success of command line parsing.
   virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
@@ -53,6 +55,8 @@ class SpanAnalyzerApp : public wxApp {
   virtual bool OnInit();
 
   /// \brief Initializes the command line parser settings.
+  /// \param[in] parser
+  ///   The command line parser, which is provided by wxWidgets.
   virtual void OnInitCmdLine(wxCmdLineParser& parser);
 
   /// \brief Gets the application configuration settings.

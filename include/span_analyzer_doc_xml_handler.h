@@ -36,9 +36,6 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   /// \brief Creates an XML node for a span analyzer document.
   /// \param[in] doc
   ///   The document.
-  /// \param[in] name
-  ///   The name of the XML node. This will be an attribute for the created
-  ///   node. If empty, no attribute will be created.
   /// \param[in] units
   ///   The unit system, which is used for attributing child XML nodes.
   /// \return An XML node for the document.

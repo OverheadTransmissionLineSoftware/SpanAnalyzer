@@ -19,6 +19,7 @@ class ResultsPane;
 /// helpful is added to the class so the remaining views can update.
 class ViewUpdateHint : public wxObject {
  public:
+  /// This enum class contains types of view update hints.
   enum class HintType {
 	  kModelCableEdit,
 	  kModelPreferencesEdit,
@@ -26,15 +27,19 @@ class ViewUpdateHint : public wxObject {
     kModelWeathercaseEdit,
   };
 
+  /// \brief Constructor.
   ViewUpdateHint(HintType type) {type = type_;};
 
+  /// \todo This needs to be made private.
+  /// \var type_
+  ///   The hint type.
   HintType type_;
 };
 
 /// \par OVERVIEW
 ///
 /// This is the SpanAnalyzer application view, which is responsible for
-/// displaying information and results from the SpanAnalyzerDoc. 
+/// displaying information and results from the SpanAnalyzerDoc.
 class SpanAnalyzerView : public wxView {
  public:
   /// \brief Constructor.
@@ -71,6 +76,7 @@ class SpanAnalyzerView : public wxView {
   /// \brief Handles closing the view.
   /// \param[in] deleteWindow
   ///   An indicator that determines if the child windows should be deleted.
+  /// \return true
   /// This function is called by wxWidgets.
   virtual bool OnClose(bool deleteWindow = true);
 
@@ -99,6 +105,8 @@ class SpanAnalyzerView : public wxView {
   ///   The results pane.
   ResultsPane* pane_results_;
 
+  /// \brief This allows wxWidgets to create this class dynamically as part of
+  ///   the docview framework.
   wxDECLARE_DYNAMIC_CLASS(SpanAnalyzerView);
 };
 

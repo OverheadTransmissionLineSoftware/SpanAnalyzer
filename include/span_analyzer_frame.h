@@ -43,6 +43,7 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   void OnMenuFilePreferences(wxCommandEvent& event);
 
   // DEBUG
+  /// \brief Handles the debug->event menu click event.
   void OnMenuDebugEvent(wxCommandEvent& event);
   // DEBUG
 

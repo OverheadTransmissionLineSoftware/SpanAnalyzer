@@ -15,7 +15,9 @@
 /// 'element' type XML nodes which have a 'text' type XML node as a child. An
 /// attribute can optionally be assigned. The XML node be displayed as the
 /// following form:
-///   <title attribute="">content</title>
+///
+///   <title attribute="optional">content</title>
+///
 /// where the 'element' node is the title, and the 'text' node is the content,
 /// and the attribute is in parenthesis.
 class XmlHandler {
