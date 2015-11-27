@@ -12,11 +12,12 @@ BEGIN_EVENT_TABLE(SpanEditorDialog, wxDialog)
   EVT_CLOSE(SpanEditorDialog::OnClose)
 END_EVENT_TABLE()
 
-SpanEditorDialog::SpanEditorDialog(wxWindow* parent,
-                                   const std::vector<Cable>* cables,
-                                   const std::vector<WeatherLoadCase>* weathercases,
-                                   const units::UnitSystem& units,
-                                   Span* span) {
+SpanEditorDialog::SpanEditorDialog(
+    wxWindow* parent,
+    const std::vector<Cable>* cables,
+    const std::list<WeatherLoadCase>* weathercases,
+    const units::UnitSystem& units,
+    Span* span) {
   // loads dialog from virtual xrc file system
   wxXmlResource::Get()->LoadDialog(this, parent, "span_editor_dialog");
 
@@ -207,9 +208,9 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
   if (index == wxNOT_FOUND) {
     span_modified_.linecable.constraint.case_weather = nullptr;
   } else {
-    str = choice->GetString(index);
-    span_modified_.linecable.constraint.case_weather =
-        &weathercases_->at(index);
+    auto iter = std::next(weathercases_->cbegin(), index);
+    const WeatherLoadCase* weathercase = &(*iter);
+    span_modified_.linecable.constraint.case_weather = weathercase;
   }
 
   // transfers constraint condition
@@ -253,10 +254,10 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
     span_modified_.linecable.weathercase_stretch_creep = nullptr;
     span_modified_.linecable.weathercase_stretch_load = nullptr;
   } else {
-    span_modified_.linecable.weathercase_stretch_creep =
-        &weathercases_->at(index);
-    span_modified_.linecable.weathercase_stretch_load =
-        &weathercases_->at(index);
+    auto iter = std::next(weathercases_->cbegin(), index);
+    const WeatherLoadCase* weathercase = &(*iter);
+    span_modified_.linecable.weathercase_stretch_creep = weathercase;
+    span_modified_.linecable.weathercase_stretch_load = weathercase;
   }
 }
 

@@ -16,38 +16,39 @@ SpanAnalyzerDoc::SpanAnalyzerDoc() {
 SpanAnalyzerDoc::~SpanAnalyzerDoc() {
 }
 
-void SpanAnalyzerDoc::AppendSpan(const Span& span) {
+std::list<Span>::const_iterator SpanAnalyzerDoc::AppendSpan(
+    const Span& span) {
   spans_.push_back(span);
+
   Modify(true);
+
+  return std::prev(spans_.end());
 }
 
-void SpanAnalyzerDoc::AppendWeathercase(const WeatherLoadCase& weathercase) {
+std::list<WeatherLoadCase>::const_iterator SpanAnalyzerDoc::AppendWeathercase(
+    const WeatherLoadCase& weathercase) {
   weathercases_.push_back(weathercase);
+
   Modify(true);
+
+  return std::prev(weathercases_.cend());
 }
 
-bool SpanAnalyzerDoc::DeleteSpan(const unsigned int& index) {
-  // checks if index is valid
-  if (weathercases_.size() < (index + 1)) {
-    return false;
-  }
+void SpanAnalyzerDoc::DeleteSpan(
+    const std::list<Span>::const_iterator& element) {
+  // gets iterator with edit capability
+  const unsigned int index = std::distance(spans_.cbegin(), element);
+  auto iter = std::next(spans_.begin(), index);
 
-  // deletes from span vector
-  auto iter = spans_.begin() + index;
+  // deletes from span list
   spans_.erase(iter);
 
   Modify(true);
-
-  return true;
 }
 
-bool SpanAnalyzerDoc::DeleteWeathercase(const unsigned int& index) {
-  // checks if index is valid
-  if (weathercases_.size() < (index + 1)) {
-    return false;
-  }
-
-  const WeatherLoadCase* weathercase = &weathercases_.at(index);
+void SpanAnalyzerDoc::DeleteWeathercase(
+    const std::list<WeatherLoadCase>::const_iterator& element) {
+  const WeatherLoadCase* weathercase = &(*element);
 
   // searches all spans and sets reference to nullptr if address matches
   for (auto iter = spans_.begin(); iter != spans_.end(); iter++) {
@@ -73,49 +74,52 @@ bool SpanAnalyzerDoc::DeleteWeathercase(const unsigned int& index) {
     }
   }
 
-  // deletes from weathercases vector
-  auto iter = weathercases_.begin() + index;
+  // gets iterator with edit capability
+  const unsigned int index = std::distance(weathercases_.cbegin(), element);
+  auto iter = std::next(weathercases_.begin(), index);
+
+  // deletes from weathercases list
   weathercases_.erase(iter);
 
   Modify(true);
-
-  return true;
 }
 
-bool SpanAnalyzerDoc::InsertSpan(const unsigned int& index,
-                                 const Span& span) {
-  // checks if index is valid
-  if (weathercases_.size() < (index + 1)) {
-    return false;
-  }
+  std::list<Span>::const_iterator SpanAnalyzerDoc::InsertSpan(
+      const std::list<Span>::const_iterator& position,
+      const Span& span) {
+  // gets iterator with edit capability
+  const unsigned int index = std::distance(spans_.cbegin(), position);
+  auto iter = std::next(spans_.begin(), index);
 
   // adds span to vector
-  auto iter = spans_.begin() + index;
   spans_.insert(iter, span);
 
   Modify(true);
 
-  return true;
+  return std::prev(position);
 }
 
-bool SpanAnalyzerDoc::InsertWeathercase(const unsigned int& index,
-                                        const WeatherLoadCase& weathercase) {
-  // checks if index is valid
-  if (weathercases_.size() < (index + 1)) {
-    return false;
-  }
+std::list<WeatherLoadCase>::const_iterator SpanAnalyzerDoc::InsertWeathercase(
+    const std::list<WeatherLoadCase>::const_iterator& position,
+    const WeatherLoadCase& weathercase) {
+  // gets iterator with edit capability
+  const unsigned int index = std::distance(weathercases_.cbegin(), position);
+  auto iter = std::next(weathercases_.begin(), index);
 
-  // adds weathercase to vector
-  auto iter = weathercases_.begin() + index;
+  // adds weathercase to list
   weathercases_.insert(iter, weathercase);
 
   Modify(true);
 
-  return true;
+  return std::prev(position);
 }
 
+/// This function compares the memory address of the weathercases.
 bool SpanAnalyzerDoc::IsReferencedWeathercase(
-    const WeatherLoadCase* weathercase) const {
+    const std::list<WeatherLoadCase>::const_iterator& element) const {
+  // gets weathercase
+  const WeatherLoadCase* weathercase = &(*element);
+
   // searches all spans to see if weathercase address matches
   for (auto iter = spans_.cbegin(); iter != spans_.cend(); iter++) {
     const Span& span = *iter;
@@ -144,16 +148,24 @@ bool SpanAnalyzerDoc::IsReferencedWeathercase(
   return false;
 }
 
-bool SpanAnalyzerDoc::IsUniqueWeathercase(const std::string& description,
-                                          const int& index_skip) const {
+bool SpanAnalyzerDoc::IsUniqueWeathercase(
+    const std::string& description,
+    const std::list<WeatherLoadCase>::const_iterator* skip) const {
+  // gets the weathercase that will be skipped
+  const WeatherLoadCase* weathercase_skip = nullptr;
+  if (skip != nullptr) {
+    weathercase_skip = &(**skip);
+  }
+
+  // searches weathercases for matching description
   for (auto iter = weathercases_.cbegin(); iter != weathercases_.cend();
        iter++) {
-    const WeatherLoadCase& weathercase = *iter;
+    const WeatherLoadCase* weathercase = &(*iter);
 
-    const int index = iter - weathercases_.cbegin();
-    if (index != index_skip) {
-      if (description == weathercase.description) {
-        // existing weathercase description has been found
+    if (description == weathercase->description) {
+      if (weathercase_skip == weathercase) {
+        // do nothing - continue searching
+      } else {
         return false;
       }
     }
@@ -204,36 +216,49 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   return stream;
 }
 
-bool SpanAnalyzerDoc::ReplaceSpan(const unsigned int& index,
-                                  const Span& span) {
-  // checks if index is valid
-  if (spans_.size() < (index + 1)) {
-    return false;
-  }
+void SpanAnalyzerDoc::MoveWeathercase(
+      const std::list<WeatherLoadCase>::const_iterator& element,
+      const std::list<WeatherLoadCase>::const_iterator& position) {
+  // gets iterators with edit capability
+  const unsigned int index_element =
+      std::distance(weathercases_.cbegin(), element);
+  auto iter_element = std::next(weathercases_.begin(), index_element);
 
-  // adds weathercase to vector
-  Span& span_index = spans_.at(index);
-  span_index = Span(span);
+  const unsigned int index_position =
+      std::distance(weathercases_.cbegin(), position);
+  auto iter_position = std::next(weathercases_.begin(), index_position);
+
+  weathercases_.splice(iter_position, weathercases_, iter_element);
 
   Modify(true);
 
-  return true;
+  return;
 }
 
-bool SpanAnalyzerDoc::ReplaceWeathercase(const unsigned int& index,
-                                         const WeatherLoadCase& weathercase) {
-  // checks if index is valid
-  if (weathercases_.size() < (index + 1)) {
-    return false;
-  }
+void SpanAnalyzerDoc::ReplaceSpan(
+    const std::list<Span>::const_iterator& element,
+    const Span& span) {
+  // gets iterator with edit capability
+  const unsigned int index = std::distance(spans_.cbegin(), element);
+  auto iter = std::next(spans_.begin(), index);
 
-  // adds weathercase to vector
-  WeatherLoadCase& weathercase_index = weathercases_.at(index);
-  weathercase_index = WeatherLoadCase(weathercase);
+  // replaces span in list
+  *iter = Span(span);
 
   Modify(true);
+}
 
-  return true;
+void SpanAnalyzerDoc::ReplaceWeathercase(
+    const std::list<WeatherLoadCase>::const_iterator& element,
+    const WeatherLoadCase& weathercase) {
+  // gets iterator with edit capability
+  const unsigned int index = std::distance(weathercases_.cbegin(), element);
+  auto iter = std::next(weathercases_.begin(), index);
+
+  // replaces weathercase in list
+  *iter = WeatherLoadCase(weathercase);
+
+  Modify(true);
 }
 
 wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
@@ -251,10 +276,10 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
   return stream;
 }
 
-const std::vector<Span>& SpanAnalyzerDoc::spans() const {
+const std::list<Span>& SpanAnalyzerDoc::spans() const {
   return spans_;
 }
 
-const std::vector<WeatherLoadCase>& SpanAnalyzerDoc::weathercases() const {
+const std::list<WeatherLoadCase>& SpanAnalyzerDoc::weathercases() const {
   return weathercases_;
 }

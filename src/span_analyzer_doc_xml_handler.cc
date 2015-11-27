@@ -38,7 +38,7 @@ wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
   // creates weather load cases node
   title = "weather_load_cases";
   node_element = new wxXmlNode(wxXML_ELEMENT_NODE, title);
-  const std::vector<WeatherLoadCase>& weathercases = doc.weathercases();
+  const std::list<WeatherLoadCase>& weathercases = doc.weathercases();
   for (auto iter = weathercases.cbegin(); iter != weathercases.cend();
        iter++) {
     // copies weathercase
@@ -60,7 +60,7 @@ wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
   // creates spans node
   title = "spans";
   node_element = new wxXmlNode(wxXML_ELEMENT_NODE, title);
-  const std::vector<Span>& spans = doc.spans();
+  const std::list<Span>& spans = doc.spans();
   for (auto iter = spans.cbegin(); iter != spans.cend(); iter++) {
     const Span& span = *iter;
 

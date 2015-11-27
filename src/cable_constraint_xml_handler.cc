@@ -110,7 +110,7 @@ wxXmlNode* CableConstraintXmlHandler::CreateNode(
 
 int CableConstraintXmlHandler::ParseNode(
     const wxXmlNode* root,
-    const std::vector<WeatherLoadCase>* weathercases,
+    const std::list<WeatherLoadCase>* weathercases,
     CableConstraint& constraint) {
   // checks for valid root node
   if (root->GetName() != "cable_constraint") {
@@ -133,7 +133,7 @@ int CableConstraintXmlHandler::ParseNode(
 
 int CableConstraintXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
-    const std::vector<WeatherLoadCase>* weathercases,
+    const std::list<WeatherLoadCase>* weathercases,
     CableConstraint& constraint) {
   // evaluates each child node
   const wxXmlNode* node = root->GetChildren();

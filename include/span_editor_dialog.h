@@ -4,7 +4,7 @@
 #ifndef OTLS_SPANANALYZER_SPANEDITORDIALOG_H_
 #define OTLS_SPANANALYZER_SPANEDITORDIALOG_H_
 
-#include <vector>
+#include <list>
 
 #include "models/base/units.h"
 #include "wx/wx.h"
@@ -35,7 +35,7 @@ class SpanEditorDialog : public wxDialog {
   ///   The span to be modified with the dialog.
   SpanEditorDialog(wxWindow* parent,
                    const std::vector<Cable>* cables,
-                   const std::vector<WeatherLoadCase>* weathercases,
+                   const std::list<WeatherLoadCase>* weathercases,
                    const units::UnitSystem& units,
                    Span* span);
 
@@ -79,7 +79,7 @@ class SpanEditorDialog : public wxDialog {
 
   /// \var weathercases_
   ///   The weathercases.
-  const std::vector<WeatherLoadCase>* weathercases_;
+  const std::list<WeatherLoadCase>* weathercases_;
 
   /// \var cables_
   ///   The cables.

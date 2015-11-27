@@ -27,6 +27,8 @@ enum {
 
 BEGIN_EVENT_TABLE(WeathercaseTreeCtrl, wxTreeCtrl)
   EVT_MENU(wxID_ANY, WeathercaseTreeCtrl::OnContextMenuSelect)
+  EVT_TREE_BEGIN_DRAG(wxID_ANY, WeathercaseTreeCtrl::OnDragBegin)
+  EVT_TREE_END_DRAG(wxID_ANY, WeathercaseTreeCtrl::OnDragEnd)
   EVT_TREE_ITEM_MENU(wxID_ANY, WeathercaseTreeCtrl::OnItemMenu)
 END_EVENT_TABLE()
 
@@ -69,12 +71,12 @@ void WeathercaseTreeCtrl::AddWeathercase() {
                                                  weathercase);
 
   // adds to document
-  doc_->AppendWeathercase(weathercase);
+  auto iter = doc_->AppendWeathercase(weathercase);
 
   // adds to treectrl
   wxTreeItemId id = AppendItem(GetRootItem(), weathercase.description);
-  EditTreeItemData* data = new EditTreeItemData(
-      EditTreeItemData::Type::kWeathercase, weathercase.description);
+  WeathercaseTreeItemData* data = new WeathercaseTreeItemData();
+  data->set_iter(iter);
   SetItemData(id, data);
 
   // updates views
@@ -84,46 +86,35 @@ void WeathercaseTreeCtrl::AddWeathercase() {
 
 void WeathercaseTreeCtrl::CopyWeathercase(const wxTreeItemId& id) {
   // gets tree item data
-  EditTreeItemData* item = (EditTreeItemData *)GetItemData(id);
-
-  // searches document weathercases for matching description
-  const std::vector<WeatherLoadCase>& weathercases = doc_->weathercases();
-  std::vector<WeatherLoadCase>::const_iterator iter;
-  for (iter = weathercases.cbegin(); iter != weathercases.cend(); iter++) {
-    const WeatherLoadCase& weathercase = *iter;
-    if (weathercase.description == item->description()) {
-      break;
-    }
-  }
+  WeathercaseTreeItemData* item = (WeathercaseTreeItemData*)GetItemData(id);
 
   // copies weathercase, modifies description
-  WeatherLoadCase weathercase = *iter;
-  std::string description = weathercase.description;
+  WeatherLoadCase weathercase = *(item->iter());
   int i = 1;
   bool is_unique = false;
   while (is_unique == false) {
     // re-checks if it is unique
-    is_unique = doc_->IsUniqueWeathercase(description, -1);
+    is_unique = doc_->IsUniqueWeathercase(weathercase.description);
     if (is_unique == true) {
-      // sets weathercase description
-      weathercase.description = description;
       break;
     } else {
       // clears previous description attempt and generates a new one
-      description.clear();
-      description = weathercase.description + " Copy" + std::to_string(i);
+      /// \todo this needs some work
+      weathercase.description.clear();
+      weathercase.description = weathercase.description + " Copy"
+                                + std::to_string(i);
       i++;
     }
   }
 
-  // adds to document
-  const unsigned int index = (iter - weathercases.cbegin()) + 1;
-  doc_->InsertWeathercase(index, weathercase);
+  // gets position and inserts to document
+  auto position = std::next(item->iter());
+  auto iter = doc_->InsertWeathercase(position, weathercase);
 
   // adds to treectrl
   wxTreeItemId id_item = InsertItem(GetRootItem(), id, weathercase.description);
-  EditTreeItemData* data = new EditTreeItemData(
-      EditTreeItemData::Type::kWeathercase, weathercase.description);
+  WeathercaseTreeItemData* data = new WeathercaseTreeItemData();
+  data->set_iter(iter);
   SetItemData(id_item, data);
 
   // updates views
@@ -133,21 +124,23 @@ void WeathercaseTreeCtrl::CopyWeathercase(const wxTreeItemId& id) {
 
 void WeathercaseTreeCtrl::DeleteWeathercase(const wxTreeItemId& id) {
   // gets tree item data
-  EditTreeItemData* item = (EditTreeItemData *)GetItemData(id);
+  WeathercaseTreeItemData* item = (WeathercaseTreeItemData *)GetItemData(id);
 
-  // searches document weathercases for matching description
-  const std::vector<WeatherLoadCase>& weathercases = doc_->weathercases();
-  std::vector<WeatherLoadCase>::const_iterator iter;
-  for (iter = weathercases.cbegin(); iter != weathercases.cend(); iter++) {
-    const WeatherLoadCase& weathercase = *iter;
-    if (weathercase.description == item->description()) {
-      break;
+  // determines if weathercase is referenced, and if so, confirms with user
+  // about deletion
+  bool is_referenced = doc_->IsReferencedWeathercase(item->iter());
+  if (is_referenced == true) {
+    std::string message = "This weathercase is referenced by spans within the "
+                          "project. Continue deletion?";
+    wxMessageDialog dialog(view_->GetFrame(), message, "Weathercase Delete",
+                           wxOK | wxCANCEL);
+    if (dialog.ShowModal() != wxID_OK) {
+      return;
     }
   }
 
   // erases from document and treectrl
-  const unsigned int index = iter - weathercases.cbegin();
-  doc_->DeleteWeathercase(index);
+  doc_->DeleteWeathercase(item->iter());
   Delete(id);
 
   // updates views
@@ -156,13 +149,13 @@ void WeathercaseTreeCtrl::DeleteWeathercase(const wxTreeItemId& id) {
 }
 
 void WeathercaseTreeCtrl::DeleteWeathercases() {
-  // gets vector and size
-  const std::vector<WeatherLoadCase>& weathercases = doc_->weathercases();
-  const unsigned int count = weathercases.size();
+  // gets list and size
+  const std::list<WeatherLoadCase>& weathercases = doc_->weathercases();
 
   // deletes weathercases from doc
-  for (unsigned int index = 0; index < count; index++) {
-    doc_->DeleteWeathercase(0);
+  for (auto iter = weathercases.cbegin(); iter != weathercases.cend();
+       iter++) {
+    doc_->DeleteWeathercase(iter);
   }
 
   // deletes weathercases from treectrl
@@ -175,23 +168,9 @@ void WeathercaseTreeCtrl::DeleteWeathercases() {
 }
 
 void WeathercaseTreeCtrl::EditWeathercase(const wxTreeItemId& id) {
-  // gets tree item data
-  EditTreeItemData* item = (EditTreeItemData *)GetItemData(id);
-
-  // searches document spans for one with matching description
-  const std::vector<WeatherLoadCase>& weathercases = doc_->weathercases();
-  std::vector<WeatherLoadCase>::const_iterator iter;
-  WeatherLoadCase weathercase;
-  for (iter = weathercases.cbegin(); iter != weathercases.cend(); iter++) {
-    weathercase = *iter;
-    if (weathercase.description == item->description()) {
-      break;
-    }
-  }
-
-  if (iter == weathercases.cend()) {
-    return;
-  }
+  // gets tree item data and copies
+  WeathercaseTreeItemData* item = (WeathercaseTreeItemData*)GetItemData(id);
+  WeatherLoadCase weathercase = *(item->iter());
 
   // converts to different unit style
   WeatherLoadCaseUnitConverter::ConvertUnitStyle(wxGetApp().config()->units,
@@ -200,23 +179,20 @@ void WeathercaseTreeCtrl::EditWeathercase(const wxTreeItemId& id) {
                                                  weathercase);
 
   // shows editor
-  const int index = iter - weathercases.cbegin();
-  const int status = ShowEditor(weathercase, index);
-
-  // converts to consistent unit style
-  WeatherLoadCaseUnitConverter::ConvertUnitStyle(wxGetApp().config()->units,
-                                                 units::UnitStyle::kDifferent,
-                                                 units::UnitStyle::kConsistent,
-                                                 weathercase);
-
-  // if user accepts changes when editing
+  auto iter = item->iter();
+  const int status = ShowEditor(weathercase, &iter);
   if (status == wxID_OK) {
+    // converts to consistent unit style
+    WeatherLoadCaseUnitConverter::ConvertUnitStyle(wxGetApp().config()->units,
+                                                   units::UnitStyle::kDifferent,
+                                                   units::UnitStyle::kConsistent,
+                                                   weathercase);
+
     // updates document
-    doc_->ReplaceWeathercase(index, weathercase);
+    doc_->ReplaceWeathercase(item->iter(), weathercase);
 
     // updates treectrl item name
-    item->set_description(weathercase.description);
-    SetItemText(id, item->description());
+    SetItemText(id, weathercase.description);
 
     // updates views
     ViewUpdateHint hint(ViewUpdateHint::HintType::kModelWeathercaseEdit);
@@ -232,13 +208,13 @@ void WeathercaseTreeCtrl::InitWeathercases() {
   DeleteChildren(root);
 
   // adds items for all weathercases in document
-  const std::vector<WeatherLoadCase>& weathercases = doc_->weathercases();
+  const std::list<WeatherLoadCase>& weathercases = doc_->weathercases();
   for (auto iter = weathercases.cbegin(); iter != weathercases.cend();
        iter++) {
     const WeatherLoadCase& weathercase = *iter;
     wxTreeItemId item = AppendItem(root, weathercase.description);
-    EditTreeItemData* data = new EditTreeItemData(
-        EditTreeItemData::Type::kWeathercase, weathercase.description);
+    WeathercaseTreeItemData* data = new WeathercaseTreeItemData();
+    data->set_iter(iter);
     SetItemData(item, data);
   }
 
@@ -268,6 +244,58 @@ void WeathercaseTreeCtrl::OnContextMenuSelect(wxCommandEvent& event) {
   }
 }
 
+void WeathercaseTreeCtrl::OnDragBegin(wxTreeEvent& event) {
+  // checks if weathercase is dragged, not the root
+  if (event.GetItem() == GetRootItem()) {
+    return;
+  }
+
+  // stores reference to dragged item and allows event
+  item_dragged_ = event.GetItem();
+  event.Allow();
+}
+
+void WeathercaseTreeCtrl::OnDragEnd(wxTreeEvent& event) {
+  // verifies that weathercase is the destination, not the root
+  if (event.GetItem() == GetRootItem()) {
+    item_dragged_ = (wxTreeItemId)0l;
+    return;
+  }
+
+  // identifies source and destination
+  wxTreeItemId item_source = item_dragged_;
+  wxTreeItemId item_destination = event.GetItem();
+
+  item_dragged_ = (wxTreeItemId)0l;
+
+  // gets data for source and destination items
+  WeathercaseTreeItemData* data_source =
+      (WeathercaseTreeItemData*)GetItemData(item_source);
+  std::list<WeatherLoadCase>::const_iterator iter_source = data_source->iter();
+
+  WeathercaseTreeItemData* data_destination =
+      (WeathercaseTreeItemData*)GetItemData(item_destination);
+  std::list<WeatherLoadCase>::const_iterator iter_destination =
+      data_destination->iter();
+  std::advance(iter_destination, 1);
+
+  // modifies document
+  doc_->MoveWeathercase(iter_source, iter_destination);
+
+  // modifies treectrl
+  wxString desc = GetItemText(item_source);
+  std::list<WeatherLoadCase>::const_iterator iter = data_source->iter();
+  Delete(item_source);
+  item_source = InsertItem(GetRootItem(), item_destination, desc);
+  WeathercaseTreeItemData* data = new WeathercaseTreeItemData();
+  data->set_iter(iter);
+  SetItemData(item_source, data);
+
+  // updates views
+  ViewUpdateHint hint(ViewUpdateHint::HintType::kModelWeathercaseEdit);
+  doc_->UpdateAllViews(nullptr, &hint);
+}
+
 void WeathercaseTreeCtrl::OnItemMenu(wxTreeEvent& event) {
   // gets item from event
   wxTreeItemId id = event.GetItem();
@@ -292,8 +320,9 @@ void WeathercaseTreeCtrl::OnItemMenu(wxTreeEvent& event) {
   event.Skip();
 }
 
-int WeathercaseTreeCtrl::ShowEditor(WeatherLoadCase& weathercase,
-                                    const int& index_skip) {
+int WeathercaseTreeCtrl::ShowEditor(
+    WeatherLoadCase& weathercase,
+    const std::list<WeatherLoadCase>::const_iterator* skip) {
   int status = 0;
   WeatherLoadCaseEditorDialog dialog_edit(view_->GetFrame(),
                                           &weathercase,
@@ -310,7 +339,7 @@ int WeathercaseTreeCtrl::ShowEditor(WeatherLoadCase& weathercase,
     }
 
     // re-checks if name is unique
-    is_unique = doc->IsUniqueWeathercase(weathercase.description, index_skip);
+    is_unique = doc->IsUniqueWeathercase(weathercase.description, skip);
     if (is_unique == false) {
       std::string message = "Weathercase description is a duplicate. Please "
                             "provide another description.";
@@ -357,7 +386,9 @@ void SpanTreeCtrl::ActivateSpan(const wxTreeItemId& id) {
     wxTreeItemId root = GetRootItem();
     wxTreeItemId item = GetFirstChild(root, cookie);
     while (item.IsOk() == true) {
-      SetItemBold(item, false);
+      if (IsBold(item) == true) {
+        SetItemBold(item, false);
+      }
       item = GetNextSibling(item);
     }
 
@@ -385,80 +416,53 @@ void SpanTreeCtrl::AddSpan() {
   }
 
   // adds to document
-  doc_->AppendSpan(span);
+  auto iter = doc_->AppendSpan(span);
 
   // adds to treectrl
   wxTreeItemId id = AppendItem(GetRootItem(), span.name);
-  EditTreeItemData* data = new EditTreeItemData(EditTreeItemData::Type::kSpan,
-                                                span.name);
+  SpanTreeItemData* data = new SpanTreeItemData();
+  data->set_iter(iter);
   SetItemData(id, data);
 }
 
 void SpanTreeCtrl::CopySpan(const wxTreeItemId& id) {
   // gets tree item data
-  EditTreeItemData* item = (EditTreeItemData *)GetItemData(id);
-
-  // gets selected span
-  // searches document spans for one with matching description
-  const std::vector<Span>& spans = doc_->spans();
-  std::vector<Span>::const_iterator iter;
-  for (iter = spans.cbegin(); iter != spans.cend(); iter++) {
-    const Span& span = *iter;
-    if (span.name == item->description()) {
-      break;
-    }
-  }
+  SpanTreeItemData* item = (SpanTreeItemData*)GetItemData(id);
 
   // copies span
-  Span span = *iter;
+  Span span = *(item->iter());
 
-  // adds to document
-  const unsigned int index = iter - spans.cbegin();
-  if (index == spans.size()) {
-    doc_->AppendSpan(span);
-  } else {
-    doc_->InsertSpan(index, span);
-  }
+  // gets position and inserts to document
+  auto position = std::next(item->iter());
+  auto iter = doc_->InsertSpan(position, span);
 
   // adds to treectrl
   wxTreeItemId id_item = InsertItem(GetRootItem(), id, span.name);
-  EditTreeItemData* data = new EditTreeItemData(EditTreeItemData::Type::kSpan,
-                                                span.name);
+  SpanTreeItemData* data = new SpanTreeItemData();
+  data->set_iter(iter);
   SetItemData(id_item, data);
 }
 
 void SpanTreeCtrl::DeleteSpan(const wxTreeItemId& id) {
   // gets tree item data
-  EditTreeItemData* item = (EditTreeItemData *)GetItemData(id);
-
-  // searches document spans for one with matching description
-  const std::vector<Span>& spans = doc_->spans();
-  std::vector<Span>::const_iterator iter;
-  for (iter = spans.cbegin(); iter != spans.cend(); iter++) {
-    const Span& span = *iter;
-    if (span.name == item->description()) {
-      break;
-    }
-  }
+  SpanTreeItemData* item = (SpanTreeItemData*)GetItemData(id);
 
   // erases from document and treectrl
-  const unsigned int index = iter - spans.cbegin();
-  doc_->DeleteSpan(index);
+  doc_->DeleteSpan(item->iter());
   Delete(id);
 
-  // updates views
+  // updates view
   ViewUpdateHint hint(ViewUpdateHint::HintType::kModelSpansEdit);
   doc_->UpdateAllViews(nullptr, &hint);
 }
 
 void SpanTreeCtrl::DeleteSpans() {
-  // gets vector and size
-  const std::vector<Span>& spans = doc_->spans();
-  const unsigned int count = spans.size();
+  // gets list and size
+  const std::list<Span>& spans = doc_->spans();
 
   // deletes spans from doc
-  for (unsigned int index = 0; index < count; index++) {
-    doc_->DeleteSpan(0);
+  for (auto iter = spans.cbegin(); iter != spans.cend(); iter++) {
+    doc_->DeleteSpan(iter);
   }
 
   // deletes spans from treectrl
@@ -471,23 +475,9 @@ void SpanTreeCtrl::DeleteSpans() {
 }
 
 void SpanTreeCtrl::EditSpan(const wxTreeItemId& id) {
-  // gets tree item data
-  EditTreeItemData* item = (EditTreeItemData *)GetItemData(id);
-
-  // searches document spans for one with matching description and copies
-  const std::vector<Span>& spans = doc_->spans();
-  std::vector<Span>::const_iterator iter;
-  Span span;
-  for (iter = spans.cbegin(); iter != spans.cend(); iter++) {
-    span = *iter;
-    if (span.name == item->description()) {
-      break;
-    }
-  }
-
-  if (iter == spans.cend()) {
-    return;
-  }
+  // gets tree item data and copies span
+  SpanTreeItemData* item = (SpanTreeItemData*)GetItemData(id);
+  Span span = *(item->iter());
 
   // creates a span editor dialog
   SpanEditorDialog dialog(view_->GetFrame(),
@@ -496,9 +486,11 @@ void SpanTreeCtrl::EditSpan(const wxTreeItemId& id) {
                           units::UnitSystem::kImperial,
                           &span);
   if (dialog.ShowModal() == wxID_OK) {
+    // updates document
+    doc_->ReplaceSpan(item->iter(), span);
+
     // updates treectrl name
-    item->set_description(span.name);
-    SetItemText(id, item->description());
+    SetItemText(id, span.name);
 
     // updates view
     ViewUpdateHint hint(ViewUpdateHint::HintType::kModelSpansEdit);
@@ -513,12 +505,13 @@ void SpanTreeCtrl::InitSpans() {
   // deletes all children items
   DeleteChildren(root);
 
-  // adds itmes for all spans in document
-  const std::vector<Span>& spans = doc_->spans();
+  // adds items for all spans in document
+  const std::list<Span>& spans = doc_->spans();
   for (auto iter = spans.cbegin(); iter != spans.cend(); iter++) {
     const Span& span = *iter;
     wxTreeItemId item = AppendItem(root, span.name);
-    EditTreeItemData* data = new EditTreeItemData(EditTreeItemData::Type::kSpan, span.name);
+    SpanTreeItemData* data = new SpanTreeItemData();
+    data->set_iter(iter);
     SetItemData(item, data);
   }
 
@@ -622,6 +615,8 @@ void EditPane::Update(wxObject* hint) {
   }
 }
 
+/// \todo This should NOT be so complicated. Find a way to cache the activated
+///   span in the treectrl.
 const Span* EditPane::ActivatedSpan() {
   // searches tree for bolded item
   wxTreeItemIdValue cookie;
@@ -638,26 +633,9 @@ const Span* EditPane::ActivatedSpan() {
   // if bold item was found
   if (id.IsOk()) {
     // gets data associated with id
-    EditTreeItemData* item =
-        (EditTreeItemData *)treectrl_spans_->GetItemData(id);
-
-    // searches document for span
-    SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
-    const std::vector<Span>& spans = doc->spans();
-    std::vector<Span>::const_iterator iter;
-    for (iter = spans.cbegin(); iter != spans.cend(); iter++) {
-      const Span& span = *iter;
-      if (span.name == item->description()) {
-        break;
-      }
-    }
-
-    // returns value based on whether span was found
-    if (iter != spans.cend()) {
-      return &*iter;
-    } else {
-      return nullptr;
-    }
+    SpanTreeItemData* item =
+        (SpanTreeItemData*)treectrl_spans_->GetItemData(id);
+    return &(*item->iter());
   } else {
     return nullptr;
   }

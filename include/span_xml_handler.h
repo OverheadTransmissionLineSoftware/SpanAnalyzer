@@ -5,7 +5,7 @@
 #define OTLS_SPANANALYZER_SPANXMLHANDLER_H_
 
 #include <string>
-#include <vector>
+#include <list>
 
 #include "models/base/units.h"
 #include "wx/xml/xml.h"
@@ -65,7 +65,7 @@ class SpanXmlHandler : public XmlHandler {
   ///   encountered.
   static int ParseNode(const wxXmlNode* root,
                        const std::vector<Cable>* cables,
-                       const std::vector<WeatherLoadCase>* weathercases,
+                       const std::list<WeatherLoadCase>* weathercases,
                        Span& span);
 
  private:
@@ -86,7 +86,7 @@ class SpanXmlHandler : public XmlHandler {
   ///   encountered.
   static int ParseNodeV1(const wxXmlNode* root,
                          const std::vector<Cable>* cables,
-                         const std::vector<WeatherLoadCase>* weathercases,
+                         const std::list<WeatherLoadCase>* weathercases,
                          Span& span);
 };
 

@@ -40,7 +40,7 @@ void ResultsPane::Update(wxObject* hint) {
 
   // gets weathercases
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
-  const std::vector<WeatherLoadCase>& weathercases = doc->weathercases();
+  const std::list<WeatherLoadCase>& weathercases = doc->weathercases();
 
   wxChoice* choice = nullptr;
   wxString str_choice;
@@ -134,13 +134,14 @@ void ResultsPane::SetUnitsStaticText(const units::UnitSystem& units) {
 void ResultsPane::OnChoiceWeathercase(wxCommandEvent& event) {
   // gets weathercases
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
-  const std::vector<WeatherLoadCase>& weathercases = doc->weathercases();
+  const std::list<WeatherLoadCase>& weathercases = doc->weathercases();
 
   // gets selection and updates reloader
   wxChoice* choice = XRCCTRL(*view_->GetFrame(),
                              "choice_sagtension_weathercase", wxChoice);
   const int index_selection = choice->GetSelection();
-  const WeatherLoadCase& weathercase = weathercases.at(index_selection);
+  auto iter = std::next(weathercases.cbegin(), index_selection);
+  const WeatherLoadCase& weathercase = *iter;
   reloader_.set_weathercase_reloaded(&weathercase);
 
   // updates sag-tension results

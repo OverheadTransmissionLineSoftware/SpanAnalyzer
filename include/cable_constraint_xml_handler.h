@@ -5,7 +5,7 @@
 #define OTLS_SPANANALYZER_CABLECONSTRAINTXMLHANDLER_H_
 
 #include <string>
-#include <vector>
+#include <list>
 
 #include "models/base/units.h"
 #include "models/transmissionline/cable_constraint.h"
@@ -59,7 +59,7 @@ class CableConstraintXmlHandler : public XmlHandler {
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
   static int ParseNode(const wxXmlNode* root,
-                       const std::vector<WeatherLoadCase>* weathercases,
+                       const std::list<WeatherLoadCase>* weathercases,
                        CableConstraint& constraint);
 
  private:
@@ -76,7 +76,7 @@ class CableConstraintXmlHandler : public XmlHandler {
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
   static int ParseNodeV1(const wxXmlNode* root,
-                         const std::vector<WeatherLoadCase>* weathercases,
+                         const std::list<WeatherLoadCase>* weathercases,
                          CableConstraint& constraint);
 };
 

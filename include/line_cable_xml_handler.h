@@ -5,7 +5,7 @@
 #define OTLS_SPANANALYZER_LINECABLEXMLHANDLER_H_
 
 #include <string>
-#include <vector>
+#include <list>
 
 #include "models/base/units.h"
 #include "models/transmissionline/line_cable.h"
@@ -63,7 +63,7 @@ class LineCableXmlHandler : public XmlHandler {
   ///   encountered.
   static int ParseNode(const wxXmlNode* root,
                        const std::vector<Cable>* cables,
-                       const std::vector<WeatherLoadCase>* weathercases,
+                       const std::list<WeatherLoadCase>* weathercases,
                        LineCable& linecable);
 
  private:
@@ -84,7 +84,7 @@ class LineCableXmlHandler : public XmlHandler {
   ///   encountered.
   static int ParseNodeV1(const wxXmlNode* root,
                          const std::vector<Cable>* cables,
-                         const std::vector<WeatherLoadCase>* weathercases,
+                         const std::list<WeatherLoadCase>* weathercases,
                          LineCable& linecable);
 };
 

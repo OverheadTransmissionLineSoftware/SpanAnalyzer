@@ -14,53 +14,55 @@
 
 /// \par OVERVIEW
 ///
-/// This class holds additional information for the treectrl items.
-class EditTreeItemData : public wxTreeItemData {
+/// This class contains the data associated with each item in the
+/// WeathercaseTreeCtrl. The data contains a std container iterator that points
+/// to where the weathercase is actually stored in the SpanAnalyzerDoc.
+class WeathercaseTreeItemData : public wxTreeItemData {
  public:
-  /// \par OVERVIEW
-  ///
-  /// This enum contains types of treectrl items.
-  enum class Type {
-    kSpan,
-    kWeathercase
-  };
+  /// \brief Sets the std container iterator for the item.
+  /// \param[in] iter
+  ///   The iterator.
+  void set_iter(std::list<WeatherLoadCase>::const_iterator iter) {
+    iter_ = iter;
+  }
 
-  /// \brief Constructor.
-  /// \param[in] type
-  ///   The type of tree item.
-  /// \param[in] description
-  ///   The description of the tree item.
-  EditTreeItemData(Type type, const wxString& description) {
-    type_ = type;
-    description_ = description;
-  };
-
-  /// \brief Gets the description.
-  /// \return The description.
-  wxString description() {return description_;}
-
-  /// \brief Sets the description.
-  /// \param[in] description
-  ///   The tree item description.
-  void set_description(wxString description) {description_ = description;};
-
-  /// \brief Sets the type.
-  /// \param[in] type
-  ///   The tree item type.
-  void set_type(Type type) {type_ = type;};
-
-  /// \brief Gets the type.
-  /// \return The type.
-  Type type() {return type_;}
+  /// \brief Gets the iterator.
+  /// \return The iterator.
+  const std::list<WeatherLoadCase>::const_iterator iter() {
+    return iter_;
+  }
 
  private:
-  /// \var description_
-  ///   The description.
-  wxString description_;
+  /// \var iter_
+  ///   The std container iterator that points to where the weathercase is
+  ///   stored.
+  std::list<WeatherLoadCase>::const_iterator iter_;
+};
 
-  /// \var type_
-  ///   The type.
-  Type type_;
+/// \par OVERVIEW
+///
+/// This class contains the data associated with each item in the SpanTreeCtrl.
+/// The data contains a std container iterator that points to where the span is
+/// actually stored in the SpanAnalyzerDoc.
+class SpanTreeItemData : public wxTreeItemData {
+ public:
+  /// \brief Sets the std container iterator for the item.
+  /// \param[in] iter
+  ///   The iterator.
+  void set_iter(std::list<Span>::const_iterator iter) {
+    iter_ = iter;
+  }
+
+  /// \brief Gets the iterator.
+  /// \return The iterator.
+  const std::list<Span>::const_iterator iter() {
+    return iter_;
+  }
+
+ private:
+  /// \var iter_
+  ///   The std container iterator that points to where the span is stored.
+  std::list<Span>::const_iterator iter_;
 };
 
 /// \par OVERVIEW
@@ -123,6 +125,16 @@ class WeathercaseTreeCtrl : public wxTreeCtrl {
   ///   function to call.
   void OnContextMenuSelect(wxCommandEvent& event);
 
+  /// \brief Handles the begin drag event.
+  /// \param[in] event
+  ///   The event.
+  void OnDragBegin(wxTreeEvent& event);
+
+  /// \brief Handles the end drag event.
+  /// \param[in] event
+  ///   The event.
+  void OnDragEnd(wxTreeEvent& event);
+
   /// \brief Handles the event for a user right click, and will generate a
   ///   context menu of options.
   /// \param[in] event
@@ -132,15 +144,21 @@ class WeathercaseTreeCtrl : public wxTreeCtrl {
   /// \brief Shows the weathercase editor.
   /// \param[in] weathercase
   ///   The weathercase to edit.
-  /// \param[in] index_skip
-  ///   The weathercaes index that will be skipped when checking if the
-  ///   weathercase is unique.
+  /// \param[in] skip
+  ///   The weathercase that will be skipped when checking if the weathercase
+  ///   description is unique.
   /// \return The return value for the ShowModal() dialog function.
-  int ShowEditor(WeatherLoadCase& weathercase, const int& index_skip = -1);
+  int ShowEditor(
+      WeatherLoadCase& weathercase,
+      const std::list<WeatherLoadCase>::const_iterator* skip = nullptr);
 
   /// \var doc_
   ///   The document.
   SpanAnalyzerDoc* doc_;
+
+  /// \var item_dragged_
+  ///   The item currently being dragged.
+  wxTreeItemId item_dragged_;
 
   /// \var view_
   ///   The view.
@@ -148,6 +166,8 @@ class WeathercaseTreeCtrl : public wxTreeCtrl {
 
   DECLARE_EVENT_TABLE()
 };
+
+/// \todo cache the activated span tree id
 
 /// \par OVERVIEW
 ///
@@ -169,6 +189,9 @@ class SpanTreeCtrl : public wxTreeCtrl {
 
   /// \brief Destructor.
   ~SpanTreeCtrl();
+
+  /// \brief Gets the activated span.
+  const Span& SpanActivated();
 
   /// \brief Updates the treectrl.
   /// \param[in] hint
