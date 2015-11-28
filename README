@@ -1,8 +1,8 @@
-Span Analyzer
+SpanAnalyzer
 ========================
 
 OVERVIEW
-This repository contains an application that uses the TLS-Libraries sag-tension
+This repository contains an application that uses the OTLS-Models sag-tension
 methods.
 
 CROSS-PLATFORM
