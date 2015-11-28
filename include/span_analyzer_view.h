@@ -30,7 +30,16 @@ class ViewUpdateHint : public wxObject {
   /// \brief Constructor.
   ViewUpdateHint(HintType type) {type = type_;};
 
-  /// \todo This needs to be made private.
+  /// \brief Sets the hint type.
+  /// \param[in] type
+  ///   The hint type.
+  void set_type(const HintType& type) {type_ = type;};
+
+  /// \brief Gets the hint type.
+  /// \return The hint type.
+  const HintType& type() const {return type_;};
+
+ private:
   /// \var type_
   ///   The hint type.
   HintType type_;
