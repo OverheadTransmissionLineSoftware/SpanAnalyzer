@@ -167,8 +167,6 @@ class WeathercaseTreeCtrl : public wxTreeCtrl {
   DECLARE_EVENT_TABLE()
 };
 
-/// \todo cache the activated span tree id
-
 /// \par OVERVIEW
 ///
 /// This class provides an interface for modifying the spans in the document.
@@ -191,7 +189,9 @@ class SpanTreeCtrl : public wxTreeCtrl {
   ~SpanTreeCtrl();
 
   /// \brief Gets the activated span.
-  const Span& SpanActivated();
+  /// \return The activated span. If no span is activated, a nullptr is
+  ///   returned.
+  const Span* SpanActivated();
 
   /// \brief Updates the treectrl.
   /// \param[in] hint
@@ -267,6 +267,10 @@ class SpanTreeCtrl : public wxTreeCtrl {
   ///   The document.
   SpanAnalyzerDoc* doc_;
 
+  /// \var item_activated_
+  ///   The item that is activated.
+  wxTreeItemId item_activated_;
+
   /// \var item_dragged_
   ///   The item currently being dragged.
   wxTreeItemId item_dragged_;
@@ -295,7 +299,7 @@ class EditPane : public wxPanel {
 
   /// \brief Gets the span that is activated in the span treectrl.
   /// \return The activated span.
-  const Span* ActivatedSpan();
+  const Span* SpanActivated();
 
   /// \brief Updates the pane.
   /// \param[in] hint

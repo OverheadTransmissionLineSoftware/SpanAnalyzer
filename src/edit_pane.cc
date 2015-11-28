@@ -376,6 +376,17 @@ SpanTreeCtrl::SpanTreeCtrl(wxWindow* parent, wxView* view)
 SpanTreeCtrl::~SpanTreeCtrl() {
 }
 
+const Span* SpanTreeCtrl::SpanActivated() {
+  if (item_activated_.IsOk()) {
+    // gets item data
+    SpanTreeItemData* data = (SpanTreeItemData*)GetItemData(item_activated_);
+    auto iter = data->iter();
+    return &(*iter);
+  } else {
+    return nullptr;
+  }
+}
+
 void SpanTreeCtrl::Update(wxObject* hint) {
   if (hint == nullptr) {
     InitSpans();
@@ -383,21 +394,22 @@ void SpanTreeCtrl::Update(wxObject* hint) {
 }
 
 void SpanTreeCtrl::ActivateSpan(const wxTreeItemId& id) {
-  if (id.IsOk()) {
-    // unbolds all previous items
-    wxTreeItemIdValue cookie;
-    wxTreeItemId root = GetRootItem();
-    wxTreeItemId item = GetFirstChild(root, cookie);
-    while (item.IsOk() == true) {
-      if (IsBold(item) == true) {
-        SetItemBold(item, false);
-      }
-      item = GetNextSibling(item);
-    }
-
-    // bolds new item
-    SetItemBold(id, true);
+  if (id.IsOk() == false) {
+    return;
   }
+
+  if (id == item_activated_) {
+    return;
+  }
+
+  // unbolds previous item
+  if (item_activated_.IsOk()) {
+    SetItemBold(item_activated_, false);
+  }
+
+  // bolds new item and caches
+  SetItemBold(id, true);
+  item_activated_ = id;
 
   // updates views
   ViewUpdateHint hint(ViewUpdateHint::HintType::kModelSpansEdit);
@@ -669,28 +681,6 @@ void EditPane::Update(wxObject* hint) {
   }
 }
 
-/// \todo This should NOT be so complicated. Find a way to cache the activated
-///   span in the treectrl.
-const Span* EditPane::ActivatedSpan() {
-  // searches tree for bolded item
-  wxTreeItemIdValue cookie;
-  wxTreeItemId root = treectrl_spans_->GetRootItem();
-  wxTreeItemId id = treectrl_spans_->GetFirstChild(root, cookie);
-  while (id.IsOk() == true) {
-    if (treectrl_spans_->IsBold(id) == true) {
-      break;
-    } else {
-      id = treectrl_spans_->GetNextSibling(id);
-    }
-  }
-
-  // if bold item was found
-  if (id.IsOk()) {
-    // gets data associated with id
-    SpanTreeItemData* item =
-        (SpanTreeItemData*)treectrl_spans_->GetItemData(id);
-    return &(*item->iter());
-  } else {
-    return nullptr;
-  }
+const Span* EditPane::SpanActivated() {
+  return treectrl_spans_->SpanActivated();
 }

@@ -59,7 +59,7 @@ void ResultsPane::Update(wxObject* hint) {
   choice->SetSelection(choice->FindString(str_choice));
 
   // gets activated span
-  const Span* span = view_->pane_edit()->ActivatedSpan();
+  const Span* span = view_->pane_edit()->SpanActivated();
   if (span != nullptr) {
     reloader_.set_line_cable(&span->linecable);
   }
