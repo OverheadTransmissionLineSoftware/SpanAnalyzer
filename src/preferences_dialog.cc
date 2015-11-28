@@ -27,12 +27,10 @@ PreferencesDialog::PreferencesDialog(
   wxDirPickerCtrl* dirpickerctrl = XRCCTRL(*this, "dirpickerctrl_cable",
                                            wxDirPickerCtrl);
 
-  /// \todo replace this with commented text below
-  dirpickerctrl->SetPath(config_->cable_directory);
-
-  //// takes the relative directory path and makes absolute
-  //wxFileName dir(wxGetCwd(), data_config->cable_directory, wxPATH_NATIVE);
-  //dirpickerctrl->SetPath(dir.GetFullPath());
+  // takes the relative config directory path and makes absolute
+  wxFileName dir(config_->cable_directory);
+  dir.MakeAbsolute(wxFileName::GetCwd());
+  dirpickerctrl->SetPath(dir.GetFullPath());
 
   // disables the metric option and selects imperial
   wxRadioBox* radiobox = XRCCTRL(*this, "radiobox_units", wxRadioBox);
@@ -66,11 +64,11 @@ void PreferencesDialog::OnButtonOk(wxCommandEvent& event) {
   }
 
   // transfers cable directory
-  // gets absolute file location from dialog and converts to relative path
+  // gets application working directory and converts to relative path
   wxDirPickerCtrl* dirpickerctrl = XRCCTRL(*this, "dirpickerctrl_cable",
                                            wxDirPickerCtrl);
   wxFileName dir(dirpickerctrl->GetPath());
-  dir.MakeRelativeTo(wxGetCwd());
+  dir.MakeRelativeTo(wxFileName::GetCwd());
   config_->cable_directory = dir.GetFullPath(wxPATH_UNIX);
 
   EndModal(wxID_OK);
