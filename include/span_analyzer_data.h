@@ -4,7 +4,7 @@
 #ifndef OTLS_SPANANALYZER_SPANANALYZERDATA_H_
 #define OTLS_SPANANALYZER_SPANANALYZERDATA_H_
 
-#include <vector>
+#include <list>
 
 #include "models/transmissionline/cable.h"
 
@@ -16,7 +16,7 @@ struct SpanAnalyzerData {
  public:
   /// \var cables
   ///   The cables.
-  std::vector<Cable> cables;
+  std::list<Cable> cables;
 };
 
 #endif //  OTLS_SPANANALYZER_SPANANALYZERDATA_H_

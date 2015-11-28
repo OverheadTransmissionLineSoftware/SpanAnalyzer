@@ -4,8 +4,8 @@
 #ifndef OTLS_SPANANALYZER_SPANXMLHANDLER_H_
 #define OTLS_SPANANALYZER_SPANXMLHANDLER_H_
 
-#include <string>
 #include <list>
+#include <string>
 
 #include "models/base/units.h"
 #include "wx/xml/xml.h"
@@ -52,10 +52,10 @@ class SpanXmlHandler : public XmlHandler {
   /// \param[in] root
   ///   The XML root node for the span.
   /// \param[in] cables
-  ///   A vector of cables that is matched against a cable description. If
+  ///   A list of cables that is matched against a cable description. If
   ///   found, a pointer will be set to the matching cable.
   /// \param[in] weathercases
-  ///   A vector of weathercases that is matched against a weathercase
+  ///   A list of weathercases that is matched against a weathercase
   ///   description. If found, a pointer will be set to the matching
   ///   weathercase.
   /// \param[out] span
@@ -64,7 +64,7 @@ class SpanXmlHandler : public XmlHandler {
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
   static int ParseNode(const wxXmlNode* root,
-                       const std::vector<Cable>* cables,
+                       const std::list<Cable>* cables,
                        const std::list<WeatherLoadCase>* weathercases,
                        Span& span);
 
@@ -73,10 +73,10 @@ class SpanXmlHandler : public XmlHandler {
   /// \param[in] root
   ///   The XML root node for the span.
   /// \param[in] cables
-  ///   A vector of cables that is matched against a cable description. If
+  ///   A list of cables that is matched against a cable description. If
   ///   found, a pointer will be set to the matching cable.
   /// \param[in] weathercases
-  ///   A vector of weathercases that is matched against a weathercase
+  ///   A list of weathercases that is matched against a weathercase
   ///   description. If found, a pointer will be set to the matching
   ///   weathercase.
   /// \param[out] span
@@ -85,7 +85,7 @@ class SpanXmlHandler : public XmlHandler {
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
   static int ParseNodeV1(const wxXmlNode* root,
-                         const std::vector<Cable>* cables,
+                         const std::list<Cable>* cables,
                          const std::list<WeatherLoadCase>* weathercases,
                          Span& span);
 };

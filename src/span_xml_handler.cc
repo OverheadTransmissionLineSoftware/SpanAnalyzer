@@ -36,7 +36,7 @@ wxXmlNode* SpanXmlHandler::CreateNode(
 
 int SpanXmlHandler::ParseNode(
     const wxXmlNode* root,
-    const std::vector<Cable>* cables,
+    const std::list<Cable>* cables,
     const std::list<WeatherLoadCase>* weathercases,
     Span& span) {
   // checks for valid root node
@@ -60,7 +60,7 @@ int SpanXmlHandler::ParseNode(
 
 int SpanXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
-    const std::vector<Cable>* cables,
+    const std::list<Cable>* cables,
     const std::list<WeatherLoadCase>* weathercases,
     Span& span) {
   // variables used to parse XML node

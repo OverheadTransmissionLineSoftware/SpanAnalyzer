@@ -14,7 +14,7 @@ END_EVENT_TABLE()
 
 SpanEditorDialog::SpanEditorDialog(
     wxWindow* parent,
-    const std::vector<Cable>* cables,
+    const std::list<Cable>* cables,
     const std::list<WeatherLoadCase>* weathercases,
     const units::UnitSystem& units,
     Span* span) {
@@ -183,7 +183,8 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
     span_modified_.linecable.cable = nullptr;
   } else {
     str = choice->GetString(index);
-    span_modified_.linecable.cable = &cables_->at(index);
+    auto iter = std::next(cables_->cbegin(), index);
+    span_modified_.linecable.cable = &(*iter);
   }
 
   // transfers constraint type
