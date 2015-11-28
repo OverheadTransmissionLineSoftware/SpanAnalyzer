@@ -114,6 +114,15 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return The input stream.
   wxInputStream& LoadObject(wxInputStream& stream);
 
+  /// \brief Moves the span position.
+  /// \param[in] element
+  ///   The span element.
+  /// \param[in] position
+  ///   The position the span is to be moved before.
+  void MoveSpan(
+      const std::list<Span>::const_iterator& element,
+      const std::list<Span>::const_iterator& position);
+
   /// \brief Moves the weathercase position.
   /// \param[in] element
   ///   The weathercase element.

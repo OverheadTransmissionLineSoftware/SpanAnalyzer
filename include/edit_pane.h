@@ -241,6 +241,16 @@ class SpanTreeCtrl : public wxTreeCtrl {
   ///   function to call.
   void OnContextMenuSelect(wxCommandEvent& event);
 
+  /// \brief Handles the begin drag event.
+  /// \param[in] event
+  ///   The event.
+  void OnDragBegin(wxTreeEvent& event);
+
+  /// \brief Handles the end drag event.
+  /// \param[in] event
+  ///   The event.
+  void OnDragEnd(wxTreeEvent& event);
+
   /// \brief Handles a double click event, which will set the span as activated.
   ///   context menu of options.
   /// \param[in] event
@@ -256,6 +266,10 @@ class SpanTreeCtrl : public wxTreeCtrl {
   /// \var doc_
   ///   The document.
   SpanAnalyzerDoc* doc_;
+
+  /// \var item_dragged_
+  ///   The item currently being dragged.
+  wxTreeItemId item_dragged_;
 
   /// \var view_
   ///   The view.

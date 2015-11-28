@@ -216,6 +216,25 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   return stream;
 }
 
+void SpanAnalyzerDoc::MoveSpan(
+      const std::list<Span>::const_iterator& element,
+      const std::list<Span>::const_iterator& position) {
+  // gets iterators with edit capability
+  const unsigned int index_element =
+      std::distance(spans_.cbegin(), element);
+  auto iter_element = std::next(spans_.begin(), index_element);
+
+  const unsigned int index_position =
+      std::distance(spans_.cbegin(), position);
+  auto iter_position = std::next(spans_.begin(), index_position);
+
+  spans_.splice(iter_position, spans_, iter_element);
+
+  Modify(true);
+
+  return;
+}
+
 void SpanAnalyzerDoc::MoveWeathercase(
       const std::list<WeatherLoadCase>::const_iterator& element,
       const std::list<WeatherLoadCase>::const_iterator& position) {

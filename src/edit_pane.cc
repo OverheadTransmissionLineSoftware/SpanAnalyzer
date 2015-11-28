@@ -353,6 +353,8 @@ int WeathercaseTreeCtrl::ShowEditor(
 
 BEGIN_EVENT_TABLE(SpanTreeCtrl, wxTreeCtrl)
   EVT_MENU(wxID_ANY, SpanTreeCtrl::OnContextMenuSelect)
+  EVT_TREE_BEGIN_DRAG(wxID_ANY, SpanTreeCtrl::OnDragBegin)
+  EVT_TREE_END_DRAG(wxID_ANY, SpanTreeCtrl::OnDragEnd)
   EVT_TREE_ITEM_ACTIVATED(wxID_ANY, SpanTreeCtrl::OnItemActivate)
   EVT_TREE_ITEM_MENU(wxID_ANY, SpanTreeCtrl::OnItemMenu)
 END_EVENT_TABLE()
@@ -541,6 +543,56 @@ void SpanTreeCtrl::OnContextMenuSelect(wxCommandEvent& event) {
   } else if (id_event == kTreeRootDeleteAll) {
     DeleteSpans();
   }
+}
+
+void SpanTreeCtrl::OnDragBegin(wxTreeEvent& event) {
+  // checks if weathercase is dragged, not the root
+  if (event.GetItem() == GetRootItem()) {
+    return;
+  }
+
+  // stores reference to dragged item and allows event
+  item_dragged_ = event.GetItem();
+  event.Allow();
+}
+
+void SpanTreeCtrl::OnDragEnd(wxTreeEvent& event) {
+  // verifies that weathercase is the destination, not the root
+  if (event.GetItem() == GetRootItem()) {
+    item_dragged_ = (wxTreeItemId)0l;
+    return;
+  }
+
+  // identifies source and destination
+  wxTreeItemId item_source = item_dragged_;
+  wxTreeItemId item_destination = event.GetItem();
+
+  item_dragged_ = (wxTreeItemId)0l;
+
+  // gets data for source and destination items
+  SpanTreeItemData* data_source = (SpanTreeItemData*)GetItemData(item_source);
+  std::list<Span>::const_iterator iter_source = data_source->iter();
+
+  SpanTreeItemData* data_destination =
+      (SpanTreeItemData*)GetItemData(item_destination);
+  std::list<Span>::const_iterator iter_destination = data_destination->iter();
+  std::advance(iter_destination, 1);
+
+  // modifies document
+  doc_->MoveSpan(iter_source, iter_destination);
+
+  // modifies treectrl
+  wxString desc = GetItemText(item_source);
+  std::list<Span>::const_iterator iter = data_source->iter();
+  Delete(item_source);
+  item_source = InsertItem(GetRootItem(), item_destination, desc);
+  SpanTreeItemData* data = new SpanTreeItemData();
+  data->set_iter(iter);
+  SetItemData(item_source, data);
+
+  // updates views
+  ViewUpdateHint hint(ViewUpdateHint::HintType::kModelSpansEdit);
+  doc_->UpdateAllViews(nullptr, &hint);
 }
 
 void SpanTreeCtrl::OnItemActivate(wxTreeEvent& event) {
