@@ -9,6 +9,8 @@
 #include "preferences_dialog.h"
 #include "span_analyzer_app.h"
 
+#include "../res/icon.xpm"
+
 // for debug event ONLY
 #include "wx/xml/xml.h"
 #include "span_editor_dialog.h"
@@ -29,9 +31,8 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
   // loads dialog from virtual xrc file system
   wxXmlResource::Get()->LoadMenuBar(this, "span_analyzer_menubar");
 
-  // sets the application icon
-  wxIcon icon("res/icon.xpm");
-  SetIcon(icon);
+  // sets the frame icon
+  SetIcon(wxICON(icon));
 }
 
 SpanAnalyzerFrame::~SpanAnalyzerFrame() {
