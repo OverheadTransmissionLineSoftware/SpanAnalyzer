@@ -2,7 +2,7 @@
 // first icon in the executable and the icons are sorted both by their order
 // (Win9x) and by alphabetically (!) (NT), so put this icon first and give it
 // a name starting with "a"
-aaaaaaaa ICON "sample.ico"
+aaaaaaaa ICON "icon.ico"
 
 // this icon is used with wxFrame::SetIcon()
 icon ICON "icon.ico"
