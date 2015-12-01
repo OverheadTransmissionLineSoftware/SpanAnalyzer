@@ -62,6 +62,11 @@ bool SpanAnalyzerApp::OnInit() {
   };
 
   if (!wxXmlResource::Get()->LoadFile(
+      wxFileName("res/error_message_dialog.xrc"))) {
+    return false;
+  };
+
+  if (!wxXmlResource::Get()->LoadFile(
       wxFileName("res/results_pane.xrc"))) {
     return false;
   };

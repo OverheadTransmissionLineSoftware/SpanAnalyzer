@@ -6,6 +6,8 @@
 #include "wx/valnum.h"
 #include "wx/xrc/xmlres.h"
 
+#include "error_message_dialog.h"
+
 BEGIN_EVENT_TABLE(SpanEditorDialog, wxDialog)
   EVT_BUTTON(wxID_CANCEL, SpanEditorDialog::OnCancel)
   EVT_BUTTON(wxID_OK, SpanEditorDialog::OnOk)
@@ -64,9 +66,11 @@ void SpanEditorDialog::OnOk(wxCommandEvent &event) {
   TransferDataFromWindow();
   TransferCustomDataFromWindow();
 
-  // validates cable data
-  // creates a temp cable for data validation
+  // validates span data
   std::list<ErrorMessage> messages;
+
+  /// \todo Validate if catenary can be solved for.
+
   if (span_modified_.Validate(true, &messages) == true) {
 
     // updates original cable reference based on user form edits
@@ -75,10 +79,10 @@ void SpanEditorDialog::OnOk(wxCommandEvent &event) {
     // ends modal by returning ok indicator
     EndModal(wxID_OK);
   } else {
-    /// \todo
-    /// do something to notify user of the errors
-    wxMessageDialog message(this, "Errors present");
+    // displays errors to user
+    ErrorMessageDialog message(this, &messages);
     message.ShowModal();
+    return;
   }
 }
 

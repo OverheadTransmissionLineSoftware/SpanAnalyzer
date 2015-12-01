@@ -8,6 +8,7 @@
 #include "wx/xrc/xmlres.h"
 
 #include "cable_unit_converter.h"
+#include "error_message_dialog.h"
 
 BEGIN_EVENT_TABLE(CableEditorDialog, wxDialog)
   EVT_BUTTON(wxID_CANCEL, CableEditorDialog::OnCancel)
@@ -53,12 +54,11 @@ void CableEditorDialog::OnOk(wxCommandEvent &event) {
     return;
   }
 
-  // transfers data from dialog controls to converted cable
+  // transfers data from dialog controls to modified cable
   this->TransferDataFromWindow();
   cable_modified_.name = name_.ToStdString();
 
   // validates cable data
-  // creates a temp cable for data validation
   std::list<ErrorMessage> messages;
   if (cable_modified_.Validate(true, &messages) == true) {
 
@@ -68,10 +68,10 @@ void CableEditorDialog::OnOk(wxCommandEvent &event) {
     // ends modal by returning ok indicator
     EndModal(wxID_OK);
   } else {
-    /// \todo
-    /// do something to notify user of the errors
-    wxMessageDialog message(this, "Errors present");
+    // displays errors to user
+    ErrorMessageDialog message(this, &messages);
     message.ShowModal();
+    return;
   }
 }
 

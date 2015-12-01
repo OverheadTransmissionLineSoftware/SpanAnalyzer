@@ -6,6 +6,8 @@
 #include "wx/valnum.h"
 #include "wx/xrc/xmlres.h"
 
+#include "error_message_dialog.h"
+
 BEGIN_EVENT_TABLE(WeatherLoadCaseEditorDialog, wxDialog)
   EVT_BUTTON(wxID_CANCEL, WeatherLoadCaseEditorDialog::OnCancel)
   EVT_BUTTON(wxID_OK, WeatherLoadCaseEditorDialog::OnOk)
@@ -55,25 +57,23 @@ void WeatherLoadCaseEditorDialog::OnOk(wxCommandEvent &event) {
     return;
   }
 
-  // transfers data from dialog controls to converted cable
+  // transfers data from dialog controls to modified weathercase
   this->TransferDataFromWindow();
   weathercase_modified_.description = name_.ToStdString();
 
   // validates weathercase data
-  // creates a temp cable for data validation
   std::list<ErrorMessage> messages;
   if (weathercase_modified_.Validate(true, &messages) == true) {
-    
     // updates original cable reference based on user form edits
     *weathercase_ = WeatherLoadCase(weathercase_modified_);
 
     // ends modal by returning ok indicator
     EndModal(wxID_OK);
   } else {
-    /// \todo
-    /// do something to notify user of the errors
-    wxMessageDialog message(this, "Errors present");
+    // displays errors to user
+    ErrorMessageDialog message(this, &messages);
     message.ShowModal();
+    return;
   }
 }
 
