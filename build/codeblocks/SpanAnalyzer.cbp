@@ -91,7 +91,10 @@
 		<Unit filename="../../res/span_analyzer_menubar.xrc" />
 		<Unit filename="../../res/span_analyzer_preferences_dialog.xrc" />
 		<Unit filename="../../res/span_editor_dialog.xrc" />
-		<Unit filename="../../res/spananalyzer.rc" />
+		<Unit filename="../../res/spananalyzer.rc">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="../../res/weather_load_case_editor_dialog.xrc" />
 		<Unit filename="../../spananalyzer.config" />
 		<Unit filename="../../src/cable_constraint_xml_handler.cc" />
