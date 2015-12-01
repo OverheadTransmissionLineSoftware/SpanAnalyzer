@@ -60,6 +60,7 @@
 		<Unit filename="../../include/cable_unit_converter.h" />
 		<Unit filename="../../include/cable_xml_handler.h" />
 		<Unit filename="../../include/edit_pane.h" />
+		<Unit filename="../../include/error_message_dialog.h" />
 		<Unit filename="../../include/file_handler.h" />
 		<Unit filename="../../include/line_cable_xml_handler.h" />
 		<Unit filename="../../include/polynomial_xml_handler.h" />
@@ -83,11 +84,14 @@
 		<Unit filename="../../include/xml_handler.h" />
 		<Unit filename="../../res/cable_editor_dialog.xrc" />
 		<Unit filename="../../res/edit_pane.xrc" />
+		<Unit filename="../../res/error_message_dialog.xrc" />
+		<Unit filename="../../res/icon.ico" />
 		<Unit filename="../../res/icon.xpm" />
 		<Unit filename="../../res/results_pane.xrc" />
 		<Unit filename="../../res/span_analyzer_menubar.xrc" />
 		<Unit filename="../../res/span_analyzer_preferences_dialog.xrc" />
 		<Unit filename="../../res/span_editor_dialog.xrc" />
+		<Unit filename="../../res/spananalyzer.rc" />
 		<Unit filename="../../res/weather_load_case_editor_dialog.xrc" />
 		<Unit filename="../../spananalyzer.config" />
 		<Unit filename="../../src/cable_constraint_xml_handler.cc" />
@@ -95,6 +99,7 @@
 		<Unit filename="../../src/cable_unit_converter.cc" />
 		<Unit filename="../../src/cable_xml_handler.cc" />
 		<Unit filename="../../src/edit_pane.cc" />
+		<Unit filename="../../src/error_message_dialog.cc" />
 		<Unit filename="../../src/file_handler.cc" />
 		<Unit filename="../../src/line_cable_xml_handler.cc" />
 		<Unit filename="../../src/polynomial_xml_handler.cc" />
