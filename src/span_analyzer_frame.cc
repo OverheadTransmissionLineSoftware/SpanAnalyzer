@@ -21,7 +21,6 @@ BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxFrame)
   EVT_MENU(XRCID("menuitem_edit_cable_edit"), SpanAnalyzerFrame::OnMenuEditCableEdit)
   EVT_MENU(XRCID("menuitem_edit_cable_new"), SpanAnalyzerFrame::OnMenuEditCableNew)
   EVT_MENU(XRCID("menuitem_edit_weathercases_edit"), SpanAnalyzerFrame::OnMenuEditWeatherCasesEdit)
-  EVT_MENU(XRCID("menuitem_file_exit"), SpanAnalyzerFrame::OnMenuFileExit)
   EVT_MENU(XRCID("menuitem_file_preferences"), SpanAnalyzerFrame::OnMenuFilePreferences)
   EVT_MENU(XRCID("menuitem_debug_event"), SpanAnalyzerFrame::OnMenuDebugEvent)
 END_EVENT_TABLE()
@@ -106,10 +105,6 @@ void SpanAnalyzerFrame::OnMenuEditWeatherCasesEdit(
 //
 //  // processes the event
 //  ProcessEventType(SpanAnalyzerController::EventType::kModelWeathercaseEdit);
-}
-
-void SpanAnalyzerFrame::OnMenuFileExit(wxCommandEvent& event) {
-  this->Destroy();
 }
 
 void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {

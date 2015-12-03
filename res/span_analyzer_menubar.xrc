@@ -30,7 +30,7 @@
         <help></help>
       </object>
       <object class="separator" />
-      <object class="wxMenuItem" name="menuitem_file_exit">
+      <object class="wxMenuItem" name="wxID_EXIT">
         <label>Exit</label>
         <help></help>
       </object>

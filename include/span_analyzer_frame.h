@@ -32,11 +32,6 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   ///   The event.
   void OnMenuEditWeatherCasesEdit(wxCommandEvent& event);
 
-  /// \brief Handles the file->exit menu click event.
-  /// \param[in] event
-  ///   The event.
-  void OnMenuFileExit(wxCommandEvent& event);
-
   /// \brief Handles the file->preferences menu click event.
   /// \param[in] event
   ///   The event.
