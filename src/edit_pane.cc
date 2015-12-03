@@ -6,14 +6,12 @@
 #include "wx/xrc/xmlres.h"
 
 #include "cable_editor_dialog.h"
+#include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
 #include "span_editor_dialog.h"
 #include "weather_load_case_editor_dialog.h"
 #include "weather_load_case_unit_converter.h"
-
-// temporary
-#include "span_analyzer_app.h"
 
 /// context menu enum
 enum {
@@ -464,6 +462,11 @@ void SpanTreeCtrl::DeleteSpan(const wxTreeItemId& id) {
 
   // erases from document and treectrl
   doc_->DeleteSpan(item->iter());
+
+  if (item_activated_ == id) {
+    item_activated_ = (wxTreeItemId)0l;
+  }
+
   Delete(id);
 
   // updates view
@@ -598,11 +601,22 @@ void SpanTreeCtrl::OnDragEnd(wxTreeEvent& event) {
   // modifies treectrl
   wxString desc = GetItemText(item_source);
   std::list<Span>::const_iterator iter = data_source->iter();
+
+  bool is_activated_item = false;
+  if (item_activated_ == item_source) {
+    is_activated_item = true;
+  }
+
   Delete(item_source);
   item_source = InsertItem(GetRootItem(), item_destination, desc);
   SpanTreeItemData* data = new SpanTreeItemData();
   data->set_iter(iter);
   SetItemData(item_source, data);
+
+  if (is_activated_item == true) {
+    item_activated_ = item_source;
+    SetItemBold(item_source);
+  }
 
   // updates views
   ViewUpdateHint hint(ViewUpdateHint::HintType::kModelSpansEdit);

@@ -60,7 +60,9 @@ void ResultsPane::Update(wxObject* hint) {
 
   // gets activated span
   const Span* span = view_->pane_edit()->SpanActivated();
-  if (span != nullptr) {
+  if (span == nullptr) {
+    reloader_.set_line_cable(nullptr);
+  } else {
     reloader_.set_line_cable(&span->linecable);
   }
 
