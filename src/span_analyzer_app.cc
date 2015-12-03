@@ -3,6 +3,7 @@
 
 #include "span_analyzer_app.h"
 
+#include "wx/stdpaths.h"
 #include "wx/xrc/xmlres.h"
 
 #include "file_handler.h"
@@ -26,8 +27,19 @@ int SpanAnalyzerApp::OnExit() {
 }
 
 bool SpanAnalyzerApp::OnCmdLineParsed(wxCmdLineParser& parser) {
+  // sets directory based on debug switch
+  if (parser.Found("debug")) {
+    directory_ = wxFileName::GetCwd();
+  } else {
+    // gets the application file name and solves for path
+    wxFileName path(wxStandardPaths::Get().GetExecutablePath());
+    directory_ = path.GetPath();
+  }
+
   // captures the start file which will be loaded when doc manager is created
-  parser.Found("file", &file_start_);
+  if (parser.GetParamCount() == 1) {
+    file_start_ = parser.GetParam(0);
+  }
 
   return true;
 }
@@ -50,44 +62,47 @@ bool SpanAnalyzerApp::OnInit() {
 
   // loads all xml resource files into virtual file system
   wxXmlResource::Get()->InitAllHandlers();
+  wxFileName path(directory_, "", "");
+  path.AppendDir("res");
+  path.SetExt("xrc");
 
-  if (!wxXmlResource::Get()->LoadFile(
-      wxFileName("res/cable_editor_dialog.xrc"))) {
+  path.SetName("cable_editor_dialog");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
   };
 
-  if (!wxXmlResource::Get()->LoadFile(
-      wxFileName("res/edit_pane.xrc"))) {
+  path.SetName("edit_pane");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
   };
 
-  if (!wxXmlResource::Get()->LoadFile(
-      wxFileName("res/error_message_dialog.xrc"))) {
+  path.SetName("error_message_dialog");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
   };
 
-  if (!wxXmlResource::Get()->LoadFile(
-      wxFileName("res/results_pane.xrc"))) {
+  path.SetName("results_pane");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
   };
 
-  if (!wxXmlResource::Get()->LoadFile(
-      wxFileName("res/span_analyzer_menubar.xrc"))) {
+  path.SetName("span_analyzer_menubar");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
   };
 
-  if (!wxXmlResource::Get()->LoadFile(
-      wxFileName("res/span_analyzer_preferences_dialog.xrc"))) {
+  path.SetName("span_analyzer_preferences_dialog");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
   };
 
-  if (!wxXmlResource::Get()->LoadFile(
-      wxFileName("res/span_editor_dialog.xrc"))) {
+  path.SetName("span_editor_dialog");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
   };
 
-  if (!wxXmlResource::Get()->LoadFile(
-      wxFileName("res/weather_load_case_editor_dialog.xrc"))) {
+  path.SetName("weather_load_case_editor_dialog");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
   };
 
@@ -127,6 +142,10 @@ SpanAnalyzerConfig* SpanAnalyzerApp::config() {
 
 SpanAnalyzerData* SpanAnalyzerApp::data() {
   return &data_;
+}
+
+wxString SpanAnalyzerApp::directory() {
+  return directory_;
 }
 
 SpanAnalyzerFrame* SpanAnalyzerApp::frame() {

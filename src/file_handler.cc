@@ -83,8 +83,10 @@ int FileHandler::LoadConfigFile(SpanAnalyzerConfig& config) {
   SpanAnalyzerFrame* frame = wxGetApp().frame();
 
   // locates config file to fill
+  wxFileName path(wxGetApp().directory(), "spananalyzer", "config");
+
   wxXmlDocument doc;
-  if (doc.Load("spananalyzer.config") == false) {
+  if (doc.Load(path.GetFullPath()) == false) {
     wxMessageDialog dialog(frame, "Could not locate config file");
     dialog.ShowModal();
   } else {
@@ -110,8 +112,10 @@ int FileHandler::LoadConfigFile(SpanAnalyzerConfig& config) {
 
 void FileHandler::SaveConfigFile(const SpanAnalyzerConfig& config) {
   // generates a virtual XML document
+  wxFileName path(wxGetApp().directory(), "spananalyzer", "config");
+
   wxXmlDocument doc;
   wxXmlNode* root = SpanAnalyzerConfigXmlHandler::CreateNode(config);
   doc.SetRoot(root);
-  doc.Save("spananalyzer.config", 2);
+  doc.Save(path.GetFullPath(), 2);
 }

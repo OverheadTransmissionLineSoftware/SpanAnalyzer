@@ -4,7 +4,6 @@
 #include "preferences_dialog.h"
 
 #include "wx/filepicker.h"
-#include "wx/stdpaths.h"
 #include "wx/xrc/xmlres.h"
 
 BEGIN_EVENT_TABLE(PreferencesDialog, wxDialog)
@@ -27,10 +26,8 @@ PreferencesDialog::PreferencesDialog(
   wxDirPickerCtrl* dirpickerctrl = XRCCTRL(*this, "dirpickerctrl_cable",
                                            wxDirPickerCtrl);
 
-  // takes the relative config directory path and makes absolute
-  wxFileName dir(config_->cable_directory);
-  dir.MakeAbsolute(wxFileName::GetCwd());
-  dirpickerctrl->SetPath(dir.GetFullPath());
+  // sets path for directory picker ctrl
+  dirpickerctrl->SetPath(config_->cable_directory);
 
   // disables the metric option and selects imperial
   wxRadioBox* radiobox = XRCCTRL(*this, "radiobox_units", wxRadioBox);
@@ -64,12 +61,9 @@ void PreferencesDialog::OnButtonOk(wxCommandEvent& event) {
   }
 
   // transfers cable directory
-  // gets application working directory and converts to relative path
   wxDirPickerCtrl* dirpickerctrl = XRCCTRL(*this, "dirpickerctrl_cable",
                                            wxDirPickerCtrl);
-  wxFileName dir(dirpickerctrl->GetPath());
-  dir.MakeRelativeTo(wxFileName::GetCwd());
-  config_->cable_directory = dir.GetFullPath(wxPATH_UNIX);
+  config_->cable_directory = dirpickerctrl->GetPath();
 
   EndModal(wxID_OK);
 }

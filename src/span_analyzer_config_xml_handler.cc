@@ -3,7 +3,7 @@
 
 #include "span_analyzer_config_xml_handler.h"
 
-#include "wx/dir.h"
+#include "wx/filename.h"
 
 #include "span_analyzer_app.h"
 
@@ -127,7 +127,7 @@ int SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
         return node->GetLineNumber();
       }
     } else if (title == "cable_directory") {
-      if (wxDir::Exists(content) == true) {
+      if (wxFileName::DirExists(content) == true) {
         config.cable_directory = content;
       } else {
         config.cable_directory = *wxEmptyString;

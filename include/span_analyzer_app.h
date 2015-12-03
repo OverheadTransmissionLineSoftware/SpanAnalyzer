@@ -67,6 +67,12 @@ class SpanAnalyzerApp : public wxApp {
   /// \return The application data.
   SpanAnalyzerData* data();
 
+  /// \brief Gets the application directory.
+  /// \return The application directory.
+  /// In debug mode, this will return the working directory. Otherwise, it will
+  /// return the directory that the application executable is stored.
+  wxString directory();
+
   /// \brief Gets the main application frame.
   /// \return The main application frame.
   SpanAnalyzerFrame* frame();
@@ -83,6 +89,12 @@ class SpanAnalyzerApp : public wxApp {
   /// \var data_
   ///   The application data.
   SpanAnalyzerData data_;
+
+  /// \var directory_
+  ///   The reference directory of the application. The debug switch will set
+  ///   this to the working directory, otherwise it will be the directory that
+  ///   the application is located.
+  wxString directory_;
 
   /// \var file_start_
   ///   The file that is loaded on application startup. This is specified as
@@ -102,8 +114,12 @@ class SpanAnalyzerApp : public wxApp {
 static const wxCmdLineEntryDesc cmd_line_desc [] = {
   {wxCMD_LINE_SWITCH, nullptr, "help", "show this help message",
       wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP},
-  {wxCMD_LINE_OPTION, nullptr, "file", "load a file on startup",
-      wxCMD_LINE_VAL_STRING},
+  {wxCMD_LINE_SWITCH, nullptr, "debug", "loads application resources, config, "
+                                "etc from the working directory instead of "
+                                "application directory",
+      wxCMD_LINE_VAL_NONE},
+  {wxCMD_LINE_PARAM, nullptr, nullptr, "startup file",
+      wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL},
 
   {wxCMD_LINE_NONE}
 };

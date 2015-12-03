@@ -12,7 +12,7 @@
 				<Option object_output="debug/obj/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="--file=test/test.spananalyzer" />
+				<Option parameters="--debug test/test.spananalyzer" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -28,6 +28,7 @@
 				<Option object_output="release/obj/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
+				<Option parameters="--debug test/test.spananalyzer" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
