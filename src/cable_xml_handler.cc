@@ -235,6 +235,7 @@ CableXmlHandler::~CableXmlHandler() {
 }
 
 wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
+                                       const std::string& name,
                                        const units::UnitSystem& units) {
   // variables used to create XML node
   double value = -999999;
@@ -246,8 +247,13 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
 
   // creates a root node for the cable
   node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "cable");
-  node_root->AddAttribute("name", wxString(cable.name));
   node_root->AddAttribute("version", "1");
+
+  // creates name node and adds to cable node
+  title = "name";
+  content = cable.name;
+  node_element = CreateElementNodeWithContent(title, content);
+  node_root->AddChild(node_element);
 
   // creates area-electrical node and adds to cable node
   title = "area_electrical";
@@ -372,7 +378,9 @@ int CableXmlHandler::ParseNodeV1(const wxXmlNode* root,
     title = node->GetName();
     content = ParseElementNodeWithContent(node);
 
-    if (title == "area_electrical") {
+    if (title == "name") {
+      cable.name = content;
+    } else if (title == "area_electrical") {
       if (content.ToDouble(&value) == true) {
         cable.area_electrical = value;
       } else {

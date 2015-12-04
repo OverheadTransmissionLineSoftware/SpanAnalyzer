@@ -96,10 +96,14 @@ class CableXmlHandler : public XmlHandler {
   /// \brief Creates an XML node for a cable struct.
   /// \param[in] cable
   ///   The cable.
+  /// \param[in] name
+  ///   The name of the XML node. This will be an attribute for the created
+  ///   node. If empty, no attribute will be created.
   /// \param[in] units
   ///   The unit system, which is used for attributing child XML nodes.
   /// \return An XML node for the cable.
   static wxXmlNode* CreateNode(const Cable& cable,
+                               const std::string& name,
                                const units::UnitSystem& units);
 
   /// \brief Parses an XML node and populates a cable struct.

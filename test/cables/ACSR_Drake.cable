@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cable name="ACSR Drake" version="1">
+<cable version="1">
+  <name>ACSR Drake</name>
   <area_electrical units="kcmil">795.0</area_electrical>
   <area_physical units="in^2">0.7264</area_physical>
   <diameter units="in">1.108</diameter>
