@@ -26,7 +26,6 @@
 ///
 /// This class supports attributing the child XML nodes for various unit
 /// systems.
-
 class WeatherLoadCaseXmlHandler : public XmlHandler {
  public:
   /// \brief Constructor.
