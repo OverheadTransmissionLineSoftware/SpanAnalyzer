@@ -121,7 +121,7 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
   } else if (units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "lbs/in^2");
   }
-  node_element = CreateElementNodeWithContent(name, content, &attribute);
+  node_element = CreateElementNodeWithContent(title, content, &attribute);
   node_root->AddChild(node_element);
 
   // returns node
