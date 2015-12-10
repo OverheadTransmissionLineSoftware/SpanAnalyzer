@@ -78,7 +78,8 @@ void WeathercaseTreeCtrl::AddWeathercase() {
   SetItemData(id, data);
 
   // updates views
-  ViewUpdateHint hint(ViewUpdateHint::HintType::kModelWeathercaseEdit);
+  ViewUpdateHint hint;
+  hint.set_type(ViewUpdateHint::HintType::kModelWeathercaseEdit);
   doc_->UpdateAllViews(nullptr, &hint);
 }
 
@@ -116,7 +117,8 @@ void WeathercaseTreeCtrl::CopyWeathercase(const wxTreeItemId& id) {
   SetItemData(id_item, data);
 
   // updates views
-  ViewUpdateHint hint(ViewUpdateHint::HintType::kModelWeathercaseEdit);
+  ViewUpdateHint hint;
+  hint.set_type(ViewUpdateHint::HintType::kModelWeathercaseEdit);
   doc_->UpdateAllViews(nullptr, &hint);
 }
 
@@ -142,7 +144,8 @@ void WeathercaseTreeCtrl::DeleteWeathercase(const wxTreeItemId& id) {
   Delete(id);
 
   // updates views
-  ViewUpdateHint hint(ViewUpdateHint::HintType::kModelWeathercaseEdit);
+  ViewUpdateHint hint;
+  hint.set_type(ViewUpdateHint::HintType::kModelWeathercaseEdit);
   doc_->UpdateAllViews(nullptr, &hint);
 }
 
@@ -161,7 +164,8 @@ void WeathercaseTreeCtrl::DeleteWeathercases() {
   DeleteChildren(root);
 
   // updates views
-  ViewUpdateHint hint(ViewUpdateHint::HintType::kModelWeathercaseEdit);
+  ViewUpdateHint hint;
+  hint.set_type(ViewUpdateHint::HintType::kModelWeathercaseEdit);
   view_->GetDocument()->UpdateAllViews(nullptr, &hint);
 }
 
@@ -193,7 +197,8 @@ void WeathercaseTreeCtrl::EditWeathercase(const wxTreeItemId& id) {
     SetItemText(id, weathercase.description);
 
     // updates views
-    ViewUpdateHint hint(ViewUpdateHint::HintType::kModelWeathercaseEdit);
+    ViewUpdateHint hint;
+    hint.set_type(ViewUpdateHint::HintType::kModelWeathercaseEdit);
     doc_->UpdateAllViews(nullptr, &hint);
   }
 }
@@ -291,7 +296,8 @@ void WeathercaseTreeCtrl::OnDragEnd(wxTreeEvent& event) {
   SetItemData(item_source, data);
 
   // updates views
-  ViewUpdateHint hint(ViewUpdateHint::HintType::kModelWeathercaseEdit);
+  ViewUpdateHint hint;
+  hint.set_type(ViewUpdateHint::HintType::kModelWeathercaseEdit);
   doc_->UpdateAllViews(nullptr, &hint);
 }
 
@@ -410,7 +416,8 @@ void SpanTreeCtrl::ActivateSpan(const wxTreeItemId& id) {
   item_activated_ = id;
 
   // updates views
-  ViewUpdateHint hint(ViewUpdateHint::HintType::kModelSpansEdit);
+  ViewUpdateHint hint;
+  hint.set_type(ViewUpdateHint::HintType::kModelSpansEdit);
   view_->GetDocument()->UpdateAllViews(nullptr, &hint);
 }
 
@@ -470,7 +477,8 @@ void SpanTreeCtrl::DeleteSpan(const wxTreeItemId& id) {
   Delete(id);
 
   // updates view
-  ViewUpdateHint hint(ViewUpdateHint::HintType::kModelSpansEdit);
+  ViewUpdateHint hint;
+  hint.set_type(ViewUpdateHint::HintType::kModelSpansEdit);
   doc_->UpdateAllViews(nullptr, &hint);
 }
 
@@ -488,7 +496,8 @@ void SpanTreeCtrl::DeleteSpans() {
   DeleteChildren(root);
 
   // updates view
-  ViewUpdateHint hint(ViewUpdateHint::HintType::kModelSpansEdit);
+  ViewUpdateHint hint;
+  hint.set_type(ViewUpdateHint::HintType::kModelSpansEdit);
   doc_->UpdateAllViews(nullptr, &hint);
 }
 
@@ -511,7 +520,8 @@ void SpanTreeCtrl::EditSpan(const wxTreeItemId& id) {
     SetItemText(id, span.name);
 
     // updates view
-    ViewUpdateHint hint(ViewUpdateHint::HintType::kModelSpansEdit);
+    ViewUpdateHint hint;
+    hint.set_type(ViewUpdateHint::HintType::kModelSpansEdit);
     doc_->UpdateAllViews(nullptr, &hint);
   }
 }
@@ -619,7 +629,8 @@ void SpanTreeCtrl::OnDragEnd(wxTreeEvent& event) {
   }
 
   // updates views
-  ViewUpdateHint hint(ViewUpdateHint::HintType::kModelSpansEdit);
+  ViewUpdateHint hint;
+  hint.set_type(ViewUpdateHint::HintType::kModelSpansEdit);
   doc_->UpdateAllViews(nullptr, &hint);
 }
 
