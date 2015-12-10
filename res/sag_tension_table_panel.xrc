@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
+  <object class="wxPanel" name="sag_tension_table_panel">
+    <style>wxTAB_TRAVERSAL</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class ="sizeritem">
+        <option>0</option>
+        <flag>wxALL</flag>
+        <border>0</border>
+        <object class ="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxStaticText" name="statictext_condition">
+              <label>Condition:</label>
+            </object>
+          </object>
+          <object class ="sizeritem">
+            <option>0</option>
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxChoice" name="choice_condition">
+              <selection>0</selection>
+              <size>100,-1</size>
+            </object>
+          </object>
+        </object>
+      </object>
+      <object class="sizeritem">
+      <option>1</option>
+      <flag>wxALL|wxEXPAND</flag>
+      <border>0</border>
+      <object class="wxListCtrl" name="listctrl_table">
+        <style>wxLC_REPORT|wxLC_HRULES|wxLC_VRULES</style>
+        <object class="listcol">
+          <align>wxLIST_FORMAT_CENTRE</align>
+          <text>Weathercase</text>
+          <width>200</width>
+        </object>
+        <object class="listcol">
+          <align>wxLIST_FORMAT_CENTRE</align>
+          <text>V Load</text>
+          <width>80</width>
+        </object>
+        <object class="listcol">
+          <align>wxLIST_FORMAT_CENTRE</align>
+          <text>T Load</text>
+          <width>80</width>
+        </object>
+        <object class="listcol">
+          <align>wxLIST_FORMAT_CENTRE</align>
+          <text>R Load</text>
+          <width>80</width>
+        </object>
+        <object class="listcol">
+          <align>wxLIST_FORMAT_CENTRE</align>
+          <text>H</text>
+          <width>80</width>
+        </object>
+        <object class="listcol">
+          <align>wxLIST_FORMAT_CENTRE</align>
+          <text>H Core</text>
+          <width>80</width>
+        </object>
+        <object class="listcol">
+          <align>wxLIST_FORMAT_CENTRE</align>
+          <text>H Shell</text>
+          <width>80</width>
+        </object>
+        <object class="listcol">
+          <align>wxLIST_FORMAT_CENTRE</align>
+          <text>H/w</text>
+          <width>80</width>
+        </object>
+      </object>
+    </object>
+    </object>
+  </object>
+</resource>

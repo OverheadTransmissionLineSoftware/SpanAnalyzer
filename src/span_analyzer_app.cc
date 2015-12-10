@@ -71,6 +71,11 @@ bool SpanAnalyzerApp::OnInit() {
     return false;
   };
 
+  path.SetName("catenary_table_panel");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
+    return false;
+  };
+
   path.SetName("edit_pane");
   if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
@@ -86,6 +91,11 @@ bool SpanAnalyzerApp::OnInit() {
     return false;
   };
 
+  path.SetName("sag_tension_table_panel");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
+    return false;
+  };
+
   path.SetName("span_analyzer_menubar");
   if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
@@ -97,6 +107,11 @@ bool SpanAnalyzerApp::OnInit() {
   };
 
   path.SetName("span_editor_dialog");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
+    return false;
+  };
+
+  path.SetName("span_panel");
   if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
   };
