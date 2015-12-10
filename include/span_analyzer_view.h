@@ -27,9 +27,6 @@ class ViewUpdateHint : public wxObject {
     kModelWeathercaseEdit,
   };
 
-  /// \brief Constructor.
-  ViewUpdateHint(HintType type) {type = type_;};
-
   /// \brief Sets the hint type.
   /// \param[in] type
   ///   The hint type.
