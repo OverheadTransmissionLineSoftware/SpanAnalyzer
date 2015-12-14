@@ -260,8 +260,9 @@ void WeathercaseTreeCtrl::OnDragBegin(wxTreeEvent& event) {
 
 void WeathercaseTreeCtrl::OnDragEnd(wxTreeEvent& event) {
   // verifies that the end drag is valid
-  if ((event.GetItem() == GetRootItem())
-       || (event.GetItem() == item_dragged_)) {
+  if ((event.GetItem().IsOk() == false)
+      ||(event.GetItem() == GetRootItem())
+      || (event.GetItem() == item_dragged_)) {
     item_dragged_ = (wxTreeItemId)0l;
     return;
   }
@@ -584,8 +585,9 @@ void SpanTreeCtrl::OnDragBegin(wxTreeEvent& event) {
 
 void SpanTreeCtrl::OnDragEnd(wxTreeEvent& event) {
   // verifies that the end drag is valid
-  if ((event.GetItem() == GetRootItem())
-       || (event.GetItem() == item_dragged_)) {
+  if ((event.GetItem().IsOk() == false)
+      ||(event.GetItem() == GetRootItem())
+      || (event.GetItem() == item_dragged_)) {
     item_dragged_ = (wxTreeItemId)0l;
     return;
   }
