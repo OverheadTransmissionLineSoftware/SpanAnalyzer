@@ -8,7 +8,12 @@
 #include "wx/xrc/xmlres.h"
 
 #include "edit_pane.h"
+#include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
+
+BEGIN_EVENT_TABLE(ResultsPane, wxPanel)
+  EVT_CHOICE(XRCID("choice_weathercase_set"), ResultsPane::OnChoiceWeathercaseSet)
+END_EVENT_TABLE()
 
 ResultsPane::ResultsPane(wxWindow* parent, SpanAnalyzerView* view) {
   // loads dialog from virtual xrc file system
@@ -16,6 +21,20 @@ ResultsPane::ResultsPane(wxWindow* parent, SpanAnalyzerView* view) {
 
   // saves view reference
   view_ = view;
+
+  // initializes weathercase set choice
+  // sets a description for the project weathercase set and the analysis
+  // weathercase sets
+  wxChoice* choice = XRCCTRL(*this, "choice_weathercase_set", wxChoice);
+  choice->Append("Project");
+
+  const std::list<std::string>& descriptions =
+      wxGetApp().data()->descriptions_weathercases_analysis;
+  for (auto iter = descriptions.cbegin(); iter != descriptions.cend();
+       iter ++) {
+    const std::string& description = *iter;
+    choice->Append(description);
+  }
 
   // creates notebook and adds child notebook pages
   wxNotebook* notebook = XRCCTRL(*this, "notebook_results", wxNotebook);
@@ -47,11 +66,63 @@ const SagTensionAnalysisResultSet& ResultsPane::results() const {
   return results_;
 }
 
+void ResultsPane::OnChoiceWeathercaseSet(wxCommandEvent& event) {
+  // gets weathercase set from application data
+  wxChoice* choice = XRCCTRL(*this, "choice_weathercase_set", wxChoice);
+  wxString str_selection = choice->GetStringSelection();
+  if (str_selection == "Project") {
+    // gets weathercases from document
+    const SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+    weathercases_selected_ = &doc->weathercases();
+  } else {
+    // gets weathercases from app data
+    // searches descriptions to find a match with the choice control
+    const SpanAnalyzerData* data = wxGetApp().data();
+    const std::list<std::string>& descriptions =
+        data->descriptions_weathercases_analysis;
+    std::list<std::string>::const_iterator iter;
+    for (iter = descriptions.cbegin(); iter != descriptions.cend(); iter ++) {
+      const std::string& description = *iter;
+      if (description == str_selection) {
+        break;
+      }
+    }
+
+    // advances the weathercase set iterator the same distance as the
+    // description iterator to find the match
+    if (iter != descriptions.cend()) {
+      const int index = std::distance(descriptions.cbegin(), iter);
+      auto it = std::next(data->weathercases_analysis.cbegin(), index);
+      weathercases_selected_ = &(*it);
+    } else
+      weathercases_selected_ = nullptr;
+  }
+
+  // updates views
+  ViewUpdateHint hint;
+  hint.set_type(ViewUpdateHint::HintType::kViewWeathercasesSetChange);
+  view_->GetDocument()->UpdateAllViews(nullptr, &hint);
+}
+
 void ResultsPane::UpdateSagTensionResults() {
-  // gets info from document/view
-  const SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  // gets activated span
   const Span* span = view_->pane_edit()->SpanActivated();
-  const std::list<WeatherLoadCase>& weathercases = doc->weathercases();
+  if (span == nullptr) {
+    results_.descriptions_weathercase.clear();
+    results_.results_initial.clear();
+    results_.results_load.clear();
+
+    return;
+  }
+
+  // checks if weathercases have been selected
+  if (weathercases_selected_ == nullptr) {
+    results_.descriptions_weathercase.clear();
+    results_.results_initial.clear();
+    results_.results_load.clear();
+
+    return;
+  }
 
   // sets up reloader
   LineCableReloader reloader;
@@ -61,7 +132,8 @@ void ResultsPane::UpdateSagTensionResults() {
 
   // updates weathercase descriptions
   results_.descriptions_weathercase.clear();
-  for (auto iter = weathercases.cbegin(); iter != weathercases.cend(); iter++) {
+  for (auto iter = weathercases_selected_->cbegin();
+       iter != weathercases_selected_->cend(); iter++) {
     const WeatherLoadCase& weathercase = *iter;
     results_.descriptions_weathercase.push_back(weathercase.description);
   }
@@ -69,7 +141,8 @@ void ResultsPane::UpdateSagTensionResults() {
   // updates initial results
   results_.results_initial.clear();
   reloader.set_condition_reloaded(CableConditionType::kInitial);
-  for (auto iter = weathercases.cbegin(); iter != weathercases.cend(); iter++) {
+  for (auto iter = weathercases_selected_->cbegin();
+       iter != weathercases_selected_->cend(); iter++) {
     const WeatherLoadCase& weathercase = *iter;
 
     // updates reloader with weathercase
@@ -93,7 +166,8 @@ void ResultsPane::UpdateSagTensionResults() {
   // updates load results
   results_.results_load.clear();
   reloader.set_condition_reloaded(CableConditionType::kLoad);
-  for (auto iter = weathercases.cbegin(); iter != weathercases.cend(); iter++) {
+  for (auto iter = weathercases_selected_->cbegin();
+       iter != weathercases_selected_->cend(); iter++) {
     const WeatherLoadCase& weathercase = *iter;
 
     // updates reloader with weathercase

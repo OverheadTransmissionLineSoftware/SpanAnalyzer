@@ -21,10 +21,11 @@ class ViewUpdateHint : public wxObject {
  public:
   /// This enum class contains types of view update hints.
   enum class HintType {
-	  kModelCableEdit,
-	  kModelPreferencesEdit,
-	  kModelSpansEdit,
+    kModelCableEdit,
+    kModelPreferencesEdit,
+    kModelSpansEdit,
     kModelWeathercaseEdit,
+    kViewWeathercasesSetChange
   };
 
   /// \brief Sets the hint type.

@@ -86,6 +86,11 @@ bool SpanAnalyzerApp::OnInit() {
     return false;
   };
 
+  path.SetName("preferences_dialog");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
+    return false;
+  };
+
   path.SetName("results_pane");
   if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
@@ -97,11 +102,6 @@ bool SpanAnalyzerApp::OnInit() {
   };
 
   path.SetName("span_analyzer_menubar");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
-  path.SetName("span_analyzer_preferences_dialog");
   if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
   };
@@ -126,10 +126,12 @@ bool SpanAnalyzerApp::OnInit() {
   SetTopWindow(frame_);
 
   // loads config file
+  /// \todo check for existence of config file, a new one may have to
+  ///   be generated
   FileHandler::LoadConfigFile(config_);
 
   // loads application data
-  FileHandler::LoadAppData(config_.cable_directory, config_.units, data_);
+  FileHandler::LoadAppData(config_.filepath_data, config_.units, data_);
 
   // loads a document if defined in command line
   if (file_start_ != wxEmptyString) {

@@ -56,6 +56,8 @@
 			<Add option="`wx-config --libs all`" />
 			<Add directory="../../../TLS-Libraries/build/codeblocks/debug/bin" />
 		</Linker>
+		<Unit filename="../../appconfig.xml" />
+		<Unit filename="../../appdata.xml" />
 		<Unit filename="../../include/cable_constraint_xml_handler.h" />
 		<Unit filename="../../include/cable_editor_dialog.h" />
 		<Unit filename="../../include/cable_unit_converter.h" />
@@ -75,6 +77,7 @@
 		<Unit filename="../../include/span_analyzer_config.h" />
 		<Unit filename="../../include/span_analyzer_config_xml_handler.h" />
 		<Unit filename="../../include/span_analyzer_data.h" />
+		<Unit filename="../../include/span_analyzer_data_xml_handler.h" />
 		<Unit filename="../../include/span_analyzer_doc.h" />
 		<Unit filename="../../include/span_analyzer_doc_xml_handler.h" />
 		<Unit filename="../../include/span_analyzer_frame.h" />
@@ -93,10 +96,10 @@
 		<Unit filename="../../res/error_message_dialog.xrc" />
 		<Unit filename="../../res/icon.ico" />
 		<Unit filename="../../res/icon.xpm" />
+		<Unit filename="../../res/preferences_dialog.xrc" />
 		<Unit filename="../../res/results_pane.xrc" />
 		<Unit filename="../../res/sag_tension_table_panel.xrc" />
 		<Unit filename="../../res/span_analyzer_menubar.xrc" />
-		<Unit filename="../../res/span_analyzer_preferences_dialog.xrc" />
 		<Unit filename="../../res/span_editor_dialog.xrc" />
 		<Unit filename="../../res/span_panel.xrc" />
 		<Unit filename="../../res/spananalyzer.rc">
@@ -104,7 +107,6 @@
 			<Option link="0" />
 		</Unit>
 		<Unit filename="../../res/weather_load_case_editor_dialog.xrc" />
-		<Unit filename="../../spananalyzer.config" />
 		<Unit filename="../../src/cable_constraint_xml_handler.cc" />
 		<Unit filename="../../src/cable_editor_dialog.cc" />
 		<Unit filename="../../src/cable_unit_converter.cc" />
@@ -121,6 +123,7 @@
 		<Unit filename="../../src/span.cc" />
 		<Unit filename="../../src/span_analyzer_app.cc" />
 		<Unit filename="../../src/span_analyzer_config_xml_handler.cc" />
+		<Unit filename="../../src/span_analyzer_data_xml_handler.cc" />
 		<Unit filename="../../src/span_analyzer_doc.cc" />
 		<Unit filename="../../src/span_analyzer_doc_xml_handler.cc" />
 		<Unit filename="../../src/span_analyzer_frame.cc" />

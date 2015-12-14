@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
-	<object class="wxDialog" name="span_analyzer_preferences_dialog">
+	<object class="wxDialog" name="preferences_dialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Preferences</title>
-    <object class="wxPanel" name="span_analyzer_preferences_panel">
+    <object class="wxPanel" name="preferences_panel">
       <style>wxTAB_TRAVERSAL</style>
       <object class="wxBoxSizer">
         <orient>wxVERTICAL</orient>
@@ -15,18 +15,18 @@
             <orient>wxHORIZONTAL</orient>
             <object class="sizeritem">
               <option>0</option>
-              <flag>wxALIGN_LEFT</flag>
+              <flag>wxALIGN_LEFT|wxALL</flag>
               <border>5</border>
-              <object class="wxStaticText" name="statictext_cable_directory">
-                <label>Cable Directory</label>
+              <object class="wxStaticText" name="statictext_filepath_data">
+                <label>Application Data</label>
               </object>
             </object>
             <object class="sizeritem">
               <option>0</option>
               <flag>wxALIGN_LEFT</flag>
               <border>5</border>
-              <object class="wxDirPickerCtrl" name="dirpickerctrl_cable">
-                <style>wxDIRP_USE_TEXTCTRL|wxDIRP_DIR_MUST_EXIST|wxDIRP_SMALL</style>
+              <object class="wxFilePickerCtrl" name="filepickerctrl_data">
+                <style>wxFLP_USE_TEXTCTRL|wxFLP_FILE_MUST_EXIST|wxFLP_SMALL</style>
                 <size>400,-1</size>
                 <value></value>
                 <maxlength>0</maxlength>

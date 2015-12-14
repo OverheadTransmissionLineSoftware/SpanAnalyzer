@@ -14,13 +14,9 @@
 /// This struct stores the application configuration settings.
 struct SpanAnalyzerConfig {
  public:
-  /// \var cable_directory
-  ///   The directory to search for cable files.
-  std::string cable_directory;
-
-  /// \var units
-  ///   The measurement unit system.
-  units::UnitSystem units;
+  /// \var filepath_data
+  ///   The file path for the application data.
+  std::string filepath_data;
 
   /// \var perspective
   ///   The AUI perspective, which is based on the user layout of panes. The
@@ -31,6 +27,10 @@ struct SpanAnalyzerConfig {
   /// \var size_frame
   ///   The main application frame size.
   wxSize size_frame;
+
+  /// \var units
+  ///   The measurement unit system.
+  units::UnitSystem units;
 };
 
 #endif //  OTLS_SPANANALYZER_SPANANALYZERCONFIG_H_

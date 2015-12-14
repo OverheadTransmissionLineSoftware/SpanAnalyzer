@@ -52,6 +52,10 @@ void SagTensionTablePanel::UpdateView(wxObject* hint) {
        ViewUpdateHint::HintType::kModelWeathercaseEdit) {
     listctrl_->DeleteAllItems();
     FillData();
+  } else if (hint_update->type() ==
+      ViewUpdateHint::HintType::kViewWeathercasesSetChange) {
+    listctrl_->DeleteAllItems();
+    FillData();
   }
 }
 

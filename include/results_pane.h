@@ -4,6 +4,7 @@
 #ifndef OTLS_SPANANALYZER_RESULTSPANE_H_
 #define OTLS_SPANANALYZER_RESULTSPANE_H_
 
+#include "models/transmissionline/weather_load_case.h"
 #include "wx/docview.h"
 #include "wx/wx.h"
 
@@ -39,16 +40,11 @@ class ResultsPane : public wxPanel {
   const SagTensionAnalysisResultSet& results() const;
 
  private:
+  /// \brief Handles the weathercase set choice event.
+  void OnChoiceWeathercaseSet(wxCommandEvent& event);
+
   /// \brief Updates the sag-tension results.
   void UpdateSagTensionResults();
-
-  /// \var results_
-  ///   The sag-tension analysis results.
-  SagTensionAnalysisResultSet results_;
-
-  /// \var view_
-  ///   The view.
-  SpanAnalyzerView* view_;
 
   /// \var panel_span_
   ///   The span panel, which is a notebook page.
@@ -61,6 +57,20 @@ class ResultsPane : public wxPanel {
   /// \var panel_table_sagtension_
   ///   The sag-tension table panel, which is a notebook page.
   SagTensionTablePanel* panel_table_sagtension_;
+
+  /// \var results_
+  ///   The sag-tension analysis results.
+  SagTensionAnalysisResultSet results_;
+
+  /// \var view_
+  ///   The view.
+  SpanAnalyzerView* view_;
+
+  /// \var weathercases_selected_
+  ///   The selected weathercases to generate results for.
+  const std::list<WeatherLoadCase>* weathercases_selected_;
+
+  DECLARE_EVENT_TABLE()
 };
 
 # endif //  OTLS_SPANANALYZER_RESULTSPANE_H_

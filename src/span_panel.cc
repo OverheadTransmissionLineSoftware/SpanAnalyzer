@@ -40,7 +40,11 @@ void SpanPanel::UpdateView(wxObject* hint) {
     UpdateWeathercases();
     UpdateData();
   } else if (hint_update->type() ==
-       ViewUpdateHint::HintType::kModelWeathercaseEdit) {
+      ViewUpdateHint::HintType::kModelWeathercaseEdit) {
+    UpdateWeathercases();
+    UpdateData();
+  } else if (hint_update->type() ==
+      ViewUpdateHint::HintType::kViewWeathercasesSetChange) {
     UpdateWeathercases();
     UpdateData();
   }
@@ -161,52 +165,58 @@ void SpanPanel::UpdateData() {
 
   // searches results for the specified weathercase
   choice = XRCCTRL(*this, "choice_sagtension_weathercase", wxChoice);
-  str_choice = choice->GetString(choice->GetSelection());
+  bool is_found_weathercase = false;
+  if (choice->GetSelection() != wxNOT_FOUND) {
+    // marks weathercase as found
+    is_found_weathercase = true;
 
-  const std::list<std::string>& descriptions =
-      results_->descriptions_weathercase;
-  auto iter = descriptions.cbegin();
-  while (iter != descriptions.cend()) {
-    const std::string& description = *iter;
-    if (description == str_choice) {
-      break;
-    } else {
-      iter++;
-    }
+    // gets results
+    auto iter_result = std::next(results->cbegin(), choice->GetSelection());
+    result = &(*iter_result);
   }
-
-  const int kIndex = std::distance(descriptions.cbegin(), iter);
-
-  // gets result with matching index
-  auto iter_result = std::next(results->cbegin(), kIndex);
-  result = &(*iter_result);
 
   // updates static text labels with results
   statictext = XRCCTRL(*this,
                        "statictext_tension_horizontal_value",
                        wxStaticText);
-  value = result->tension_horizontal;
-  str = helper::DoubleToFormattedString(value, 1);
-  statictext->SetLabel(str);
+  if (is_found_weathercase == true) {
+    value = result->tension_horizontal;
+    str = helper::DoubleToFormattedString(value, 1);
+    statictext->SetLabel(str);
+  } else {
+    statictext->SetLabel("");
+  }
 
   statictext = XRCCTRL(*this,
                        "statictext_tension_horizontal_shell_value",
                        wxStaticText);
-  value = result->tension_horizontal_shell;
-  str = helper::DoubleToFormattedString(value, 1);
-  statictext->SetLabel(str);
+  if (is_found_weathercase == true) {
+    value = result->tension_horizontal_shell;
+    str = helper::DoubleToFormattedString(value, 1);
+    statictext->SetLabel(str);
+  } else {
+    statictext->SetLabel("");
+  }
 
   statictext = XRCCTRL(*this,
                        "statictext_tension_horizontal_core_value",
                        wxStaticText);
-  value = result->tension_horizontal_core;
-  str = helper::DoubleToFormattedString(value, 1);
-  statictext->SetLabel(str);
+  if (is_found_weathercase == true) {
+    value = result->tension_horizontal_core;
+    str = helper::DoubleToFormattedString(value, 1);
+    statictext->SetLabel(str);
+  } else {
+    statictext->SetLabel("");
+  }
 
   statictext = XRCCTRL(*this,
                        "statictext_catenary_constant_value",
                        wxStaticText);
-  value = result->tension_horizontal / result->weight_unit.Magnitude();
-  str = helper::DoubleToFormattedString(value, 1);
-  statictext->SetLabel(str);
+  if (is_found_weathercase == true) {
+    value = result->tension_horizontal / result->weight_unit.Magnitude();
+    str = helper::DoubleToFormattedString(value, 1);
+    statictext->SetLabel(str);
+  } else {
+    statictext->SetLabel("");
+  }
 }

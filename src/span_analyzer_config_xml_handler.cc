@@ -27,6 +27,12 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
 
   // adds child nodes for struct parameters
 
+  // creates filepath-data node
+  title = "filepath_data";
+  content = config.filepath_data;
+  node_element = CreateElementNodeWithContent(title, content);
+  node_root->AddChild(node_element);
+
   // creates size-frame node
   title = "size_frame";
   const bool is_maximized = wxGetApp().frame()->IsMaximized();
@@ -64,12 +70,6 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
   node_element = CreateElementNodeWithContent(title, content);
   node_root->AddChild(node_element);
 
-  // creates cable directory
-  title = "cable_directory";
-  content = config.cable_directory;
-  node_element = CreateElementNodeWithContent(title, content);
-  node_root->AddChild(node_element);
-
   // returns node
   return node_root;
 }
@@ -103,7 +103,9 @@ int SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
     const wxString title = node->GetName();
     const wxString content = ParseElementNodeWithContent(node);
 
-    if (title == "size_frame") {
+    if (title == "filepath_data") {
+      config.filepath_data = content;
+    } else if (title == "size_frame") {
       if (content == "Automatic") {
         config.size_frame.SetWidth(0);
         config.size_frame.SetHeight(0);
@@ -125,12 +127,6 @@ int SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
         config.units = units::UnitSystem::kImperial;
       } else {
         return node->GetLineNumber();
-      }
-    } else if (title == "cable_directory") {
-      if (wxFileName::DirExists(content) == true) {
-        config.cable_directory = content;
-      } else {
-        config.cable_directory = *wxEmptyString;
       }
     } else {
       // node is not recognized by ther parser

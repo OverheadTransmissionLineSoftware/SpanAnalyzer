@@ -16,18 +16,17 @@ PreferencesDialog::PreferencesDialog(
     wxWindow* parent,
     SpanAnalyzerConfig* config) {
   // loads dialog from virtual xrc file system
-  wxXmlResource::Get()->LoadDialog(this, parent,
-                                   "span_analyzer_preferences_dialog");
+  wxXmlResource::Get()->LoadDialog(this, parent, "preferences_dialog");
 
   // saves doc reference
   config_ = config;
 
   // updates the cable directory
-  wxDirPickerCtrl* dirpickerctrl = XRCCTRL(*this, "dirpickerctrl_cable",
-                                           wxDirPickerCtrl);
+  wxFilePickerCtrl* filepickerctrl = XRCCTRL(*this, "filepickerctrl_data",
+                                             wxFilePickerCtrl);
 
-  // sets path for directory picker ctrl
-  dirpickerctrl->SetPath(config_->cable_directory);
+  // sets application data path for file picker ctrl
+  filepickerctrl->SetPath(config_->filepath_data);
 
   // disables the metric option and selects imperial
   wxRadioBox* radiobox = XRCCTRL(*this, "radiobox_units", wxRadioBox);
@@ -60,10 +59,10 @@ void PreferencesDialog::OnButtonOk(wxCommandEvent& event) {
     config_->units = units::UnitSystem::kImperial;
   }
 
-  // transfers cable directory
-  wxDirPickerCtrl* dirpickerctrl = XRCCTRL(*this, "dirpickerctrl_cable",
-                                           wxDirPickerCtrl);
-  config_->cable_directory = dirpickerctrl->GetPath();
+  // transfers application data path
+  wxFilePickerCtrl* filepickerctrl = XRCCTRL(*this, "filepickerctrl_data",
+                                             wxFilePickerCtrl);
+  config_->filepath_data = filepickerctrl->GetPath();
 
   EndModal(wxID_OK);
 }

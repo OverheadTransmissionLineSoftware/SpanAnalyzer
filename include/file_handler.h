@@ -21,19 +21,21 @@ class FileHandler {
   /// \brief Destructor.
   ~FileHandler();
 
-  /// \brief Parses the cable files in the specified directory.
-  /// \param[in] directory_cables
-  ///   The cable directory.
+  /// \brief Loads the application data at the provided file path.
+  /// \param[in] filepath
+  ///   The file path for the application data.
   /// \param[in] units
   ///   The unit system. This is used for converting to consistent units.
   /// \param[out] data
   ///   The application data that is populated.
+  /// \return The file line number of the node if the content could not be
+  ///   converted to the expected data type. Returns 0 if no errors were
+  ///   encountered.
   /// \todo this needs some sort of parsing feedback.
   /// \todo Does this need to be a public function? Why not embed within the
   /// parse config file. Or why not create a Load/Save config.
-  static void LoadAppData(const std::string& directory_cables,
-                          units::UnitSystem& units,
-                          SpanAnalyzerData& data);
+  static int LoadAppData(std::string filepath, units::UnitSystem& units,
+                         SpanAnalyzerData& data);
 
   /// \brief Parses the config file.
   /// \param[out] config

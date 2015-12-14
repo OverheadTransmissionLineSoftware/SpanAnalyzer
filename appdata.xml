@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<span_analyzer_data version="1">
+  <cable_directory>/home/brett/github/SpanAnalyzer/test/cables</cable_directory>
+  <analysis_weather_load_cases>
+    <analysis_weather_load_case_set name="Stringing">
+      <weather_load_case version="1">
+        <description>0-0-0</description>
+        <thickness_ice units="in">0.000</thickness_ice>
+        <density_ice units="lb/ft^3">0.0</density_ice>
+        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+        <temperature_cable units="deg F">0</temperature_cable>
+      </weather_load_case>
+      <weather_load_case version="1">
+        <description>0-0-30</description>
+        <thickness_ice units="in">0.000</thickness_ice>
+        <density_ice units="lb/ft^3">0.0</density_ice>
+        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+        <temperature_cable units="deg F">30</temperature_cable>
+      </weather_load_case>
+      <weather_load_case version="1">
+        <description>0-0-60</description>
+        <thickness_ice units="in">0.000</thickness_ice>
+        <density_ice units="lb/ft^3">0.0</density_ice>
+        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+        <temperature_cable units="deg F">60</temperature_cable>
+      </weather_load_case>
+      <weather_load_case version="1">
+        <description>0-0-90</description>
+        <thickness_ice units="in">0.000</thickness_ice>
+        <density_ice units="lb/ft^3">0.0</density_ice>
+        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+        <temperature_cable units="deg F">90</temperature_cable>
+      </weather_load_case>
+      <weather_load_case version="1">
+        <description>0-0-120</description>
+        <thickness_ice units="in">0.000</thickness_ice>
+        <density_ice units="lb/ft^3">0.0</density_ice>
+        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+        <temperature_cable units="deg F">120</temperature_cable>
+      </weather_load_case>
+    </analysis_weather_load_case_set>
+    <analysis_weather_load_case_set name="Structural">
+      <weather_load_case version="1">
+        <description>0.25-8-15</description>
+        <thickness_ice units="in">0.250</thickness_ice>
+        <density_ice units="lb/ft^3">57.3</density_ice>
+        <pressure_wind units="lb/ft^2">8.0</pressure_wind>
+        <temperature_cable units="deg F">15</temperature_cable>
+      </weather_load_case>
+      <weather_load_case version="1">
+        <description>0.5-8-0</description>
+        <thickness_ice units="in">0.500</thickness_ice>
+        <density_ice units="lb/ft^3">57.3</density_ice>
+        <pressure_wind units="lb/ft^2">8.0</pressure_wind>
+        <temperature_cable units="deg F">0</temperature_cable>
+      </weather_load_case>
+      <weather_load_case version="1">
+        <description>0.75-8-0</description>
+        <thickness_ice units="in">0.750</thickness_ice>
+        <density_ice units="lb/ft^3">57.3</density_ice>
+        <pressure_wind units="lb/ft^2">8.0</pressure_wind>
+        <temperature_cable units="deg F">0</temperature_cable>
+      </weather_load_case>
+      <weather_load_case version="1">
+        <description>1-8-0</description>
+        <thickness_ice units="in">1.000</thickness_ice>
+        <density_ice units="lb/ft^3">57.3</density_ice>
+        <pressure_wind units="lb/ft^2">8.0</pressure_wind>
+        <temperature_cable units="deg F">0</temperature_cable>
+      </weather_load_case>
+    </analysis_weather_load_case_set>
+  </analysis_weather_load_cases>
+</span_analyzer_data>
