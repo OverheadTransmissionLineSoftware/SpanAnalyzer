@@ -5,6 +5,39 @@
 #define OTLS_SPANANALYZER_SPANANALYZERFRAME_H_
 
 #include "wx/docview.h"
+#include "wx/dnd.h"
+
+/// \par OVERVIEW
+///
+/// This class is the drop target for an application document file.
+///
+/// If an application file is dropped onto the main application frame
+/// associated with this target, it will notify the document manager to open
+/// the document.
+class DocumentFileDropTarget : public wxFileDropTarget {
+ public:
+  /// \brief Constructor.
+  /// \param[in] parent
+  ///   The parent window.
+  DocumentFileDropTarget(wxWindow* parent);
+
+  /// \brief Handles the drop file event.
+  /// \param[in] x
+  ///   The x position of the mouse.
+  /// \param[in] y
+  ///   The y position of the mouse.
+  /// \param[in] filenames
+  ///   The list of files that are dropped. This should only contain one
+  ///   file.
+  /// \return Return true to accept data, or false to veto the operation.
+  virtual bool OnDropFiles(wxCoord x, wxCoord y,
+                           const wxArrayString& filenames);
+
+ private:
+  /// \var parent_
+  ///   The parent window.
+  wxWindow* parent_;
+};
 
 /// \par OVERVIEW
 ///
