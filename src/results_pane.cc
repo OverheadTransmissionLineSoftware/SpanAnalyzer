@@ -130,6 +130,9 @@ void ResultsPane::UpdateSagTensionResults() {
   reloader.set_length_unloaded_unstretched_adjustment(0);
   reloader.set_condition_reloaded(CableConditionType::kInitial);
 
+  // updates span reference
+  results_.span = span;
+
   // updates weathercase descriptions
   results_.descriptions_weathercase.clear();
   for (auto iter = weathercases_selected_->cbegin();
@@ -152,7 +155,6 @@ void ResultsPane::UpdateSagTensionResults() {
     Catenary3d catenary = reloader.CatenaryReloaded();
 
     SagTensionAnalysisResult result;
-    result.spacing_endpoints = catenary.spacing_endpoints();
     result.tension_horizontal = catenary.tension_horizontal();
     result.tension_horizontal_core = reloader.TensionHorizontalComponent(
         CableElongationModel::ComponentType::kCore);
@@ -177,7 +179,6 @@ void ResultsPane::UpdateSagTensionResults() {
     Catenary3d catenary = reloader.CatenaryReloaded();
 
     SagTensionAnalysisResult result;
-    result.spacing_endpoints = catenary.spacing_endpoints();
     result.tension_horizontal = catenary.tension_horizontal();
     result.tension_horizontal_core = reloader.TensionHorizontalComponent(
         CableElongationModel::ComponentType::kCore);

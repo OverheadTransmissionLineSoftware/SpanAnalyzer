@@ -43,6 +43,9 @@ class SpanEditorDialog : public wxDialog {
   ~SpanEditorDialog();
 
  private:
+  /// \brief Initializes the choice controls on the form.
+  void InitChoiceControls();
+
   /// \brief Handles the cancel button event.
   /// \param[in] event
   ///   The event.
@@ -52,6 +55,16 @@ class SpanEditorDialog : public wxDialog {
   /// \param[in] event
   ///   The event.
   void OnClose(wxCloseEvent& event);
+
+  /// \brief Handles the match constraint geometry checkbox event.
+  /// \param[in] event
+  ///   The event.
+  void OnCheckboxMatchGeometry(wxCommandEvent& event);
+
+  /// \brief Handles the span type choice event.
+  /// \param[in] event
+  ///   The event.
+  void OnChoiceType(wxCommandEvent& event);
 
   /// \brief Handles the Ok button event.
   /// \param[in] event
@@ -65,9 +78,6 @@ class SpanEditorDialog : public wxDialog {
 
   /// \brief Sets the control validators on the form.
   void SetValidators();
-
-  /// \brief Initializes the choice controls on the form.
-  void InitChoiceControls();
 
   /// \brief Transfers data that isn't tied to a validator from the span object
   ///   to the window.

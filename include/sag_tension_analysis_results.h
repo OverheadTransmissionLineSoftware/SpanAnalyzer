@@ -8,6 +8,8 @@
 
 #include "models/base/vector.h"
 
+#include "span.h"
+
 /// \par OVERVIEW
 ///
 /// This represents a single sag-tension analysis result.
@@ -15,10 +17,6 @@
 /// The sag-tension solution is fairly computationally expensive. Using these
 /// results, a catenary can be created to generate further analsyis results.
 struct SagTensionAnalysisResult {
-  /// \var spacing_endpoints
-  ///   The spacing between support endpoints.
-  Vector3d spacing_endpoints;
-
   /// \var tension_horizontal
   ///   The horizontal tension of the cable.
   double tension_horizontal;
@@ -52,6 +50,10 @@ struct SagTensionAnalysisResultSet {
   /// \var results_load
   ///   The sag-tension results for the load cable condition.
   std::list<SagTensionAnalysisResult> results_load;
+
+  /// \var span
+  ///   The span corresponding to the sag-tension result set.
+  const Span* span;
 };
 
 #endif  // OTLS_SPANANALYZER_SAGTENSIONANALYSISRESULTS_H_

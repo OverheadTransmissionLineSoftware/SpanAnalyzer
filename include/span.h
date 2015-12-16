@@ -16,6 +16,14 @@
 /// the LineCable class.
 struct Span {
  public:
+  /// \par OVERVIEW
+  ///
+  ///  This enum contains types of spans.
+  enum class Type {
+    kDeadendSpan,
+    kRulingSpan
+  };
+
   /// \brief Constructor.
   Span();
 
@@ -39,6 +47,14 @@ struct Span {
   /// \var name
   ///   The name.
   std::string name;
+
+  /// \var spacing_catenary
+  ///   The catenary spacing.
+  Vector3d spacing_catenary;
+
+  /// \var type
+  ///   The span type.
+  Type type;
 };
 
 #endif  // OTLS_SPANANALYZER_SPAN_H_

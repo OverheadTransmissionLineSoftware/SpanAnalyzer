@@ -42,6 +42,30 @@
               <option>0</option>
               <flag>wxALL</flag>
               <border>5</border>
+              <object class="wxStaticText" name="statictext_span_type">
+                <label>Span Type</label>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxChoice" name="choice_span_type">
+                <size>150,-1</size>
+              </object>
+            </object>
+          </object>
+        </object>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxEXPAND</flag>
+          <border>0</border>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
               <object class="wxStaticText" name="statictext_cable">
                 <label>Cable</label>
               </object>
@@ -211,30 +235,112 @@
         </object>
         <object class="sizeritem">
           <option>0</option>
-          <flag>wxALIGN_CENTER</flag>
+          <flag>wxEXPAND|wxALL</flag>
           <border>5</border>
-          <object class="wxBoxSizer">
-            <orient>wxHORIZONTAL</orient>
+          <object class="wxStaticBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <label>Catenary Geometry</label>
             <object class="sizeritem">
               <option>0</option>
               <flag>wxALL</flag>
               <border>5</border>
-              <object class="wxButton" name="wxID_OK">
-                <label>OK</label>
-                <default>1</default>
+              <object class="wxCheckBox" name="checkbox_match_constraint_geometry">
+                <label>Match Constraint Geometry</label>
               </object>
             </object>
             <object class="sizeritem">
               <option>0</option>
-              <flag>wxALL</flag>
-              <border>5</border>
-              <object class="wxButton" name="wxID_CANCEL">
-                <label>Cancel</label>
-                <default>0</default>
+              <flag></flag>
+              <border>0</border>
+              <object class="wxFlexGridSizer">
+                <rows>2</rows>
+                <cols>3</cols>
+                <vgap>0</vgap>
+                <hgap>0</hgap>
+                <growablecols></growablecols>
+                <growablerows></growablerows>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxStaticText" name="statictext_catenary_spacing_horizontal">
+                    <label>Horizontal</label>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxStaticText" name="statictext_catenary_spacing_horizontal_units">
+                    <label>[ft]</label>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxTextCtrl" name="textctrl_catenary_spacing_horizontal">
+                    <value></value>
+                    <size>70,-1</size>
+                    <maxlength>0</maxlength>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxStaticText" name="statictext_catenary_spacing_vertical">
+                    <label>Vertical</label>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxStaticText" name="statictext_catenary_spacing_vertical_units">
+                    <label>[ft]</label>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxTextCtrl" name="textctrl_catenary_spacing_vertical">
+                    <value></value>
+                    <size>70,-1</size>
+                    <maxlength>0</maxlength>
+                  </object>
+                </object>
               </object>
             </object>
           </object>
         </object>
+        <object class="sizeritem">
+        <option>0</option>
+        <flag>wxALIGN_CENTER</flag>
+        <border>5</border>
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxButton" name="wxID_OK">
+              <label>OK</label>
+              <default>1</default>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxButton" name="wxID_CANCEL">
+              <label>Cancel</label>
+              <default>0</default>
+            </object>
+          </object>
+        </object>
+      </object>
       </object>
     </object>
 	</object>

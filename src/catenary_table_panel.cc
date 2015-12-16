@@ -156,7 +156,7 @@ void CatenaryTablePanel::FillData() {
 
     // creates a catenary to calculate results
     Catenary3d catenary;
-    catenary.set_spacing_endpoints(result.spacing_endpoints);
+    catenary.set_spacing_endpoints(results_->span->spacing_catenary);
     catenary.set_tension_horizontal(result.tension_horizontal);
     catenary.set_weight_unit(result.weight_unit);
 

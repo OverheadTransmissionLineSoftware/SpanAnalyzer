@@ -4,6 +4,7 @@
 #include "span_xml_handler.h"
 
 #include "line_cable_xml_handler.h"
+#include "vector_xml_handler.h"
 
 SpanXmlHandler::SpanXmlHandler() {
 }
@@ -18,6 +19,9 @@ wxXmlNode* SpanXmlHandler::CreateNode(
   // variables used to create XML node
   wxXmlNode* node_root = nullptr;
   wxXmlNode* node_element = nullptr;
+  std::string title;
+  std::string content;
+  wxXmlAttribute attribute;
 
   // creates a node for the span root
   node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "span");
@@ -26,8 +30,30 @@ wxXmlNode* SpanXmlHandler::CreateNode(
 
   // adds child nodes for parameters
 
+  // creates type node and adds to parent node
+  title = "type";
+  if (span.type == Span::Type::kDeadendSpan) {
+    content = "Deadend";
+  } else if (span.type == Span::Type::kRulingSpan) {
+    content = "RulingSpan";
+  }
+  node_element = CreateElementNodeWithContent(title, content);
+  node_root->AddChild(node_element);
+
   // creates linecable node and adds to parent node
   node_element = LineCableXmlHandler::CreateNode(span.linecable, "", units);
+  node_root->AddChild(node_element);
+
+  // creates catenary geometry node and adds to parent node
+  if (units == units::UnitSystem::kImperial) {
+    attribute = wxXmlAttribute("units", "ft");
+  } else if (units == units::UnitSystem::kMetric) {
+    attribute = wxXmlAttribute("units", "???");
+  }
+  node_element = Vector3dXmlHandler::CreateNode(span.spacing_catenary,
+                                                "catenary_spacing",
+                                                attribute,
+                                                1);
   node_root->AddChild(node_element);
 
   // returns node
@@ -78,9 +104,23 @@ int SpanXmlHandler::ParseNodeV1(
     title = node->GetName();
     content = ParseElementNodeWithContent(node);
 
-    if (title == "line_cable") {
+    if (title == "type") {
+      if (content == "Deadend") {
+        span.type = Span::Type::kDeadendSpan;
+      } else if (content == "RulingSpan") {
+        span.type = Span::Type::kRulingSpan;
+      } else {
+        return node->GetLineNumber();
+      }
+    } else if (title == "line_cable") {
       int line_number = LineCableXmlHandler::ParseNode(
           node, cables, weathercases, span.linecable);
+      if(line_number != 0) {
+        return line_number;
+      }
+    } else if (title == "vector_3d") {
+      const int line_number = Vector3dXmlHandler::ParseNode(
+          node, span.spacing_catenary);
       if(line_number != 0) {
         return line_number;
       }
