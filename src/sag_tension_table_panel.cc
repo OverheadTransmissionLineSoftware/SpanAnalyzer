@@ -172,12 +172,12 @@ void SagTensionTablePanel::FillData() {
     listctrl_->SetItem(index_row, index_col, str);
 
     index_col++;
-    value = result.tension_horizontal_core;
+    value = result.tension_horizontal_shell;
     str = helper::DoubleToFormattedString(value, 1);
     listctrl_->SetItem(index_row, index_col, str);
 
     index_col++;
-    value = result.tension_horizontal_shell;
+    value = result.tension_horizontal_core;
     str = helper::DoubleToFormattedString(value, 1);
     listctrl_->SetItem(index_row, index_col, str);
 

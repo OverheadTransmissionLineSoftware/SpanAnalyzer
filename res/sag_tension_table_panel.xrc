@@ -62,12 +62,12 @@
         </object>
         <object class="listcol">
           <align>wxLIST_FORMAT_CENTRE</align>
-          <text>H Core</text>
+          <text>H Shell</text>
           <width>80</width>
         </object>
         <object class="listcol">
           <align>wxLIST_FORMAT_CENTRE</align>
-          <text>H Shell</text>
+          <text>H Core</text>
           <width>80</width>
         </object>
         <object class="listcol">
