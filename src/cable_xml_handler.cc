@@ -5,8 +5,6 @@
 
 #include "models/base/helper.h"
 
-#include "polynomial_xml_handler.h"
-
 CableComponentXmlHandler::CableComponentXmlHandler() {
 }
 
@@ -24,7 +22,7 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
   std::string content;
   wxXmlAttribute attribute;
   double value;
-  Polynomial polynomial;
+  const std::vector<double>* coefficients = nullptr;
 
   // creates a node for the cable component root
   node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "cable_component");
@@ -70,9 +68,11 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
   node_element = CreateElementNodeWithContent(title, content, &attribute);
   node_root->AddChild(node_element);
 
-  // creates polynomial stress-strain node and adds to component node
-  title = "polynomial";
-  polynomial.set_coefficients(&component.coefficients_polynomial_loadstrain);
+  // creates coefficients stress-strain node and adds to component node
+  title = "coefficients";
+  node_element = new wxXmlNode(wxXML_ELEMENT_NODE, title);
+  node_element->AddAttribute("name", "stress-strain");
+
   if (units == units::UnitSystem::kMetric) {
     attribute = wxXmlAttribute("units", "???");
   } else if (units == units::UnitSystem::kImperial) {
@@ -80,9 +80,18 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
   } else {
     attribute = wxXmlAttribute();
   }
-  node_element = PolynomialXmlHandler::CreateNode(polynomial,
-                                                  "stress-strain",
-                                                  attribute);
+
+  coefficients = &component.coefficients_polynomial_loadstrain;
+  for (auto iter = coefficients->cbegin(); iter != coefficients->cend();
+       iter++) {
+    const double& coefficient = *iter;
+    content = helper::DoubleToFormattedString(coefficient, 1);
+    wxXmlNode* sub_node = XmlHandler::CreateElementNodeWithContent(
+        "coefficient",
+        content,
+        &attribute);
+    node_element->AddChild(sub_node);
+  }
   node_root->AddChild(node_element);
 
   // creates load-limit-polynomial-loadstrain node and adds to component node
@@ -98,8 +107,10 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
   node_root->AddChild(node_element);
 
   // creates coefficients-creep node and adds to component node
-  title = "polynomial";
-  polynomial.set_coefficients(&component.coefficients_polynomial_creep);
+  title = "coefficients";
+  node_element = new wxXmlNode(wxXML_ELEMENT_NODE, title);
+  node_element->AddAttribute("name", "creep");
+
   if (units == units::UnitSystem::kMetric) {
     attribute = wxXmlAttribute("units", "???");
   } else if (units == units::UnitSystem::kImperial) {
@@ -107,9 +118,18 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
   } else {
     attribute = wxXmlAttribute();
   }
-  node_element = PolynomialXmlHandler::CreateNode(polynomial,
-                                                  "creep",
-                                                  attribute);
+
+  coefficients = &component.coefficients_polynomial_creep;
+  for (auto iter = coefficients->cbegin(); iter != coefficients->cend();
+       iter++) {
+    const double& coefficient = *iter;
+    content = helper::DoubleToFormattedString(coefficient, 1);
+    wxXmlNode* sub_node = XmlHandler::CreateElementNodeWithContent(
+        "coefficient",
+        content,
+        &attribute);
+    node_element->AddChild(sub_node);
+  }
   node_root->AddChild(node_element);
 
   // creates load-limit-polynomial-creep node and adds to component node
@@ -164,34 +184,29 @@ int CableComponentXmlHandler::ParseNodeV1(const wxXmlNode* root,
       } else {
         return node->GetLineNumber();
       }
-    } else if (title == "polynomial") {
-      wxString name_polynomial;
-      node->GetAttribute("name", &name_polynomial);
-      Polynomial polynomial;
+    } else if (title == "coefficients") {
+      wxString name_coefficients;
+      node->GetAttribute("name", &name_coefficients);
 
-      if (name_polynomial == "stress-strain") {
-        int line_number = PolynomialXmlHandler::ParseNode(node, polynomial);
-        if(line_number != 0) {
-          return line_number;
+      // gets coefficient sub-nodes
+      wxXmlNode* sub_node = node->GetChildren();
+      while (sub_node != nullptr) {
+        // creates a new coefficient
+        double coefficient = -999999;
+        const wxString sub_content = ParseElementNodeWithContent(sub_node);
+        sub_content.ToDouble(&coefficient);
+
+        // adds coefficient to container
+        if (name_coefficients == "stress-strain") {
+          component.coefficients_polynomial_loadstrain.push_back(coefficient);
+        } else if (name_coefficients == "creep") {
+          component.coefficients_polynomial_creep.push_back(coefficient);
+        } else {
+          // node was not recognized by parser
+          return node->GetLineNumber();
         }
-
-        std::vector<double> coefficients = *polynomial.coefficients();
-        component.coefficients_polynomial_loadstrain = coefficients;
-
-      } else if (name_polynomial == "creep") {
-        int line_number = PolynomialXmlHandler::ParseNode(node, polynomial);
-        if(line_number != 0) {
-          return line_number;
-        }
-
-        std::vector<double> coefficients = *polynomial.coefficients();
-        component.coefficients_polynomial_creep = coefficients;
-
-      } else {
-        // node was not recognized by parser
-        return node->GetLineNumber();
+        sub_node = sub_node->GetNext();
       }
-
     } else if (title == "limit_polynomial_creep") {
       if (content.ToDouble(&value) == true) {
         component.load_limit_polynomial_creep = value;

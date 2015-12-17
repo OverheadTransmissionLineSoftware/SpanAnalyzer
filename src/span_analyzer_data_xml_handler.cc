@@ -40,6 +40,14 @@ void LoadCablesFromDirectory(const std::string& directory_cables,
           if (doc.Load(str_path) == true) {
             // parses the XML document and loads into a cable object
             Cable cable;
+
+            /// \todo fix CableComponent constructor to have no default
+            ///   coefficients
+            cable.component_core.coefficients_polynomial_creep.clear();
+            cable.component_core.coefficients_polynomial_loadstrain.clear();
+            cable.component_shell.coefficients_polynomial_creep.clear();
+            cable.component_shell.coefficients_polynomial_loadstrain.clear();
+
             const wxXmlNode* root = doc.GetRoot();
             int line_number = CableXmlHandler::ParseNode(root, cable);
             if (line_number == 0) {
