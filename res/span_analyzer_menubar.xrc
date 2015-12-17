@@ -51,6 +51,13 @@
         <help></help>
       </object>
     </object>
+    <object class="wxMenu" name="menu_help">
+      <label>Help</label>
+      <object class="wxMenuItem" name="menuitem_help_about">
+        <label>About</label>
+        <help></help>
+      </object>
+    </object>
     <object class="wxMenu" name="menu_debug">
       <label>Debug</label>
       <object class="wxMenuItem" name="menuitem_debug_event">

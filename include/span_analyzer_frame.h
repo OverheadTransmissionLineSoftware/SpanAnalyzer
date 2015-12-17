@@ -70,6 +70,11 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   ///   The event.
   void OnMenuFilePreferences(wxCommandEvent& event);
 
+  /// \brief Handles the help->about menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuHelpAbout(wxCommandEvent& event);
+
   // DEBUG
   /// \brief Handles the debug->event menu click event.
   void OnMenuDebugEvent(wxCommandEvent& event);

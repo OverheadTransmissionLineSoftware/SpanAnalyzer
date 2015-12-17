@@ -3,6 +3,7 @@
 
 #include "span_analyzer_frame.h"
 
+#include "wx/aboutdlg.h"
 #include "wx/xrc/xmlres.h"
 
 #include "file_handler.h"
@@ -10,12 +11,6 @@
 #include "span_analyzer_app.h"
 
 #include "../res/icon.xpm"
-
-// for debug event ONLY
-#include "wx/xml/xml.h"
-#include "span_editor_dialog.h"
-#include "span_analyzer_config_xml_handler.h"
-#include "span_analyzer_view.h"
 
 DocumentFileDropTarget::DocumentFileDropTarget(wxWindow* parent) {
   parent_ = parent;
@@ -56,6 +51,7 @@ BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxFrame)
   EVT_MENU(XRCID("menuitem_edit_cable_new"), SpanAnalyzerFrame::OnMenuEditCableNew)
   EVT_MENU(XRCID("menuitem_edit_weathercases_edit"), SpanAnalyzerFrame::OnMenuEditWeatherCasesEdit)
   EVT_MENU(XRCID("menuitem_file_preferences"), SpanAnalyzerFrame::OnMenuFilePreferences)
+  EVT_MENU(XRCID("menuitem_help_about"), SpanAnalyzerFrame::OnMenuHelpAbout)
   EVT_MENU(XRCID("menuitem_debug_event"), SpanAnalyzerFrame::OnMenuDebugEvent)
 END_EVENT_TABLE()
 
@@ -93,6 +89,33 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
   if (preferences.ShowModal() == wxID_OK) {
     /// \todo implement unit system changes
   }
+}
+
+void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
+  // sets the dialog info
+  wxAboutDialogInfo info;
+  info.SetIcon(wxICON(icon));
+  info.SetName(wxGetApp().GetAppDisplayName());
+  info.SetVersion("0.1");
+  info.SetCopyright("License:   http://unlicense.org/");
+  info.SetDescription(
+    "This application provides a GUI for calculating the sag-tension response\n"
+    "of transmission line cables.\n"
+    "\n"
+    "This application is part of the Overhead Transmission Line Software\n"
+    "suite. For the actual engineering modeling and sag-tension computations,\n"
+    "see the Models library.\n"
+     "\n"
+    "This software was developed so that transmission engineers can know\n"
+    "exactly how results are calculated, and so that the software can be\n"
+    "freely modified to fit the unique needs of the utility they represent.\n"
+    "\n"
+    "To get involved in project development, or to review the code, see the\n"
+    "website link.");
+  info.SetWebSite("https://github.com/OverheadTransmissionLineSoftware/SpanAnalyzer");
+
+  // shows the dialog
+  wxAboutBox(info, this);
 }
 
 // DEBUG
