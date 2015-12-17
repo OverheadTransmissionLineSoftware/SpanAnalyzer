@@ -92,7 +92,7 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
   // resets frame to document-less state
   SpanAnalyzerFrame* frame = wxGetApp().frame();
   frame->Refresh();
-  frame->SetTitle("SpanAnalyzer");
+  frame->SetTitle(wxGetApp().GetAppDisplayName());
 
   return true;
 }
