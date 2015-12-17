@@ -50,6 +50,10 @@ bool SpanAnalyzerApp::OnInit() {
     return false;
   }
 
+  // sets application name
+  SetAppDisplayName("Span Analyzer");
+  SetAppName("SpanAnalyzer");
+
   // creates a document manager and sets to single document interface
   manager_doc_ = new wxDocManager();
   manager_doc_->SetMaxDocsOpen(1);
