@@ -403,6 +403,10 @@ void SpanTreeCtrl::ActivateSpan(const wxTreeItemId& id) {
     return;
   }
 
+  if (id == GetRootItem()) {
+    return;
+  }
+
   if (id == item_activated_) {
     return;
   }
