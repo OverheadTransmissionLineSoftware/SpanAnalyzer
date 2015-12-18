@@ -8,6 +8,7 @@
 
 #include "cable_unit_converter.h"
 #include "cable_xml_handler.h"
+#include "error_message_dialog.h"
 #include "span_analyzer_app.h"
 #include "weather_load_case_xml_handler.h"
 
@@ -27,6 +28,8 @@ void LoadCablesFromDirectory(const std::string& directory_cables,
   // gets cable directory from model and attempts to parse all files with
   // the proper file extension
   if (wxDir::Exists(directory_cables) == true) {
+    // creates a list of error messages when parsing cable files
+    std::list<ErrorMessage> messages;
 
     // loads files with proper extension into application
     wxDir directory(directory_cables);
@@ -53,16 +56,23 @@ void LoadCablesFromDirectory(const std::string& directory_cables,
             if (line_number == 0) {
               data.cables.push_back(cable);
             } else {
-              wxString message = str_file + ": Error at line "
-                                 + std::to_wstring(line_number);
-              wxMessageDialog dialog(frame, message);
-              dialog.ShowModal();
+              ErrorMessage message;
+              message.title = str_file;
+              message.description = "Error at line " + std::to_wstring(line_number)
+                                    + ". File skipped.";
+              messages.push_back(message);
             }
           }
         }
         if (directory.GetNext(&str_file) == false) {
           break;
         }
+      }
+
+      // displays errors to user
+      if (messages.empty() == false) {
+        ErrorMessageDialog dialog(frame, &messages);
+        dialog.ShowModal();
       }
     }
   } else {
@@ -97,7 +107,6 @@ wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
 
   // creates analysis weathercase node
   title = "analysis_weather_load_cases";
-  
 
   // returns node
   return node_root;
@@ -145,7 +154,7 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
         // creates a new weather load case set
         std::list<WeatherLoadCase> weathercase_set;
         const std::string str_name = sub_node->GetAttribute("name");
-        
+
         // gets node for individual weathercases
         wxXmlNode* node_weathercase = sub_node->GetChildren();
         while (node_weathercase != nullptr) {
