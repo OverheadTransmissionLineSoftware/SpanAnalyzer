@@ -58,7 +58,8 @@ void LoadCablesFromDirectory(const std::string& directory_cables,
             } else {
               ErrorMessage message;
               message.title = str_file;
-              message.description = "Error at line " + std::to_wstring(line_number)
+              message.description = "Error at line " +
+                                    std::to_wstring(line_number)
                                     + ". File skipped.";
               messages.push_back(message);
             }
@@ -77,8 +78,7 @@ void LoadCablesFromDirectory(const std::string& directory_cables,
     }
   } else {
     wxString message = "Cable directory does not exist";
-    wxMessageDialog dialog(frame, message);
-    dialog.ShowModal();
+    wxMessageBox(message);
   }
 }
 

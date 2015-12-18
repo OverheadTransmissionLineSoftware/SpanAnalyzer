@@ -349,8 +349,7 @@ int WeathercaseTreeCtrl::ShowEditor(
     if (is_unique == false) {
       std::string message = "Weathercase description is a duplicate. Please "
                             "provide another description.";
-      wxMessageDialog dialog_message(view_->GetFrame(), message);
-      dialog_message.ShowModal();
+      wxMessageBox(message);
     }
   }
 

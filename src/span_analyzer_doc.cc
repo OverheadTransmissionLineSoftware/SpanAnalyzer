@@ -180,10 +180,8 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   // attempts to load an xml document from the input stream
   wxXmlDocument doc_xml;
   if (doc_xml.Load(stream) == false) {
-    wxWindow* window = this->GetDocumentWindow();
     wxString message = "SpanAnalyzerDoc: Invalid XML file.";
-    wxMessageDialog dialog(window, message);
-    dialog.ShowModal();
+    wxMessageBox(message);
   } else {
     units::UnitSystem units;
 
@@ -192,20 +190,16 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
     int line_number = SpanAnalyzerDocXmlHandler::ParseNode(
         root, &wxGetApp().data()->cables, *this, units);
     if (line_number != 0) {
-      wxWindow* window = this->GetDocumentWindow();
       wxString message = "Span Analyzer Document: Error at line "
                          + std::to_wstring(line_number);
-      wxMessageDialog dialog(window, message);
-      dialog.ShowModal();
+      wxMessageBox(message);
     }
 
     // temporarily disables until metric units are supported
     if (units == units::UnitSystem::kMetric) {
-      wxWindow* parent = this->GetDocumentWindow();
       wxString message = "Span Analyzer Document: Metric units are not yet "
                          "supported";
-      wxMessageDialog dialog(parent, message);
-      dialog.ShowModal();
+      wxMessageBox(message);
     }
   }
 

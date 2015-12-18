@@ -21,25 +21,21 @@ FileHandler::~FileHandler() {
 int FileHandler::LoadAppData(std::string filepath,
                              units::UnitSystem& units,
                              SpanAnalyzerData& data) {
-  SpanAnalyzerFrame* frame = wxGetApp().frame();
-
   // locates config file to fill
   wxFileName path(filepath);
 
-  // uses an xml document to load cable files
+  // uses an xml document to load application data
   wxXmlDocument doc;
   if (doc.Load(path.GetFullPath()) == false) {
-    wxMessageDialog dialog(frame, "Could not locate app data file");
-    dialog.ShowModal();
+    wxMessageBox("Could not locate app data file");
   } else {
-    // parses the XML root and loads into the cable object
+    // parses the XML root and loads into the application data
     const wxXmlNode* root = doc.GetRoot();
     int line_number = SpanAnalyzerDataXmlHandler::ParseNode(root, data, units);
     if (line_number != 0) {
       wxString message = "AppData file: Error at line "
                          + std::to_string(line_number);
-      wxMessageDialog dialog(frame, message);
-      dialog.ShowModal();
+      wxMessageBox(message);
       return line_number;
     }
   }
@@ -54,7 +50,7 @@ int FileHandler::LoadAppData(std::string filepath,
         cable);
   }
 
-  // converts weathercases to consistent unit style
+  // converts analysis weathercases to consistent unit style
   for (auto iter = data.weathercases_analysis.begin();
        iter != data.weathercases_analysis.end(); iter++) {
     std::list<WeatherLoadCase>& weathercases = *iter;
@@ -72,15 +68,12 @@ int FileHandler::LoadAppData(std::string filepath,
 }
 
 int FileHandler::LoadConfigFile(SpanAnalyzerConfig& config) {
-  SpanAnalyzerFrame* frame = wxGetApp().frame();
-
   // locates config file to fill
   wxFileName path(wxGetApp().directory(), "appconfig", "xml");
 
   wxXmlDocument doc;
   if (doc.Load(path.GetFullPath()) == false) {
-    wxMessageDialog dialog(frame, "Could not locate config file");
-    dialog.ShowModal();
+    wxMessageBox("Could not locate config file");
   } else {
     // parses the XML root and loads into the cable object
     const wxXmlNode* root = doc.GetRoot();
@@ -88,14 +81,12 @@ int FileHandler::LoadConfigFile(SpanAnalyzerConfig& config) {
     if (line_number != 0) {
       wxString message = "Config file: Error at line "
                          + std::to_string(line_number);
-      wxMessageDialog dialog(frame, message);
-      dialog.ShowModal();
+      wxMessageBox(message);
       return line_number;
     }
 
     if (config.units == units::UnitSystem::kMetric) {
-      wxMessageDialog dialog(frame, "Metric units are not yet supported");
-      dialog.ShowModal();
+      wxMessageBox("Metric units are not yet supported");
     }
   }
 
