@@ -17,9 +17,10 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="$(MODELS)/build/codeblocks/debug/bin/libotlsmodels_sagtension.a" />
-					<Add library="$(MODELS)/build/codeblocks/debug/bin/libotlsmodels_transmissionline.a" />
-					<Add library="$(MODELS)/build/codeblocks/debug/bin/libotlsmodels_base.a" />
+					<Add library="libotlsmodels_sagtension.a" />
+					<Add library="libotlsmodels_transmissionline.a" />
+					<Add library="libotlsmodels_base.a" />
+					<Add directory="$(MODELS)/build/codeblocks/debug/bin" />
 				</Linker>
 			</Target>
 			<Target title="release">
@@ -34,14 +35,14 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="$(MODELS)/build/codeblocks/release/bin/libotlsmodels_sagtension.a" />
-					<Add library="$(MODELS)/build/codeblocks/release/bin/libotlsmodels_transmissionline.a" />
-					<Add library="$(MODELS)/build/codeblocks/release/bin/libotlsmodels_base.a" />
+					<Add library="libotlsmodels_sagtension.a" />
+					<Add library="libotlsmodels_transmissionline.a" />
+					<Add library="libotlsmodels_base.a" />
+					<Add directory="$(MODELS)/build/codeblocks/release/bin" />
 				</Linker>
 			</Target>
 			<Environment>
 				<Variable name="MODELS" value="/home/brett/github/Models" />
-				<Variable name="WXWIDGETS" value="/home/brett/wxWidgets/wxWidgets-3.0.2/build-gtk-debug" />
 			</Environment>
 		</Build>
 		<Compiler>
@@ -50,11 +51,9 @@
 			<Add option="`wx-config --cxxflags`" />
 			<Add directory="../../include" />
 			<Add directory="$(MODELS)/include" />
-			<Add directory="$(WXWIDGETS)/include" />
 		</Compiler>
 		<Linker>
 			<Add option="`wx-config --libs all`" />
-			<Add directory="../../../TLS-Libraries/build/codeblocks/debug/bin" />
 		</Linker>
 		<Unit filename="../../appconfig.xml" />
 		<Unit filename="../../appdata.xml" />
