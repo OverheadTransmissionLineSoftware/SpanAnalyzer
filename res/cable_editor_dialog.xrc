@@ -12,39 +12,40 @@
           <option>0</option>
           <flag>wxEXPAND</flag>
           <border>0</border>
-          <object class="wxFlexGridSizer">
-            <rows>8</rows>
-            <cols>3</cols>
-            <vgap>0</vgap>
-            <hgap>0</hgap>
-            <flexibledirection>wxHORIZONTAL</flexibledirection>
-            <growablecols></growablecols>
-            <growablerows></growablerows>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
             <object class="sizeritem">
               <option>0</option>
-              <flag>wxLEFT</flag>
+              <flag>wxALL</flag>
               <border>10</border>
               <object class="wxStaticText" name="statictext_name">
                 <label>Name</label>
               </object>
             </object>
             <object class="sizeritem">
-              <option>0</option>
-              <flag>wxLEFT|wxRIGHT</flag>
+              <option>1</option>
+              <flag>wxALL</flag>
               <border>10</border>
-              <object class="wxStaticText" name="statictext_name_units">
-                <label></label>
-              </object>
-            </object>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag></flag>
-              <border>0</border>
               <object class="wxTextCtrl" name="textctrl_name">
                 <value></value>
                 <maxlength>0</maxlength>
+                <tooltip>The display name of the cable.</tooltip>
               </object>
             </object>
+          </object>
+        </object>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxEXPAND</flag>
+          <border>0</border>
+          <object class="wxFlexGridSizer">
+            <rows>7</rows>
+            <cols>3</cols>
+            <vgap>0</vgap>
+            <hgap>0</hgap>
+            <flexibledirection>wxHORIZONTAL</flexibledirection>
+            <growablecols></growablecols>
+            <growablerows></growablerows>
             <object class="sizeritem">
               <option>0</option>
               <flag>wxLEFT</flag>
@@ -66,8 +67,10 @@
               <flag></flag>
               <border>0</border>
               <object class="wxTextCtrl" name="textctrl_area_electrical">
+                <size>75,-1</size>
                 <value></value>
                 <maxlength>0</maxlength>
+                <tooltip>The conductive area of the cable.</tooltip>
               </object>
             </object>
             <object class="sizeritem">
@@ -91,8 +94,10 @@
               <flag></flag>
               <border>0</border>
               <object class="wxTextCtrl" name="textctrl_area_physical">
+                <size>75,-1</size>
                 <value></value>
                 <maxlength>0</maxlength>
+                <tooltip>The total area of the cable, including all components.</tooltip>
               </object>
             </object>
             <object class="sizeritem">
@@ -116,8 +121,10 @@
               <flag></flag>
               <border>0</border>
               <object class="wxTextCtrl" name="textctrl_diameter">
+                <size>75,-1</size>
                 <value></value>
                 <maxlength>0</maxlength>
+                <tooltip>The nominal outer diameter of the cable.</tooltip>
               </object>
             </object>
             <object class="sizeritem">
@@ -141,8 +148,10 @@
               <flag></flag>
               <border>0</border>
               <object class="wxTextCtrl" name="textctrl_weight_unit">
+                <size>75,-1</size>
                 <value></value>
                 <maxlength>0</maxlength>
+                <tooltip>The weight per unit length of the cable.</tooltip>
               </object>
             </object>
             <object class="sizeritem">
@@ -166,8 +175,10 @@
               <flag></flag>
               <border>0</border>
               <object class="wxTextCtrl" name="textctrl_strength_rated">
+                <size>75,-1</size>
                 <value></value>
                 <maxlength>0</maxlength>
+                <tooltip>The rated load that should not be exceeded.</tooltip>
               </object>
             </object>
             <object class="sizeritem">
@@ -191,8 +202,10 @@
               <flag></flag>
               <border>0</border>
               <object class="wxTextCtrl" name="textctrl_temperature_properties">
+                <size>75,-1</size>
                 <value></value>
                 <maxlength>0</maxlength>
+                <tooltip>The reference temperature of the component properties.</tooltip>
               </object>
             </object>
           </object>
@@ -236,8 +249,10 @@
                   <flag>wxLEFT</flag>
                   <border>10</border>
                   <object class="wxTextCtrl" name="textctrl_shell_coefficient_expansion_thermal">
+                    <size>100,-1</size>
                     <value></value>
                     <maxlength>0</maxlength>
+                    <tooltip>The linear expansion coefficient that defines how much the component elongates/contracts due to change from reference temperature.</tooltip>
                   </object>
                 </object>
                 <object class="sizeritem">
@@ -261,8 +276,10 @@
                   <flag>wxLEFT</flag>
                   <border>10</border>
                   <object class="wxTextCtrl" name="textctrl_shell_modulus_tension">
+                    <size>100,-1</size>
                     <value></value>
                     <maxlength>0</maxlength>
+                    <tooltip>The elastic modulus that defines how the component elongates when stretched.</tooltip>
                   </object>
                 </object>
               </object>
@@ -278,7 +295,7 @@
                 <hgap>0</hgap>
                 <object class="sizeritem">
                   <option>0</option>
-                  <flag>wxALIGN_CENTER</flag>
+                  <flag>wxALIGN_CENTER|wxALL</flag>
                   <border>0</border>
                   <object class="wxStaticText" name="statictext_shell_a0">
                     <label>a0</label>
@@ -286,7 +303,7 @@
                 </object>
                 <object class="sizeritem">
                   <option>0</option>
-                  <flag>wxALIGN_CENTER</flag>
+                  <flag>wxALIGN_CENTER|wxALL</flag>
                   <border>0</border>
                   <object class="wxStaticText" name="statictext_shell_a1">
                     <label>a1</label>
@@ -294,7 +311,7 @@
                 </object>
                 <object class="sizeritem">
                   <option>0</option>
-                  <flag>wxALIGN_CENTER</flag>
+                  <flag>wxALIGN_CENTER|wxALL</flag>
                   <border>0</border>
                   <object class="wxStaticText" name="statictext_shell_a2">
                     <label>a2</label>
@@ -302,7 +319,7 @@
                 </object>
                 <object class="sizeritem">
                   <option>0</option>
-                  <flag>wxALIGN_CENTER</flag>
+                  <flag>wxALIGN_CENTER|wxALL</flag>
                   <border>0</border>
                   <object class="wxStaticText" name="statictext_shell_a3">
                     <label>a3</label>
@@ -310,7 +327,7 @@
                 </object>
                 <object class="sizeritem">
                   <option>0</option>
-                  <flag>wxALIGN_CENTER</flag>
+                  <flag>wxALIGN_CENTER|wxALL</flag>
                   <border>0</border>
                   <object class="wxStaticText" name="statictext_shell_a4">
                     <label>a4</label>
@@ -318,52 +335,62 @@
                 </object>
                 <object class="sizeritem">
                   <option>0</option>
-                  <flag></flag>
+                  <flag>wxALL</flag>
                   <border>0</border>
                   <object class="wxTextCtrl" name="textctrl_shell_a0">
+                    <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
                     <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component elongates when unstretched.</tooltip>
                   </object>
                 </object>
                 <object class="sizeritem">
                   <option>0</option>
-                  <flag></flag>
+                  <flag>wxALL</flag>
                   <border>0</border>
                   <object class="wxTextCtrl" name="textctrl_shell_a1">
+                    <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
                     <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component elongates when unstretched.</tooltip>
                   </object>
                 </object>
                 <object class="sizeritem">
                   <option>0</option>
-                  <flag></flag>
+                  <flag>wxALL</flag>
                   <border>0</border>
                   <object class="wxTextCtrl" name="textctrl_shell_a2">
+                    <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
                     <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component elongates when unstretched.</tooltip>
                   </object>
                 </object>
                 <object class="sizeritem">
                   <option>0</option>
-                  <flag></flag>
+                  <flag>wxALL</flag>
                   <border>0</border>
                   <object class="wxTextCtrl" name="textctrl_shell_a3">
+                    <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
                     <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component elongates when unstretched.</tooltip>
                   </object>
                 </object>
                 <object class="sizeritem">
                   <option>0</option>
-                  <flag></flag>
+                  <flag>wxALL</flag>
                   <border>0</border>
                   <object class="wxTextCtrl" name="textctrl_shell_a4">
+                    <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
                     <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component elongates when unstretched.</tooltip>
                   </object>
                 </object>
               </object>
@@ -409,8 +436,10 @@
                   <flag>wxLEFT</flag>
                   <border>10</border>
                   <object class="wxTextCtrl" name="textctrl_core_coefficient_expansion_thermal">
+                    <size>100,-1</size>
                     <value></value>
                     <maxlength>0</maxlength>
+                    <tooltip>The linear expansion coefficient that defines how much the component elongates/contracts due to change from reference temperature.</tooltip>
                   </object>
                 </object>
                 <object class="sizeritem">
@@ -434,8 +463,10 @@
                   <flag>wxLEFT</flag>
                   <border>10</border>
                   <object class="wxTextCtrl" name="textctrl_core_modulus_tension">
+                    <size>100,-1</size>
                     <value></value>
                     <maxlength>0</maxlength>
+                    <tooltip>The elastic modulus that defines how the component elongates when stretched.</tooltip>
                   </object>
                 </object>
               </object>
@@ -494,9 +525,11 @@
                   <flag></flag>
                   <border>0</border>
                   <object class="wxTextCtrl" name="textctrl_core_a0">
+                    <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
                     <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component elongates when unstretched.</tooltip>
                   </object>
                 </object>
                 <object class="sizeritem">
@@ -504,9 +537,11 @@
                   <flag></flag>
                   <border>0</border>
                   <object class="wxTextCtrl" name="textctrl_core_a1">
+                    <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
                     <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component elongates when unstretched.</tooltip>
                   </object>
                 </object>
                 <object class="sizeritem">
@@ -514,9 +549,11 @@
                   <flag></flag>
                   <border>0</border>
                   <object class="wxTextCtrl" name="textctrl_core_a2">
+                    <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
                     <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component elongates when unstretched.</tooltip>
                   </object>
                 </object>
                 <object class="sizeritem">
@@ -524,9 +561,11 @@
                   <flag></flag>
                   <border>0</border>
                   <object class="wxTextCtrl" name="textctrl_core_a3">
+                    <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
                     <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component elongates when unstretched.</tooltip>
                   </object>
                 </object>
                 <object class="sizeritem">
@@ -534,9 +573,11 @@
                   <flag></flag>
                   <border>0</border>
                   <object class="wxTextCtrl" name="textctrl_core_a4">
+                    <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
                     <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component elongates when unstretched.</tooltip>
                   </object>
                 </object>
               </object>

@@ -52,8 +52,10 @@
               <border>0</border>
               <object class="wxTextCtrl" name="textctrl_thickness_ice">
                 <style>wxTE_LEFT</style>
+                <size>75,-1</size>
                 <value></value>
                 <maxlength>0</maxlength>
+                <tooltip>The radial ice accumulation from the outside surface of the cable.</tooltip>
               </object>
             </object>
             <object class="sizeritem">
@@ -78,8 +80,10 @@
               <border>0</border>
               <object class="wxTextCtrl" name="textctrl_density_ice">
                 <style>wxTE_LEFT</style>
+                <size>75,-1</size>
                 <value></value>
                 <maxlength>0</maxlength>
+                <tooltip>The density of the accumulated ice.</tooltip>
               </object>
             </object>
             <object class="sizeritem">
@@ -104,8 +108,10 @@
               <border>0</border>
               <object class="wxTextCtrl" name="textctrl_pressure_wind">
                 <style>wxTE_LEFT</style>
+                <size>75,-1</size>
                 <value></value>
                 <maxlength>0</maxlength>
+                <tooltip>The wind pressure that is perpendicular to the direction of the cable.</tooltip>
               </object>
             </object>
             <object class="sizeritem">
@@ -130,8 +136,10 @@
               <border>0</border>
               <object class="wxTextCtrl" name="textctrl_temperature_cable">
                 <style>wxTE_LEFT</style>
+                <size>75,-1</size>
                 <value></value>
                 <maxlength>0</maxlength>
+                <tooltip>The temperature of the cable surface.</tooltip>
               </object>
             </object>
           </object>

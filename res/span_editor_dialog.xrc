@@ -103,6 +103,7 @@
                 <value></value>
                 <size>70,-1</size>
                 <maxlength>0</maxlength>
+                <tooltip>The constraint limit.</tooltip>
               </object>
             </object>
             <object class="sizeritem">
@@ -172,6 +173,7 @@
                 <value></value>
                 <size>70,-1</size>
                 <maxlength>0</maxlength>
+                <tooltip>The horizontal spacing between cable attachments. This is the geometry used in the sag-tension calculation.</tooltip>
               </object>
             </object>
             <object class="sizeritem">
@@ -198,6 +200,7 @@
                 <value></value>
                 <size>70,-1</size>
                 <maxlength>0</maxlength>
+                <tooltip>The vertical spacing between cable attachments. Positive values mean the ahead-on-line attachment is higher than the back-on-line attachment. This is the geometry used in the sag-tension calculation.</tooltip>
               </object>
             </object>
           </object>
@@ -283,6 +286,7 @@
                     <value></value>
                     <size>70,-1</size>
                     <maxlength>0</maxlength>
+                    <tooltip>The horizontal spacing between cable attachments. This is the geometry is used after the sag-tension process, when a catenary is being fitted using the sag-tension results.</tooltip>
                   </object>
                 </object>
                 <object class="sizeritem">
@@ -309,6 +313,7 @@
                     <value></value>
                     <size>70,-1</size>
                     <maxlength>0</maxlength>
+                    <tooltip>The vertical spacing between cable attachments. Positive values mean the ahead-on-line attachment is higher than the back-on-line attachment. This is the geometry is used after the sag-tension process, when a catenary is being fitted using the sag-tension results.</tooltip>
                   </object>
                 </object>
               </object>
