@@ -6,6 +6,10 @@
 #include "wx/aboutdlg.h"
 #include "wx/xrc/xmlres.h"
 
+#include "cable_directory_editor_dialog.h"
+#include "cable_editor_dialog.h"
+#include "cable_unit_converter.h"
+#include "cable_xml_handler.h"
 #include "file_handler.h"
 #include "preferences_dialog.h"
 #include "span_analyzer_app.h"
@@ -47,12 +51,12 @@ bool DocumentFileDropTarget::OnDropFiles(wxCoord x, wxCoord y,
 }
 
 BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxFrame)
-  EVT_MENU(XRCID("menuitem_edit_cable_edit"), SpanAnalyzerFrame::OnMenuEditCableEdit)
-  EVT_MENU(XRCID("menuitem_edit_cable_new"), SpanAnalyzerFrame::OnMenuEditCableNew)
-  EVT_MENU(XRCID("menuitem_edit_weathercases_edit"), SpanAnalyzerFrame::OnMenuEditWeatherCasesEdit)
+  EVT_MENU(XRCID("menuitem_edit_analysis_weathercases"), SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases)
+  EVT_MENU(XRCID("menuitem_edit_cable"), SpanAnalyzerFrame::OnMenuEditCable)
+  EVT_MENU(XRCID("menuitem_edit_cable_directory"), SpanAnalyzerFrame::OnMenuEditCableDirectory)
+  EVT_MENU(XRCID("menuitem_edit_new_cable"), SpanAnalyzerFrame::OnMenuEditNewCable)
   EVT_MENU(XRCID("menuitem_file_preferences"), SpanAnalyzerFrame::OnMenuFilePreferences)
   EVT_MENU(XRCID("menuitem_help_about"), SpanAnalyzerFrame::OnMenuHelpAbout)
-  EVT_MENU(XRCID("menuitem_debug_event"), SpanAnalyzerFrame::OnMenuDebugEvent)
 END_EVENT_TABLE()
 
 SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
@@ -73,14 +77,137 @@ SpanAnalyzerFrame::~SpanAnalyzerFrame() {
   FileHandler::SaveConfigFile(*config);
 }
 
-void SpanAnalyzerFrame::OnMenuEditCableEdit(wxCommandEvent& event) {
-}
-
-void SpanAnalyzerFrame::OnMenuEditCableNew(wxCommandEvent& event) {
-}
-
-void SpanAnalyzerFrame::OnMenuEditWeatherCasesEdit(
+void SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases(
     wxCommandEvent& event) {
+}
+
+/// This could be greatly simplified if the cable object, or a derived object
+/// maintained the filepath that it was loaded from.
+void SpanAnalyzerFrame::OnMenuEditCable(wxCommandEvent& event) {
+  // initializes variables
+  Cable cable;
+  bool is_loaded_into_data = false;
+  std::list<Cable>::iterator iter;
+  units::UnitSystem units = wxGetApp().config()->units;
+
+  // shows file selector dialog
+  wxFileDialog dialog(this, "Cable File Selector", wxEmptyString, "*cable",
+                      "*cable", wxFD_OPEN);
+  if (dialog.ShowModal() != wxID_OK) {
+    return;
+  }
+
+  // gets path and loads cable
+  const std::string filepath = dialog.GetPath();
+  FileHandler::LoadCable(filepath, cable);
+
+  // determines if cable is already loaded into application
+  SpanAnalyzerData* data = wxGetApp().data();
+  wxFileName filename(dialog.GetPath());
+  if (filename.GetPath() == data->directory_cables) {
+    // gets iterator to matching cable in application data
+    for (iter = data->cables.begin(); iter != data->cables.end(); iter++) {
+      const Cable& cable_data = *iter;
+      if (cable.name == cable_data.name) {
+        is_loaded_into_data = true;
+        break;
+      }
+    }
+
+    if (iter == data->cables.end()) {
+      is_loaded_into_data = false;
+    }
+  } else {
+    is_loaded_into_data = false;
+  }
+
+  // converts units to different unit style
+  CableUnitConverter::ConvertUnitStyle(
+      units,
+      units::UnitStyle::kConsistent,
+      units::UnitStyle::kDifferent,
+      cable);
+
+  // creates dialog to edit cable
+  CableEditorDialog dialog_edit(this, &cable, units);
+  if (dialog_edit.ShowModal() != wxID_OK) {
+    return;
+  }
+
+  // converts units to consistent unit style
+  CableUnitConverter::ConvertUnitStyle(
+      wxGetApp().config()->units,
+      units::UnitStyle::kDifferent,
+      units::UnitStyle::kConsistent,
+      cable);
+
+  // saves cable to filesystem
+  FileHandler::SaveCable(filepath, cable, units);
+
+  // updates application data, if necessary
+  if (is_loaded_into_data == true) {
+    *iter = cable;
+  }
+}
+
+void SpanAnalyzerFrame::OnMenuEditCableDirectory(wxCommandEvent& event) {
+  // checks if no documents are currently open
+  // doesn't allow swapping cables with open doc, too difficult to replace/match
+  // cable references
+  wxDocManager* manager = wxGetApp().manager_doc();
+  if (manager->GetCurrentDocument() != nullptr) {
+    std::string message = "Document is currently open. To change cable "
+                          "directory, close document and try again.";
+    wxMessageBox(message);
+
+    return;
+  }
+
+  // gets application data
+  SpanAnalyzerData* data = wxGetApp().data();
+
+  // shows cable directory editor dialog
+  CableDirectoryEditorDialog dialog(this, &data->directory_cables);
+  if (dialog.ShowModal() == wxID_OK) {
+    // saves application data
+    FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data);
+
+    // reloads all cables in the directory
+    data->cables.clear();
+    FileHandler::LoadCablesFromDirectory(data->directory_cables);
+  }
+}
+
+void SpanAnalyzerFrame::OnMenuEditNewCable(wxCommandEvent& event) {
+  // creates new cable
+  Cable cable;
+
+  // gets units
+  units::UnitSystem units = wxGetApp().config()->units;
+
+  // displays an editor dialog
+  CableEditorDialog dialog(this, &cable, units);
+  if (dialog.ShowModal() != wxID_OK) {
+    return;
+  }
+
+  // converts unit style to consistent
+  CableUnitConverter::ConvertUnitStyle(
+      units,
+      units::UnitStyle::kDifferent,
+      units::UnitStyle::kConsistent,
+      cable);
+
+  // gets filepath to save cable
+  wxFileDialog dialog_file(this, "Save Cable File", "", ".cable",
+                           "Cable Files (*.cable) | *.cable", wxFD_SAVE);
+  if (dialog_file.ShowModal() != wxID_OK) {
+    return;
+  }
+
+  // saves file
+  const std::string filepath = dialog_file.GetPath();
+  FileHandler::SaveCable(filepath, cable, units);
 }
 
 void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
@@ -117,8 +244,3 @@ void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
   // shows the dialog
   wxAboutBox(info, this);
 }
-
-// DEBUG
-void SpanAnalyzerFrame::OnMenuDebugEvent(wxCommandEvent& event) {
-}
-// DEBUG

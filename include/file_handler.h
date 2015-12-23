@@ -4,15 +4,27 @@
 #ifndef OTLS_SPANANALYZER_FILEHANDLER_H_
 #define OTLS_SPANANALYZER_FILEHANDLER_H_
 
+#include <list>
 #include <string>
 
 #include "span_analyzer_config.h"
 #include "span_analyzer_data.h"
 
+/// \todo Files that are loaded need to have unit attributes somewhere on
+///   them. This is so that the units can be cross-converted if need be.
+
 /// \par OVERVIEW
 ///
 /// This class handles reading and writing application files that are not
 /// document related.
+///
+/// \par UNIT CONVERSION
+///
+/// The functions in this class convert the file unit system and style to match
+/// the needs of the application. If the file unit system is different than the
+/// application unit system, these functions will convert to application unit
+/// system. The files will always contain information in user-friendly
+/// units, but the data is converted to consistent unit style.
 class FileHandler {
  public:
   /// \brief Constructor.
@@ -31,11 +43,25 @@ class FileHandler {
   /// \return The file line number of the node if the content could not be
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
-  /// \todo this needs some sort of parsing feedback.
-  /// \todo Does this need to be a public function? Why not embed within the
-  /// parse config file. Or why not create a Load/Save config.
-  static int LoadAppData(std::string filepath, units::UnitSystem& units,
+  static int LoadAppData(const std::string& filepath,
+                         const units::UnitSystem& units,
                          SpanAnalyzerData& data);
+
+  /// \brief Loads a cable file.
+  /// \param[in] filepath
+  ///   The filepath.
+  /// \param[out] cable
+  ///   The cable that is populated.
+  /// \return The file line number of the node if the content could not be
+  ///   converted to the expected data type. Returns 0 if no errors were
+  ///   encountered.
+  static int LoadCable(const std::string& filepath, Cable& cable);
+
+  /// \brief Loads all cables from the specified directory.
+  /// \param[in] directory
+  ///   The directory to load cables.
+  /// \return A list of cables in the directory.
+  static std::list<Cable> LoadCablesFromDirectory(const std::string& directory);
 
   /// \brief Parses the config file.
   /// \param[out] config
@@ -45,6 +71,24 @@ class FileHandler {
   ///   encountered.
   /// This function will parse a file in the application directory.
   static int LoadConfigFile(SpanAnalyzerConfig& config);
+
+  /// \brief Saves the application data file.
+  /// \param[in] filepath
+  ///   The filepath.
+  /// \param[in] data
+  ///   The application data.
+  static void SaveAppData(const std::string& filepath,
+                          const SpanAnalyzerData& data);
+
+  /// \brief Saves a cable file.
+  /// \param[in] filepath
+  ///   The filepath.
+  /// \param[in] cable
+  ///   The cable.
+  /// \param[in] units
+  ///   The unit system.
+  static void SaveCable(const std::string& filepath, const Cable& cable,
+                        const units::UnitSystem& units);
 
   /// \brief Generates an application configuration file.
   /// \param[in] config

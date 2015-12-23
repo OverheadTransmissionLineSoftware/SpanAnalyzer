@@ -37,31 +37,24 @@
     </object>
     <object class="wxMenu" name="menu_edit">
       <label>Edit</label>
-      <object class="wxMenuItem" name="menuitem_edit_cable_new">
+      <object class="wxMenuItem" name="menuitem_edit_cable_directory">
+        <label>Cable Directory</label>
+      </object>
+      <object class="wxMenuItem" name="menuitem_edit_analysis_weathercases">
+        <label>Analysis Weathercases</label>
+      </object>
+      <object class ="separator"/>
+      <object class="wxMenuItem" name="menuitem_edit_new_cable">
         <label>New Cable</label>
-        <help></help>
       </object>
-      <object class="wxMenuItem" name="menuitem_edit_cables_edit">
-        <label>Edit Cables</label>
-        <help></help>
-      </object>
-      <object class="separator" />
-      <object class="wxMenuItem" name="menuitem_edit_weathercases_edit">
-        <label>Edit Weathercases</label>
-        <help></help>
+      <object class="wxMenuItem" name="menuitem_edit_cable">
+        <label>Edit Cable</label>
       </object>
     </object>
     <object class="wxMenu" name="menu_help">
       <label>Help</label>
       <object class="wxMenuItem" name="menuitem_help_about">
         <label>About</label>
-        <help></help>
-      </object>
-    </object>
-    <object class="wxMenu" name="menu_debug">
-      <label>Debug</label>
-      <object class="wxMenuItem" name="menuitem_debug_event">
-        <label>Event</label>
         <help></help>
       </object>
     </object>

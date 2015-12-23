@@ -3,86 +3,10 @@
 
 #include "span_analyzer_data_xml_handler.h"
 
-#include "wx/dir.h"
 #include "wx/filename.h"
 
-#include "cable_unit_converter.h"
-#include "cable_xml_handler.h"
-#include "error_message_dialog.h"
-#include "span_analyzer_app.h"
+#include "file_handler.h"
 #include "weather_load_case_xml_handler.h"
-
-namespace {
-
-void LoadCablesFromDirectory(const std::string& directory_cables,
-                             units::UnitSystem& units,
-                             SpanAnalyzerData& data) {
-  SpanAnalyzerFrame* frame = wxGetApp().frame();
-
-  // clears all cables in application data
-  data.cables.clear();
-
-  // uses an xml document to load cable files
-  wxXmlDocument doc;
-
-  // gets cable directory from model and attempts to parse all files with
-  // the proper file extension
-  if (wxDir::Exists(directory_cables) == true) {
-    // creates a list of error messages when parsing cable files
-    std::list<ErrorMessage> messages;
-
-    // loads files with proper extension into application
-    wxDir directory(directory_cables);
-    wxString str_file;
-    if (directory.GetFirst(&str_file) == true) {
-      // goes through all files in directory
-      while (true) {
-        wxFileName file(directory.GetNameWithSep() + str_file);
-        if (file.GetExt() == "cable") {
-          wxString str_path = directory.GetNameWithSep() + str_file;
-          if (doc.Load(str_path) == true) {
-            // parses the XML document and loads into a cable object
-            Cable cable;
-
-            /// \todo fix CableComponent constructor to have no default
-            ///   coefficients
-            cable.component_core.coefficients_polynomial_creep.clear();
-            cable.component_core.coefficients_polynomial_loadstrain.clear();
-            cable.component_shell.coefficients_polynomial_creep.clear();
-            cable.component_shell.coefficients_polynomial_loadstrain.clear();
-
-            const wxXmlNode* root = doc.GetRoot();
-            int line_number = CableXmlHandler::ParseNode(root, cable);
-            if (line_number == 0) {
-              data.cables.push_back(cable);
-            } else {
-              ErrorMessage message;
-              message.title = str_file;
-              message.description = "Error at line " +
-                                    std::to_wstring(line_number)
-                                    + ". File skipped.";
-              messages.push_back(message);
-            }
-          }
-        }
-        if (directory.GetNext(&str_file) == false) {
-          break;
-        }
-      }
-
-      // displays errors to user
-      if (messages.empty() == false) {
-        ErrorMessageDialog dialog(frame, &messages);
-        dialog.ShowModal();
-      }
-    }
-  } else {
-    wxString message = "Cable directory does not exist";
-    wxMessageBox(message);
-  }
-}
-
-}  // namespace
 
 wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
     const SpanAnalyzerData& data,
@@ -145,7 +69,7 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
 
     if (title == "cable_directory") {
       data.directory_cables = content;
-      LoadCablesFromDirectory(data.directory_cables, units, data);
+      data.cables = FileHandler::LoadCablesFromDirectory(data.directory_cables);
     } else if (title == "analysis_weather_load_cases") {
       // gets node for analysis weather load case set
       wxXmlNode* sub_node = node->GetChildren();

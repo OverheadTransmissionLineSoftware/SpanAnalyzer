@@ -50,20 +50,25 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   /// \brief Destructor.
   ~SpanAnalyzerFrame();
 
-  /// \brief Handles the edit->edit cable menu click event.
-  /// \param[in] event
-  ///   The event.
-  void OnMenuEditCableEdit(wxCommandEvent& event);
-
-  /// \brief Handles the edit->new cable menu click event.
-  /// \param[in] event
-  ///   The event.
-  void OnMenuEditCableNew(wxCommandEvent& event);
-
   /// \brief Handles the edit->edit weather cases menu click event.
   /// \param[in] event
   ///   The event.
-  void OnMenuEditWeatherCasesEdit(wxCommandEvent& event);
+  void OnMenuEditAnalysisWeathercases(wxCommandEvent& event);
+
+  /// \brief Handles the edit->edit cable menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuEditCable(wxCommandEvent& event);
+
+  /// \brief Handles the edit->cable directory menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuEditCableDirectory(wxCommandEvent& event);
+
+  /// \brief Handles the edit->new cables menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuEditNewCable(wxCommandEvent& event);
 
   /// \brief Handles the file->preferences menu click event.
   /// \param[in] event
@@ -74,11 +79,6 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   /// \param[in] event
   ///   The event.
   void OnMenuHelpAbout(wxCommandEvent& event);
-
-  // DEBUG
-  /// \brief Handles the debug->event menu click event.
-  void OnMenuDebugEvent(wxCommandEvent& event);
-  // DEBUG
 
  private:
   DECLARE_EVENT_TABLE()
