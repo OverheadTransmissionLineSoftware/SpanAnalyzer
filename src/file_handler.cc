@@ -45,15 +45,7 @@ int FileHandler::LoadAppData(const std::string& filepath,
     }
   }
 
-  // converts cables to consistent unit style
-  for (auto iter = data.cables.begin(); iter != data.cables.end(); iter++) {
-    Cable& cable = *iter;
-    CableUnitConverter::ConvertUnitStyle(
-        units_file,
-        units::UnitStyle::kDifferent,
-        units::UnitStyle::kConsistent,
-        cable);
-  }
+  // cables are already converted to consistent unit style
 
   // converts analysis weathercases to consistent unit style
   for (auto iter = data.weathercases_analysis.begin();
