@@ -70,6 +70,11 @@ bool SpanAnalyzerApp::OnInit() {
   path.AppendDir("res");
   path.SetExt("xrc");
 
+  path.SetName("analysis_weather_load_case_manager_dialog");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
+    return false;
+  };
+
   path.SetName("cable_editor_dialog");
   if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;

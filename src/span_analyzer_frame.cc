@@ -6,6 +6,7 @@
 #include "wx/aboutdlg.h"
 #include "wx/xrc/xmlres.h"
 
+#include "analysis_weather_load_case_manager_dialog.h"
 #include "cable_directory_editor_dialog.h"
 #include "cable_editor_dialog.h"
 #include "cable_unit_converter.h"
@@ -79,6 +80,19 @@ SpanAnalyzerFrame::~SpanAnalyzerFrame() {
 
 void SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases(
     wxCommandEvent& event) {
+  // gets application data
+  SpanAnalyzerData* data = wxGetApp().data();
+
+  // shows an editor
+  AnalysisWeatherLoadCaseManagerDialog dialog(
+      this,
+      wxGetApp().config()->units,
+      &data->descriptions_weathercases_analysis,
+      &data->weathercases_analysis);
+  if (dialog.ShowModal() == wxID_OK) {
+    // saves application data
+    FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data);
+  }
 }
 
 /// This could be greatly simplified if the cable object, or a derived object
