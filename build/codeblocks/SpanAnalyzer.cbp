@@ -57,6 +57,7 @@
 		</Linker>
 		<Unit filename="../../appconfig.xml" />
 		<Unit filename="../../appdata.xml" />
+		<Unit filename="../../include/analysis_weather_load_case_manager_dialog.h" />
 		<Unit filename="../../include/cable_constraint_xml_handler.h" />
 		<Unit filename="../../include/cable_directory_editor_dialog.h" />
 		<Unit filename="../../include/cable_editor_dialog.h" />
@@ -89,6 +90,7 @@
 		<Unit filename="../../include/weather_load_case_unit_converter.h" />
 		<Unit filename="../../include/weather_load_case_xml_handler.h" />
 		<Unit filename="../../include/xml_handler.h" />
+		<Unit filename="../../res/analysis_weather_load_case_manager_dialog.xrc" />
 		<Unit filename="../../res/cable_directory_editor_dialog.xrc" />
 		<Unit filename="../../res/cable_editor_dialog.xrc" />
 		<Unit filename="../../res/catenary_table_panel.xrc" />
@@ -107,6 +109,7 @@
 			<Option link="0" />
 		</Unit>
 		<Unit filename="../../res/weather_load_case_editor_dialog.xrc" />
+		<Unit filename="../../src/analysis_weather_load_case_manager_dialog.cc" />
 		<Unit filename="../../src/cable_constraint_xml_handler.cc" />
 		<Unit filename="../../src/cable_directory_editor_dialog.cc" />
 		<Unit filename="../../src/cable_editor_dialog.cc" />
