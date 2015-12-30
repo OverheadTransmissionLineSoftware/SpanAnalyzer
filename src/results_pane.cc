@@ -39,8 +39,8 @@ ResultsPane::ResultsPane(wxWindow* parent, SpanAnalyzerView* view) {
   // creates notebook and adds child notebook pages
   wxNotebook* notebook = XRCCTRL(*this, "notebook_results", wxNotebook);
 
-  panel_span_ = new SpanPanel(notebook, &results_);
-  notebook->AddPage(panel_span_, "Span");
+  //panel_span_ = new SpanPanel(notebook, &results_);
+  //notebook->AddPage(panel_span_, "Span");
 
   panel_table_sagtension_ = new SagTensionTablePanel(notebook, &results_);
   notebook->AddPage(panel_table_sagtension_, "Sag-Tension Table");
@@ -57,7 +57,7 @@ void ResultsPane::Update(wxObject* hint) {
     UpdateSagTensionResults();
   }
 
-  panel_span_->UpdateView(hint);
+  //panel_span_->UpdateView(hint);
   panel_table_sagtension_->UpdateView(hint);
   panel_table_catenary_->UpdateView(hint);
 }
