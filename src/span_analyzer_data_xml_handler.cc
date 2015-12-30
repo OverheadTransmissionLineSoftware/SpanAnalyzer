@@ -31,6 +31,26 @@ wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
 
   // creates analysis weathercase node
   title = "analysis_weather_load_cases";
+  node_element = new wxXmlNode(wxXML_ELEMENT_NODE, title);
+
+  for (auto iter = data.weathercases_analysis.cbegin();
+       iter != data.weathercases_analysis.cend(); iter++) {
+    // creates a weathercase set node
+    wxXmlNode* sub_node = new wxXmlNode(wxXML_ELEMENT_NODE,
+                                        "analysis_weather_load_case_set");
+
+    // gets weathercase set, iterates through list
+    const std::list<WeatherLoadCase>& weathercases = *iter;
+    for (auto it = weathercases.cbegin(); it != weathercases.cend(); it++) {
+      // adds a weathercase node to the set node
+      const WeatherLoadCase& weathercase = *it;
+      wxXmlNode* node_weathercase =
+          WeatherLoadCaseXmlHandler::CreateNode(weathercase, "", units);
+      sub_node->AddChild(node_weathercase);
+    }
+    node_element->AddChild(sub_node);
+  }
+  node_root->AddChild(node_element);
 
   // returns node
   return node_root;

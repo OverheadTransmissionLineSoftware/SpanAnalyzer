@@ -204,16 +204,8 @@ void FileHandler::SaveAppData(const std::string& filepath,
   // gets the units
   units::UnitSystem units = wxGetApp().config()->units;
 
-  // converts cables to consistent unit style
-  for (auto iter = data_converted.cables.begin();
-       iter != data_converted.cables.end(); iter++) {
-    Cable& cable = *iter;
-    CableUnitConverter::ConvertUnitStyle(
-        units,
-        units::UnitStyle::kConsistent,
-        units::UnitStyle::kDifferent,
-        cable);
-  }
+  // cables are stored in individual files, and are not included in the app
+  // data file
 
   // converts analysis weathercases to different unit style
   for (auto iter = data_converted.weathercases_analysis.begin();
