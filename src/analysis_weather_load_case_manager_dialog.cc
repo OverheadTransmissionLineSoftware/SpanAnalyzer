@@ -229,7 +229,8 @@ void AnalysisWeatherLoadCaseManagerDialog::OnListBoxWeatherCaseDoubleClick(
     *iter_weathercase = weathercase;
 
     // updates listbox of description change
-    listbox_weathercases_->SetStringSelection(weathercase.description);
+    listbox_weathercases_->SetString(index_weathercases,
+                                     weathercase.description);
   }
 }
 
