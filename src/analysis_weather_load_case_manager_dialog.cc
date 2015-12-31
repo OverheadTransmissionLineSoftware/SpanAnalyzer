@@ -18,6 +18,7 @@ BEGIN_EVENT_TABLE(AnalysisWeatherLoadCaseManagerDialog, wxDialog)
   EVT_BUTTON(wxID_OK, AnalysisWeatherLoadCaseManagerDialog::OnOk)
   EVT_CLOSE(AnalysisWeatherLoadCaseManagerDialog::OnClose)
   EVT_LISTBOX(XRCID("listbox_sets"), AnalysisWeatherLoadCaseManagerDialog::OnListBoxSetSelect)
+  EVT_LISTBOX_DCLICK(XRCID("listbox_sets"), AnalysisWeatherLoadCaseManagerDialog::OnListBoxSetDoubleClick)
   EVT_LISTBOX_DCLICK(XRCID("listbox_weathercases"), AnalysisWeatherLoadCaseManagerDialog::OnListBoxWeatherCaseDoubleClick)
   EVT_SPIN_DOWN(XRCID("spinbutton_sets"), AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonSetDown)
   EVT_SPIN_DOWN(XRCID("spinbutton_weathercases"), AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseDown)
@@ -154,6 +155,26 @@ void AnalysisWeatherLoadCaseManagerDialog::OnClose(wxCloseEvent& event) {
   EndModal(wxID_CLOSE);
 }
 
+void AnalysisWeatherLoadCaseManagerDialog::OnListBoxSetDoubleClick(
+    wxCommandEvent& event) {
+  // gets set name
+  auto iter = std::next(descriptions_modified_.begin(), index_set_activated_);
+
+  // shows a dialog an allows user to edit set name
+  std::string str = wxGetTextFromUser("Enter a weathercase set name:",
+                                      "Weathercase Set Name Edit",
+                                      *iter);
+
+  // implements change if user accepts name change
+  if (str.empty() == false) {
+    // updates list
+    *iter = str;
+
+    // updates listbox
+    listbox_sets_->SetString(index_set_activated_, str);
+  }
+}
+
 void AnalysisWeatherLoadCaseManagerDialog::OnListBoxSetSelect(
     wxCommandEvent& event) {
   // gets the set listbox index
@@ -229,7 +250,7 @@ void AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonSetDown(
   }
 
   // exits if the activated set is the last set
-  int kCount = listbox_sets_->GetCount() - 1;
+  const int kCount = listbox_sets_->GetCount() - 1;
   if (index_set_activated_ == kCount) {
     return;
   }
@@ -301,7 +322,7 @@ void AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseDown(
   }
 
   // exits if the selected index is the first weathercase
-  int kCount = listbox_sets_->GetCount() - 1;
+  const int kCount = listbox_sets_->GetCount() - 1;
   if (index == kCount) {
     return;
   }

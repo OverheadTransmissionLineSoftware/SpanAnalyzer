@@ -56,6 +56,11 @@ class AnalysisWeatherLoadCaseManagerDialog : public wxDialog {
   ///   The event.
   void OnClose(wxCloseEvent& event);
 
+  /// \brief Handles the set listbox double click event.
+  /// \param[in] event
+  ///   The event.
+  void OnListBoxSetDoubleClick(wxCommandEvent& event);
+
   /// \brief Handles the set listbox selection event.
   /// \param[in] event
   ///   The event.
