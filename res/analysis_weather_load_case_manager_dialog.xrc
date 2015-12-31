@@ -10,44 +10,53 @@
         <orient>wxVERTICAL</orient>
         <object class="sizeritem">
           <option>0</option>
-          <flag>wxEXPAND|wxALL</flag>
+          <flag>wxALL</flag>
           <border>5</border>
           <object class="wxBoxSizer">
             <orient>wxHORIZONTAL</orient>
             <object class ="sizeritem">
               <option>0</option>
-              <flag>wxEXPAND|wxALL</flag>
-              <border>5</border>
-              <object class="wxBoxSizer">
+              <flag></flag>
+              <border>0</border>
+              <object class="wxStaticBoxSizer">
                 <orient>wxVERTICAL</orient>
+                <label>Sets</label>
                 <object class="sizeritem">
                   <option>0</option>
-                  <flag>wxEXPAND|wxALIGN_CENTER</flag>
-                  <border>5</border>
-                  <object class="wxStaticText" name="statictext_sets">
-                    <label>Sets</label>
-                  </object>
-                </object>
-                <object class="sizeritem">
-                  <option>0</option>
-                  <flag>wxEXPAND|wxALL</flag>
-                  <border>5</border>
-                  <object class="wxListBox" name="listbox_sets">
-                    <style>wxLB_SINGLE</style>
-                    <size>250,400</size>
-                    <value></value>
-                    <maxlength>0</maxlength>
-                  </object>
-                </object>
-                <object class ="sizeritem">
-                  <option>0</option>
-                  <flag>wxEXPAND|wxALL|wxALIGN_CENTER</flag>
-                  <border>5</border>
+                  <flag></flag>
+                  <border>0</border>
                   <object class="wxBoxSizer">
                     <orient>wxHORIZONTAL</orient>
                     <object class="sizeritem">
                       <option>0</option>
-                      <flag>wxEXPAND|wxALL</flag>
+                      <flag>wxLEFT</flag>
+                      <border>5</border>
+                      <object class="wxListBox" name="listbox_sets">
+                        <style>wxLB_SINGLE</style>
+                        <size>250,400</size>
+                        <value></value>
+                        <maxlength>0</maxlength>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALIGN_CENTER</flag>
+                      <border>0</border>
+                      <object class="wxSpinButton" name="spinbutton_sets">
+                        <style>wxSP_VERTICAL</style>
+                      </object>
+                    </object>
+                  </object>
+                </object>
+                <object class ="sizeritem">
+                  <option>0</option>
+                  <flag>wxALIGN_CENTER</flag>
+                  <border>0</border>
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
                       <border>5</border>
                       <object class="wxButton" name="button_sets_add">
                         <label>Add</label>
@@ -56,19 +65,11 @@
                     </object>
                     <object class="sizeritem">
                       <option>0</option>
-                      <flag>wxEXPAND|wxALL</flag>
+                      <flag>wxALL</flag>
                       <border>5</border>
                       <object class="wxButton" name="button_sets_delete">
                         <label>Delete</label>
                         <default>0</default>
-                      </object>
-                    </object>
-                    <object class="sizeritem">
-                      <option>0</option>
-                      <flag>wxEXPAND|wxALL</flag>
-                      <border>5</border>
-                      <object class="wxSpinButton" name="spinbutton_sets">
-                        <style>wxSP_VERTICAL</style>
                       </object>
                     </object>
                   </object>
@@ -77,38 +78,47 @@
             </object>
             <object class ="sizeritem">
               <option>0</option>
-              <flag>wxEXPAND|wxALL</flag>
-              <border>5</border>
-              <object class="wxBoxSizer">
+              <flag></flag>
+              <border>0</border>
+              <object class="wxStaticBoxSizer">
                 <orient>wxVERTICAL</orient>
+                <label>Weathercases</label>
                 <object class="sizeritem">
                   <option>0</option>
-                  <flag>wxEXPAND|wxLEFT</flag>
-                  <border>5</border>
-                  <object class="wxStaticText" name="statictext_weathercases">
-                    <label>Weathercases</label>
-                  </object>
-                </object>
-                <object class="sizeritem">
-                  <option>0</option>
-                  <flag>wxEXPAND|wxALL</flag>
-                  <border>5</border>
-                  <object class="wxListBox" name="listbox_weathercases">
-                    <style>wxLB_SINGLE</style>
-                    <size>250,400</size>
-                    <value></value>
-                    <maxlength>0</maxlength>
-                  </object>
-                </object>
-                <object class ="sizeritem">
-                  <option>0</option>
-                  <flag>wxEXPAND|wxALL|wxALIGN_CENTER</flag>
-                  <border>5</border>
+                  <flag></flag>
+                  <border>0</border>
                   <object class="wxBoxSizer">
                     <orient>wxHORIZONTAL</orient>
                     <object class="sizeritem">
                       <option>0</option>
-                      <flag>wxEXPAND|wxALL</flag>
+                      <flag>wxLEFT</flag>
+                      <border>5</border>
+                      <object class="wxListBox" name="listbox_weathercases">
+                        <style>wxLB_SINGLE</style>
+                        <size>250,400</size>
+                        <value></value>
+                        <maxlength>0</maxlength>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALIGN_CENTER</flag>
+                      <border>0</border>
+                      <object class="wxSpinButton" name="spinbutton_weathercases">
+                        <style>wxSP_VERTICAL</style>
+                      </object>
+                    </object>
+                  </object>
+                </object>
+                <object class ="sizeritem">
+                  <option>0</option>
+                  <flag>wxALIGN_CENTER</flag>
+                  <border>0</border>
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
                       <border>5</border>
                       <object class="wxButton" name="button_weathercases_add">
                         <label>Add</label>
@@ -117,19 +127,11 @@
                     </object>
                     <object class="sizeritem">
                       <option>0</option>
-                      <flag>wxEXPAND|wxALL</flag>
+                      <flag>wxALL</flag>
                       <border>5</border>
                       <object class="wxButton" name="button_weathercases_delete">
                         <label>Delete</label>
                         <default>0</default>
-                      </object>
-                    </object>
-                    <object class="sizeritem">
-                      <option>0</option>
-                      <flag>wxEXPAND|wxALL</flag>
-                      <border>5</border>
-                      <object class="wxSpinButton" name="spinbutton_weathercases">
-                        <style>wxSP_VERTICAL</style>
                       </object>
                     </object>
                   </object>
@@ -141,7 +143,7 @@
         <object class="sizeritem">
           <option>0</option>
           <flag>wxALIGN_CENTER</flag>
-          <border>5</border>
+          <border>0</border>
           <object class="wxBoxSizer">
             <orient>wxHORIZONTAL</orient>
             <object class="sizeritem">
