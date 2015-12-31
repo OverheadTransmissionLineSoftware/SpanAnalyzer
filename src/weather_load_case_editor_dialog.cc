@@ -121,7 +121,7 @@ void WeatherLoadCaseEditorDialog::SetValidators() {
   textctrl->SetValidator(wxTextValidator(style, value_str));
 
   // thickness-ice
-  precision = 2;
+  precision = 3;
   value_num = &weathercase_modified_.thickness_ice;
   style = wxNUM_VAL_NO_TRAILING_ZEROES;
   textctrl = XRCCTRL(*this, "textctrl_thickness_ice", wxTextCtrl);
