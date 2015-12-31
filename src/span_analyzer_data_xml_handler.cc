@@ -39,6 +39,12 @@ wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
     wxXmlNode* sub_node = new wxXmlNode(wxXML_ELEMENT_NODE,
                                         "analysis_weather_load_case_set");
 
+    // adds name attribute
+    const int index = std::distance(data.weathercases_analysis.cbegin(), iter);
+    auto iter_name = std::next(data.descriptions_weathercases_analysis.cbegin(),
+                               index);
+    sub_node->AddAttribute("name", *iter_name);
+
     // gets weathercase set, iterates through list
     const std::list<WeatherLoadCase>& weathercases = *iter;
     for (auto it = weathercases.cbegin(); it != weathercases.cend(); it++) {
