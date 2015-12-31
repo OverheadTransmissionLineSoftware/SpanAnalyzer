@@ -20,8 +20,8 @@
         </object>
         <object class="sizeritem">
           <option>0</option>
-          <flag>wxEXPAND|wxALL</flag>
-          <border>5</border>
+          <flag>wxEXPAND</flag>
+          <border>0</border>
           <object class="wxFlexGridSizer">
             <rows>4</rows>
             <cols>3</cols>
@@ -48,8 +48,8 @@
             </object>
             <object class="sizeritem">
               <option>0</option>
-              <flag></flag>
-              <border>0</border>
+              <flag>wxRIGHT</flag>
+              <border>5</border>
               <object class="wxTextCtrl" name="textctrl_thickness_ice">
                 <style>wxTE_LEFT</style>
                 <size>75,-1</size>
@@ -76,8 +76,8 @@
             </object>
             <object class="sizeritem">
               <option>0</option>
-              <flag></flag>
-              <border>0</border>
+              <flag>wxRIGHT</flag>
+              <border>5</border>
               <object class="wxTextCtrl" name="textctrl_density_ice">
                 <style>wxTE_LEFT</style>
                 <size>75,-1</size>
@@ -104,8 +104,8 @@
             </object>
             <object class="sizeritem">
               <option>0</option>
-              <flag></flag>
-              <border>0</border>
+              <flag>wxRIGHT</flag>
+              <border>5</border>
               <object class="wxTextCtrl" name="textctrl_pressure_wind">
                 <style>wxTE_LEFT</style>
                 <size>75,-1</size>
@@ -132,8 +132,8 @@
             </object>
             <object class="sizeritem">
               <option>0</option>
-              <flag></flag>
-              <border>0</border>
+              <flag>wxRIGHT</flag>
+              <border>5</border>
               <object class="wxTextCtrl" name="textctrl_temperature_cable">
                 <style>wxTE_LEFT</style>
                 <size>75,-1</size>
@@ -147,7 +147,7 @@
         <object class="sizeritem">
           <option>0</option>
           <flag>wxALIGN_CENTER</flag>
-          <border>5</border>
+          <border>0</border>
           <object class="wxBoxSizer">
             <orient>wxHORIZONTAL</orient>
             <object class="sizeritem">

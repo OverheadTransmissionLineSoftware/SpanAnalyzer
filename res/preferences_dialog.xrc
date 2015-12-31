@@ -9,13 +9,13 @@
         <orient>wxVERTICAL</orient>
         <object class="sizeritem">
           <option>0</option>
-          <flag>wxALIGN_LEFT</flag>
-          <border>5</border>
+          <flag></flag>
+          <border>0</border>
           <object class="wxBoxSizer">
             <orient>wxHORIZONTAL</orient>
             <object class="sizeritem">
               <option>0</option>
-              <flag>wxALIGN_LEFT|wxALL</flag>
+              <flag>wxALL|wxALIGN_CENTER</flag>
               <border>5</border>
               <object class="wxStaticText" name="statictext_filepath_data">
                 <label>Application Data</label>
@@ -23,7 +23,7 @@
             </object>
             <object class="sizeritem">
               <option>0</option>
-              <flag>wxALIGN_LEFT</flag>
+              <flag>wxALL|wxALIGN_CENTER</flag>
               <border>5</border>
               <object class="wxFilePickerCtrl" name="filepickerctrl_data">
                 <style>wxFLP_USE_TEXTCTRL|wxFLP_FILE_MUST_EXIST|wxFLP_SMALL</style>
@@ -34,7 +34,7 @@
             </object>
             <object class="sizeritem">
               <option>0</option>
-              <flag>wxALIGN_LEFT|wxALL</flag>
+              <flag>wxALL|wxALIGN_CENTER</flag>
               <border>5</border>
               <object class="wxStaticText" name="statictext_restart">
                 <label>(applied on restart)</label>
@@ -44,7 +44,7 @@
         </object>
         <object class="sizeritem">
           <option>0</option>
-          <flag>wxALIGN_LEFT</flag>
+          <flag>wxALL</flag>
           <border>5</border>
           <object class="wxRadioBox" name="radiobox_units">
             <style>wxRA_SPECIFY_COLS</style>
@@ -60,7 +60,7 @@
         <object class="sizeritem">
           <option>0</option>
           <flag>wxALIGN_CENTER</flag>
-          <border>5</border>
+          <border>0</border>
           <object class="wxBoxSizer">
             <orient>wxHORIZONTAL</orient>
             <object class="sizeritem">
