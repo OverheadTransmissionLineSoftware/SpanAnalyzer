@@ -43,8 +43,14 @@ class ResultsPane : public wxPanel {
   /// \brief Handles the weathercase set choice event.
   void OnChoiceWeathercaseSet(wxCommandEvent& event);
 
+  /// \brief Updates the analysis weathercase set choice control.
+  void UpdateAnalysisWeathercaseSetChoice();
+
   /// \brief Updates the sag-tension results.
   void UpdateSagTensionResults();
+
+  /// \brief Updates the selected weathercases.
+  void UpdateSelectedWeathercases();
 
   /// \var panel_span_
   ///   The span panel, which is a notebook page.

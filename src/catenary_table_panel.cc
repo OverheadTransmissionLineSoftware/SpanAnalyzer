@@ -55,7 +55,12 @@ void CatenaryTablePanel::UpdateView(wxObject* hint) {
 
   // interprets hint type
   ViewUpdateHint* hint_update = (ViewUpdateHint*)hint;
-  if (hint_update->type() == ViewUpdateHint::HintType::kModelSpansEdit) {
+  if (hint_update->type() ==
+       ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit) {
+    listctrl_->DeleteAllItems();
+    FillData();
+  } else if (hint_update->type() ==
+       ViewUpdateHint::HintType::kModelSpansEdit) {
     FillData();
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelWeathercaseEdit) {

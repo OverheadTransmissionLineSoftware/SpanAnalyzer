@@ -14,6 +14,7 @@
 #include "file_handler.h"
 #include "preferences_dialog.h"
 #include "span_analyzer_app.h"
+#include "span_analyzer_view.h"
 
 #include "../res/icon.xpm"
 
@@ -92,6 +93,12 @@ void SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases(
   if (dialog.ShowModal() == wxID_OK) {
     // saves application data
     FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data);
+
+    // posts event to update views
+    ViewUpdateHint hint;
+    hint.set_type(ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit);
+    wxGetApp().manager_doc()->GetCurrentDocument()->UpdateAllViews(nullptr,
+                                                                   &hint);
   }
 }
 
