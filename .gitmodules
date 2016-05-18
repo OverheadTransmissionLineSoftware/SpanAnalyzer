@@ -1,6 +1,6 @@
-[submodule "external/models"]
-	path = external/models
-	url = https://github.com/OverheadTransmissionLineSoftware/Models.git
+[submodule "external/Models"]
+        path = external/Models
+        url = https://github.com/OverheadTransmissionLineSoftware/Models.git
 [submodule "external/wxWidgets"]
 	path = external/wxWidgets
 	url = https://github.com/wxWidgets/wxWidgets.git
