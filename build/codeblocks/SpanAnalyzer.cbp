@@ -22,6 +22,9 @@
 					<Add library="libotlsmodels_base.a" />
 					<Add directory="$(MODELS)/build/codeblocks/debug/bin" />
 				</Linker>
+				<Environment>
+					<Variable name="WXWIDGETS_CONFIG" value="" />
+				</Environment>
 			</Target>
 			<Target title="release">
 				<Option output="release/bin/SpanAnalyzer" prefix_auto="1" extension_auto="1" />
@@ -40,21 +43,22 @@
 					<Add library="libotlsmodels_base.a" />
 					<Add directory="$(MODELS)/build/codeblocks/release/bin" />
 				</Linker>
+				<Environment>
+					<Variable name="WXWIDGETS_SETUP" value="" />
+				</Environment>
 			</Target>
 			<Environment>
-				<Variable name="MODELS" value="/home/brett/github/Models" />
+				<Variable name="MODELS" value="../../external/Models" />
+				<Variable name="WXWIDGETS" value="../../external/wxWidgets" />
 			</Environment>
 		</Build>
 		<Compiler>
 			<Add option="-std=c++11" />
 			<Add option="-Wall" />
-			<Add option="`wx-config --cxxflags`" />
 			<Add directory="../../include" />
 			<Add directory="$(MODELS)/include" />
+			<Add directory="$(WXWIDGETS)/include" />
 		</Compiler>
-		<Linker>
-			<Add option="`wx-config --libs all`" />
-		</Linker>
 		<Unit filename="../../appconfig.xml" />
 		<Unit filename="../../appdata.xml" />
 		<Unit filename="../../include/analysis_weather_load_case_manager_dialog.h" />
