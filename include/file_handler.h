@@ -40,9 +40,8 @@ class FileHandler {
   ///   The unit system. This is used for converting to consistent units.
   /// \param[out] data
   ///   The application data that is populated.
-  /// \return The file line number of the node if the content could not be
-  ///   converted to the expected data type. Returns 0 if no errors were
-  ///   encountered.
+  /// \return 0 if no errors were encountered, -1 if the file did not exist, or
+  ///   the line number if an error was encountered in the file.
   static int LoadAppData(const std::string& filepath,
                          const units::UnitSystem& units,
                          SpanAnalyzerData& data);
@@ -63,14 +62,15 @@ class FileHandler {
   /// \return A list of cables in the directory.
   static std::list<Cable> LoadCablesFromDirectory(const std::string& directory);
 
-  /// \brief Parses the config file.
+  /// \brief Loads and parses the config file.
+  /// \param[in] filepath
+  ///   The filepath.
   /// \param[out] config
   ///   The application configuration settings.
-  /// \return The file line number of the node if the content could not be
-  ///   converted to the expected data type. Returns 0 if no errors were
-  ///   encountered.
-  /// This function will parse a file in the application directory.
-  static int LoadConfigFile(SpanAnalyzerConfig& config);
+  /// \return 0 if no errors were encountered, -1 if the file did not exist, or
+  ///   the line number if an error was encountered in the file.
+  static int LoadConfigFile(const std::string& filepath,
+                            SpanAnalyzerConfig& config);
 
   /// \brief Saves the application data file.
   /// \param[in] filepath
@@ -91,10 +91,13 @@ class FileHandler {
                         const units::UnitSystem& units);
 
   /// \brief Generates an application configuration file.
+  /// \param[in] filepath
+  ///   The filepath.
   /// \param[in] config
   ///   The application configuration settings.
   /// This function will create a file in the application directory.
-  static void SaveConfigFile(const SpanAnalyzerConfig& config);
+  static void SaveConfigFile(const std::string& filepath,
+                             const SpanAnalyzerConfig& config);
 };
 
 #endif  // OTLS_SPANANALYZER_FILEHANDLER_H_

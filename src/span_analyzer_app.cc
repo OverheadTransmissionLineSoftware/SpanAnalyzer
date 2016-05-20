@@ -3,6 +3,7 @@
 
 #include "span_analyzer_app.h"
 
+#include "wx/filename.h"
 #include "wx/stdpaths.h"
 #include "wx/xrc/xmlres.h"
 
@@ -36,9 +37,20 @@ bool SpanAnalyzerApp::OnCmdLineParsed(wxCmdLineParser& parser) {
     directory_ = path.GetPath();
   }
 
+  // gets the config file path
+  if (parser.Found("config", &filepath_config_)) {
+    // nothing to do, file path already captured
+  } else {
+    // default to a specific file in the application directory
+    if (filepath_config_.empty() == true) {
+      wxFileName path(directory_, "spananalyzer", "conf");
+      filepath_config_ = path.GetFullPath();
+    }
+  }
+
   // captures the start file which will be loaded when doc manager is created
   if (parser.GetParamCount() == 1) {
-    file_start_ = parser.GetParam(0);
+    filepath_start_ = parser.GetParam(0);
   }
 
   return true;
@@ -140,16 +152,60 @@ bool SpanAnalyzerApp::OnInit() {
   SetTopWindow(frame_);
 
   // loads config file
-  /// \todo check for existence of config file, a new one may have to
-  ///   be generated
-  FileHandler::LoadConfigFile(config_);
+  // the config file path is set when parsing the command line
+  const int status_config = FileHandler::LoadConfigFile(filepath_config_,
+                                                        config_);
+  if (status_config == -1) {
+    // manually initializes config
+    path = wxFileName(filepath_config_);
+    path.SetName("appdata");
+    path.SetExt("xml");
+    config_.filepath_data = path.GetFullPath();
+
+    config_.perspective = "";
+    config_.size_frame = wxSize(600,400);
+    config_.units = units::UnitSystem::kImperial;
+
+    // saves config file
+    path = wxFileName(filepath_config_);
+    FileHandler::SaveConfigFile(filepath_config_, config_);
+
+    // notifies user
+    wxMessageBox("Config file could not be located. New file has been created: "
+                 + path.GetFullPath());
+  } else if (status_config != 0) {
+    // notifies user to correct
+    wxMessageBox("Config file: " + filepath_config_ + "Error on line:"
+                 + std::to_string(status_config));
+
+    return false;
+  };
 
   // loads application data
-  FileHandler::LoadAppData(config_.filepath_data, config_.units, data_);
+  const int status_data = FileHandler::LoadAppData(config_.filepath_data,
+                                                   config_.units, data_);
+  if (status_data == -1) {
+    // manually initializes data
+    /// \todo should create a subdirectory for the cable directory
+    data_.directory_cables == config_.filepath_data;
+
+    // saves data file
+    FileHandler::SaveAppData(config_.filepath_data, data_);
+
+    // notifies user
+    wxMessageBox("Data file could not be located. New file has been created: "
+                 + path.GetFullPath());
+  } else if (status_data != 0) {
+    // notifies user to correct
+    wxMessageBox("Data file: " + config_.filepath_data + "Error on line:"
+                 + std::to_string(status_data));
+
+    return false;
+  }
 
   // loads a document if defined in command line
-  if (file_start_ != wxEmptyString) {
-    manager_doc_->CreateDocument(file_start_);
+  if (filepath_start_ != wxEmptyString) {
+    manager_doc_->CreateDocument(filepath_start_);
   }
 
   // sets application frame based on config setting and shows
