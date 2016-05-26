@@ -15,7 +15,7 @@ class WeatherLoadCaseUnitConverter {
  public:
   /// \brief Constructor.
   WeatherLoadCaseUnitConverter();
-  
+
   /// \brief Destructor.
   ~WeatherLoadCaseUnitConverter();
 
@@ -29,10 +29,10 @@ class WeatherLoadCaseUnitConverter {
   /// \param[in,out] weathercase
   ///   The weather case to be converted.
   /// The 'different' style units are as follows:
-  ///  - density_ice = [??? or feet]
-  ///  - pressure_wind = [??? or lbs/ft^2]
-  ///  - temperature_cable = [??? or deg F]
-  ///  - thickness_ice = [??? or in]
+  ///  - density_ice = [N/m^3 or lb/ft^3]
+  ///  - pressure_wind = [Pa or lb/ft^2]
+  ///  - temperature_cable = [degC or deg F]
+  ///  - thickness_ice = [cm or in]
   static void ConvertUnitStyle(const units::UnitSystem& system,
                                const units::UnitStyle& style_from,
                                const units::UnitStyle& style_to,
@@ -46,6 +46,7 @@ class WeatherLoadCaseUnitConverter {
   ///   units.
   /// \param[in,out] weathercase
   ///   The weather case to be converted.
+  /// This function requires that the weathercase be in a 'consistent' unit style.
   static void ConvertUnitSystem(const units::UnitSystem& system_from,
                                 const units::UnitSystem& system_to,
                                 WeatherLoadCase& weathercase);
