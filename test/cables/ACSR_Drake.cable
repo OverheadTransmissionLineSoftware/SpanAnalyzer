@@ -11,7 +11,7 @@
     <coefficient_expansion_linear_thermal units="deg F">0.0000128</coefficient_expansion_linear_thermal>
     <modulus_tension_elastic units="lbs/in^2">6400000</modulus_tension_elastic>
     <modulus_compression_elastic units="lbs/in^2">0</modulus_compression_elastic>
-    <coefficients name="stress-strain" version="1">
+    <coefficients name="stress-strain">
       <coefficient units="lbs/in^2">-1213.0</coefficient>
       <coefficient units="lbs/in^2">44308.1</coefficient>
       <coefficient units="lbs/in^2">-14004.4</coefficient>
@@ -19,7 +19,7 @@
       <coefficient units="lbs/in^2">30676.0</coefficient>
     </coefficients>
     <limit_polynomial_stress-strain units="lbs/in^2">14655.0</limit_polynomial_stress-strain>
-    <coefficients name="creep" version="1">
+    <coefficients name="creep">
       <coefficient units="lbs/in^2">-544.8</coefficient>
       <coefficient units="lbs/in^2">21426.8</coefficient>
       <coefficient units="lbs/in^2">-18842.2</coefficient>
@@ -32,7 +32,7 @@
     <coefficient_expansion_linear_thermal units="deg F">0.0000064</coefficient_expansion_linear_thermal>
     <modulus_tension_elastic units="lbs/in^2">3700000</modulus_tension_elastic>
     <modulus_compression_elastic units="lbs/in^2">0</modulus_compression_elastic>
-    <coefficients name="stress-strain" version="1">
+    <coefficients name="stress-strain">
       <coefficient units="lbs/in^2">-69.3</coefficient>
       <coefficient units="lbs/in^2">38629.0</coefficient>
       <coefficient units="lbs/in^2">3998.1</coefficient>
@@ -40,7 +40,7 @@
       <coefficient units="lbs/in^2">27892.0</coefficient>
     </coefficients>
     <limit_polynomial_stress-strain units="lbs/in^2">16273.9</limit_polynomial_stress-strain>
-    <coefficients name="creep" version="1">
+    <coefficients name="creep">
       <coefficient units="lbs/in^2">47.1</coefficient>
       <coefficient units="lbs/in^2">36211.3</coefficient>
       <coefficient units="lbs/in^2">12201.4</coefficient>
