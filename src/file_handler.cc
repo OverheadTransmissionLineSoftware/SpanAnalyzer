@@ -273,14 +273,21 @@ void FileHandler::SaveAppData(const std::string& filepath,
     }
   }
 
-  // generates a virtual XML document and saves
-  wxFileName path(filepath);
-
-  wxXmlDocument doc;
+  // generates an xml node
   wxXmlNode* root = SpanAnalyzerDataXmlHandler::CreateNode(data_converted,
                                                            units);
+
+  // gets the units
+  if (units == units::UnitSystem::kImperial) {
+    root->AddAttribute("units", "Imperial");
+  } else if (units == units::UnitSystem::kMetric) {
+    root->AddAttribute("units", "Metric");
+  }
+
+  // generates a virtual XML document and saves
+  wxXmlDocument doc;
   doc.SetRoot(root);
-  doc.Save(path.GetFullPath(), 2);
+  doc.Save(filepath, 2);
 }
 
 void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
