@@ -74,9 +74,11 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
 }
 
 SpanAnalyzerFrame::~SpanAnalyzerFrame() {
+/// \todo Save the frame size to the config and save the actual config file
+///       on app close event.
   // saves UI configuration before frame closes
   SpanAnalyzerConfig* config = wxGetApp().config();
-  FileHandler::SaveConfigFile(*config);
+//  FileHandler::SaveConfigFile(*config);
 }
 
 void SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases(
@@ -92,7 +94,8 @@ void SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases(
       &data->weathercases_analysis);
   if (dialog.ShowModal() == wxID_OK) {
     // saves application data
-    FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data);
+    FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
+                             wxGetApp().config()->units);
 
     // posts event to update views
     ViewUpdateHint hint;
@@ -120,7 +123,7 @@ void SpanAnalyzerFrame::OnMenuEditCable(wxCommandEvent& event) {
 
   // gets path and loads cable
   const std::string filepath = dialog.GetPath();
-  FileHandler::LoadCable(filepath, cable);
+  FileHandler::LoadCable(filepath, wxGetApp().config()->units, cable);
 
   // determines if cable is already loaded into application
   SpanAnalyzerData* data = wxGetApp().data();
@@ -191,11 +194,13 @@ void SpanAnalyzerFrame::OnMenuEditCableDirectory(wxCommandEvent& event) {
   CableDirectoryEditorDialog dialog(this, &data->directory_cables);
   if (dialog.ShowModal() == wxID_OK) {
     // saves application data
-    FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data);
+    FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
+                             wxGetApp().config()->units);
 
     // reloads all cables in the directory
     data->cables.clear();
-    FileHandler::LoadCablesFromDirectory(data->directory_cables);
+    FileHandler::LoadCablesFromDirectory(data->directory_cables,
+                                         wxGetApp().config()->units);
   }
 }
 

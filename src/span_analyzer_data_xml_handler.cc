@@ -95,7 +95,9 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
 
     if (title == "cable_directory") {
       data.directory_cables = content;
-      data.cables = FileHandler::LoadCablesFromDirectory(data.directory_cables);
+      data.cables = FileHandler::LoadCablesFromDirectory(
+          data.directory_cables,
+          units);
     } else if (title == "analysis_weather_load_cases") {
       // gets node for analysis weather load case set
       wxXmlNode* sub_node = node->GetChildren();

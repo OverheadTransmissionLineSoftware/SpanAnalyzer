@@ -190,7 +190,7 @@ bool SpanAnalyzerApp::OnInit() {
     data_.directory_cables == config_.filepath_data;
 
     // saves data file
-    FileHandler::SaveAppData(config_.filepath_data, data_);
+    FileHandler::SaveAppData(config_.filepath_data, data_, config_.units);
 
     // notifies user
     wxMessageBox("Data file could not be located. New file has been created: "

@@ -33,11 +33,11 @@ class FileHandler {
   /// \brief Destructor.
   ~FileHandler();
 
-  /// \brief Loads the application data at the provided file path.
+  /// \brief Loads the application data file.
   /// \param[in] filepath
   ///   The file path for the application data.
   /// \param[in] units
-  ///   The unit system. This is used for converting to consistent units.
+  ///   The unit system to convert to.
   /// \param[out] data
   ///   The application data that is populated.
   /// \return 0 if no errors were encountered, -1 if the file did not exist, or
@@ -49,20 +49,28 @@ class FileHandler {
   /// \brief Loads a cable file.
   /// \param[in] filepath
   ///   The filepath.
+  /// \param[in] units
+  ///   The unit system to convert to.
   /// \param[out] cable
   ///   The cable that is populated.
   /// \return The file line number of the node if the content could not be
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
-  static int LoadCable(const std::string& filepath, Cable& cable);
+  static int LoadCable(const std::string& filepath,
+                       const units::UnitSystem& units,
+                       Cable& cable);
 
   /// \brief Loads all cables from the specified directory.
   /// \param[in] directory
   ///   The directory to load cables.
+  /// \param[in] units
+  ///   The unit system to convert to.
   /// \return A list of cables in the directory.
-  static std::list<Cable> LoadCablesFromDirectory(const std::string& directory);
+  static std::list<Cable> LoadCablesFromDirectory(
+      const std::string& directory,
+      const units::UnitSystem& units);
 
-  /// \brief Loads and parses the config file.
+  /// \brief Loads the config file.
   /// \param[in] filepath
   ///   The filepath.
   /// \param[out] config
@@ -77,8 +85,11 @@ class FileHandler {
   ///   The filepath.
   /// \param[in] data
   ///   The application data.
+  /// \param[in] units
+  ///   The current unit system, which will be labeled in the file.
   static void SaveAppData(const std::string& filepath,
-                          const SpanAnalyzerData& data);
+                          const SpanAnalyzerData& data,
+                          const units::UnitSystem& units);
 
   /// \brief Saves a cable file.
   /// \param[in] filepath
@@ -86,11 +97,11 @@ class FileHandler {
   /// \param[in] cable
   ///   The cable.
   /// \param[in] units
-  ///   The unit system.
+  ///   The current unit system, which will be labeled in the file.
   static void SaveCable(const std::string& filepath, const Cable& cable,
                         const units::UnitSystem& units);
 
-  /// \brief Generates an application configuration file.
+  /// \brief Saves the application configuration file.
   /// \param[in] filepath
   ///   The filepath.
   /// \param[in] config

@@ -24,32 +24,45 @@ FileHandler::~FileHandler() {
 int FileHandler::LoadAppData(const std::string& filepath,
                              const units::UnitSystem& units,
                              SpanAnalyzerData& data) {
-  // initializes file units
-  /// \todo fix unit system declaration once units are attributed in file
-  units::UnitSystem units_file = units::UnitSystem::kImperial;
-
-  wxFileName path(filepath);
-
   // checks if the file exists
-  if (path.Exists() == false) {
+  if (wxFileName::Exists(filepath) == false) {
     return -1;
   }
 
-  // uses an xml document to load application data
+  // uses an xml document to load app data file
   wxXmlDocument doc;
   if (doc.Load(filepath) == false) {
+    // invalid xml file
     return -1;
-  } else {
-    // parses the XML root and loads into the application data
-    const wxXmlNode* root = doc.GetRoot();
-    int line_number = SpanAnalyzerDataXmlHandler::ParseNode(root, data,
-                                                            units_file);
-    if (line_number != 0) {
-      return line_number;
-    }
   }
 
-  // cables are already converted to consistent unit style
+  // checks for valid xml root
+  const wxXmlNode* root = doc.GetRoot();
+  if (root->GetName() != "span_analyzer_data") {
+    return root->GetLineNumber();
+  }
+
+  // gets unit system attribute from file
+  wxString str_units;
+  units::UnitSystem units_file;
+  if (root->GetAttribute("units", &str_units) == true) {
+    if (str_units == "Imperial") {
+      units_file = units::UnitSystem::kImperial;
+    } else if (str_units == "Metric") {
+      units_file = units::UnitSystem::kMetric;
+    } else {
+      return root->GetLineNumber();
+    }
+  } else {
+    return root->GetLineNumber();
+  }
+
+  // parses the xml node to populate data object
+  int line_number = SpanAnalyzerDataXmlHandler::ParseNode(root, data,
+                                                          units_file);
+  if (line_number != 0) {
+    return line_number;
+  }
 
   // converts analysis weathercases to consistent unit style
   for (auto iter = data.weathercases_analysis.begin();
@@ -67,34 +80,69 @@ int FileHandler::LoadAppData(const std::string& filepath,
 
   // converts unit systems if the file doesn't match applicaton config
   if (units_file != wxGetApp().config()->units) {
-
+    for (auto iter = data.weathercases_analysis.begin();
+         iter != data.weathercases_analysis.end(); iter++) {
+      std::list<WeatherLoadCase>& weathercases = *iter;
+      for (auto it = weathercases.begin(); it != weathercases.end(); it++) {
+        WeatherLoadCase& weathercase = *it;
+        WeatherLoadCaseUnitConverter::ConvertUnitSystem(
+            units_file,
+            units,
+            weathercase);
+      }
+    }
   }
 
   return 0;
 }
 
-int FileHandler::LoadCable(const std::string& filepath, Cable& cable) {
-  // initializes file units
-  /// \todo fix unit system declaration when units are attributed in cable file
-  units::UnitSystem units_file = units::UnitSystem::kImperial;
+int FileHandler::LoadCable(const std::string& filepath,
+                           const units::UnitSystem& units,
+                           Cable& cable) {
+  // checks if the file exists
+  if (wxFileName::Exists(filepath) == false) {
+    return -1;
+  }
 
-  // uses an xml document to load cable files
+  // uses an xml document to load cable file
   wxXmlDocument doc;
-  int line_number = -1;
-  if (doc.Load(filepath) == true) {
-    /// \todo fix CableComponent constructor to have no default
-    ///   coefficients
-    cable.component_core.coefficients_polynomial_creep.clear();
-    cable.component_core.coefficients_polynomial_loadstrain.clear();
-    cable.component_shell.coefficients_polynomial_creep.clear();
-    cable.component_shell.coefficients_polynomial_loadstrain.clear();
-
-    // uses cable xml parser to populate cable object
-    const wxXmlNode* root = doc.GetRoot();
-    line_number = CableXmlHandler::ParseNode(root, cable);
-  } else {
+  if (doc.Load(filepath) == false) {
     // invalid xml file
     return -1;
+  }
+
+  // checks for valid xml root
+  const wxXmlNode* root = doc.GetRoot();
+  if (root->GetName() != "cable") {
+    return root->GetLineNumber();
+  }
+
+  // gets unit system attribute from file
+  wxString str_units;
+  units::UnitSystem units_file;
+  if (root->GetAttribute("units", &str_units) == true) {
+    if (str_units == "Imperial") {
+      units_file = units::UnitSystem::kImperial;
+    } else if (str_units == "Metric") {
+      units_file = units::UnitSystem::kMetric;
+    } else {
+      return root->GetLineNumber();
+    }
+  } else {
+    return root->GetLineNumber();
+  }
+
+  // parses the xml node to populate cable object
+  /// \todo fix CableComponent constructor to have no default
+  ///   coefficients
+  cable.component_core.coefficients_polynomial_creep.clear();
+  cable.component_core.coefficients_polynomial_loadstrain.clear();
+  cable.component_shell.coefficients_polynomial_creep.clear();
+  cable.component_shell.coefficients_polynomial_loadstrain.clear();
+
+  int line_number = CableXmlHandler::ParseNode(root, cable);
+  if (line_number != 0) {
+    return line_number;
   }
 
   // converts units to consistent style
@@ -105,20 +153,19 @@ int FileHandler::LoadCable(const std::string& filepath, Cable& cable) {
       cable);
 
   // converts unit systems if the file doesn't match applicaton config
-  if (units_file != wxGetApp().config()->units) {
-
+  units::UnitSystem units_config = wxGetApp().config()->units;
+  if (units_file != units_config) {
+    CableUnitConverter::ConvertUnitSystem(units_file, units_config, cable);
   }
 
   return line_number;
 }
 
 std::list<Cable> FileHandler::LoadCablesFromDirectory(
-    const std::string& directory) {
+    const std::string& directory,
+    const units::UnitSystem& units) {
   // initializes list of cables
   std::list<Cable> cables;
-
-  // gets application frame
-  SpanAnalyzerFrame* frame = wxGetApp().frame();
 
   // checks if directory exists
   if (wxDir::Exists(directory) == false) {
@@ -143,7 +190,7 @@ std::list<Cable> FileHandler::LoadCablesFromDirectory(
         // creates cable, sends to xml parser
         std::string filepath = file.GetFullPath();
         Cable cable;
-        int line_number = FileHandler::LoadCable(filepath, cable);
+        int line_number = FileHandler::LoadCable(filepath, units, cable);
 
         // if error is encountered, adds to list to display to user at the end
         if (line_number == 0) {
@@ -166,6 +213,7 @@ std::list<Cable> FileHandler::LoadCablesFromDirectory(
 
     // displays errors to user
     if (messages.empty() == false) {
+      SpanAnalyzerFrame* frame = wxGetApp().frame();
       ErrorMessageDialog dialog(frame, &messages);
       dialog.ShowModal();
     }
@@ -176,36 +224,37 @@ std::list<Cable> FileHandler::LoadCablesFromDirectory(
 
 int FileHandler::LoadConfigFile(const std::string& filepath,
                                 SpanAnalyzerConfig& config) {
-  wxFileName path(filepath);
-
   // checks if the file exists
-  if (path.Exists() == false) {
+  if (wxFileName::Exists(filepath) == false) {
     return -1;
   }
 
-  // opens the file
+  // uses an xml document to load config file
   wxXmlDocument doc;
-  if (doc.Load(path.GetFullPath()) == false) {
+  if (doc.Load(filepath) == false) {
     return -1;
-  } else {
-    // parses the XML root and loads into the config struct
-    const wxXmlNode* root = doc.GetRoot();
-    int line_number = SpanAnalyzerConfigXmlHandler::ParseNode(root, config);
-    if (line_number != 0) {
-      return line_number;
-    }
+  }
+
+  // checks for valid xml root
+  const wxXmlNode* root = doc.GetRoot();
+  if (root->GetName() != "span_analyzer_config") {
+    return root->GetLineNumber();
+  }
+
+  // parses the XML node and loads into the config struct
+  int line_number = SpanAnalyzerConfigXmlHandler::ParseNode(root, config);
+  if (line_number != 0) {
+    return line_number;
   }
 
   return 0;
 }
 
 void FileHandler::SaveAppData(const std::string& filepath,
-                              const SpanAnalyzerData& data) {
+                              const SpanAnalyzerData& data,
+                              const units::UnitSystem& units) {
   // creates a copy of the data
   SpanAnalyzerData data_converted = data;
-
-  // gets the units
-  units::UnitSystem units = wxGetApp().config()->units;
 
   // cables are stored in individual files, and are not included in the app
   // data file
@@ -243,10 +292,18 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
                                        units::UnitStyle::kDifferent,
                                        cable_converted);
 
-  // generates an xml document and saves
-  wxXmlDocument doc;
+  // generates an xml node
   wxXmlNode* root = CableXmlHandler::CreateNode(cable_converted, filepath,
                                                 units);
+  // gets the units
+  if (units == units::UnitSystem::kImperial) {
+    root->AddAttribute("units", "Imperial");
+  } else if (units == units::UnitSystem::kMetric) {
+    root->AddAttribute("units", "Metric");
+  }
+
+  // creates an xml document and saves
+  wxXmlDocument doc;
   doc.SetRoot(root);
   doc.Save(filepath, 2);
 }
