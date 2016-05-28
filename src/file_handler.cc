@@ -284,7 +284,7 @@ void FileHandler::SaveAppData(const std::string& filepath,
     root->AddAttribute("units", "Metric");
   }
 
-  // generates a virtual XML document and saves
+  // creates an xml document and saves
   wxXmlDocument doc;
   doc.SetRoot(root);
   doc.Save(filepath, 2);
@@ -317,9 +317,11 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
 
 void FileHandler::SaveConfigFile(const std::string& filepath,
                                  const SpanAnalyzerConfig& config) {
-  // generates a virtual XML document and saves
-  wxXmlDocument doc;
+  // generates an xml node
   wxXmlNode* root = SpanAnalyzerConfigXmlHandler::CreateNode(config);
+
+  // creates an xml document and saves
+  wxXmlDocument doc;
   doc.SetRoot(root);
   doc.Save(filepath, 2);
 }

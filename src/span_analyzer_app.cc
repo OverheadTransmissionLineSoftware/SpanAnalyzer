@@ -21,12 +21,6 @@ SpanAnalyzerApp::SpanAnalyzerApp() {
 SpanAnalyzerApp::~SpanAnalyzerApp() {
 }
 
-int SpanAnalyzerApp::OnExit() {
-  delete manager_doc_;
-
-  return wxApp::OnExit();
-}
-
 bool SpanAnalyzerApp::OnCmdLineParsed(wxCmdLineParser& parser) {
   // sets directory based on debug switch
   if (parser.Found("debug")) {
@@ -54,6 +48,17 @@ bool SpanAnalyzerApp::OnCmdLineParsed(wxCmdLineParser& parser) {
   }
 
   return true;
+}
+
+int SpanAnalyzerApp::OnExit() {
+  // saves config file
+  FileHandler::SaveConfigFile(filepath_config_, config_);
+
+  // cleans up allocated resources
+  delete manager_doc_;
+
+  // continues exit process
+  return wxApp::OnExit();
 }
 
 bool SpanAnalyzerApp::OnInit() {
@@ -163,7 +168,7 @@ bool SpanAnalyzerApp::OnInit() {
     config_.filepath_data = path.GetFullPath();
 
     config_.perspective = "";
-    config_.size_frame = wxSize(600,400);
+    config_.size_frame = wxSize(0, 0);
     config_.units = units::UnitSystem::kImperial;
 
     // saves config file
@@ -209,7 +214,12 @@ bool SpanAnalyzerApp::OnInit() {
   }
 
   // sets application frame based on config setting and shows
-  frame_->SetSize(config_.size_frame);
+  if (config_.size_frame.GetHeight() < 100
+      || config_.size_frame.GetWidth() < 100) {
+    frame_->Maximize();
+  } else {
+    frame_->SetSize(config_.size_frame);
+  }
   frame_->Centre(wxBOTH);
   frame_->Show(true);
 

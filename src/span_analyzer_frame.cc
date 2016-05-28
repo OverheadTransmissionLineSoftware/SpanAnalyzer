@@ -74,11 +74,13 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
 }
 
 SpanAnalyzerFrame::~SpanAnalyzerFrame() {
-/// \todo Save the frame size to the config and save the actual config file
-///       on app close event.
-  // saves UI configuration before frame closes
+  // saves frame size to application config
   SpanAnalyzerConfig* config = wxGetApp().config();
-//  FileHandler::SaveConfigFile(*config);
+  if (this->IsMaximized() == true) {
+    config->size_frame = wxSize(0, 0);
+  } else {
+    config->size_frame = this->GetSize();
+  }
 }
 
 void SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases(
