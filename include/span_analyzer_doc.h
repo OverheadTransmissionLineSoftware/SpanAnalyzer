@@ -6,12 +6,11 @@
 
 #include <list>
 
+#include "models/base/units.h"
 #include "models/transmissionline/weather_load_case.h"
 #include "wx/docview.h"
 
 #include "span.h"
-
-/// \todo unit conversion should be an internal method
 
 /// \par OVERVIEW
 ///
@@ -54,6 +53,27 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return An iterator for the added weathercase.
   std::list<WeatherLoadCase>::const_iterator AppendWeathercase(
       const WeatherLoadCase& weathercase);
+
+  /// \brief Converts the document between unit styles.
+  /// \param[in] system
+  ///   The unit system.
+  /// \param[in] style_from
+  ///   The unit style to convert from.
+  /// \param[in] style_to
+  ///   The unit style to convert to.
+  void ConvertUnitStyle(const units::UnitSystem& system,
+                        const units::UnitStyle& style_from,
+                        const units::UnitStyle& style_to);
+
+  /// \brief Converts the document between unit systems.
+  /// \param[in] system_from
+  ///   The unit system to convert from.
+  /// \param[in] system_to
+  ///   The unit system to convert to.
+  /// This function requires that the document is in a 'consistent' unit
+  /// style.
+  void ConvertUnitSystem(const units::UnitSystem& system_from,
+                         const units::UnitSystem& system_to);
 
   /// \brief Deletes a span.
   /// \param[in] element

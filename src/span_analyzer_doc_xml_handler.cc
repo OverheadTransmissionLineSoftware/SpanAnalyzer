@@ -26,13 +26,6 @@ wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
   node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "span_analyzer_doc");
   node_root->AddAttribute("version", "1");
 
-  // creates units attribute
-  if (units == units::UnitSystem::kMetric) {
-    node_root->AddAttribute("units", "Metric");
-  } else if (units == units::UnitSystem::kImperial) {
-    node_root->AddAttribute("units", "Imperial");
-  }
-
   // adds child nodes for parameters
 
   // creates weather load cases node
