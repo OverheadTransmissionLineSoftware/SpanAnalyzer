@@ -51,7 +51,7 @@ wxXmlNode* SpanXmlHandler::CreateNode(
     attribute = wxXmlAttribute("units", "???");
   }
   node_element = Vector3dXmlHandler::CreateNode(span.spacing_catenary,
-                                                "catenary_spacing",
+                                                "spacing_catenary",
                                                 attribute,
                                                 1);
   node_root->AddChild(node_element);
