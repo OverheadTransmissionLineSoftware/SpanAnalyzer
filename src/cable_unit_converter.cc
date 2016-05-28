@@ -280,10 +280,6 @@ void CableUnitConverter::ConvertUnitStyle(const units::UnitSystem& system,
   if (system == units::UnitSystem::kMetric) {
     // converts cable units to consistent unit style
     if (style_to == units::UnitStyle::kConsistent) {
-      cable.area_electrical = units::ConvertLength(
-          cable.area_electrical,
-          units::LengthConversionType::kMillimetersToMeters,
-          2);
       cable.area_physical = units::ConvertLength(
           cable.area_physical,
           units::LengthConversionType::kMillimetersToMeters,
@@ -294,10 +290,6 @@ void CableUnitConverter::ConvertUnitStyle(const units::UnitSystem& system,
 
     // converts cable units to different unit style
     } else if (style_to == units::UnitStyle::kDifferent) {
-      cable.area_electrical = units::ConvertLength(
-          cable.area_electrical,
-          units::LengthConversionType::kMetersToMillimeters,
-          2);
       cable.area_physical = units::ConvertLength(
           cable.area_physical,
           units::LengthConversionType::kMetersToMillimeters,
@@ -309,7 +301,6 @@ void CableUnitConverter::ConvertUnitStyle(const units::UnitSystem& system,
   } else if (system == units::UnitSystem::kImperial) {
     // converts cable units to consistent unit style
     if (style_to == units::UnitStyle::kConsistent) {
-      cable.area_electrical = cable.area_electrical; /// \todo add kcmil conv
       cable.area_physical = units::ConvertLength(
           cable.area_physical,
           units::LengthConversionType::kInchesToFeet,
@@ -320,7 +311,6 @@ void CableUnitConverter::ConvertUnitStyle(const units::UnitSystem& system,
 
     // converts cable units to different unit style
     } else if (style_to == units::UnitStyle::kDifferent) {
-      cable.area_electrical = cable.area_electrical; /// \todo add kcmil conv
       cable.area_physical = units::ConvertLength(
           cable.area_physical,
           units::LengthConversionType::kFeetToInches,
@@ -366,7 +356,6 @@ void CableUnitConverter::ConvertUnitSystem(const units::UnitSystem& system_from,
 
   // converts unit system for cable
   if (system_to == units::UnitSystem::kMetric) {
-    cable.area_electrical = cable.area_electrical; /// \todo add kcmil conv here
     cable.area_physical = units::ConvertLength(
         cable.area_physical,
         units::LengthConversionType::kFeetToMeters, 2);
@@ -387,7 +376,6 @@ void CableUnitConverter::ConvertUnitSystem(const units::UnitSystem& system_from,
         cable.weight_unit,
         units::LengthConversionType::kFeetToMeters, 1, false);
   } else if (system_to == units::UnitSystem::kImperial) {
-    cable.area_electrical = cable.area_electrical; /// \todo add kcmil conv here
     cable.area_physical = units::ConvertLength(
         cable.area_physical,
         units::LengthConversionType::kMetersToFeet, 2);

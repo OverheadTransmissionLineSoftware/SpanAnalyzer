@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cable version="1" units="Imperial">
   <name>ACSR Drake</name>
-  <area_electrical units="kcmil">795.0</area_electrical>
   <area_physical units="in^2">0.7264</area_physical>
   <diameter units="in">1.108</diameter>
   <weight_unit units="lbs/feet">1.094</weight_unit>

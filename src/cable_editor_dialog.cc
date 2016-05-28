@@ -79,7 +79,7 @@ void CableEditorDialog::SetUnitsStaticText(const units::UnitSystem& units) {
   /// \todo
   ///  wxWidgets seems to have a bug when editing labels. The StaticText
   ///  controls are not re-sized
-  
+
   //wxStaticText* statictext = nullptr;
 
   //if (units == units::UnitSystem::kMetric) {
@@ -147,14 +147,6 @@ void CableEditorDialog::SetValidators() {
   style = wxFILTER_NONE;
   textctrl = XRCCTRL(*this, "textctrl_name", wxTextCtrl);
   textctrl->SetValidator(wxTextValidator(style, value_str));
-
-  // area-electrical
-  precision = 1;
-  value_num = &cable_modified_.area_electrical;
-  style = wxNUM_VAL_NO_TRAILING_ZEROES;
-  textctrl = XRCCTRL(*this, "textctrl_area_electrical", wxTextCtrl);
-  textctrl->SetValidator(
-      wxFloatingPointValidator<double>(precision, value_num, style));
 
   // area-physical
   precision = 4;

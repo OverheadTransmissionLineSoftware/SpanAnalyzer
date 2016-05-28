@@ -270,18 +270,6 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
   node_element = CreateElementNodeWithContent(title, content);
   node_root->AddChild(node_element);
 
-  // creates area-electrical node and adds to cable node
-  title = "area_electrical";
-  value = cable.area_electrical;
-  content = helper::DoubleToFormattedString(value, 1);
-  if (units == units::UnitSystem::kMetric) {
-    attribute = new wxXmlAttribute("units", "???");
-  } else if (units == units::UnitSystem::kImperial) {
-    attribute = new wxXmlAttribute("units", "kcmil");
-  }
-  node_element = CreateElementNodeWithContent(title, content, attribute);
-  node_root->AddChild(node_element);
-
   // creates area-physical node and adds to cable node
   title = "area_physical";
   value = cable.area_physical;
@@ -395,12 +383,6 @@ int CableXmlHandler::ParseNodeV1(const wxXmlNode* root,
 
     if (title == "name") {
       cable.name = content;
-    } else if (title == "area_electrical") {
-      if (content.ToDouble(&value) == true) {
-        cable.area_electrical = value;
-      } else {
-        return node->GetLineNumber();
-      }
     } else if (title == "area_physical") {
       if (content.ToDouble(&value) == true) {
         cable.area_physical = value;

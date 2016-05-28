@@ -39,40 +39,13 @@
           <flag>wxEXPAND</flag>
           <border>0</border>
           <object class="wxFlexGridSizer">
-            <rows>7</rows>
+            <rows>6</rows>
             <cols>3</cols>
             <vgap>0</vgap>
             <hgap>0</hgap>
             <flexibledirection>wxHORIZONTAL</flexibledirection>
             <growablecols></growablecols>
             <growablerows></growablerows>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag>wxLEFT</flag>
-              <border>10</border>
-              <object class="wxStaticText" name="statictext_area_electrical">
-                <label>Electrical Area</label>
-              </object>
-            </object>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag>wxLEFT|wxRIGHT</flag>
-              <border>10</border>
-              <object class="wxStaticText" name="statictext_area_electrical_units">
-                <label>[kcmil]</label>
-              </object>
-            </object>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag></flag>
-              <border>0</border>
-              <object class="wxTextCtrl" name="textctrl_area_electrical">
-                <size>75,-1</size>
-                <value></value>
-                <maxlength>0</maxlength>
-                <tooltip>The conductive area of the cable.</tooltip>
-              </object>
-            </object>
             <object class="sizeritem">
               <option>0</option>
               <flag>wxLEFT</flag>
