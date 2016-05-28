@@ -10,9 +10,6 @@
 #include "span_analyzer_config.h"
 #include "span_analyzer_data.h"
 
-/// \todo Files that are loaded need to have unit attributes somewhere on
-///   them. This is so that the units can be cross-converted if need be.
-
 /// \par OVERVIEW
 ///
 /// This class handles reading and writing application files that are not
