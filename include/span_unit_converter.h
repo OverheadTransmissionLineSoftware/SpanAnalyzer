@@ -17,6 +17,7 @@
 ///  - Cable
 ///  - WeatherLoadCase
 class SpanUnitConverter {
+ public:
   /// \brief Constructor.
   SpanUnitConverter();
 
