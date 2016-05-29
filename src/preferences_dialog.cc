@@ -22,16 +22,18 @@ PreferencesDialog::PreferencesDialog(
   config_ = config;
 
   // updates the cable directory
+  // sets application data path for file picker ctrl
   wxFilePickerCtrl* filepickerctrl = XRCCTRL(*this, "filepickerctrl_data",
                                              wxFilePickerCtrl);
-
-  // sets application data path for file picker ctrl
   filepickerctrl->SetPath(config_->filepath_data);
 
-  // disables the metric option and selects imperial
+  // sets the unit system in the radio control
   wxRadioBox* radiobox = XRCCTRL(*this, "radiobox_units", wxRadioBox);
-  radiobox->Enable(0, false);
-  radiobox->SetSelection(1);
+  if (config_->units == units::UnitSystem::kImperial) {
+    radiobox->SetSelection(0);
+  } else if (config_->units == units::UnitSystem::kMetric) {
+    radiobox->SetSelection(1);
+  }
 
   // fits the dialog around the sizers
   this->Fit();
@@ -54,9 +56,9 @@ void PreferencesDialog::OnButtonOk(wxCommandEvent& event) {
   // transfers units
   wxRadioBox* radiobox = XRCCTRL(*this, "radiobox_units", wxRadioBox);
   if (radiobox->GetSelection() == 0) {
-    config_->units = units::UnitSystem::kMetric;
-  } else if (radiobox->GetSelection() == 1) {
     config_->units = units::UnitSystem::kImperial;
+  } else if (radiobox->GetSelection() == 1) {
+    config_->units = units::UnitSystem::kMetric;
   }
 
   // transfers application data path
