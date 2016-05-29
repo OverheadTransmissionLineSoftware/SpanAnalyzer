@@ -76,8 +76,6 @@ void CableEditorDialog::OnOk(wxCommandEvent &event) {
 }
 
 void CableEditorDialog::SetUnitsStaticText(const units::UnitSystem& units) {
-  wxStaticText* statictext = nullptr;
-
   if (units == units::UnitSystem::kMetric) {
     XRCCTRL(*this, "statictext_area_physical_units", wxStaticText)->
         SetLabel("mm^2");
