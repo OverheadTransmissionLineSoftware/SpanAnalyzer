@@ -43,7 +43,7 @@
               <flag>wxALL</flag>
               <border>5</border>
               <object class="wxStaticText" name="statictext_thickness_ice_units">
-                <label>[in]</label>
+                <label>WWW</label>
               </object>
             </object>
             <object class="sizeritem">
@@ -71,7 +71,7 @@
               <flag>wxALL</flag>
               <border>5</border>
               <object class="wxStaticText" name="statictext_density_ice_units">
-                <label>[lb/ft^3]</label>
+                <label>WWW</label>
               </object>
             </object>
             <object class="sizeritem">
@@ -99,7 +99,7 @@
               <flag>wxALL</flag>
               <border>5</border>
               <object class="wxStaticText" name="statictext_pressure_wind_units">
-                <label>[lb/ft^2]</label>
+                <label>WWW</label>
               </object>
             </object>
             <object class="sizeritem">
@@ -127,7 +127,7 @@
               <flag>wxALL</flag>
               <border>5</border>
               <object class="wxStaticText" name="statictext_temperature_cable_units">
-                <label>[deg F]</label>
+                <label>WWW</label>
               </object>
             </object>
             <object class="sizeritem">

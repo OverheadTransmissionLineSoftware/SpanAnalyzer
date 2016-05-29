@@ -79,31 +79,25 @@ void WeatherLoadCaseEditorDialog::OnOk(wxCommandEvent &event) {
 
 void WeatherLoadCaseEditorDialog::SetUnitsStaticText(
     const units::UnitSystem& units) {
-  /// \todo
-  ///  wxWidgets seems to have a bug when editing labels. The StaticText
-  ///  controls are not re-sized
-
-  //if (units == units::UnitSystem::kMetric) {
-  //  /// \todo
-  //  /// Need to include metric form labeling.
-  //  XRCCTRL(*this, "statictext_thickness_ice_units", wxStaticText)->
-  //      SetLabel("[???]");
-  //  XRCCTRL(*this, "statictext_density_ice_units", wxStaticText)->
-  //      SetLabel("[???]");
-  //  XRCCTRL(*this, "statictext_pressure_wind_units", wxStaticText)->
-  //      SetLabel("[???]");
-  //  XRCCTRL(*this, "statictext_temperature_cable_units", wxStaticText)->
-  //      SetLabel("[???]");
-  //} else if (units == units::UnitSystem::kImperial) {
-  //  XRCCTRL(*this, "statictext_thickness_ice_units", wxStaticText)->
-  //      SetLabel("[in]");
-  //  XRCCTRL(*this, "statictext_density_ice_units", wxStaticText)->
-  //      SetLabel("[lb/ft^3]");
-  //  XRCCTRL(*this, "statictext_pressure_wind_units", wxStaticText)->
-  //      SetLabel("[lb/ft^2]");
-  //  XRCCTRL(*this, "statictext_temperature_cable_units", wxStaticText)->
-  //      SetLabel("[deg F]");
-  //}
+  if (units == units::UnitSystem::kMetric) {
+    XRCCTRL(*this, "statictext_thickness_ice_units", wxStaticText)->
+        SetLabel("[cm]");
+    XRCCTRL(*this, "statictext_density_ice_units", wxStaticText)->
+        SetLabel("[N/m^3]");
+    XRCCTRL(*this, "statictext_pressure_wind_units", wxStaticText)->
+        SetLabel("[Pa]");
+    XRCCTRL(*this, "statictext_temperature_cable_units", wxStaticText)->
+        SetLabel("[degC]");
+  } else if (units == units::UnitSystem::kImperial) {
+    XRCCTRL(*this, "statictext_thickness_ice_units", wxStaticText)->
+        SetLabel("[in]");
+    XRCCTRL(*this, "statictext_density_ice_units", wxStaticText)->
+        SetLabel("[pcf]");
+    XRCCTRL(*this, "statictext_pressure_wind_units", wxStaticText)->
+        SetLabel("[psf]");
+    XRCCTRL(*this, "statictext_temperature_cable_units", wxStaticText)->
+        SetLabel("[degF]");
+  }
 }
 
 void WeatherLoadCaseEditorDialog::SetValidators() {
