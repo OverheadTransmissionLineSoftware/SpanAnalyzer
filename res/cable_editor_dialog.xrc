@@ -59,7 +59,7 @@
               <flag>wxLEFT|wxRIGHT</flag>
               <border>10</border>
               <object class="wxStaticText" name="statictext_area_physical_units">
-                <label>[in^2]</label>
+                <label>WWW</label>
               </object>
             </object>
             <object class="sizeritem">
@@ -86,7 +86,7 @@
               <flag>wxLEFT|wxRIGHT</flag>
               <border>10</border>
               <object class="wxStaticText" name="statictext_diameter_units">
-                <label>[in]</label>
+                <label>WWW</label>
               </object>
             </object>
             <object class="sizeritem">
@@ -113,7 +113,7 @@
               <flag>wxLEFT|wxRIGHT</flag>
               <border>10</border>
               <object class="wxStaticText" name="statictext_weight_unit_units">
-                <label>[lbs/ft]</label>
+                <label>WWW</label>
               </object>
             </object>
             <object class="sizeritem">
@@ -140,7 +140,7 @@
               <flag>wxLEFT|wxRIGHT</flag>
               <border>10</border>
               <object class="wxStaticText" name="statictext_strength_rated_units">
-                <label>[lbs]</label>
+                <label>WWW</label>
               </object>
             </object>
             <object class="sizeritem">
@@ -167,7 +167,7 @@
               <flag>wxLEFT|wxRIGHT</flag>
               <border>10</border>
               <object class="wxStaticText" name="statictext_temperature_properties_units">
-                <label>[deg F]</label>
+                <label>WWW</label>
               </object>
             </object>
             <object class="sizeritem">
@@ -214,7 +214,7 @@
                   <flag>wxLEFT</flag>
                   <border>10</border>
                   <object class="wxStaticText" name="statictext_shell_coefficient_expansion_thermal_units">
-                    <label>[/deg F]</label>
+                    <label>WWW</label>
                   </object>
                 </object>
                 <object class="sizeritem">
@@ -241,7 +241,7 @@
                   <flag>wxLEFT</flag>
                   <border>10</border>
                   <object class="wxStaticText" name="statictext_shell_modulus_tension_units">
-                    <label>[lb/in^2]</label>
+                    <label>WWW</label>
                   </object>
                 </object>
                 <object class="sizeritem">
@@ -401,7 +401,7 @@
                   <flag>wxLEFT</flag>
                   <border>10</border>
                   <object class="wxStaticText" name="statictext_core_coefficient_expansion_thermal_units">
-                    <label>[/deg F]</label>
+                    <label>WWW</label>
                   </object>
                 </object>
                 <object class="sizeritem">
@@ -428,7 +428,7 @@
                   <flag>wxLEFT</flag>
                   <border>10</border>
                   <object class="wxStaticText" name="statictext_core_modulus_tension_units">
-                    <label>[lb/in^2]</label>
+                    <label>WWW</label>
                   </object>
                 </object>
                 <object class="sizeritem">
