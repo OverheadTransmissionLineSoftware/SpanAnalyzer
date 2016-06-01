@@ -124,12 +124,6 @@ int SpanAnalyzerDocXmlHandler::ParseNodeV1(
           int line_number = WeatherLoadCaseXmlHandler::ParseNode(sub_node,
                                                                  weathercase);
           if (line_number == 0) {
-            // converts weathercase to consistent units
-            WeatherLoadCaseUnitConverter::ConvertUnitStyle(
-                units,
-                units::UnitStyle::kDifferent,
-                units::UnitStyle::kConsistent,
-                weathercase);
             doc.AppendWeathercase(weathercase);
           } else {
             return line_number;
