@@ -47,7 +47,9 @@ void WeatherLoadCaseUnitConverter::ConvertUnitSystem(
         units::ForceConversionType::kPoundsToNewtons);
     weathercase.density_ice = units::ConvertLength(
         weathercase.density_ice,
-        units::LengthConversionType::kFeetToMeters);
+        units::LengthConversionType::kFeetToMeters,
+        3,
+        false);
 
     weathercase.pressure_wind = units::ConvertStress(
         weathercase.pressure_wind,
@@ -64,7 +66,9 @@ void WeatherLoadCaseUnitConverter::ConvertUnitSystem(
         units::ForceConversionType::kNewtonsToPounds);
     weathercase.density_ice = units::ConvertLength(
         weathercase.density_ice,
-        units::LengthConversionType::kMetersToFeet);
+        units::LengthConversionType::kMetersToFeet,
+        3,
+        false);
 
     weathercase.pressure_wind = units::ConvertStress(
         weathercase.pressure_wind,

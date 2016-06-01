@@ -211,9 +211,10 @@ void CableComponentUnitConverter::ConvertUnitSystem(
   }
 
   if (system_to == units::UnitSystem::kMetric) {
-    component.coefficient_expansion_linear_thermal = units::ConvertTemperature(
-        component.coefficient_expansion_linear_thermal,
-        units::TemperatureConversionType::kFahrenheitToCelsius);
+    // manually converting this parameter because only scaling is needed to
+    // convert to the new unit system
+    component.coefficient_expansion_linear_thermal =
+        component.coefficient_expansion_linear_thermal * 1.8;
 
     ConvertComponentCoefficientsLoad(
         units::ForceConversionType::kPoundsToNewtons,
@@ -235,9 +236,10 @@ void CableComponentUnitConverter::ConvertUnitSystem(
         component.modulus_tension_elastic_area,
         units::ForceConversionType::kPoundsToNewtons);
   } else if (system_to == units::UnitSystem::kImperial) {
-    component.coefficient_expansion_linear_thermal = units::ConvertTemperature(
-        component.coefficient_expansion_linear_thermal,
-        units::TemperatureConversionType::kCelsiusToFahrenheit);
+    // manually converting this parameter because only scaling is needed to
+    // convert to the new unit system
+    component.coefficient_expansion_linear_thermal =
+        component.coefficient_expansion_linear_thermal / 1.8;
 
     ConvertComponentCoefficientsLoad(
         units::ForceConversionType::kNewtonsToPounds,
