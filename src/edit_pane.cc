@@ -514,7 +514,7 @@ void SpanTreeCtrl::EditSpan(const wxTreeItemId& id) {
   SpanEditorDialog dialog(view_->GetFrame(),
                           &wxGetApp().data()->cables,
                           &doc_->weathercases(),
-                          units::UnitSystem::kImperial,
+                          wxGetApp().config()->units,
                           &span);
   if (dialog.ShowModal() == wxID_OK) {
     // updates document
