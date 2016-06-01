@@ -14,7 +14,9 @@
 #include "file_handler.h"
 #include "preferences_dialog.h"
 #include "span_analyzer_app.h"
+#include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
+#include "weather_load_case_unit_converter.h"
 
 #include "../res/icon.xpm"
 
@@ -177,9 +179,10 @@ void SpanAnalyzerFrame::OnMenuEditCable(wxCommandEvent& event) {
 }
 
 void SpanAnalyzerFrame::OnMenuEditCableDirectory(wxCommandEvent& event) {
-  // checks if no documents are currently open
-  // doesn't allow swapping cables with open doc, too difficult to replace/match
-  // cable references
+  /// \todo This check should eventually be removed. Changing the cable
+  ///   directory requires some trickery while the doc is open, but should
+  ///   be able to be done. If it can't, the data needs re-organized so that
+  ///   it is possible.
   wxDocManager* manager = wxGetApp().manager_doc();
   if (manager->GetCurrentDocument() != nullptr) {
     std::string message = "Document is currently open. To change cable "
@@ -239,10 +242,55 @@ void SpanAnalyzerFrame::OnMenuEditNewCable(wxCommandEvent& event) {
 }
 
 void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
+  // gets the application config
+  SpanAnalyzerConfig* config = wxGetApp().config();
+
+  // stores a copy of the unit system before letting user edit
+  units::UnitSystem units_before = config->units;
+
   // creates preferences editor dialog and shows
-  PreferencesDialog preferences(this, wxGetApp().config());
-  if (preferences.ShowModal() == wxID_OK) {
-    /// \todo implement unit system changes
+  // exits if user closes/cancels
+  PreferencesDialog preferences(this, config);
+  if (preferences.ShowModal() != wxID_OK) {
+    return;
+  }
+
+  // application data change is implemented on app restart
+
+  // converts unit system if it changed
+  SpanAnalyzerData* data = wxGetApp().data();
+  if (units_before != config->units) {
+    // converts app data
+    for (auto iter = data->weathercases_analysis.begin();
+         iter != data->weathercases_analysis.end(); iter++) {
+      std::list<WeatherLoadCase>& weathercases = *iter;
+      for (auto it = weathercases.begin(); it != weathercases.end(); it++) {
+        WeatherLoadCase& weathercase = *it;
+        WeatherLoadCaseUnitConverter::ConvertUnitSystem(
+            units_before,
+            config->units,
+            weathercase);
+      }
+    }
+
+    for (auto iter = data->cables.begin(); iter != data->cables.end(); iter++) {
+      Cable& cable = *iter;
+      CableUnitConverter::ConvertUnitSystem(
+          units_before,
+          config->units,
+          cable);
+    }
+
+    // converts doc
+    SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->GetCurrentDocument();
+    if (doc != nullptr) {
+      doc->ConvertUnitSystem(units_before, config->units);
+    }
+
+    // updates views
+    ViewUpdateHint hint;
+    hint.set_type(ViewUpdateHint::HintType::kModelPreferencesEdit);
+    doc->UpdateAllViews(nullptr, &hint);
   }
 }
 

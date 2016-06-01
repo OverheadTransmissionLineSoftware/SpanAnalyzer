@@ -51,6 +51,9 @@ void ResultsPane::Update(wxObject* hint) {
     UpdateAnalysisWeathercaseSetChoice();
     UpdateSagTensionResults();
   } else if (hint_update->type() ==
+       ViewUpdateHint::HintType::kModelPreferencesEdit) {
+     UpdateSagTensionResults();
+  } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelSpansEdit) {
     UpdateSagTensionResults();
   } else if (hint_update->type() ==
