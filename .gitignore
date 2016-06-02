@@ -1,16 +1,32 @@
 # compiled source #
 ###################
-*.o
-*.d
-*.so
 *.a
-*.lib
+*.d
 *.dll
+*.o
+*.obj
+*.so
+*.lib
 
 # Code::Blocks temp files #
 ###########################
 *.depend
 *.layout
+
+# Visual Studio temp files #
+############################
+*.db
+*.filters
+*.idb
+*.ilk
+*.lastbuildstate
+*.pdb
+*.res
+*.sln
+*.suo
+*.tlog
+*.user
+*.vcxproj
 
 # doxygen generated files #
 ###########################
