@@ -4,6 +4,8 @@
 #ifndef OTLS_SPANANALYZER_SPANANALYZERAPP_H_
 #define OTLS_SPANANALYZER_SPANANALYZERAPP_H_
 
+#include <string>
+
 #include "wx/cmdline.h"
 #include "wx/docview.h"
 #include "wx/wx.h"
@@ -96,17 +98,17 @@ class SpanAnalyzerApp : public wxApp {
   ///   The reference directory of the application. The debug switch will set
   ///   this to the working directory, otherwise it will be the directory that
   ///   the application is located.
-  wxString directory_;
+  std::string directory_;
 
   /// \var filepath_config_
   ///   The config file that is loaded on application startup. This is specified
   ///   as a command line option.
-  wxString filepath_config_;
+  std::string filepath_config_;
 
   /// \var filepath_start_
   ///   The file that is loaded on application startup. This is specified as
   ///   a command line option.
-  wxString filepath_start_;
+  std::string filepath_start_;
 
   /// \var frame_
   ///   The main application frame.

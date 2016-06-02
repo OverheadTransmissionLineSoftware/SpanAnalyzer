@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <span_analyzer_data version="1" units="Imperial">
-  <cable_directory>/home/brett/github/SpanAnalyzer/test/cables</cable_directory>
+  <cable_directory></cable_directory>
   <analysis_weather_load_cases>
     <analysis_weather_load_case_set name="Stringing">
       <weather_load_case version="1">

@@ -32,8 +32,9 @@ bool SpanAnalyzerApp::OnCmdLineParsed(wxCmdLineParser& parser) {
   }
 
   // gets the config file path
-  if (parser.Found("config", &filepath_config_)) {
-    // nothing to do, file path already captured
+  wxString filepath_config;
+  if (parser.Found("config", &filepath_config)) {
+    filepath_config_ = filepath_config;
   } else {
     // default to a specific file in the application directory
     if (filepath_config_.empty() == true) {
@@ -156,29 +157,28 @@ bool SpanAnalyzerApp::OnInit() {
   frame_ = new SpanAnalyzerFrame(manager_doc_);
   SetTopWindow(frame_);
 
-  // loads config file
-  // the config file path is set when parsing the command line
-  const int status_config = FileHandler::LoadConfigFile(filepath_config_,
-                                                        config_);
-  if (status_config == -1) {
+  // checks if config file exists, creates one if not
+  path = filepath_config_;
+  if (path.Exists() == false) {
     // manually initializes config
-    path = wxFileName(filepath_config_);
-    path.SetName("appdata");
-    path.SetExt("xml");
-    config_.filepath_data = path.GetFullPath();
-
+    config_.filepath_data = "";
     config_.perspective = "";
     config_.size_frame = wxSize(0, 0);
     config_.units = units::UnitSystem::kImperial;
 
     // saves config file
-    path = wxFileName(filepath_config_);
     FileHandler::SaveConfigFile(filepath_config_, config_);
 
     // notifies user
+    path = wxFileName(filepath_config_);
     wxMessageBox("Config file could not be located. New file has been created: "
-                 + path.GetFullPath());
-  } else if (status_config != 0) {
+      + path.GetFullPath());
+  }
+
+  // load config file
+  const int status_config = FileHandler::LoadConfigFile(filepath_config_,
+                                                        config_);
+  if (status_config != 0) {
     // notifies user to correct
     wxMessageBox("Config file: " + filepath_config_ + "Error on line:"
                  + std::to_string(status_config));
@@ -186,21 +186,31 @@ bool SpanAnalyzerApp::OnInit() {
     return false;
   };
 
-  // loads application data
-  const int status_data = FileHandler::LoadAppData(config_.filepath_data,
-                                                   config_.units, data_);
-  if (status_data == -1) {
+  // checks if data file exists, creates one if not
+  path = config_.filepath_data;
+  if (path.Exists() == false) {
     // manually initializes data
     /// \todo should create a subdirectory for the cable directory
-    data_.directory_cables == config_.filepath_data;
+    data_.directory_cables = directory_;
 
-    // saves data file
-    FileHandler::SaveAppData(config_.filepath_data, data_, config_.units);
+    // defines default data file path and updates config
+    path = wxFileName(directory_, "appdata", "xml");
+    config_.filepath_data = path.GetFullPath();
 
-    // notifies user
-    wxMessageBox("Data file could not be located. New file has been created: "
-                 + path.GetFullPath());
-  } else if (status_data != 0) {
+    // saves new data file if default file doesn't exist
+    if (path.Exists() == false) {
+      FileHandler::SaveAppData(config_.filepath_data, data_, config_.units);
+
+      // notifies user
+      wxMessageBox("Data file could not be located. New file has been created: "
+        + path.GetFullPath());
+    }
+  }
+
+  // loads application data file
+  const int status_data = FileHandler::LoadAppData(config_.filepath_data,
+                                                    config_.units, data_);
+  if (status_data != 0) {
     // notifies user to correct
     wxMessageBox("Data file: " + config_.filepath_data + "Error on line:"
                  + std::to_string(status_data));
