@@ -44,7 +44,7 @@ wxXmlNode* WeatherLoadCaseXmlHandler::CreateNode(
   value = weathercase.thickness_ice;
   content = helper::DoubleToFormattedString(value, 3);
   if (units == units::UnitSystem::kMetric) {
-    attribute = wxXmlAttribute("units", "???");
+    attribute = wxXmlAttribute("units", "cm");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "in");
   }
@@ -56,7 +56,7 @@ wxXmlNode* WeatherLoadCaseXmlHandler::CreateNode(
   value = weathercase.density_ice;
   content = helper::DoubleToFormattedString(value, 1);
   if (units == units::UnitSystem::kMetric) {
-    attribute = wxXmlAttribute("units", "???");
+    attribute = wxXmlAttribute("units", "N/m^3");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "lb/ft^3");
   }
@@ -68,7 +68,7 @@ wxXmlNode* WeatherLoadCaseXmlHandler::CreateNode(
   value = weathercase.pressure_wind;
   content = helper::DoubleToFormattedString(value, 1);
   if (units == units::UnitSystem::kMetric) {
-    attribute = wxXmlAttribute("units", "???");
+    attribute = wxXmlAttribute("units", "Pa");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "lb/ft^2");
   }
@@ -80,7 +80,7 @@ wxXmlNode* WeatherLoadCaseXmlHandler::CreateNode(
   value = weathercase.temperature_cable;
   content = helper::DoubleToFormattedString(value, 0);
   if (units == units::UnitSystem::kMetric) {
-    attribute = wxXmlAttribute("units", "???");
+    attribute = wxXmlAttribute("units", "deg C");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "deg F");
   }

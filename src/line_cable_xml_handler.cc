@@ -53,7 +53,7 @@ wxXmlNode* LineCableXmlHandler::CreateNode(
   if (units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "ft");
   } else if (units == units::UnitSystem::kMetric) {
-    attribute = wxXmlAttribute("units", "???");
+    attribute = wxXmlAttribute("units", "m");
   }
   node_element = Vector3dXmlHandler::CreateNode(
       linecable.spacing_attachments_ruling_span, title, attribute, 1);

@@ -48,7 +48,7 @@ wxXmlNode* SpanXmlHandler::CreateNode(
   if (units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "ft");
   } else if (units == units::UnitSystem::kMetric) {
-    attribute = wxXmlAttribute("units", "???");
+    attribute = wxXmlAttribute("units", "m");
   }
   node_element = Vector3dXmlHandler::CreateNode(span.spacing_catenary,
                                                 "spacing_catenary",
