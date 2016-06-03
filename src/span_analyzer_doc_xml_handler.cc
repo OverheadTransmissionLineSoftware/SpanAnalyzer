@@ -4,7 +4,6 @@
 #include "span_analyzer_doc_xml_handler.h"
 
 #include "span_xml_handler.h"
-#include "weather_load_case_unit_converter.h"
 #include "weather_load_case_xml_handler.h"
 
 SpanAnalyzerDocXmlHandler::SpanAnalyzerDocXmlHandler() {
@@ -34,15 +33,8 @@ wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
   const std::list<WeatherLoadCase>& weathercases = doc.weathercases();
   for (auto iter = weathercases.cbegin(); iter != weathercases.cend();
        iter++) {
-    // copies weathercase
-    WeatherLoadCase weathercase = *iter;
-
-    // converts weathercase to different unit style
-    WeatherLoadCaseUnitConverter::ConvertUnitStyle(
-        units,
-        units::UnitStyle::kConsistent,
-        units::UnitStyle::kDifferent,
-        weathercase);
+    // gets weathercase
+    const WeatherLoadCase& weathercase = *iter;
 
     // creates weather load case node and adds to root
     node_element->AddChild(
