@@ -168,11 +168,6 @@ bool SpanAnalyzerApp::OnInit() {
 
     // saves config file
     FileHandler::SaveConfigFile(filepath_config_, config_);
-
-    // notifies user
-    path = wxFileName(filepath_config_);
-    wxMessageBox("Config file could not be located. New file has been created: "
-      + path.GetFullPath());
   }
 
   // load config file
