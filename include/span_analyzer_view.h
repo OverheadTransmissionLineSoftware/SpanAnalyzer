@@ -56,6 +56,13 @@ class SpanAnalyzerView : public wxView {
   /// \brief Destructor.
   ~SpanAnalyzerView();
 
+  /// \brief Handles closing the view.
+  /// \param[in] deleteWindow
+  ///   An indicator that determines if the child windows should be deleted.
+  /// \return true
+  /// This function is called by wxWidgets.
+  virtual bool OnClose(bool deleteWindow = true);
+
   /// \brief Creates the view and initializes.
   /// \param[in] doc
   ///   The document.
@@ -80,13 +87,6 @@ class SpanAnalyzerView : public wxView {
   ///   provided by the function/action that triggered the update.
   /// This function is called by wxWidgets.
   virtual void OnUpdate(wxView *sender, wxObject *hint = nullptr);
-
-  /// \brief Handles closing the view.
-  /// \param[in] deleteWindow
-  ///   An indicator that determines if the child windows should be deleted.
-  /// \return true
-  /// This function is called by wxWidgets.
-  virtual bool OnClose(bool deleteWindow = true);
 
   /// \brief Gets the edit pane.
   /// \return The edit pane.
