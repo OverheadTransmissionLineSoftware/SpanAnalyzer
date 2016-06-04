@@ -286,6 +286,9 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
                        "The document will close.";
     wxMessageBox(message);
 
+    // marks document as unmodified to avoid additional popup
+    Modify(false);
+
     // sets stream to invalide state and returns
     stream.Reset(wxSTREAM_READ_ERROR);
     return stream;
