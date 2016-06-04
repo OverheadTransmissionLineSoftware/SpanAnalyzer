@@ -11,6 +11,13 @@
 ///
 /// This class converts a cable component between unit systems as well as unit
 /// styles.
+///
+/// \par STRESS VS. LOAD
+///
+/// This class uses stress when converted to 'different' unit style, and load
+/// when converted to the 'consistent' unit style. Users are accustomed to
+/// stress when dealing with CableComponent coefficients and limits, but the
+/// Models libraries requires the values be defined in terms of load.
 class CableComponentUnitConverter {
  public:
   /// \brief Constructor.
@@ -18,25 +25,6 @@ class CableComponentUnitConverter {
 
   /// \brief Destructor.
   ~CableComponentUnitConverter();
-
-  /// \brief Converts the component loads to virtual stresses. This is needed
-  ///   for compatibility with industry-standard polynomials.
-  /// \param[in] area_virtual
-  ///   The virtual area of the component when converting to stress.
-  /// \param[in,out] component
-  ///   The component to be converted.
-  /// This function requires a consistent unit style.
-  static void ConvertLoadToStress(const double& area_virtual,
-                                  CableComponent& component);
-
-  /// \brief Converts the component virtual stresses to loads. This is needed
-  ///   for compatibility with industry-standard polynomials.
-  /// \param[in] area_virtual
-  ///   The virtual area of the component when converting to stress.
-  /// \param[in,out] component
-  ///   The component to be converted.
-  static void ConvertStressToLoad(const double& area_virtual,
-                                  CableComponent& component);
 
   /// \brief Changes the cable between unit styles.
   /// \param[in] system
@@ -48,15 +36,13 @@ class CableComponentUnitConverter {
   /// \param[in,out] component
   ///   The component to be converted.
   /// The 'different' style units are as follows:
-  ///  - coefficient_expansion_linear_thermal = [??? or /degF]
-  ///  - coefficients_polynomial_creep = [??? or lbs]
-  ///  - coefficients_polynomial_loadstrain = [??? or lbs]
-  ///  - load_limit_polynomial_creep = [??? or lbs]
-  ///  - load_limit_polynomial_loadstrain = [??? or lbs]
-  ///  - modulus_compression_elastic_area = [??? or lbs]
-  ///  - modulus_tension_elastic_area = [??? or lbs]
-  /// This function requires that the component be represented by loads, not
-  /// stresses.
+  ///  - coefficient_expansion_linear_thermal = [/degC or /degF]
+  ///  - coefficients_polynomial_creep = [MPa or psi]
+  ///  - coefficients_polynomial_loadstrain = [MPa or psi]
+  ///  - load_limit_polynomial_creep = [MPa or psi]
+  ///  - load_limit_polynomial_loadstrain = [MPa or psi]
+  ///  - modulus_compression_elastic_area = [MPa or psi]
+  ///  - modulus_tension_elastic_area = [MPa of psi]
   static void ConvertUnitStyle(const units::UnitSystem& system,
                                const units::UnitStyle& style_from,
                                const units::UnitStyle& style_to,
@@ -64,15 +50,16 @@ class CableComponentUnitConverter {
 
   /// \brief Changes the cable between unit systems.
   /// \param[in] system_from
-  ///   The unit system to convert from. These must be consistent style units.
+  ///   The unit system to convert from.
   /// \param[in] system_to
-  ///   The unit system to convert to. These will also be in consistent style
-  ///   units.
-  /// \param[in,out] cable
-  ///   The cable to be converted.
+  ///   The unit system to convert to.
+  /// \param[in,out] component
+  ///   The component to be converted.
+  /// This function requires that the component is in a 'consistent' unit
+  /// style.
   static void ConvertUnitSystem(const units::UnitSystem& system_from,
                                 const units::UnitSystem& system_to,
-                                Cable& cable);
+                                CableComponent& component);
 };
 
 /// \par OVERVIEW
@@ -115,6 +102,7 @@ class CableUnitConverter {
   ///   units.
   /// \param[in,out] cable
   ///   The cable to be converted.
+  /// This function requires that the cable be in a 'consistent' unit style.
   static void ConvertUnitSystem(const units::UnitSystem& system_from,
                                 const units::UnitSystem& system_to,
                                 Cable& cable);

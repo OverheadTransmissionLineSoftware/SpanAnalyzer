@@ -59,7 +59,6 @@
 			<Add directory="$(MODELS)/include" />
 			<Add directory="$(WXWIDGETS)/include" />
 		</Compiler>
-		<Unit filename="../../appconfig.xml" />
 		<Unit filename="../../appdata.xml" />
 		<Unit filename="../../include/analysis_weather_load_case_manager_dialog.h" />
 		<Unit filename="../../include/cable_constraint_xml_handler.h" />
@@ -88,6 +87,7 @@
 		<Unit filename="../../include/span_analyzer_view.h" />
 		<Unit filename="../../include/span_editor_dialog.h" />
 		<Unit filename="../../include/span_panel.h" />
+		<Unit filename="../../include/span_unit_converter.h" />
 		<Unit filename="../../include/span_xml_handler.h" />
 		<Unit filename="../../include/vector_xml_handler.h" />
 		<Unit filename="../../include/weather_load_case_editor_dialog.h" />
@@ -113,6 +113,7 @@
 			<Option link="0" />
 		</Unit>
 		<Unit filename="../../res/weather_load_case_editor_dialog.xrc" />
+		<Unit filename="../../spananalyzer.conf" />
 		<Unit filename="../../src/analysis_weather_load_case_manager_dialog.cc" />
 		<Unit filename="../../src/cable_constraint_xml_handler.cc" />
 		<Unit filename="../../src/cable_directory_editor_dialog.cc" />
@@ -137,12 +138,14 @@
 		<Unit filename="../../src/span_analyzer_view.cc" />
 		<Unit filename="../../src/span_editor_dialog.cc" />
 		<Unit filename="../../src/span_panel.cc" />
+		<Unit filename="../../src/span_unit_converter.cc" />
 		<Unit filename="../../src/span_xml_handler.cc" />
 		<Unit filename="../../src/vector_xml_handler.cc" />
 		<Unit filename="../../src/weather_load_case_editor_dialog.cc" />
 		<Unit filename="../../src/weather_load_case_unit_converter.cc" />
 		<Unit filename="../../src/weather_load_case_xml_handler.cc" />
 		<Unit filename="../../src/xml_handler.cc" />
+		<Unit filename="../../test/cables/ACSR_Drake.cable" />
 		<Unit filename="../../test/test.spananalyzer" />
 		<Extensions>
 			<code_completion />

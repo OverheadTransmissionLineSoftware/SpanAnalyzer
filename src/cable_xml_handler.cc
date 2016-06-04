@@ -37,7 +37,7 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
   value = component.coefficient_expansion_linear_thermal;
   content = helper::DoubleToFormattedString(value, 7);
   if (units == units::UnitSystem::kMetric) {
-    attribute = wxXmlAttribute("units", "???");
+    attribute = wxXmlAttribute("units", "deg C");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "deg F");
   }
@@ -49,7 +49,7 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
   value = component.modulus_tension_elastic_area;
   content = helper::DoubleToFormattedString(value, 0);
   if (units == units::UnitSystem::kMetric) {
-    attribute = wxXmlAttribute("units", "???");
+    attribute = wxXmlAttribute("units", "MPa");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "lbs/in^2");
   }
@@ -61,7 +61,7 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
   value = component.modulus_compression_elastic_area;
   content = helper::DoubleToFormattedString(value, 0);
   if (units == units::UnitSystem::kMetric) {
-    attribute = wxXmlAttribute("units", "???");
+    attribute = wxXmlAttribute("units", "MPa");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "lbs/in^2");
   }
@@ -74,7 +74,7 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
   node_element->AddAttribute("name", "stress-strain");
 
   if (units == units::UnitSystem::kMetric) {
-    attribute = wxXmlAttribute("units", "???");
+    attribute = wxXmlAttribute("units", "MPa");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "lbs/in^2");
   } else {
@@ -99,7 +99,7 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
   value = component.load_limit_polynomial_loadstrain;
   content = helper::DoubleToFormattedString(value, 1);
   if (units == units::UnitSystem::kMetric) {
-    attribute = wxXmlAttribute("units", "???");
+    attribute = wxXmlAttribute("units", "MPa");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "lbs/in^2");
   }
@@ -112,7 +112,7 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
   node_element->AddAttribute("name", "creep");
 
   if (units == units::UnitSystem::kMetric) {
-    attribute = wxXmlAttribute("units", "???");
+    attribute = wxXmlAttribute("units", "MPa");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "lbs/in^2");
   } else {
@@ -137,7 +137,7 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
   value = component.load_limit_polynomial_creep;
   content = helper::DoubleToFormattedString(value, 1);
   if (units == units::UnitSystem::kMetric) {
-    attribute = wxXmlAttribute("units", "???");
+    attribute = wxXmlAttribute("units", "MPa");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "lbs/in^2");
   }
@@ -270,24 +270,12 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
   node_element = CreateElementNodeWithContent(title, content);
   node_root->AddChild(node_element);
 
-  // creates area-electrical node and adds to cable node
-  title = "area_electrical";
-  value = cable.area_electrical;
-  content = helper::DoubleToFormattedString(value, 1);
-  if (units == units::UnitSystem::kMetric) {
-    attribute = new wxXmlAttribute("units", "???");
-  } else if (units == units::UnitSystem::kImperial) {
-    attribute = new wxXmlAttribute("units", "kcmil");
-  }
-  node_element = CreateElementNodeWithContent(title, content, attribute);
-  node_root->AddChild(node_element);
-
   // creates area-physical node and adds to cable node
   title = "area_physical";
   value = cable.area_physical;
   content = helper::DoubleToFormattedString(value, 4);
   if (units == units::UnitSystem::kMetric) {
-    attribute = new wxXmlAttribute("units", "???");
+    attribute = new wxXmlAttribute("units", "mm^2");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = new wxXmlAttribute("units", "in^2");
   }
@@ -299,7 +287,7 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
   value = cable.diameter;
   content = helper::DoubleToFormattedString(value, 3);
   if (units == units::UnitSystem::kMetric) {
-    attribute = new wxXmlAttribute("units", "???");
+    attribute = new wxXmlAttribute("units", "mm");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = new wxXmlAttribute("units", "in");
   }
@@ -311,7 +299,7 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
   value = cable.weight_unit;
   content = helper::DoubleToFormattedString(value, 3);
   if (units == units::UnitSystem::kMetric) {
-    attribute = new wxXmlAttribute("units", "???");
+    attribute = new wxXmlAttribute("units", "N/m");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = new wxXmlAttribute("units", "lbs/feet");
   }
@@ -323,7 +311,7 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
   value = cable.strength_rated;
   content = helper::DoubleToFormattedString(value, 0);
   if (units == units::UnitSystem::kMetric) {
-    attribute = new wxXmlAttribute("units", "???");
+    attribute = new wxXmlAttribute("units", "N");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = new wxXmlAttribute("units", "lbs");
   }
@@ -335,7 +323,7 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
   value = cable.temperature_properties_components;
   content = helper::DoubleToFormattedString(value, 0);
   if (units == units::UnitSystem::kMetric) {
-    attribute = new wxXmlAttribute("units", "???");
+    attribute = new wxXmlAttribute("units", "deg C");
   } else if (units == units::UnitSystem::kImperial) {
     attribute = new wxXmlAttribute("units", "deg F");
   }
@@ -395,12 +383,6 @@ int CableXmlHandler::ParseNodeV1(const wxXmlNode* root,
 
     if (title == "name") {
       cable.name = content;
-    } else if (title == "area_electrical") {
-      if (content.ToDouble(&value) == true) {
-        cable.area_electrical = value;
-      } else {
-        return node->GetLineNumber();
-      }
     } else if (title == "area_physical") {
       if (content.ToDouble(&value) == true) {
         cable.area_physical = value;

@@ -4,6 +4,8 @@
 #ifndef OTLS_SPANANALYZER_SPANANALYZERAPP_H_
 #define OTLS_SPANANALYZER_SPANANALYZERAPP_H_
 
+#include <string>
+
 #include "wx/cmdline.h"
 #include "wx/docview.h"
 #include "wx/wx.h"
@@ -23,7 +25,9 @@
 ///
 /// \par CONFIGURATION SETTINGS
 ///
-/// The application stores configuration settings, which are stored in a data struct.
+/// The application stores configuration settings. This includes:
+///   - AUI pane layout and frame size
+///   - data file location
 ///
 /// \par DATA
 ///
@@ -94,12 +98,17 @@ class SpanAnalyzerApp : public wxApp {
   ///   The reference directory of the application. The debug switch will set
   ///   this to the working directory, otherwise it will be the directory that
   ///   the application is located.
-  wxString directory_;
+  std::string directory_;
 
-  /// \var file_start_
+  /// \var filepath_config_
+  ///   The config file that is loaded on application startup. This is specified
+  ///   as a command line option.
+  std::string filepath_config_;
+
+  /// \var filepath_start_
   ///   The file that is loaded on application startup. This is specified as
   ///   a command line option.
-  wxString file_start_;
+  std::string filepath_start_;
 
   /// \var frame_
   ///   The main application frame.
@@ -112,13 +121,14 @@ class SpanAnalyzerApp : public wxApp {
 
 /// This is an array of command line options.
 static const wxCmdLineEntryDesc cmd_line_desc [] = {
-  {wxCMD_LINE_SWITCH, nullptr, "help", "show this help message",
+  {wxCMD_LINE_SWITCH, nullptr, "help", "shows this help message",
       wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP},
-  {wxCMD_LINE_SWITCH, nullptr, "debug", "loads application resources, config, "
-                                "etc from the working directory instead of "
-                                "application directory",
+  {wxCMD_LINE_OPTION, nullptr, "config", "the application configuration file",
+      wxCMD_LINE_VAL_STRING},
+  {wxCMD_LINE_SWITCH, nullptr, "debug", "loads application resources from the "
+      "working directory instead of application directory",
       wxCMD_LINE_VAL_NONE},
-  {wxCMD_LINE_PARAM, nullptr, nullptr, "startup file",
+  {wxCMD_LINE_PARAM, nullptr, nullptr, "file",
       wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL},
 
   {wxCMD_LINE_NONE}

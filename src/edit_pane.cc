@@ -10,6 +10,7 @@
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
 #include "span_editor_dialog.h"
+#include "span_unit_converter.h"
 #include "weather_load_case_editor_dialog.h"
 #include "weather_load_case_unit_converter.h"
 
@@ -510,13 +511,25 @@ void SpanTreeCtrl::EditSpan(const wxTreeItemId& id) {
   SpanTreeItemData* item = (SpanTreeItemData*)GetItemData(id);
   Span span = *(item->iter());
 
+  // converts span to different unit style
+  SpanUnitConverter::ConvertUnitStyle(wxGetApp().config()->units,
+                                      units::UnitStyle::kConsistent,
+                                      units::UnitStyle::kDifferent,
+                                      span);
+
   // creates a span editor dialog
   SpanEditorDialog dialog(view_->GetFrame(),
                           &wxGetApp().data()->cables,
                           &doc_->weathercases(),
-                          units::UnitSystem::kImperial,
+                          wxGetApp().config()->units,
                           &span);
   if (dialog.ShowModal() == wxID_OK) {
+    // converts span to consistent unit style
+    SpanUnitConverter::ConvertUnitStyle(wxGetApp().config()->units,
+                                        units::UnitStyle::kDifferent,
+                                        units::UnitStyle::kConsistent,
+                                        span);
+
     // updates document
     doc_->ReplaceSpan(item->iter(), span);
 

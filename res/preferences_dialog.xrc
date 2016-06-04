@@ -52,8 +52,8 @@
             <dimension>1</dimension>
             <selection>0</selection>
             <content>
-              <item>Metric</item>
               <item>Imperial</item>
+              <item>Metric</item>
             </content>
           </object>
         </object>

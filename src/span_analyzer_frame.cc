@@ -14,7 +14,9 @@
 #include "file_handler.h"
 #include "preferences_dialog.h"
 #include "span_analyzer_app.h"
+#include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
+#include "weather_load_case_unit_converter.h"
 
 #include "../res/icon.xpm"
 
@@ -74,9 +76,13 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
 }
 
 SpanAnalyzerFrame::~SpanAnalyzerFrame() {
-  // saves UI configuration before frame closes
+  // saves frame size to application config
   SpanAnalyzerConfig* config = wxGetApp().config();
-  FileHandler::SaveConfigFile(*config);
+  if (this->IsMaximized() == true) {
+    config->size_frame = wxSize(0, 0);
+  } else {
+    config->size_frame = this->GetSize();
+  }
 }
 
 void SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases(
@@ -92,7 +98,8 @@ void SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases(
       &data->weathercases_analysis);
   if (dialog.ShowModal() == wxID_OK) {
     // saves application data
-    FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data);
+    FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
+                             wxGetApp().config()->units);
 
     // posts event to update views
     ViewUpdateHint hint;
@@ -120,7 +127,7 @@ void SpanAnalyzerFrame::OnMenuEditCable(wxCommandEvent& event) {
 
   // gets path and loads cable
   const std::string filepath = dialog.GetPath();
-  FileHandler::LoadCable(filepath, cable);
+  FileHandler::LoadCable(filepath, wxGetApp().config()->units, cable);
 
   // determines if cable is already loaded into application
   SpanAnalyzerData* data = wxGetApp().data();
@@ -172,9 +179,10 @@ void SpanAnalyzerFrame::OnMenuEditCable(wxCommandEvent& event) {
 }
 
 void SpanAnalyzerFrame::OnMenuEditCableDirectory(wxCommandEvent& event) {
-  // checks if no documents are currently open
-  // doesn't allow swapping cables with open doc, too difficult to replace/match
-  // cable references
+  /// \todo This check should eventually be removed. Changing the cable
+  ///   directory requires some trickery while the doc is open, but should
+  ///   be able to be done. If it can't, the data needs re-organized so that
+  ///   it is possible.
   wxDocManager* manager = wxGetApp().manager_doc();
   if (manager->GetCurrentDocument() != nullptr) {
     std::string message = "Document is currently open. To change cable "
@@ -191,11 +199,13 @@ void SpanAnalyzerFrame::OnMenuEditCableDirectory(wxCommandEvent& event) {
   CableDirectoryEditorDialog dialog(this, &data->directory_cables);
   if (dialog.ShowModal() == wxID_OK) {
     // saves application data
-    FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data);
+    FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
+                             wxGetApp().config()->units);
 
     // reloads all cables in the directory
     data->cables.clear();
-    FileHandler::LoadCablesFromDirectory(data->directory_cables);
+    FileHandler::LoadCablesFromDirectory(data->directory_cables,
+                                         wxGetApp().config()->units);
   }
 }
 
@@ -232,10 +242,55 @@ void SpanAnalyzerFrame::OnMenuEditNewCable(wxCommandEvent& event) {
 }
 
 void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
+  // gets the application config
+  SpanAnalyzerConfig* config = wxGetApp().config();
+
+  // stores a copy of the unit system before letting user edit
+  units::UnitSystem units_before = config->units;
+
   // creates preferences editor dialog and shows
-  PreferencesDialog preferences(this, wxGetApp().config());
-  if (preferences.ShowModal() == wxID_OK) {
-    /// \todo implement unit system changes
+  // exits if user closes/cancels
+  PreferencesDialog preferences(this, config);
+  if (preferences.ShowModal() != wxID_OK) {
+    return;
+  }
+
+  // application data change is implemented on app restart
+
+  // converts unit system if it changed
+  SpanAnalyzerData* data = wxGetApp().data();
+  if (units_before != config->units) {
+    // converts app data
+    for (auto iter = data->weathercases_analysis.begin();
+         iter != data->weathercases_analysis.end(); iter++) {
+      std::list<WeatherLoadCase>& weathercases = *iter;
+      for (auto it = weathercases.begin(); it != weathercases.end(); it++) {
+        WeatherLoadCase& weathercase = *it;
+        WeatherLoadCaseUnitConverter::ConvertUnitSystem(
+            units_before,
+            config->units,
+            weathercase);
+      }
+    }
+
+    for (auto iter = data->cables.begin(); iter != data->cables.end(); iter++) {
+      Cable& cable = *iter;
+      CableUnitConverter::ConvertUnitSystem(
+          units_before,
+          config->units,
+          cable);
+    }
+
+    // converts doc
+    SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->GetCurrentDocument();
+    if (doc != nullptr) {
+      doc->ConvertUnitSystem(units_before, config->units);
+    }
+
+    // updates views
+    ViewUpdateHint hint;
+    hint.set_type(ViewUpdateHint::HintType::kModelPreferencesEdit);
+    doc->UpdateAllViews(nullptr, &hint);
   }
 }
 

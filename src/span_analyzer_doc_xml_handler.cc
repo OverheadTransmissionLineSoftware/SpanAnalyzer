@@ -4,7 +4,6 @@
 #include "span_analyzer_doc_xml_handler.h"
 
 #include "span_xml_handler.h"
-#include "weather_load_case_unit_converter.h"
 #include "weather_load_case_xml_handler.h"
 
 SpanAnalyzerDocXmlHandler::SpanAnalyzerDocXmlHandler() {
@@ -26,13 +25,6 @@ wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
   node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "span_analyzer_doc");
   node_root->AddAttribute("version", "1");
 
-  // creates units attribute
-  if (units == units::UnitSystem::kMetric) {
-    node_root->AddAttribute("units", "Metric");
-  } else if (units == units::UnitSystem::kImperial) {
-    node_root->AddAttribute("units", "Imperial");
-  }
-
   // adds child nodes for parameters
 
   // creates weather load cases node
@@ -41,15 +33,8 @@ wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
   const std::list<WeatherLoadCase>& weathercases = doc.weathercases();
   for (auto iter = weathercases.cbegin(); iter != weathercases.cend();
        iter++) {
-    // copies weathercase
-    WeatherLoadCase weathercase = *iter;
-
-    // converts weathercase to different unit style
-    WeatherLoadCaseUnitConverter::ConvertUnitStyle(
-        units,
-        units::UnitStyle::kConsistent,
-        units::UnitStyle::kDifferent,
-        weathercase);
+    // gets weathercase
+    const WeatherLoadCase& weathercase = *iter;
 
     // creates weather load case node and adds to root
     node_element->AddChild(
@@ -131,12 +116,6 @@ int SpanAnalyzerDocXmlHandler::ParseNodeV1(
           int line_number = WeatherLoadCaseXmlHandler::ParseNode(sub_node,
                                                                  weathercase);
           if (line_number == 0) {
-            // converts weathercase to consistent units
-            WeatherLoadCaseUnitConverter::ConvertUnitStyle(
-                units,
-                units::UnitStyle::kDifferent,
-                units::UnitStyle::kConsistent,
-                weathercase);
             doc.AppendWeathercase(weathercase);
           } else {
             return line_number;

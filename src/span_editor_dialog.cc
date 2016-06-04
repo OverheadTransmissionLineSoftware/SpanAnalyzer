@@ -226,15 +226,25 @@ void SpanEditorDialog::OnOk(wxCommandEvent &event) {
 }
 
 void SpanEditorDialog::SetUnitsStaticText(const units::UnitSystem& units) {
-  /// \todo
-  ///  wxWidgets seems to have a bug when editing labels. The StaticText
-  ///  controls are not re-sized
   if (units == units::UnitSystem::kMetric) {
-
+    XRCCTRL(*this, "statictext_constraint_spacing_horizontal_units",
+            wxStaticText)->SetLabel("[m]");
+    XRCCTRL(*this, "statictext_constraint_spacing_vertical_units",
+            wxStaticText)->SetLabel("[m]");
+    XRCCTRL(*this, "statictext_catenary_spacing_horizontal_units",
+            wxStaticText)->SetLabel("[m]");
+    XRCCTRL(*this, "statictext_catenary_spacing_vertical_units",
+            wxStaticText)->SetLabel("[m]");
   } else if (units == units::UnitSystem::kImperial) {
-
+    XRCCTRL(*this, "statictext_constraint_spacing_horizontal_units",
+            wxStaticText)->SetLabel("[ft]");
+    XRCCTRL(*this, "statictext_constraint_spacing_vertical_units",
+            wxStaticText)->SetLabel("[ft]");
+    XRCCTRL(*this, "statictext_catenary_spacing_horizontal_units",
+            wxStaticText)->SetLabel("[ft]");
+    XRCCTRL(*this, "statictext_catenary_spacing_vertical_units",
+            wxStaticText)->SetLabel("[ft]");
   }
-
 }
 
 void SpanEditorDialog::SetValidators() {

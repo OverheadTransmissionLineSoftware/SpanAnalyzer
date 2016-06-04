@@ -3,6 +3,7 @@
 
 #include "span_analyzer_app.h"
 
+#include "wx/filename.h"
 #include "wx/stdpaths.h"
 #include "wx/xrc/xmlres.h"
 
@@ -20,12 +21,6 @@ SpanAnalyzerApp::SpanAnalyzerApp() {
 SpanAnalyzerApp::~SpanAnalyzerApp() {
 }
 
-int SpanAnalyzerApp::OnExit() {
-  delete manager_doc_;
-
-  return wxApp::OnExit();
-}
-
 bool SpanAnalyzerApp::OnCmdLineParsed(wxCmdLineParser& parser) {
   // sets directory based on debug switch
   if (parser.Found("debug")) {
@@ -36,12 +31,35 @@ bool SpanAnalyzerApp::OnCmdLineParsed(wxCmdLineParser& parser) {
     directory_ = path.GetPath();
   }
 
+  // gets the config file path
+  wxString filepath_config;
+  if (parser.Found("config", &filepath_config)) {
+    filepath_config_ = filepath_config;
+  } else {
+    // default to a specific file in the application directory
+    if (filepath_config_.empty() == true) {
+      wxFileName path(directory_, "spananalyzer", "conf");
+      filepath_config_ = path.GetFullPath();
+    }
+  }
+
   // captures the start file which will be loaded when doc manager is created
   if (parser.GetParamCount() == 1) {
-    file_start_ = parser.GetParam(0);
+    filepath_start_ = parser.GetParam(0);
   }
 
   return true;
+}
+
+int SpanAnalyzerApp::OnExit() {
+  // saves config file
+  FileHandler::SaveConfigFile(filepath_config_, config_);
+
+  // cleans up allocated resources
+  delete manager_doc_;
+
+  // continues exit process
+  return wxApp::OnExit();
 }
 
 bool SpanAnalyzerApp::OnInit() {
@@ -139,21 +157,74 @@ bool SpanAnalyzerApp::OnInit() {
   frame_ = new SpanAnalyzerFrame(manager_doc_);
   SetTopWindow(frame_);
 
-  // loads config file
-  /// \todo check for existence of config file, a new one may have to
-  ///   be generated
-  FileHandler::LoadConfigFile(config_);
+  // checks if config file exists, creates one if not
+  path = filepath_config_;
+  if (path.Exists() == false) {
+    // manually initializes config
+    config_.filepath_data = "";
+    config_.perspective = "";
+    config_.size_frame = wxSize(0, 0);
+    config_.units = units::UnitSystem::kImperial;
 
-  // loads application data
-  FileHandler::LoadAppData(config_.filepath_data, config_.units, data_);
+    // saves config file
+    FileHandler::SaveConfigFile(filepath_config_, config_);
+  }
+
+  // load config file
+  const int status_config = FileHandler::LoadConfigFile(filepath_config_,
+                                                        config_);
+  if (status_config != 0) {
+    // notifies user to correct
+    wxMessageBox("Config file: " + filepath_config_ + "Error on line:"
+                 + std::to_string(status_config));
+
+    return false;
+  };
+
+  // checks if data file exists, creates one if not
+  path = config_.filepath_data;
+  if (path.Exists() == false) {
+    // manually initializes data
+    /// \todo should create a subdirectory for the cable directory
+    data_.directory_cables = directory_;
+
+    // defines default data file path and updates config
+    path = wxFileName(directory_, "appdata", "xml");
+    config_.filepath_data = path.GetFullPath();
+
+    // saves new data file if default file doesn't exist
+    if (path.Exists() == false) {
+      FileHandler::SaveAppData(config_.filepath_data, data_, config_.units);
+
+      // notifies user
+      wxMessageBox("Data file could not be located. New file has been created: "
+        + path.GetFullPath());
+    }
+  }
+
+  // loads application data file
+  const int status_data = FileHandler::LoadAppData(config_.filepath_data,
+                                                    config_.units, data_);
+  if (status_data != 0) {
+    // notifies user to correct
+    wxMessageBox("Data file: " + config_.filepath_data + "Error on line:"
+                 + std::to_string(status_data));
+
+    return false;
+  }
 
   // loads a document if defined in command line
-  if (file_start_ != wxEmptyString) {
-    manager_doc_->CreateDocument(file_start_);
+  if (filepath_start_ != wxEmptyString) {
+    manager_doc_->CreateDocument(filepath_start_);
   }
 
   // sets application frame based on config setting and shows
-  frame_->SetSize(config_.size_frame);
+  if (config_.size_frame.GetHeight() < 100
+      || config_.size_frame.GetWidth() < 100) {
+    frame_->Maximize();
+  } else {
+    frame_->SetSize(config_.size_frame);
+  }
   frame_->Centre(wxBOTH);
   frame_->Show(true);
 

@@ -35,23 +35,14 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
 
   // creates size-frame node
   title = "size_frame";
-  const bool is_maximized = wxGetApp().frame()->IsMaximized();
-  const wxSize size = wxGetApp().frame()->GetSize();
-  if (is_maximized == true) {
-    content = "Automatic";
-  } else {
-    content = "Manual";
-  }
+  content = "";
   node_element = CreateElementNodeWithContent(title, content);
-  if (is_maximized == false) {
-    wxString content_attr;
 
-    content_attr = std::to_string(size.GetWidth());
-    node_element->AddAttribute("x", content_attr);
-
-    content_attr = std::to_string(size.GetHeight());
-    node_element->AddAttribute("y", content_attr);
-  }
+  wxString str;
+  str = std::to_string(config.size_frame.GetWidth());
+  node_element->AddAttribute("x", str);
+  str = std::to_string(config.size_frame.GetHeight());
+  node_element->AddAttribute("y", str);
   node_root->AddChild(node_element);
 
   // creates perspective node
@@ -106,18 +97,11 @@ int SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
     if (title == "filepath_data") {
       config.filepath_data = content;
     } else if (title == "size_frame") {
-      if (content == "Automatic") {
-        config.size_frame.SetWidth(0);
-        config.size_frame.SetHeight(0);
-      } else if (content == "Manual") {
-        std::string content_attr;
-
-        content_attr = node->GetAttribute("x");
-        config.size_frame.SetWidth(std::stoi(content_attr));
-
-        content_attr = node->GetAttribute("y");
-        config.size_frame.SetHeight(std::stoi(content_attr));
-      }
+      std::string str;
+      str = node->GetAttribute("x");
+      config.size_frame.SetWidth(std::stoi(str));
+      str = node->GetAttribute("y");
+      config.size_frame.SetHeight(std::stoi(str));
     } else if (title == "perspective") {
       config.perspective = content;
     } else if (title == "units") {

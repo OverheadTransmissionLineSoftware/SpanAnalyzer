@@ -7,6 +7,8 @@
 
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc_xml_handler.h"
+#include "span_unit_converter.h"
+#include "weather_load_case_unit_converter.h"
 
 IMPLEMENT_DYNAMIC_CLASS(SpanAnalyzerDoc, wxDocument)
 
@@ -33,6 +35,49 @@ std::list<WeatherLoadCase>::const_iterator SpanAnalyzerDoc::AppendWeathercase(
 
   return std::prev(weathercases_.cend());
 }
+
+void SpanAnalyzerDoc::ConvertUnitStyle(const units::UnitSystem& system,
+                                       const units::UnitStyle& style_from,
+                                       const units::UnitStyle& style_to) {
+  if (style_from == style_to) {
+    return;
+  }
+
+  // converts weathercases
+  for (auto it = weathercases_.begin(); it != weathercases_.end(); it++) {
+    WeatherLoadCase& weathercase = *it;
+    WeatherLoadCaseUnitConverter::ConvertUnitStyle(system, style_from,
+                                                   style_to, weathercase);
+  }
+
+  // converts spans
+  for (auto it = spans_.begin(); it != spans_.end(); it++) {
+    Span& span = *it;
+    SpanUnitConverter::ConvertUnitStyle(system, style_from,
+                                        style_to, span);
+  }
+}
+
+void SpanAnalyzerDoc::ConvertUnitSystem(const units::UnitSystem& system_from,
+                                        const units::UnitSystem& system_to) {
+  if (system_from == system_to) {
+    return;
+  }
+
+  // converts weathercases
+  for (auto it = weathercases_.begin(); it != weathercases_.end(); it++) {
+    WeatherLoadCase& weathercase = *it;
+    WeatherLoadCaseUnitConverter::ConvertUnitSystem(system_from, system_to,
+                                                    weathercase);
+  }
+
+  // converts spans
+  for (auto it = spans_.begin(); it != spans_.end(); it++) {
+    Span& span = *it;
+    SpanUnitConverter::ConvertUnitSystem(system_from, system_to, span);
+  }
+}
+
 
 void SpanAnalyzerDoc::DeleteSpan(
     const std::list<Span>::const_iterator& element) {
@@ -175,32 +220,89 @@ bool SpanAnalyzerDoc::IsUniqueWeathercase(
   return true;
 }
 
-/// \todo This needs to check for duplicates and remove them if necessary.
+/// \todo This needs to check for weathercase duplicates and remove them if necessary.
 wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   // attempts to load an xml document from the input stream
   wxXmlDocument doc_xml;
   if (doc_xml.Load(stream) == false) {
-    wxString message = "SpanAnalyzerDoc: Invalid XML file.";
+    // sets stream to invalid state and returns
+    stream.Reset(wxSTREAM_READ_ERROR);
+    return stream;
+  }
+
+  // checks for valid xml root
+  const wxXmlNode* root = doc_xml.GetRoot();
+  if (root->GetName() != "span_analyzer_doc") {
+    // notifies user of error
+    wxString message = "Span Analyzer Document Error\n"
+                       "File doesn't begin with the correct xml node. \n\n"
+                       "The document will close.";
     wxMessageBox(message);
+
+    // sets stream to invalide state and returns
+    stream.Reset(wxSTREAM_READ_ERROR);
+    return stream;
+  }
+
+  // gets unit system attribute from file
+  wxString str_units;
+  units::UnitSystem units_file;
+  if (root->GetAttribute("units", &str_units) == true) {
+    if (str_units == "Imperial") {
+      units_file = units::UnitSystem::kImperial;
+    } else if (str_units == "Metric") {
+      units_file = units::UnitSystem::kMetric;
+    } else {
+      // notifies user of error
+      wxString message = "Span Analyzer Document Error\n"
+                         "Parser didn't recognize unit system. \n\n"
+                         "The document will close.";
+      wxMessageBox(message);
+
+      // sets stream to invalide state and returns
+      stream.Reset(wxSTREAM_READ_ERROR);
+      return stream;
+    }
   } else {
-    units::UnitSystem units;
+    // notifies user of error
+    wxString message = "Span Analyzer Document Error\n"
+                       "Parser didn't recognize unit system. \n\n"
+                       "The document will close.";
+    wxMessageBox(message);
 
-    // parses the XML root and loads into the cable object
-    const wxXmlNode* root = doc_xml.GetRoot();
-    int line_number = SpanAnalyzerDocXmlHandler::ParseNode(
-        root, &wxGetApp().data()->cables, *this, units);
-    if (line_number != 0) {
-      wxString message = "Span Analyzer Document: Error at line "
-                         + std::to_wstring(line_number);
-      wxMessageBox(message);
-    }
+    // sets stream to invalide state and returns
+    stream.Reset(wxSTREAM_READ_ERROR);
+    return stream;
+  }
 
-    // temporarily disables until metric units are supported
-    if (units == units::UnitSystem::kMetric) {
-      wxString message = "Span Analyzer Document: Metric units are not yet "
-                         "supported";
-      wxMessageBox(message);
-    }
+  // parses the XML node and loads into the document
+  int line_number = SpanAnalyzerDocXmlHandler::ParseNode(
+      root, &wxGetApp().data()->cables, *this, units_file);
+  if (line_number != 0) {
+    // notifies user of error
+    wxString message = "Span Analyzer Document Error: "
+                       "Line " + std::to_wstring(line_number) + "\n"
+                       "Parser didn't recognize input.\n\n"
+                       "The document will close.";
+    wxMessageBox(message);
+
+    // marks document as unmodified to avoid additional popup
+    Modify(false);
+
+    // sets stream to invalide state and returns
+    stream.Reset(wxSTREAM_READ_ERROR);
+    return stream;
+  }
+
+  // converts units to consistent style
+  ConvertUnitStyle(units_file,
+                   units::UnitStyle::kDifferent,
+                   units::UnitStyle::kConsistent);
+
+  // converts unit systems if the file doesn't match applicaton config
+  units::UnitSystem units_config = wxGetApp().config()->units;
+  if (units_file != units_config) {
+    ConvertUnitSystem(units_file, units_config);
   }
 
   // resets modified status to false because the xml parser uses functions
@@ -275,16 +377,34 @@ void SpanAnalyzerDoc::ReplaceWeathercase(
 }
 
 wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
-  // gets unit setting
+  // gets the unit system from app config
   units::UnitSystem units = wxGetApp().config()->units;
 
-  // creates an xml root
+  // converts to a different unit style for saving
+  ConvertUnitStyle(units, units::UnitStyle::kConsistent,
+                   units::UnitStyle::kDifferent);
+
+  // generates an xml node
   wxXmlNode* root = SpanAnalyzerDocXmlHandler::CreateNode(*this, units);
 
-  // creates an XML document and puts in stream
+  // adds unit attribute to xml node
+  // this attribute should be added at this step vs the xml handler because
+  // the attribute describes all values in the file, and is consistent
+  // with how the FileHandler functions work
+  if (units == units::UnitSystem::kImperial) {
+    root->AddAttribute("units", "Imperial");
+  } else if (units == units::UnitSystem::kMetric) {
+    root->AddAttribute("units", "Metric");
+  }
+
+  // creates an XML document and savaes to stream
   wxXmlDocument doc_xml;
   doc_xml.SetRoot(root);
   doc_xml.Save(stream);
+
+  // converts back to a consistent unit style
+  ConvertUnitStyle(units, units::UnitStyle::kDifferent,
+                   units::UnitStyle::kConsistent);
 
   return stream;
 }

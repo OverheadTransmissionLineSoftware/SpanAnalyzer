@@ -60,6 +60,9 @@ void CatenaryTablePanel::UpdateView(wxObject* hint) {
     listctrl_->DeleteAllItems();
     FillData();
   } else if (hint_update->type() ==
+    ViewUpdateHint::HintType::kModelPreferencesEdit) {
+    FillData();
+  } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelSpansEdit) {
     FillData();
   } else if (hint_update->type() ==

@@ -60,18 +60,6 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   return true;
 }
 
-void SpanAnalyzerView::OnDraw(wxDC *dc) {
-}
-
-void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
-  // passes to base class first
-  wxView::OnUpdate(sender, hint);
-
-  // don't need to distinguish sender - all frames are grouped under one view
-  pane_edit_->Update(hint);
-  pane_results_->Update(hint);
-}
-
 bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
   if (!GetDocument()->Close()) {
     return false;
@@ -95,6 +83,18 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
   frame->SetTitle(wxGetApp().GetAppDisplayName());
 
   return true;
+}
+
+void SpanAnalyzerView::OnDraw(wxDC *dc) {
+}
+
+void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
+  // passes to base class first
+  wxView::OnUpdate(sender, hint);
+
+  // don't need to distinguish sender - all frames are grouped under one view
+  pane_edit_->Update(hint);
+  pane_results_->Update(hint);
 }
 
 EditPane* SpanAnalyzerView::pane_edit() {
