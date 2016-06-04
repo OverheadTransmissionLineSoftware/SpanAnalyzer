@@ -3,10 +3,10 @@
 *.a
 *.d
 *.dll
+*.lib
 *.o
 *.obj
 *.so
-*.lib
 
 # Code::Blocks temp files #
 ###########################
@@ -20,13 +20,12 @@
 *.idb
 *.ilk
 *.lastbuildstate
+*.opendb
 *.pdb
 *.res
-*.sln
 *.suo
 *.tlog
 *.user
-*.vcxproj
 
 # doxygen generated files #
 ###########################
