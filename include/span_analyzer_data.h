@@ -12,21 +12,31 @@
 
 /// \par OVERVIEW
 ///
+/// This object pairs a cable with an external file.
+struct CableFile {
+ public:
+  /// \var cable
+  ///   The cable.
+  Cable cable;
+
+  /// \var filepath
+  ///   The file path.
+  std::string filepath;
+};
+
+/// \par OVERVIEW
+///
 /// This struct stores the application data. This information is referenced by a
 /// SpanAnalyzerDocument.
 struct SpanAnalyzerData {
  public:
-  /// \var cables
-  ///   The cables.
-  std::list<Cable> cables;
+  /// \var cablefiles
+  ///   The cable files.
+  std::list<CableFile> cablefiles;
 
   /// \var descriptions_weathercases_analysis
   ///   The analysis weathercase set descriptions.
   std::list<std::string> descriptions_weathercases_analysis;
-
-  /// \var directory_cables
-  ///   The cable directory.
-  std::string directory_cables;
 
   /// \var weathercases_analysis
   ///   The analysis weathercase sets.

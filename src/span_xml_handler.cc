@@ -62,7 +62,7 @@ wxXmlNode* SpanXmlHandler::CreateNode(
 
 int SpanXmlHandler::ParseNode(
     const wxXmlNode* root,
-    const std::list<Cable>* cables,
+    const std::list<CableFile>* cablefiles,
     const std::list<WeatherLoadCase>* weathercases,
     Span& span) {
   // checks for valid root node
@@ -78,7 +78,7 @@ int SpanXmlHandler::ParseNode(
 
   // sends to proper parsing function
   if (version == "1") {
-    return ParseNodeV1(root, cables, weathercases, span);
+    return ParseNodeV1(root, cablefiles, weathercases, span);
   } else {
     return root->GetLineNumber();
   }
@@ -86,7 +86,7 @@ int SpanXmlHandler::ParseNode(
 
 int SpanXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
-    const std::list<Cable>* cables,
+    const std::list<CableFile>* cablefiles,
     const std::list<WeatherLoadCase>* weathercases,
     Span& span) {
   // variables used to parse XML node
@@ -113,8 +113,18 @@ int SpanXmlHandler::ParseNodeV1(
         return node->GetLineNumber();
       }
     } else if (title == "line_cable") {
+      // line cable is not intended to be application-specific
+      // creates a list of cable pointers from the cable files
+      std::list<const Cable*> cables;
+
+      for (auto iter = cablefiles->begin(); iter != cablefiles->end(); iter++) {
+        const CableFile& cablefile = *iter;
+        const Cable* cable = &cablefile.cable;
+        cables.push_back(cable);
+      }
+
       int line_number = LineCableXmlHandler::ParseNode(
-          node, cables, weathercases, span.linecable);
+          node, &cables, weathercases, span.linecable);
       if(line_number != 0) {
         return line_number;
       }

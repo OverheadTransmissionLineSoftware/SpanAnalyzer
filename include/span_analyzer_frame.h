@@ -55,20 +55,10 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   ///   The event.
   void OnMenuEditAnalysisWeathercases(wxCommandEvent& event);
 
-  /// \brief Handles the edit->edit cable menu click event.
+  /// \brief Handles the edit->cables menu click event.
   /// \param[in] event
   ///   The event.
-  void OnMenuEditCable(wxCommandEvent& event);
-
-  /// \brief Handles the edit->cable directory menu click event.
-  /// \param[in] event
-  ///   The event.
-  void OnMenuEditCableDirectory(wxCommandEvent& event);
-
-  /// \brief Handles the edit->new cables menu click event.
-  /// \param[in] event
-  ///   The event.
-  void OnMenuEditNewCable(wxCommandEvent& event);
+  void OnMenuEditCables(wxCommandEvent& event);
 
   /// \brief Handles the file->preferences menu click event.
   /// \param[in] event

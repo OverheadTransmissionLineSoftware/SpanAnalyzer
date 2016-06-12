@@ -57,16 +57,6 @@ class FileHandler {
                        const units::UnitSystem& units,
                        Cable& cable);
 
-  /// \brief Loads all cables from the specified directory.
-  /// \param[in] directory
-  ///   The directory to load cables.
-  /// \param[in] units
-  ///   The unit system to convert to.
-  /// \return A list of cables in the directory.
-  static std::list<Cable> LoadCablesFromDirectory(
-      const std::string& directory,
-      const units::UnitSystem& units);
-
   /// \brief Loads the config file.
   /// \param[in] filepath
   ///   The filepath.

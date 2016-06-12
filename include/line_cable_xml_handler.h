@@ -62,7 +62,7 @@ class LineCableXmlHandler : public XmlHandler {
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
   static int ParseNode(const wxXmlNode* root,
-                       const std::list<Cable>* cables,
+                       const std::list<const Cable*>* cables,
                        const std::list<WeatherLoadCase>* weathercases,
                        LineCable& linecable);
 
@@ -83,7 +83,7 @@ class LineCableXmlHandler : public XmlHandler {
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
   static int ParseNodeV1(const wxXmlNode* root,
-                         const std::list<Cable>* cables,
+                         const std::list<const Cable*>* cables,
                          const std::list<WeatherLoadCase>* weathercases,
                          LineCable& linecable);
 };

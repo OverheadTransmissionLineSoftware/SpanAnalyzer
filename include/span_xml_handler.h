@@ -11,6 +11,7 @@
 #include "wx/xml/xml.h"
 
 #include "span.h"
+#include "span_analyzer_data.h"
 #include "xml_handler.h"
 
 /// \par OVERVIEW
@@ -51,8 +52,8 @@ class SpanXmlHandler : public XmlHandler {
   /// \brief Parses an XML node and populates a span.
   /// \param[in] root
   ///   The XML root node for the span.
-  /// \param[in] cables
-  ///   A list of cables that is matched against a cable description. If
+  /// \param[in] cablefiles
+  ///   A list of cables files that is matched against a cable description. If
   ///   found, a pointer will be set to the matching cable.
   /// \param[in] weathercases
   ///   A list of weathercases that is matched against a weathercase
@@ -64,7 +65,7 @@ class SpanXmlHandler : public XmlHandler {
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
   static int ParseNode(const wxXmlNode* root,
-                       const std::list<Cable>* cables,
+                       const std::list<CableFile>* cablefiles,
                        const std::list<WeatherLoadCase>* weathercases,
                        Span& span);
 
@@ -72,8 +73,8 @@ class SpanXmlHandler : public XmlHandler {
   /// \brief Parses a version 1 XML node and populates a span.
   /// \param[in] root
   ///   The XML root node for the span.
-  /// \param[in] cables
-  ///   A list of cables that is matched against a cable description. If
+  /// \param[in] cablefiles
+  ///   A list of cable files that is matched against a cable description. If
   ///   found, a pointer will be set to the matching cable.
   /// \param[in] weathercases
   ///   A list of weathercases that is matched against a weathercase
@@ -85,7 +86,7 @@ class SpanXmlHandler : public XmlHandler {
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
   static int ParseNodeV1(const wxXmlNode* root,
-                         const std::list<Cable>* cables,
+                         const std::list<CableFile>* cablefiles,
                          const std::list<WeatherLoadCase>* weathercases,
                          Span& span);
 };

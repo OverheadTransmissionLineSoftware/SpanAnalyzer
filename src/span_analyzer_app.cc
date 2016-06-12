@@ -98,11 +98,6 @@ bool SpanAnalyzerApp::OnInit() {
     return false;
   };
 
-  path.SetName("cable_directory_editor_dialog");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
   path.SetName("catenary_table_panel");
   if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
@@ -184,10 +179,6 @@ bool SpanAnalyzerApp::OnInit() {
   // checks if data file exists, creates one if not
   path = config_.filepath_data;
   if (path.Exists() == false) {
-    // manually initializes data
-    /// \todo should create a subdirectory for the cable directory
-    data_.directory_cables = directory_;
-
     // defines default data file path and updates config
     path = wxFileName(directory_, "appdata", "xml");
     config_.filepath_data = path.GetFullPath();

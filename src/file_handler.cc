@@ -161,67 +161,6 @@ int FileHandler::LoadCable(const std::string& filepath,
   return line_number;
 }
 
-std::list<Cable> FileHandler::LoadCablesFromDirectory(
-    const std::string& directory,
-    const units::UnitSystem& units) {
-  // initializes list of cables
-  std::list<Cable> cables;
-
-  // checks if directory exists
-  if (wxDir::Exists(directory) == false) {
-    wxString message = "Cable directory does not exist";
-    wxMessageBox(message);
-
-    return cables;
-  }
-
-  // creates a list of error messages when parsing cable files
-  std::list<ErrorMessage> messages;
-
-  // initializes variables
-  wxDir dir(directory);
-  wxString str_file;
-
-  // gets first file, and goes through all files in the directory
-  if (dir.GetFirst(&str_file) == true) {
-    while (true) {
-      wxFileName file(dir.GetNameWithSep() + str_file);
-      if (file.GetExt() == "cable") {
-        // creates cable, sends to xml parser
-        std::string filepath = file.GetFullPath();
-        Cable cable;
-        int line_number = FileHandler::LoadCable(filepath, units, cable);
-
-        // if error is encountered, adds to list to display to user at the end
-        if (line_number == 0) {
-          cables.push_back(cable);
-        } else {
-          ErrorMessage message;
-          message.title = file.GetFullName();
-          message.description = "Parsing error on line "
-                                + std::to_string(line_number)
-                                + ". File skipped.";
-          messages.push_back(message);
-        }
-      }
-
-      // gets next file in directory
-      if (dir.GetNext(&str_file) == false) {
-        break;
-      }
-    }
-
-    // displays errors to user
-    if (messages.empty() == false) {
-      SpanAnalyzerFrame* frame = wxGetApp().frame();
-      ErrorMessageDialog dialog(frame, &messages);
-      dialog.ShowModal();
-    }
-  }
-
-  return cables;
-}
-
 int FileHandler::LoadConfigFile(const std::string& filepath,
                                 SpanAnalyzerConfig& config) {
   // checks if the file exists

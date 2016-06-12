@@ -7,9 +7,10 @@
 #include <list>
 
 #include "models/base/units.h"
-#include "xml_handler.h"
 
+#include "span_analyzer_data.h"
 #include "span_analyzer_doc.h"
+#include "xml_handler.h"
 
 /// \par OVERVIEW
 ///
@@ -45,8 +46,8 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   /// \brief Parses an XML node and populates a document.
   /// \param[in] root
   ///   The XML root node for the document.
-  /// \param[in] cables
-  ///   A list of cables that is matched against a cable description. If
+  /// \param[in] cablefiles
+  ///   A list of cables files that is matched against a cable description. If
   ///   found, a pointer will be set to the matching cable.
   /// \param[out] doc
   ///   The document that is populated.
@@ -56,7 +57,7 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
   static int ParseNode(const wxXmlNode* root,
-                       const std::list<Cable>* cables,
+                       const std::list<CableFile>* cablefiles,
                        SpanAnalyzerDoc& doc,
                        units::UnitSystem& units);
 
@@ -65,7 +66,7 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   /// \param[in] root
   ///   The XML root node for the document.
   /// \param[in] cables
-  ///   A list of cables that is matched against a cable description. If
+  ///   A list of cable files that is matched against a cable description. If
   ///   found, a pointer will be set to the matching cable.
   /// \param[out] doc
   ///   The document that is populated.
@@ -75,7 +76,7 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   ///   converted to the expected data type. Returns 0 if no errors were
   ///   encountered.
   static int ParseNodeV1(const wxXmlNode* root,
-                         const std::list<Cable>* cables,
+                         const std::list<CableFile>* cablefiles,
                          SpanAnalyzerDoc& doc,
                          units::UnitSystem& units);
 };

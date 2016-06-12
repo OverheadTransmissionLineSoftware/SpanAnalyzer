@@ -37,18 +37,11 @@
     </object>
     <object class="wxMenu" name="menu_edit">
       <label>Edit</label>
-      <object class="wxMenuItem" name="menuitem_edit_cable_directory">
-        <label>Cable Directory</label>
+      <object class="wxMenuItem" name="menuitem_edit_cables">
+        <label>Cables</label>
       </object>
       <object class="wxMenuItem" name="menuitem_edit_analysis_weathercases">
         <label>Analysis Weathercases</label>
-      </object>
-      <object class ="separator"/>
-      <object class="wxMenuItem" name="menuitem_edit_new_cable">
-        <label>New Cable</label>
-      </object>
-      <object class="wxMenuItem" name="menuitem_edit_cable">
-        <label>Edit Cable</label>
       </object>
     </object>
     <object class="wxMenu" name="menu_help">
