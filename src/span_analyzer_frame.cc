@@ -7,6 +7,7 @@
 #include "wx/xrc/xmlres.h"
 
 #include "analysis_weather_load_case_manager_dialog.h"
+#include "cable_file_manager_dialog.h"
 #include "cable_unit_converter.h"
 #include "file_handler.h"
 #include "preferences_dialog.h"
@@ -105,6 +106,34 @@ void SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases(
 }
 
 void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
+  // checks to make sure document is closed
+  wxDocManager* manager = wxGetApp().manager_doc();
+  if (manager->GetCurrentDocument() != nullptr) {
+    std::string message = "Document is currently open. To change cable "
+      "directory, close document and try again.";
+    wxMessageBox(message);
+
+    return;
+  }
+
+  // gets application config and data
+  const SpanAnalyzerConfig* config = wxGetApp().config();
+  SpanAnalyzerData* data = wxGetApp().data();
+
+  // creates and shows the cable file manager dialog
+  CableFileManagerDialog dialog(this, config->units, &data->cablefiles);
+  if (dialog.ShowModal() == wxID_OK) {
+    // saves application data
+    FileHandler::SaveAppData(config->filepath_data, *data, config->units);
+  }
+
+  // reloads all cable files in case things get out of sync
+  // i.e. user edits cable file, but doesn't accept any changes in file manager
+  for (auto iter = data->cablefiles.begin(); iter != data->cablefiles.end();
+       iter++) {
+    CableFile& cablefile = *iter;
+    FileHandler::LoadCable(cablefile.filepath, config->units, cablefile.cable);
+  }
 }
 
 void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {

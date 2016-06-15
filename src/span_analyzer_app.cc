@@ -98,6 +98,11 @@ bool SpanAnalyzerApp::OnInit() {
     return false;
   };
 
+  path.SetName("cable_file_manager_dialog");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
+    return false;
+  };
+
   path.SetName("catenary_table_panel");
   if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
