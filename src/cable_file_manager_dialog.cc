@@ -3,6 +3,7 @@
 
 #include "cable_file_manager_dialog.h"
 
+#include "wx/spinbutt.h"
 #include "wx/xrc/xmlres.h"
 
 #include "cable_editor_dialog.h"
@@ -19,6 +20,8 @@ BEGIN_EVENT_TABLE(CableFileManagerDialog, wxDialog)
   EVT_BUTTON(XRCID("button_remove"), CableFileManagerDialog::OnButtonRemove)
   EVT_CLOSE(CableFileManagerDialog::OnClose)
   EVT_LIST_ITEM_SELECTED(wxID_ANY, CableFileManagerDialog::OnItemSelect)
+  EVT_SPIN_DOWN(XRCID("spinbutton_cablefiles"), CableFileManagerDialog::OnSpinButtonDown)
+  EVT_SPIN_UP(XRCID("spinbutton_cablefiles"), CableFileManagerDialog::OnSpinButtonUp)
 END_EVENT_TABLE()
 
 CableFileManagerDialog::CableFileManagerDialog(
@@ -244,6 +247,9 @@ void CableFileManagerDialog::OnButtonRemove(wxCommandEvent& event) {
 
   // removes from listctrl
   listctrl_->DeleteItem(index_selected_);
+
+  // resets cached index
+  index_selected_ = -1;
 }
 
 void CableFileManagerDialog::OnClose(wxCloseEvent &event) {
@@ -252,4 +258,69 @@ void CableFileManagerDialog::OnClose(wxCloseEvent &event) {
 
 void CableFileManagerDialog::OnItemSelect(wxListEvent& event) {
   index_selected_ = event.GetIndex();
+}
+
+void CableFileManagerDialog::OnSpinButtonDown(wxSpinEvent& event) {
+  // exits if nothing is selected
+  if (index_selected_ < 0) {
+    return;
+  }
+
+  // exits if the selected index is the last cable file
+  const int kCount = listctrl_->GetItemCount() - 1;
+  if (index_selected_ == kCount) {
+    return;
+  }
+
+  // switches cable files in list using iterators
+  auto iter_selection = std::next(cablefiles_modified_.begin(),
+                                  index_selected_);
+  auto iter_position = std::next(iter_selection, 2);
+  cablefiles_modified_.splice(iter_position, cablefiles_modified_,
+                              iter_selection);
+
+  // updates listctrl
+  const CableFile& cablefile = *iter_selection;
+
+  listctrl_->DeleteItem(index_selected_);
+
+  index_selected_ += 1;
+  wxListItem item;
+  item.SetId(index_selected_);
+  item.SetState(wxLIST_STATE_SELECTED);
+  listctrl_->InsertItem(item);
+  listctrl_->SetItem(index_selected_, 0, cablefile.cable.name);
+  listctrl_->SetItem(index_selected_, 1, cablefile.filepath);
+}
+
+void CableFileManagerDialog::OnSpinButtonUp(wxSpinEvent& event) {
+  // exits if nothing is selected
+  if (index_selected_ < 0) {
+    return;
+  }
+
+  // exits if the selected index is the first cable file
+  if (index_selected_ == 0) {
+    return;
+  }
+
+  // switches cable files in list using iterators
+  auto iter_selection = std::next(cablefiles_modified_.begin(),
+    index_selected_);
+  auto iter_position = std::prev(iter_selection, 1);
+  cablefiles_modified_.splice(iter_position, cablefiles_modified_,
+                              iter_selection);
+
+  // updates listctrl
+  const CableFile& cablefile = *iter_selection;
+
+  listctrl_->DeleteItem(index_selected_);
+
+  index_selected_ -= 1;
+  wxListItem item;
+  item.SetId(index_selected_);
+  item.SetState(wxLIST_STATE_SELECTED);
+  listctrl_->InsertItem(item);
+  listctrl_->SetItem(index_selected_, 0, cablefile.cable.name);
+  listctrl_->SetItem(index_selected_, 1, cablefile.filepath);
 }

@@ -36,7 +36,7 @@
               <option>0</option>
               <flag>wxALIGN_CENTER</flag>
               <border>0</border>
-              <object class="wxSpinButton" name="spinbutton_weathercases">
+              <object class="wxSpinButton" name="spinbutton_cablefiles">
                 <style>wxSP_VERTICAL</style>
               </object>
             </object>

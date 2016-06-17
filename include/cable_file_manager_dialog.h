@@ -68,6 +68,16 @@ class CableFileManagerDialog : public wxDialog {
   ///   The event.
   void OnItemSelect(wxListEvent& event);
 
+  /// \brief Handles the set spin button down event.
+  /// \param[in] event
+  ///   The event.
+  void OnSpinButtonDown(wxSpinEvent& event);
+
+  /// \brief Handles the set spin button up event.
+  /// \param[in] event
+  ///   The event.
+  void OnSpinButtonUp(wxSpinEvent& event);
+
   /// \var index_selected_
   ///   The index of the selected item in the listctrl.
   long index_selected_;
