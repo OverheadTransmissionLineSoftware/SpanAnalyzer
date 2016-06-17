@@ -61,7 +61,7 @@ wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
 
 int SpanAnalyzerDocXmlHandler::ParseNode(
     const wxXmlNode* root,
-    const std::list<Cable>* cables,
+    const std::list<CableFile>* cablefiles,
     SpanAnalyzerDoc& doc,
     units::UnitSystem& units) {
   // checks for valid root node
@@ -77,7 +77,7 @@ int SpanAnalyzerDocXmlHandler::ParseNode(
 
   // sends to proper parsing function
   if (version == "1") {
-    return ParseNodeV1(root, cables, doc, units);
+    return ParseNodeV1(root, cablefiles, doc, units);
   } else {
     return root->GetLineNumber();
   }
@@ -85,7 +85,7 @@ int SpanAnalyzerDocXmlHandler::ParseNode(
 
 int SpanAnalyzerDocXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
-    const std::list<Cable>* cables,
+    const std::list<CableFile>* cablefiles,
     SpanAnalyzerDoc& doc,
     units::UnitSystem& units) {
   // gets units attribute
@@ -133,7 +133,7 @@ int SpanAnalyzerDocXmlHandler::ParseNodeV1(
         } else {
           Span span;
           const int line_number = SpanXmlHandler::ParseNode(
-              sub_node, cables, &doc.weathercases(), span);
+              sub_node, cablefiles, &doc.weathercases(), span);
           if (line_number == 0) {
             doc.AppendSpan(span);
           } else {

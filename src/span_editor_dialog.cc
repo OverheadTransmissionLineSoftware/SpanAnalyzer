@@ -19,7 +19,7 @@ END_EVENT_TABLE()
 
 SpanEditorDialog::SpanEditorDialog(
     wxWindow* parent,
-    const std::list<Cable>* cables,
+    const std::list<CableFile>* cablefiles,
     const std::list<WeatherLoadCase>* weathercases,
     const units::UnitSystem& units,
     Span* span) {
@@ -28,7 +28,7 @@ SpanEditorDialog::SpanEditorDialog(
 
   // saves constructor parameters to class
   SetUnitsStaticText(units);
-  cables_ = cables;
+  cablefiles_ = cablefiles;
   weathercases_ = weathercases;
 
   // saves unmodified span reference, and copies to modified span
@@ -60,9 +60,10 @@ void SpanEditorDialog::InitChoiceControls() {
 
   // populates cable choice control
   choice = XRCCTRL(*this, "choice_cable", wxChoice);
-  for (auto iter = cables_->cbegin(); iter != cables_->cend(); iter++) {
-    const Cable& cable = *iter;
-    choice->Append(cable.name);
+  for (auto iter = cablefiles_->cbegin(); iter != cablefiles_->cend();
+       iter++) {
+    const CableFile& cablefile = *iter;
+    choice->Append(cablefile.cable.name);
   }
 
   // populates constraint type choice control
@@ -322,8 +323,8 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
     span_modified_.linecable.cable = nullptr;
   } else {
     str = choice->GetString(index);
-    auto iter = std::next(cables_->cbegin(), index);
-    span_modified_.linecable.cable = &(*iter);
+    auto iter = std::next(cablefiles_->cbegin(), index);
+    span_modified_.linecable.cable = &(*iter).cable;
   }
 
   // transfers constraint type

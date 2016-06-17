@@ -277,7 +277,7 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
 
   // parses the XML node and loads into the document
   int line_number = SpanAnalyzerDocXmlHandler::ParseNode(
-      root, &wxGetApp().data()->cables, *this, units_file);
+      root, &wxGetApp().data()->cablefiles, *this, units_file);
   if (line_number != 0) {
     // notifies user of error
     wxString message = "Span Analyzer Document Error: "

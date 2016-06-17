@@ -432,7 +432,7 @@ void SpanTreeCtrl::AddSpan() {
   span.name = "NEW";
 
   SpanEditorDialog dialog(view_->GetFrame(),
-                          &wxGetApp().data()->cables,
+                          &wxGetApp().data()->cablefiles,
                           &doc_->weathercases(),
                           units::UnitSystem::kImperial,
                           &span);
@@ -519,7 +519,7 @@ void SpanTreeCtrl::EditSpan(const wxTreeItemId& id) {
 
   // creates a span editor dialog
   SpanEditorDialog dialog(view_->GetFrame(),
-                          &wxGetApp().data()->cables,
+                          &wxGetApp().data()->cablefiles,
                           &doc_->weathercases(),
                           wxGetApp().config()->units,
                           &span);

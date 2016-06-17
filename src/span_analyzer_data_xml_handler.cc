@@ -24,9 +24,17 @@ wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
   // adds child nodes for struct parameters
 
   // creates cable directory node
-  title = "cable_directory";
-  content = data.directory_cables;
-  node_element = CreateElementNodeWithContent(title, content);
+  title = "cables";
+  node_element = new wxXmlNode(wxXML_ELEMENT_NODE, title);
+
+  for (auto iter = data.cablefiles.cbegin(); iter != data.cablefiles.cend();
+       iter++) {
+    const CableFile& cablefile = *iter;
+    wxXmlNode* sub_node = CreateElementNodeWithContent("file",
+                                                       cablefile.filepath);
+    node_element->AddChild(sub_node);
+  }
+
   node_root->AddChild(node_element);
 
   // creates analysis weathercase node
@@ -93,11 +101,28 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
     const wxString title = node->GetName();
     const wxString content = ParseElementNodeWithContent(node);
 
-    if (title == "cable_directory") {
-      data.directory_cables = content;
-      data.cables = FileHandler::LoadCablesFromDirectory(
-          data.directory_cables,
-          units);
+    if (title == "cables") {
+      // gets node for cable file
+      wxXmlNode* sub_node = node->GetChildren();
+
+      while (sub_node != nullptr) {
+        CableFile cablefile;
+
+        // gets filepath
+        cablefile.filepath = ParseElementNodeWithContent(sub_node);
+
+        // parses cable file
+        int status = -1;
+        status = FileHandler::LoadCable(cablefile.filepath, units,
+                                        cablefile.cable);
+
+        if (status == 0) {
+          // adds to data lists
+          data.cablefiles.push_back(cablefile);
+        }
+
+        sub_node = sub_node->GetNext();
+      }
     } else if (title == "analysis_weather_load_cases") {
       // gets node for analysis weather load case set
       wxXmlNode* sub_node = node->GetChildren();

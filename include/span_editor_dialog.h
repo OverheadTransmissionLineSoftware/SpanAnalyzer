@@ -10,6 +10,7 @@
 #include "wx/wx.h"
 
 #include "span.h"
+#include "span_analyzer_data.h"
 
 /// \par OVERVIEW
 ///
@@ -25,8 +26,8 @@ class SpanEditorDialog : public wxDialog {
   /// \brief Default constructor.
   /// \param[in] parent
   ///   The parent window.
-  /// \param[in] cables
-  ///   The cables available for reference.
+  /// \param[in] cablefiles
+  ///   The cable files available for reference.
   /// \param[in] weathercases
   ///   The weathercases available for reference.
   /// \param[in] units
@@ -34,7 +35,7 @@ class SpanEditorDialog : public wxDialog {
   /// \param[in] span
   ///   The span to be modified with the dialog.
   SpanEditorDialog(wxWindow* parent,
-                   const std::list<Cable>* cables,
+                   const std::list<CableFile>* cablefiles,
                    const std::list<WeatherLoadCase>* weathercases,
                    const units::UnitSystem& units,
                    Span* span);
@@ -87,13 +88,9 @@ class SpanEditorDialog : public wxDialog {
   ///   the span object.
   void TransferCustomDataFromWindow();
 
-  /// \var weathercases_
-  ///   The weathercases.
-  const std::list<WeatherLoadCase>* weathercases_;
-
-  /// \var cables_
-  ///   The cables.
-  const std::list<Cable>* cables_;
+  /// \var cablefiles_
+  ///   The cable files.
+  const std::list<CableFile>* cablefiles_;
 
   /// \var span_
   ///   The span that is edited.
@@ -102,6 +99,10 @@ class SpanEditorDialog : public wxDialog {
   /// \var span_modified_
   ///   The span that is modified and tied to the dialog controls.
   Span span_modified_;
+
+  /// \var weathercases_
+  ///   The weathercases.
+  const std::list<WeatherLoadCase>* weathercases_;
 
   DECLARE_EVENT_TABLE()
 };

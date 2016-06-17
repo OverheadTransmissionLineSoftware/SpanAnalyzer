@@ -87,7 +87,7 @@ wxXmlNode* LineCableXmlHandler::CreateNode(
 
 int LineCableXmlHandler::ParseNode(
     const wxXmlNode* root,
-    const std::list<Cable>* cables,
+    const std::list<const Cable*>* cables,
     const std::list<WeatherLoadCase>* weathercases,
     LineCable& linecable) {
   // checks for valid root node
@@ -111,7 +111,7 @@ int LineCableXmlHandler::ParseNode(
 
 int LineCableXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
-    const std::list<Cable>* cables,
+    const std::list<const Cable*>* cables,
     const std::list<WeatherLoadCase>* weathercases,
     LineCable& linecable) {
   // evaluates each child node
@@ -125,9 +125,9 @@ int LineCableXmlHandler::ParseNodeV1(
       linecable.cable = nullptr;
       for (auto iter = cables->cbegin(); iter != cables->cend();
            iter++) {
-        const Cable& cable = *iter;
-        if (content == cable.name) {
-          linecable.cable = &cable;
+        const Cable* cable = *iter;
+        if (content == cable->name) {
+          linecable.cable = cable;
           break;
         }
       }
