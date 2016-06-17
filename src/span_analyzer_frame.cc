@@ -178,15 +178,16 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
     }
 
     // converts doc
-    SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->GetCurrentDocument();
+    SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
+                               GetCurrentDocument();
     if (doc != nullptr) {
       doc->ConvertUnitSystem(units_before, config->units);
-    }
 
-    // updates views
-    ViewUpdateHint hint;
-    hint.set_type(ViewUpdateHint::HintType::kModelPreferencesEdit);
-    doc->UpdateAllViews(nullptr, &hint);
+      // updates views
+      ViewUpdateHint hint;
+      hint.set_type(ViewUpdateHint::HintType::kModelPreferencesEdit);
+      doc->UpdateAllViews(nullptr, &hint);
+    }
   }
 }
 
