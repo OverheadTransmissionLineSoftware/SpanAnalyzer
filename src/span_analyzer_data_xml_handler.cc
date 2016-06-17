@@ -112,11 +112,14 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
         cablefile.filepath = ParseElementNodeWithContent(sub_node);
 
         // parses cable file
-        FileHandler::LoadCable(cablefile.filepath, units,
-                               cablefile.cable);
+        int status = -1;
+        status = FileHandler::LoadCable(cablefile.filepath, units,
+                                        cablefile.cable);
 
-        // adds to data lists
-        data.cablefiles.push_back(cablefile);
+        if (status == 0) {
+          // adds to data lists
+          data.cablefiles.push_back(cablefile);
+        }
 
         sub_node = sub_node->GetNext();
       }
