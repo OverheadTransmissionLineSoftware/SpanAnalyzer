@@ -27,6 +27,20 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
 
   // adds child nodes for struct parameters
 
+  // creates log level node
+  title = "level_log";
+  if (config.level_log == wxLOG_Error) {
+    content = "Error";
+  } else if (config.level_log == wxLOG_Message) {
+    content = "Message";
+  } else if (config.level_log == wxLOG_Info) {
+    content = "Verbose";
+  } else {
+    content = "";
+  }
+  node_element = CreateElementNodeWithContent(title, content);
+  node_root->AddChild(node_element);
+
   // creates filepath-data node
   title = "filepath_data";
   content = config.filepath_data;
@@ -96,6 +110,16 @@ int SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
 
     if (title == "filepath_data") {
       config.filepath_data = content;
+    } else if (title == "level_log") {
+      if (content == "Error") {
+        config.level_log = wxLOG_Error;
+      } else if (content == "Message") {
+        config.level_log = wxLOG_Message;
+      } else if (content == "Verbose") {
+        config.level_log = wxLOG_Info;
+      } else {
+        config.level_log = wxLOG_Message;
+      }
     } else if (title == "size_frame") {
       std::string str;
       str = node->GetAttribute("x");

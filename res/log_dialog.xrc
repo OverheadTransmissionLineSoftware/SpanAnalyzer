@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<resource version="2.5.3.0">
+	<object class="wxDialog" name="log_dialog">
+		<style>wxDEFAULT_DIALOG_STYLE</style>
+		<title>Log</title>
+    <object class="wxPanel" name="log_pane">
+      <style>wxTAB_TRAVERSAL</style>
+    </object>
+  </object>
+</resource>
+

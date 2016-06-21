@@ -18,6 +18,10 @@ struct SpanAnalyzerConfig {
   ///   The file path for the application data.
   std::string filepath_data;
 
+  /// \var level_log
+  ///   The log level of the application.
+  wxLogLevelValues level_log;
+
   /// \var perspective
   ///   The AUI perspective, which is based on the user layout of panes. The
   ///   perspective is loaded/saved on application startup/exit, and modified
