@@ -33,8 +33,6 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
     content = "Error";
   } else if (config.level_log == wxLOG_Message) {
     content = "Message";
-  } else if (config.level_log == wxLOG_Info) {
-    content = "Verbose";
   } else {
     content = "";
   }
@@ -110,14 +108,16 @@ int SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
 
     if (title == "filepath_data") {
       config.filepath_data = content;
+      if (config.filepath_data.empty() == true) {
+        wxLogError("Application data file isn't defined.");
+      }
     } else if (title == "level_log") {
       if (content == "Error") {
         config.level_log = wxLOG_Error;
       } else if (content == "Message") {
         config.level_log = wxLOG_Message;
-      } else if (content == "Verbose") {
-        config.level_log = wxLOG_Info;
       } else {
+        wxLogError("Logging level isn't recognized. Setting to default.");
         config.level_log = wxLOG_Message;
       }
     } else if (title == "size_frame") {
@@ -134,11 +134,14 @@ int SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
       } else if (content == "Imperial") {
         config.units = units::UnitSystem::kImperial;
       } else {
-        return node->GetLineNumber();
+        wxLogError("Unit system isn't recognized. Setting to default "
+                   "(metric).");
+        config.units = units::UnitSystem::kMetric;
       }
     } else {
-      // node is not recognized by ther parser
-      return node->GetLineNumber();
+      std::string message = "Line " + std::to_string(node->GetLineNumber())
+                            + ". XML node isn't recognized. Skipping.";
+      wxLogError(message.c_str());
     }
 
     node = node->GetNext();

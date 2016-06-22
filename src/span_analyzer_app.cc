@@ -165,13 +165,14 @@ bool SpanAnalyzerApp::OnInit() {
   // sets application logging to a modeless dialog managed by the frame
   wxLogTextCtrl* log = new wxLogTextCtrl(frame_->dialog_log()->textctrl());
   wxLog::SetActiveTarget(log);
+  wxLog::SetLogLevel(wxLOG_Error);
 
   // checks if config file exists, creates one if not
   path = filepath_config_;
   if (path.Exists() == false) {
     // manually initializes config
     config_.filepath_data = "";
-    config_.level_log = wxLOG_Message;
+    config_.level_log = wxLOG_Error;
     config_.perspective = "";
     config_.size_frame = wxSize(0, 0);
     config_.units = units::UnitSystem::kImperial;
@@ -191,7 +192,7 @@ bool SpanAnalyzerApp::OnInit() {
     return false;
   };
 
-  // sets log level
+  // sets log level specified in app config
   wxLog::SetLogLevel(config_.level_log);
 
   // checks if data file exists, creates one if not

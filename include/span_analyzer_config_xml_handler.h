@@ -37,9 +37,9 @@ class SpanAnalyzerConfigXmlHandler : public XmlHandler {
   ///   The XML root node for the config settings.
   /// \param[out] config
   ///   The config settings that are populated.
-  /// \return The file line number of the node if the content could not be
-  ///   converted to the expected data type. Returns 0 if no errors were
-  ///   encountered.
+  /// \return The file line number of a critical error. Returns 0 if no critical
+  ///   errors were encountered.
+  /// Non-critical errors are directed to the active application log target.
   static int ParseNode(const wxXmlNode* root,
                        SpanAnalyzerConfig& config);
 
@@ -49,9 +49,9 @@ class SpanAnalyzerConfigXmlHandler : public XmlHandler {
   ///   The XML root node for the config settings.
   /// \param[out] config
   ///   The config settings that are populated.
-  /// \return The file line number of the node if the content could not be
-  ///   converted to the expected data type. Returns 0 if no errors were
-  ///   encountered.
+  /// \return The file line number of a critical error. Returns 0 if no critical
+  ///   errors were encountered.
+  /// Non-critical errors are directed to the active application log target.
   static int ParseNodeV1(const wxXmlNode* root,
                          SpanAnalyzerConfig& config);
 };
