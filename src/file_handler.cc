@@ -99,21 +99,26 @@ int FileHandler::LoadAppData(const std::string& filepath,
 int FileHandler::LoadCable(const std::string& filepath,
                            const units::UnitSystem& units,
                            Cable& cable) {
+  std::string message = "Loading cable file: " + filepath;
+  wxLogMessage(message.c_str());
+
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
+    wxLogError("Cable file does not exist. Aborting.");
     return -1;
   }
 
   // uses an xml document to load cable file
   wxXmlDocument doc;
   if (doc.Load(filepath) == false) {
-    // invalid xml file
+    wxLogError("Cable file contains an invalid xml structure. Aborting.");
     return -1;
   }
 
   // checks for valid xml root
   const wxXmlNode* root = doc.GetRoot();
   if (root->GetName() != "cable") {
+    wxLogError("Cable file contains an invalid xml root. Aborting.");
     return root->GetLineNumber();
   }
 
@@ -126,9 +131,11 @@ int FileHandler::LoadCable(const std::string& filepath,
     } else if (str_units == "Metric") {
       units_file = units::UnitSystem::kMetric;
     } else {
+      wxLogError("Cable file contains an invalid units attribute. Aborting.");
       return root->GetLineNumber();
     }
   } else {
+    wxLogError("Cable file is missing units attribute. Aborting.");
     return root->GetLineNumber();
   }
 
@@ -142,6 +149,10 @@ int FileHandler::LoadCable(const std::string& filepath,
 
   int line_number = CableXmlHandler::ParseNode(root, cable);
   if (line_number != 0) {
+    std::string message = "Cable file contains a critical error on line "
+                          + std::to_string(line_number)
+                          + ". Aborting.";
+    wxLogError(message.c_str());
     return line_number;
   }
 
