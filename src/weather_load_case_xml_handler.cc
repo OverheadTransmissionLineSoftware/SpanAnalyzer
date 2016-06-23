@@ -114,6 +114,8 @@ int WeatherLoadCaseXmlHandler::ParseNode(const wxXmlNode* root,
 
 int WeatherLoadCaseXmlHandler::ParseNodeV1(const wxXmlNode* root,
                                            WeatherLoadCase& weathercase) {
+  std::string message;
+
   // evaluates each child node
   wxXmlNode* node = root->GetChildren();
   while (node != nullptr) {
@@ -127,29 +129,42 @@ int WeatherLoadCaseXmlHandler::ParseNodeV1(const wxXmlNode* root,
       if (content.ToDouble(&value) == true) {
         weathercase.thickness_ice = value;
       } else {
-        return node->GetLineNumber();
+        message = "Line " + std::to_string(node->GetLineNumber()) + ". "
+                  "Invalid ice thickness.";
+        wxLogError(message.c_str());
+        weathercase.thickness_ice = -999999;
       }
     } else if (title == "density_ice") {
       if (content.ToDouble(&value) == true) {
         weathercase.density_ice = value;
       } else {
-        return node->GetLineNumber();
+        message = "Line " + std::to_string(node->GetLineNumber()) + ". "
+                  "Invalid ice density.";
+        wxLogError(message.c_str());
+        weathercase.density_ice = -999999;
       }
     } else if (title == "pressure_wind") {
       if (content.ToDouble(&value) == true) {
         weathercase.pressure_wind = value;
       } else {
-        return node->GetLineNumber();
+        message = "Line " + std::to_string(node->GetLineNumber()) + ". "
+                  "Invalid wind pressure.";
+        wxLogError(message.c_str());
+        weathercase.pressure_wind = -999999;
       }
     } else if (title == "temperature_cable") {
       if (content.ToDouble(&value) == true) {
         weathercase.temperature_cable = value;
       } else {
-        return node->GetLineNumber();
+        message = "Line " + std::to_string(node->GetLineNumber()) + ". "
+                  "Invalid cable temperature.";
+        wxLogError(message.c_str());
+        weathercase.temperature_cable = -999999;
       }
     } else {
-      // node is not recognized by ther parser
-      return node->GetLineNumber();
+      message = "Line " + std::to_string(node->GetLineNumber()) + ". "
+                "XML node isn't recognized.";
+      wxLogError(message.c_str());
     }
 
     node = node->GetNext();
