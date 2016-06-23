@@ -15,7 +15,7 @@ wxXmlNode* XmlHandler::CreateElementNodeWithContent(
     const wxXmlAttribute* attribute) {
   // creates element node
   wxXmlNode* node = new wxXmlNode(wxXML_ELEMENT_NODE, title);
-  
+
   // creates child text node
   if (content != *wxEmptyString) {
     wxXmlNode* node_child = new wxXmlNode(wxXML_TEXT_NODE,
@@ -30,6 +30,14 @@ wxXmlNode* XmlHandler::CreateElementNodeWithContent(
   }
 
   return node;
+}
+
+wxString XmlHandler::FileAndLineNumber(const wxString& filepath,
+                                       const wxXmlNode* node) {
+  wxString num;
+  num << node->GetLineNumber();
+
+  return filepath + ":" + num + ". ";
 }
 
 wxString XmlHandler::ParseElementNodeWithContent(const wxXmlNode* node) {
