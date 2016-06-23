@@ -92,6 +92,7 @@ wxXmlNode* WeatherLoadCaseXmlHandler::CreateNode(
 }
 
 int WeatherLoadCaseXmlHandler::ParseNode(const wxXmlNode* root,
+                                         const std::string& filepath,
                                          WeatherLoadCase& weathercase) {
   // checks for valid root node
   if (root->GetName() != "weather_load_case") {
@@ -106,15 +107,16 @@ int WeatherLoadCaseXmlHandler::ParseNode(const wxXmlNode* root,
 
   // sends to proper parsing function
   if (version == "1") {
-    return ParseNodeV1(root, weathercase);
+    return ParseNodeV1(root, filepath, weathercase);
   } else {
     return root->GetLineNumber();
   }
 }
 
 int WeatherLoadCaseXmlHandler::ParseNodeV1(const wxXmlNode* root,
+                                           const std::string& filepath,
                                            WeatherLoadCase& weathercase) {
-  std::string message;
+  wxString message;
 
   // evaluates each child node
   wxXmlNode* node = root->GetChildren();
@@ -129,42 +131,42 @@ int WeatherLoadCaseXmlHandler::ParseNodeV1(const wxXmlNode* root,
       if (content.ToDouble(&value) == true) {
         weathercase.thickness_ice = value;
       } else {
-        message = "Line " + std::to_string(node->GetLineNumber()) + ". "
-                  "Invalid ice thickness.";
-        wxLogError(message.c_str());
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid ice thickness.";
+        wxLogError(message);
         weathercase.thickness_ice = -999999;
       }
     } else if (title == "density_ice") {
       if (content.ToDouble(&value) == true) {
         weathercase.density_ice = value;
       } else {
-        message = "Line " + std::to_string(node->GetLineNumber()) + ". "
-                  "Invalid ice density.";
-        wxLogError(message.c_str());
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid ice density.";
+        wxLogError(message);
         weathercase.density_ice = -999999;
       }
     } else if (title == "pressure_wind") {
       if (content.ToDouble(&value) == true) {
         weathercase.pressure_wind = value;
       } else {
-        message = "Line " + std::to_string(node->GetLineNumber()) + ". "
-                  "Invalid wind pressure.";
-        wxLogError(message.c_str());
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid wind pressure.";
+        wxLogError(message);
         weathercase.pressure_wind = -999999;
       }
     } else if (title == "temperature_cable") {
       if (content.ToDouble(&value) == true) {
         weathercase.temperature_cable = value;
       } else {
-        message = "Line " + std::to_string(node->GetLineNumber()) + ". "
-                  "Invalid cable temperature.";
-        wxLogError(message.c_str());
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid cable temperature.";
+        wxLogError(message);
         weathercase.temperature_cable = -999999;
       }
     } else {
-      message = "Line " + std::to_string(node->GetLineNumber()) + ". "
-                "XML node isn't recognized.";
-      wxLogError(message.c_str());
+      message = FileAndLineNumber(filepath, node)
+                + "XML node isn't recognized.";
+        wxLogError(message);
     }
 
     node = node->GetNext();
