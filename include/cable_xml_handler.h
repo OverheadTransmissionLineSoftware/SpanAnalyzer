@@ -50,6 +50,9 @@ class CableComponentXmlHandler : public XmlHandler {
   /// \brief Parses an XML node and populates a cable component.
   /// \param[in] root
   ///   The XML root node for the cable component.
+  /// \param[in] filepath
+  ///   The filepath that the xml node was loaded from. This is for logging
+  ///   purposes only and can be left blank.
   /// \param[out] component
   ///   The cable component that is populated.
   /// \return The file line number of a critical error. Returns 0 if no critical
@@ -58,12 +61,16 @@ class CableComponentXmlHandler : public XmlHandler {
   /// Non-critical errors are directed to the active application log target. If
   /// the property is recognized, it is set to an invalid state.
   static int ParseNode(const wxXmlNode* root,
+                       const std::string& filepath,
                        CableComponent& component);
 
  private:
   /// \brief Parses a version 1 XML node and populates a cable component.
   /// \param[in] root
   ///   The XML root node for the cable component.
+  /// \param[in] filepath
+  ///   The filepath that the xml node was loaded from. This is for logging
+  ///   purposes only and can be left blank.
   /// \param[out] component
   ///   The cable component that is populated.
   /// \return The file line number of a critical error. Returns 0 if no critical
@@ -72,6 +79,7 @@ class CableComponentXmlHandler : public XmlHandler {
   /// Non-critical errors are directed to the active application log target. If
   /// the property is recognized, it is set to an invalid state.
   static int ParseNodeV1(const wxXmlNode* root,
+                         const std::string& filepath,
                          CableComponent& component);
 };
 
@@ -113,6 +121,9 @@ class CableXmlHandler : public XmlHandler {
   /// \brief Parses an XML node and populates a cable struct.
   /// \param[in] root
   ///   The XML root node for the cable.
+  /// \param[in] filepath
+  ///   The filepath that the xml node was loaded from. This is for logging
+  ///   purposes only and can be left blank.
   /// \param[out] cable
   ///   The cable that is populated.
   /// \return The file line number of a critical error. Returns 0 if no critical
@@ -121,12 +132,16 @@ class CableXmlHandler : public XmlHandler {
   /// Non-critical errors are directed to the active application log target. If
   /// the property is recognized, it is set to an invalid state.
   static int ParseNode(const wxXmlNode* root,
+                       const std::string& filepath,
                        Cable& cable);
 
  private:
   /// \brief Parses a version 1 XML node and populates a cable.
   /// \param[in] root
   ///   The XML root node for the cable.
+  /// \param[in] filepath
+  ///   The filepath that the xml node was loaded from. This is for logging
+  ///   purposes only and can be left blank.
   /// \param[out] cable
   ///   The cable that is populated.
   /// \return The file line number of a critical error. Returns 0 if no critical
@@ -135,6 +150,7 @@ class CableXmlHandler : public XmlHandler {
   /// Non-critical errors are directed to the active application log target. If
   /// the property is recognized, it is set to an invalid state.
   static int ParseNodeV1(const wxXmlNode* root,
+                         const std::string& filepath,
                          Cable& cable);
 };
 
