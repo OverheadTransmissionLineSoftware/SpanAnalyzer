@@ -62,6 +62,7 @@ wxXmlNode* SpanXmlHandler::CreateNode(
 
 int SpanXmlHandler::ParseNode(
     const wxXmlNode* root,
+    const std::string& filepath,
     const std::list<CableFile>* cablefiles,
     const std::list<WeatherLoadCase>* weathercases,
     Span& span) {
@@ -78,7 +79,7 @@ int SpanXmlHandler::ParseNode(
 
   // sends to proper parsing function
   if (version == "1") {
-    return ParseNodeV1(root, cablefiles, weathercases, span);
+    return ParseNodeV1(root, filepath, cablefiles, weathercases, span);
   } else {
     return root->GetLineNumber();
   }
@@ -86,12 +87,15 @@ int SpanXmlHandler::ParseNode(
 
 int SpanXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
+    const std::string& filepath,
     const std::list<CableFile>* cablefiles,
     const std::list<WeatherLoadCase>* weathercases,
     Span& span) {
   // variables used to parse XML node
   wxString title;
   wxString content;
+
+  wxString message;
 
   // gets name attribute
   wxString name;
@@ -110,7 +114,9 @@ int SpanXmlHandler::ParseNodeV1(
       } else if (content == "RulingSpan") {
         span.type = Span::Type::kRulingSpan;
       } else {
-        return node->GetLineNumber();
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid span type.";
+        wxLogError(message);
       }
     } else if (title == "line_cable") {
       // line cable is not intended to be application-specific
@@ -124,24 +130,31 @@ int SpanXmlHandler::ParseNodeV1(
       }
 
       int line_number = LineCableXmlHandler::ParseNode(
-          node, &cables, weathercases, span.linecable);
+          node, filepath, &cables, weathercases, span.linecable);
       if(line_number != 0) {
-        return line_number;
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid line cable.";
+        wxLogError(message);
+        span.linecable = LineCable();
       }
     } else if (title == "vector_3d") {
       const int line_number = Vector3dXmlHandler::ParseNode(
-          node, span.spacing_catenary);
+          node, filepath, span.spacing_catenary);
       if(line_number != 0) {
-        return line_number;
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid catenary spacing.";
+        wxLogError(message);
+        span.spacing_catenary = Vector3d();
       }
     } else {
-      // node is not recognized by ther parser
-      return node->GetLineNumber();
+      message = FileAndLineNumber(filepath, node)
+                + "XML node isn't recognized.";
+      wxLogError(message);
     }
 
     node = node->GetNext();
   }
 
-  // if it gets to this point, no errors were encountered
+  // if it gets to this point, no critical errors were encountered
   return 0;
 }
