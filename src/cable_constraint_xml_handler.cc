@@ -110,6 +110,7 @@ wxXmlNode* CableConstraintXmlHandler::CreateNode(
 
 int CableConstraintXmlHandler::ParseNode(
     const wxXmlNode* root,
+    const std::string& filepath,
     const std::list<WeatherLoadCase>* weathercases,
     CableConstraint& constraint) {
   // checks for valid root node
@@ -125,7 +126,7 @@ int CableConstraintXmlHandler::ParseNode(
 
   // sends to proper parsing function
   if (version == "1") {
-    return ParseNodeV1(root, weathercases, constraint);
+    return ParseNodeV1(root, filepath, weathercases, constraint);
   } else {
     return root->GetLineNumber();
   }
@@ -133,8 +134,12 @@ int CableConstraintXmlHandler::ParseNode(
 
 int CableConstraintXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
+    const std::string& filepath,
     const std::list<WeatherLoadCase>* weathercases,
     CableConstraint& constraint) {
+
+  wxString message;
+
   // evaluates each child node
   const wxXmlNode* node = root->GetChildren();
   while (node != nullptr) {
@@ -146,7 +151,10 @@ int CableConstraintXmlHandler::ParseNodeV1(
       if (content.ToDouble(&value) == true) {
         constraint.limit = value;
       } else {
-        return node->GetLineNumber();
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid limit.";
+        wxLogError(message);
+        constraint.limit = -999999;
       }
 
       const wxString content_attribute = node->GetAttribute("type");
@@ -157,8 +165,9 @@ int CableConstraintXmlHandler::ParseNodeV1(
       } else if (content_attribute == "SupportTension") {
         constraint.type_limit = CableConstraint::LimitType::kSupportTension;
       } else {
-        // content was not recognized by parser
-        return node->GetLineNumber();
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid limit type.";
+        wxLogError(message);
       }
     } else if (title == "weather_load_case") {
       // initializes the weathercase and attempts to find a match
@@ -174,7 +183,9 @@ int CableConstraintXmlHandler::ParseNodeV1(
 
       // checks if match was found
       if (constraint.case_weather == nullptr) {
-        return node->GetLineNumber();
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid weathercase. Couldn't find " + content;
+        wxLogError(message);
       }
     } else if (title == "condition") {
       if (content == "Creep") {
@@ -184,17 +195,19 @@ int CableConstraintXmlHandler::ParseNodeV1(
       } else if (content == "Load") {
         constraint.condition = CableConditionType::kLoad;
       } else {
-        // node was not recognized by parser
-        return node->GetLineNumber();
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid condition.";
+        wxLogError(message);
       }
     } else {
-      // node is not recognized by ther parser
-      return node->GetLineNumber();
+      message = FileAndLineNumber(filepath, node)
+                + "XML node isn't recognized.";
+      wxLogError(message);
     }
 
     node = node->GetNext();
   }
 
-  // if it gets to this point, no errors were encountered
+  // if it gets to this point, no critical errors were encountered
   return 0;
 }
