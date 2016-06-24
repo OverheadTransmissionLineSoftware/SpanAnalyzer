@@ -59,6 +59,7 @@ wxXmlNode* Vector3dXmlHandler::CreateNode(
 }
 
 int Vector3dXmlHandler::ParseNode(const wxXmlNode* root,
+                                  const std::string& filepath,
                                   Vector3d& vector) {
   // checks for valid root node
   if (root->GetName() != "vector_3d") {
@@ -73,14 +74,17 @@ int Vector3dXmlHandler::ParseNode(const wxXmlNode* root,
 
   // sends to proper parsing function
   if (version == "1") {
-    return ParseNodeV1(root, vector);
+    return ParseNodeV1(root, filepath, vector);
   } else {
     return root->GetLineNumber();
   }
 }
 
 int Vector3dXmlHandler::ParseNodeV1(const wxXmlNode* root,
+                                    const std::string& filepath,
                                     Vector3d& vector) {
+  wxString message;
+
   // evaluates each child node
   wxXmlNode* node = root->GetChildren();
   while (node != nullptr) {
@@ -92,28 +96,38 @@ int Vector3dXmlHandler::ParseNodeV1(const wxXmlNode* root,
       if (content.ToDouble(&value) == true) {
         vector.set_x(value);
       } else {
-        return node->GetLineNumber();
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid x component.";
+        wxLogError(message);
+        vector.set_x(-999999);
       }
     } else if (title == "y") {
       if (content.ToDouble(&value) == true) {
         vector.set_y(value);
       } else {
-        return node->GetLineNumber();
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid y component.";
+        wxLogError(message);
+        vector.set_y(-999999);
       }
     } else if (title == "z") {
       if (content.ToDouble(&value) == true) {
         vector.set_z(value);
       } else {
-        return node->GetLineNumber();
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid z component.";
+        wxLogError(message);
+        vector.set_z(-999999);
       }
     } else {
-      // node is not recognized by ther parser
-      return node->GetLineNumber();
+      message = FileAndLineNumber(filepath, node)
+                + "XML node isn't recognized.";
+      wxLogError(message);
     }
 
     node = node->GetNext();
   }
 
-  // if it gets to this point, no errors were encountered
+  // if it gets to this point, no critical errors were encountered
   return 0;
 }
