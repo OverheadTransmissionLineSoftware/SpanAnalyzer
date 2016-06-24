@@ -24,21 +24,27 @@ FileHandler::~FileHandler() {
 int FileHandler::LoadAppData(const std::string& filepath,
                              const units::UnitSystem& units,
                              SpanAnalyzerData& data) {
+  std::string message = "Loading application data file: " + filepath;
+  wxLogMessage(message.c_str());
+
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
+    wxLogError("Application data file does not exist. Aborting.");
     return -1;
   }
 
   // uses an xml document to load app data file
   wxXmlDocument doc;
   if (doc.Load(filepath) == false) {
-    // invalid xml file
+    wxLogError("Application data file contains an invalid xml structure. "
+               "Aborting.");
     return -1;
   }
 
   // checks for valid xml root
   const wxXmlNode* root = doc.GetRoot();
   if (root->GetName() != "span_analyzer_data") {
+    wxLogError("Application data file contains an invalid xml root. Aborting.");
     return root->GetLineNumber();
   }
 
@@ -51,16 +57,22 @@ int FileHandler::LoadAppData(const std::string& filepath,
     } else if (str_units == "Metric") {
       units_file = units::UnitSystem::kMetric;
     } else {
+      wxLogError("Application data file contains an invalid units attribute. "
+                 "Aborting.");
       return root->GetLineNumber();
     }
   } else {
+    wxLogError("Application data file is missing units attribute. Aborting.");
     return root->GetLineNumber();
   }
 
   // parses the xml node to populate data object
-  int line_number = SpanAnalyzerDataXmlHandler::ParseNode(root, data,
-                                                          units_file);
+  int line_number = SpanAnalyzerDataXmlHandler::ParseNode(root, filepath,
+                                                          units_file, data);
   if (line_number != 0) {
+    std::string message = "Applicaton data file contains a critical error on "
+                          "line " + std::to_string(line_number)
+                          + ". Aborting.";
     return line_number;
   }
 
@@ -147,7 +159,7 @@ int FileHandler::LoadCable(const std::string& filepath,
   cable.component_shell.coefficients_polynomial_creep.clear();
   cable.component_shell.coefficients_polynomial_loadstrain.clear();
 
-  int line_number = CableXmlHandler::ParseNode(root, cable);
+  int line_number = CableXmlHandler::ParseNode(root, filepath, cable);
   if (line_number != 0) {
     std::string message = "Cable file contains a critical error on line "
                           + std::to_string(line_number)

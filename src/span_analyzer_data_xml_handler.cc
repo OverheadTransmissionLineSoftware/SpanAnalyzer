@@ -71,8 +71,9 @@ wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
 }
 
 int SpanAnalyzerDataXmlHandler::ParseNode(const wxXmlNode* root,
-                                          SpanAnalyzerData& data,
-                                          units::UnitSystem& units) {
+                                          const std::string& filepath,
+                                          const units::UnitSystem& units,
+                                          SpanAnalyzerData& data) {
   // checks for valid root node
   if (root->GetName() != "span_analyzer_data") {
     return root->GetLineNumber();
@@ -86,15 +87,18 @@ int SpanAnalyzerDataXmlHandler::ParseNode(const wxXmlNode* root,
 
   // sends to proper parsing function
   if (version == "1") {
-    return ParseNodeV1(root, data, units);
+    return ParseNodeV1(root, filepath, units, data);
   } else {
     return root->GetLineNumber();
   }
 }
 
 int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
-                                            SpanAnalyzerData& data,
-                                            units::UnitSystem& units) {
+                                            const std::string& filepath,
+                                            const units::UnitSystem& units,
+                                            SpanAnalyzerData& data) {
+  wxString message;
+
   // evaluates each child node
   const wxXmlNode* node = root->GetChildren();
   while (node != nullptr) {
@@ -104,17 +108,16 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
     if (title == "cables") {
       // gets node for cable file
       wxXmlNode* sub_node = node->GetChildren();
-
       while (sub_node != nullptr) {
         CableFile cablefile;
 
         // gets filepath
         cablefile.filepath = ParseElementNodeWithContent(sub_node);
 
-        // parses cable file
-        int status = -1;
-        status = FileHandler::LoadCable(cablefile.filepath, units,
-                                        cablefile.cable);
+        // loads cable file
+        // filehandler function handles all logging
+        int status =  FileHandler::LoadCable(cablefile.filepath, units,
+                                             cablefile.cable);
 
         if (status == 0) {
           // adds to data lists
@@ -126,7 +129,6 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
     } else if (title == "analysis_weather_load_cases") {
       // gets node for analysis weather load case set
       wxXmlNode* sub_node = node->GetChildren();
-
       while (sub_node != nullptr) {
         // creates a new weather load case set
         std::list<WeatherLoadCase> weathercase_set;
@@ -135,15 +137,26 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
         // gets node for individual weathercases
         wxXmlNode* node_weathercase = sub_node->GetChildren();
         while (node_weathercase != nullptr) {
-          // creates a weathercase, parses, and adds to set
+          // creates a weathercase and parses
           WeatherLoadCase weathercase;
-          WeatherLoadCaseXmlHandler::ParseNode(node_weathercase, weathercase);
-          weathercase_set.push_back(weathercase);
+          int status = WeatherLoadCaseXmlHandler::ParseNode(
+              node_weathercase,
+              filepath,
+              weathercase);
+
+          // adds to container if parsing was successful
+          if (status == 0) {
+            weathercase_set.push_back(weathercase);
+          } else {
+            message = FileAndLineNumber(filepath, node_weathercase)
+                      + "Invalid weathercase. Skipping.";
+            wxLogError(message);
+          }
 
           node_weathercase = node_weathercase->GetNext();
         }
 
-        // adds weathercase description to list
+        // adds weathercase set description to list
         data.descriptions_weathercases_analysis.push_back(str_name);
 
         // adds weathercase set to analysis weathercases list
@@ -152,8 +165,9 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
         sub_node = sub_node->GetNext();
       }
     } else {
-      // node is not recognized by ther parser
-      return node->GetLineNumber();
+      message = FileAndLineNumber(filepath, node)
+                + "XML node isn't recognized.";
+      wxLogMessage(message);
     }
 
     node = node->GetNext();

@@ -38,31 +38,47 @@ class SpanAnalyzerDataXmlHandler : public XmlHandler {
   /// \brief Parses an XML node and populates a data object.
   /// \param[in] root
   ///   The XML root node for the data.
+  /// \param[in] filepath
+  ///   The filepath that the xml node was loaded from. This is for logging
+  ///   purposes only and can be left blank.
+  /// \param[in] units
+  ///   The unit system, which is used by the filehandler to convert external
+  ///   files (ex: cable files) as they are loaded into the data. Data that is
+  ///   stored internally in the data file is NOT converted.
   /// \param[out] data
   ///   The data.
-  /// \param[out] units
-  ///   The units for the data.
-  /// \return The file line number of the node if the content could not be
-  ///   converted to the expected data type. Returns 0 if no errors were
-  ///   encountered.
+  /// \return The file line number of a critical error. Returns 0 if no critical
+  ///   errors were encountered.
+  /// Critical errors cause the parsing to abort, but are not logged.
+  /// Non-critical errors are directed to the active application log target. If
+  /// the property is recognized, it is set to an invalid state.
   static int ParseNode(const wxXmlNode* root,
-                       SpanAnalyzerData& data,
-                       units::UnitSystem& units);
+                       const std::string& filepath,
+                       const units::UnitSystem& units,
+                       SpanAnalyzerData& data);
 
  private:
   /// \brief Parses a version 1 XML node and populates a data object.
   /// \param[in] root
   ///   The XML root node for the document.
+  /// \param[in] filepath
+  ///   The filepath that the xml node was loaded from. This is for logging
+  ///   purposes only and can be left blank.
+  /// \param[in] units
+  ///   The unit system, which is used by the filehandler to convert external
+  ///   files (ex: cable files) as they are loaded into the data. Data that is
+  ///   stored internally in the data file is NOT converted.
   /// \param[out] data
   ///   The data.
-  /// \param[out] units
-  ///   The units for the data.
-  /// \return The file line number of the node if the content could not be
-  ///   converted to the expected data type. Returns 0 if no errors were
-  ///   encountered.
+  /// \return The file line number of a critical error. Returns 0 if no critical
+  ///   errors were encountered.
+  /// Critical errors cause the parsing to abort, but are not logged.
+  /// Non-critical errors are directed to the active application log target. If
+  /// the property is recognized, it is set to an invalid state.
   static int ParseNodeV1(const wxXmlNode* root,
-                         SpanAnalyzerData& data,
-                         units::UnitSystem& units);
+                         const std::string& filepath,
+                         const units::UnitSystem& units,
+                         SpanAnalyzerData& data);
 };
 
 #endif  // OTLS_SPANANALYZER_SPANANALYZERDATAXMLHANDLER_H_
