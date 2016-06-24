@@ -37,7 +37,7 @@ wxString XmlHandler::FileAndLineNumber(const wxString& filepath,
   wxString num;
   num << node->GetLineNumber();
 
-  return filepath + ":" + num + ". ";
+  return filepath + ":" + num + "  --  ";
 }
 
 wxString XmlHandler::ParseElementNodeWithContent(const wxXmlNode* node) {

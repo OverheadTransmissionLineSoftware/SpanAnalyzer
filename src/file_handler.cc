@@ -71,8 +71,8 @@ int FileHandler::LoadAppData(const std::string& filepath,
                                                           units_file, data);
   if (line_number != 0) {
     std::string message = "Applicaton data file contains a critical error on "
-                          "line " + std::to_string(line_number)
-                          + ". Aborting.";
+                          "line " + std::to_string(line_number) + "  --  "
+                          "Aborting.";
     return line_number;
   }
 
