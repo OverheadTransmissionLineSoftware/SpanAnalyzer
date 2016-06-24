@@ -18,10 +18,10 @@ LogDialog::LogDialog(wxWindow* parent) {
   // creates a textctrl and adds to pane
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   textctrl_ = new wxTextCtrl(this, wxID_ANY, wxEmptyString,
-                             wxDefaultPosition, wxDefaultSize,
+                             wxDefaultPosition, wxSize(800,400),
                              wxTE_MULTILINE|wxTE_READONLY);
   sizer->Add(textctrl_, 1, wxEXPAND);
-  this->SetSizer(sizer);
+  this->SetSizerAndFit(sizer);
 }
 
 LogDialog::~LogDialog() {
