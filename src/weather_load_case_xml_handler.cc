@@ -166,7 +166,7 @@ int WeatherLoadCaseXmlHandler::ParseNodeV1(const wxXmlNode* root,
     } else {
       message = FileAndLineNumber(filepath, node)
                 + "XML node isn't recognized.";
-        wxLogError(message);
+      wxLogError(message);
     }
 
     node = node->GetNext();
