@@ -40,45 +40,51 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   /// \param[in] units
   ///   The unit system, which is used for attributing child XML nodes.
   /// \return An XML node for the document.
-  static wxXmlNode* CreateNode(SpanAnalyzerDoc& doc,
+  static wxXmlNode* CreateNode(const SpanAnalyzerDoc& doc,
                                const units::UnitSystem& units);
 
   /// \brief Parses an XML node and populates a document.
   /// \param[in] root
   ///   The XML root node for the document.
+  /// \param[in] filepath
+  ///   The filepath that the xml node was loaded from. This is for logging
+  ///   purposes only and can be left blank.
   /// \param[in] cablefiles
   ///   A list of cables files that is matched against a cable description. If
   ///   found, a pointer will be set to the matching cable.
   /// \param[out] doc
   ///   The document that is populated.
-  /// \param[out] units
-  ///   The units for the document.
-  /// \return The file line number of the node if the content could not be
-  ///   converted to the expected data type. Returns 0 if no errors were
-  ///   encountered.
+  /// \return The file line number of a critical error. Returns 0 if no critical
+  ///   errors were encountered.
+  /// Critical errors cause the parsing to abort, but are not logged.
+  /// Non-critical errors are directed to the active application log target. If
+  /// the property is recognized, it is set to an invalid state.
   static int ParseNode(const wxXmlNode* root,
+                       const std::string& filepath,
                        const std::list<CableFile>* cablefiles,
-                       SpanAnalyzerDoc& doc,
-                       units::UnitSystem& units);
+                       SpanAnalyzerDoc& doc);
 
  private:
   /// \brief Parses a version 1 XML node and populates a document.
   /// \param[in] root
   ///   The XML root node for the document.
+  /// \param[in] filepath
+  ///   The filepath that the xml node was loaded from. This is for logging
+  ///   purposes only and can be left blank.
   /// \param[in] cables
   ///   A list of cable files that is matched against a cable description. If
   ///   found, a pointer will be set to the matching cable.
   /// \param[out] doc
   ///   The document that is populated.
-  /// \param[out] units
-  ///   The units for the document.
-  /// \return The file line number of the node if the content could not be
-  ///   converted to the expected data type. Returns 0 if no errors were
-  ///   encountered.
+  /// \return The file line number of a critical error. Returns 0 if no critical
+  ///   errors were encountered.
+  /// Critical errors cause the parsing to abort, but are not logged.
+  /// Non-critical errors are directed to the active application log target. If
+  /// the property is recognized, it is set to an invalid state.
   static int ParseNodeV1(const wxXmlNode* root,
+                         const std::string& filepath,
                          const std::list<CableFile>* cablefiles,
-                         SpanAnalyzerDoc& doc,
-                         units::UnitSystem& units);
+                         SpanAnalyzerDoc& doc);
 };
 
 #endif  // OTLS_SPANANALYZER_SPANANALYZERDOCXMLHANDLER_H_
