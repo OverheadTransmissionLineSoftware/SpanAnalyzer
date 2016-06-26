@@ -205,26 +205,45 @@ int FileHandler::LoadCable(const std::string& filepath,
 
 int FileHandler::LoadConfigFile(const std::string& filepath,
                                 SpanAnalyzerConfig& config) {
+  std::string message = "Loading config file: " + filepath;
+  wxLogMessage(message.c_str());
+
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
+    message = "Config file (" + filepath + ") does not exist. Keeping "
+              "application defaults.";
+    wxLogError(message.c_str());
     return -1;
   }
 
   // uses an xml document to load config file
   wxXmlDocument doc;
   if (doc.Load(filepath) == false) {
+    message = filepath + "  --  "
+              "Config file contains an invalid xml structure. Keeping "
+              "application defaults.";
+    wxLogError(message.c_str());
     return -1;
   }
 
   // checks for valid xml root
   const wxXmlNode* root = doc.GetRoot();
   if (root->GetName() != "span_analyzer_config") {
+    message = filepath + "  --  "
+              "Config file contains an invalid xml root. Keeping "
+              "application defaults.";
+    wxLogError(message.c_str());
     return root->GetLineNumber();
   }
 
   // parses the XML node and loads into the config struct
-  int line_number = SpanAnalyzerConfigXmlHandler::ParseNode(root, config);
+  int line_number = SpanAnalyzerConfigXmlHandler::ParseNode(root, filepath,
+                                                            config);
   if (line_number != 0) {
+    message = filepath + ":" + std::to_string(line_number) + "  --  "
+              "Config file contains a critical parsing error. Keeping "
+              "application defaults.";
+    wxLogError(message.c_str());
     return line_number;
   }
 
@@ -306,6 +325,10 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
 
 void FileHandler::SaveConfigFile(const std::string& filepath,
                                  const SpanAnalyzerConfig& config) {
+  // logs
+  std::string message = "Saving config file: " + filepath;
+  wxLogMessage(message.c_str());
+
   // generates an xml node
   wxXmlNode* root = SpanAnalyzerConfigXmlHandler::CreateNode(config);
 
