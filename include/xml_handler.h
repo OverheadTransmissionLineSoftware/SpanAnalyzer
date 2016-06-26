@@ -47,7 +47,7 @@ class XmlHandler {
   ///   of the node.
   /// \param[in] filepath
   ///   The filepath.
-  /// \param[n] node
+  /// \param[in] node
   ///   The xml node.
   /// \return A formatted string containing the filepath and line number of the
   ///   node.

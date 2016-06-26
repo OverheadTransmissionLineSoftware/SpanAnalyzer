@@ -82,7 +82,7 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   LogDialog* dialog_log();
 
  private:
-  /// \var dialog_log
+  /// \var dialog_log_
   ///   The log dialog.
   LogDialog* dialog_log_;
 

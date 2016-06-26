@@ -71,7 +71,7 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   /// \param[in] filepath
   ///   The filepath that the xml node was loaded from. This is for logging
   ///   purposes only and can be left blank.
-  /// \param[in] cables
+  /// \param[in] cablefiles
   ///   A list of cable files that is matched against a cable description. If
   ///   found, a pointer will be set to the matching cable.
   /// \param[out] doc
