@@ -195,6 +195,9 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
       doc->UpdateAllViews(nullptr, &hint);
     }
   }
+
+  // updates logging level
+  wxLog::SetLogLevel(config->level_log);
 }
 
 void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {

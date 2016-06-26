@@ -28,10 +28,20 @@ PreferencesDialog::PreferencesDialog(
   filepickerctrl->SetPath(config_->filepath_data);
 
   // sets the unit system in the radio control
-  wxRadioBox* radiobox = XRCCTRL(*this, "radiobox_units", wxRadioBox);
+  wxRadioBox* radiobox = nullptr;
+
+  radiobox = XRCCTRL(*this, "radiobox_units", wxRadioBox);
   if (config_->units == units::UnitSystem::kImperial) {
     radiobox->SetSelection(0);
   } else if (config_->units == units::UnitSystem::kMetric) {
+    radiobox->SetSelection(1);
+  }
+
+  // sets the logging level in the radio control
+  radiobox = XRCCTRL(*this, "radiobox_logging", wxRadioBox);
+  if (config_->level_log == wxLOG_Error) {
+    radiobox->SetSelection(0);
+  } else if (config_->level_log == wxLOG_Message) {
     radiobox->SetSelection(1);
   }
 
@@ -53,12 +63,22 @@ void PreferencesDialog::OnButtonCancel(wxCommandEvent& event) {
 /// \param[in] event
 ///   The event.
 void PreferencesDialog::OnButtonOk(wxCommandEvent& event) {
+  wxRadioBox* radiobox = nullptr;
+
   // transfers units
-  wxRadioBox* radiobox = XRCCTRL(*this, "radiobox_units", wxRadioBox);
+  radiobox = XRCCTRL(*this, "radiobox_units", wxRadioBox);
   if (radiobox->GetSelection() == 0) {
     config_->units = units::UnitSystem::kImperial;
   } else if (radiobox->GetSelection() == 1) {
     config_->units = units::UnitSystem::kMetric;
+  }
+
+  // transfers logging level
+  radiobox = XRCCTRL(*this, "radiobox_logging", wxRadioBox);
+  if (radiobox->GetSelection() == 0) {
+    config_->level_log = wxLOG_Error;
+  } else if (radiobox->GetSelection() == 1) {
+    config_->level_log = wxLOG_Message;
   }
 
   // transfers application data path
