@@ -234,6 +234,10 @@ int FileHandler::LoadConfigFile(const std::string& filepath,
 void FileHandler::SaveAppData(const std::string& filepath,
                               const SpanAnalyzerData& data,
                               const units::UnitSystem& units) {
+  // logs
+  std::string message = "Saving application data file: " + filepath;
+  wxLogMessage(message.c_str());
+
   // creates a copy of the data
   SpanAnalyzerData data_converted = data;
 
@@ -273,6 +277,10 @@ void FileHandler::SaveAppData(const std::string& filepath,
 
 void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
                             const units::UnitSystem& units) {
+  // logs
+  std::string message = "Saving cable file: " + filepath;
+  wxLogMessage(message.c_str());
+
   // creates a copy of the cable and converts to different unit style
   Cable cable_converted = cable;
   CableUnitConverter::ConvertUnitStyle(units,

@@ -392,6 +392,10 @@ void SpanAnalyzerDoc::ReplaceWeathercase(
 }
 
 wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
+  // logs
+  std::string message = "Saving document file: " + GetFilename();
+  wxLogMessage(message.c_str());
+
   // gets the unit system from app config
   units::UnitSystem units = wxGetApp().config()->units;
 

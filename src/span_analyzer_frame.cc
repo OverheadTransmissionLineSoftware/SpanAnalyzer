@@ -133,6 +133,8 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
 
   // reloads all cable files in case things get out of sync
   // i.e. user edits cable file, but doesn't accept any changes in file manager
+  // logs
+  wxLogMessage("Flushing cable files.");
   for (auto iter = data->cablefiles.begin(); iter != data->cablefiles.end();
        iter++) {
     CableFile& cablefile = *iter;
