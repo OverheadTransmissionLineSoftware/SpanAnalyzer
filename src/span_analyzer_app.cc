@@ -52,6 +52,9 @@ bool SpanAnalyzerApp::OnCmdLineParsed(wxCmdLineParser& parser) {
 }
 
 int SpanAnalyzerApp::OnExit() {
+  // disables logging because all windows are destroyed
+  wxLog::EnableLogging(false);
+
   // saves config file
   FileHandler::SaveConfigFile(filepath_config_, config_);
 
