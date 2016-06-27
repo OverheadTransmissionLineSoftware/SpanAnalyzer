@@ -57,6 +57,7 @@ BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxFrame)
   EVT_MENU(XRCID("menuitem_edit_cables"), SpanAnalyzerFrame::OnMenuEditCables)
   EVT_MENU(XRCID("menuitem_file_preferences"), SpanAnalyzerFrame::OnMenuFilePreferences)
   EVT_MENU(XRCID("menuitem_help_about"), SpanAnalyzerFrame::OnMenuHelpAbout)
+  EVT_MENU(XRCID("menuitem_view_log"), SpanAnalyzerFrame::OnMenuViewLog)
 END_EVENT_TABLE()
 
 SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
@@ -69,6 +70,9 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
 
   // sets the drag and drop target
   SetDropTarget(new DocumentFileDropTarget(this));
+
+  // creates the log dialog
+  dialog_log_ = new LogDialog(this);
 }
 
 SpanAnalyzerFrame::~SpanAnalyzerFrame() {
@@ -129,6 +133,8 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
 
   // reloads all cable files in case things get out of sync
   // i.e. user edits cable file, but doesn't accept any changes in file manager
+  // logs
+  wxLogMessage("Flushing cable files.");
   for (auto iter = data->cablefiles.begin(); iter != data->cablefiles.end();
        iter++) {
     CableFile& cablefile = *iter;
@@ -189,6 +195,9 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
       doc->UpdateAllViews(nullptr, &hint);
     }
   }
+
+  // updates logging level
+  wxLog::SetLogLevel(config->level_log);
 }
 
 void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
@@ -216,4 +225,17 @@ void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
 
   // shows the dialog
   wxAboutBox(info, this);
+}
+
+void SpanAnalyzerFrame::OnMenuViewLog(wxCommandEvent& event) {
+  if (dialog_log_->IsShown() == false) {
+    // shows dialog
+    dialog_log_->Show(true);
+  } else {
+    dialog_log_->Show(false);
+  }
+}
+
+LogDialog* SpanAnalyzerFrame::dialog_log() {
+  return dialog_log_;
 }

@@ -44,17 +44,40 @@
         </object>
         <object class="sizeritem">
           <option>0</option>
-          <flag>wxALL</flag>
-          <border>5</border>
-          <object class="wxRadioBox" name="radiobox_units">
-            <style>wxRA_SPECIFY_COLS</style>
-            <label>Unit Systems</label>
-            <dimension>1</dimension>
-            <selection>0</selection>
-            <content>
-              <item>Imperial</item>
-              <item>Metric</item>
-            </content>
+          <flag></flag>
+          <border>0</border>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxRadioBox" name="radiobox_units">
+                <style>wxRA_SPECIFY_COLS</style>
+                <label>Unit Systems</label>
+                <dimension>1</dimension>
+                <selection>0</selection>
+                <content>
+                  <item>Imperial</item>
+                  <item>Metric</item>
+                </content>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxRadioBox" name="radiobox_logging">
+                <style>wxRA_SPECIFY_COLS</style>
+                <label>Logging</label>
+                <dimension>1</dimension>
+                <selection>0</selection>
+                <content>
+                  <item>Errors</item>
+                  <item>Messages</item>
+                </content>
+              </object>
+            </object>
           </object>
         </object>
         <object class="sizeritem">

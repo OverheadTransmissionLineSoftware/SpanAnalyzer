@@ -24,21 +24,33 @@ FileHandler::~FileHandler() {
 int FileHandler::LoadAppData(const std::string& filepath,
                              const units::UnitSystem& units,
                              SpanAnalyzerData& data) {
+  std::string message = "Loading application data file: " + filepath;
+  wxLogMessage(message.c_str());
+
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
+    message = "Application data file (" + filepath + ") does not exist. "
+              "Aborting.";
+    wxLogError(message.c_str());
     return -1;
   }
 
   // uses an xml document to load app data file
   wxXmlDocument doc;
   if (doc.Load(filepath) == false) {
-    // invalid xml file
+    message = filepath + "  --  "
+              "Application data file contains an invalid xml structure. "
+              "Aborting.";
+    wxLogError(message.c_str());
     return -1;
   }
 
   // checks for valid xml root
   const wxXmlNode* root = doc.GetRoot();
   if (root->GetName() != "span_analyzer_data") {
+    message = filepath + "  --  "
+              "Application data file contains an invalid xml root. Aborting.";
+    wxLogError(message.c_str());
     return root->GetLineNumber();
   }
 
@@ -51,16 +63,27 @@ int FileHandler::LoadAppData(const std::string& filepath,
     } else if (str_units == "Metric") {
       units_file = units::UnitSystem::kMetric;
     } else {
+      message = filepath + "  --  "
+                "Application data file contains an invalid units attribute. "
+                "Aborting.";
+      wxLogError(message.c_str());
       return root->GetLineNumber();
     }
   } else {
+    message = filepath + "  --  "
+              "Application data file is missing units attribute. Aborting.";
+    wxLogError(message.c_str());
     return root->GetLineNumber();
   }
 
   // parses the xml node to populate data object
-  int line_number = SpanAnalyzerDataXmlHandler::ParseNode(root, data,
-                                                          units_file);
+  int line_number = SpanAnalyzerDataXmlHandler::ParseNode(root, filepath,
+                                                          units_file, data);
   if (line_number != 0) {
+    message = filepath + std::to_string(line_number) + "  --  "
+              "Applicaton data file contains a critical parsing error. "
+              "Aborting.";
+    wxLogError(message.c_str());
     return line_number;
   }
 
@@ -99,21 +122,31 @@ int FileHandler::LoadAppData(const std::string& filepath,
 int FileHandler::LoadCable(const std::string& filepath,
                            const units::UnitSystem& units,
                            Cable& cable) {
+  std::string message = "Loading cable file: " + filepath;
+  wxLogMessage(message.c_str());
+
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
+    message = "Cable file (" + filepath + ") does not exist. Aborting.";
+    wxLogError(message.c_str());
     return -1;
   }
 
   // uses an xml document to load cable file
   wxXmlDocument doc;
   if (doc.Load(filepath) == false) {
-    // invalid xml file
+    message = filepath + "  --  "
+              "Cable file contains an invalid xml structure. Aborting.";
+    wxLogError(message.c_str());
     return -1;
   }
 
   // checks for valid xml root
   const wxXmlNode* root = doc.GetRoot();
   if (root->GetName() != "cable") {
+    message = filepath + "  --  "
+              "Cable file contains an invalid xml root. Aborting.";
+    wxLogError(message.c_str());
     return root->GetLineNumber();
   }
 
@@ -126,9 +159,15 @@ int FileHandler::LoadCable(const std::string& filepath,
     } else if (str_units == "Metric") {
       units_file = units::UnitSystem::kMetric;
     } else {
+      message = filepath + "  --  "
+                "Cable file contains an invalid units attribute. Aborting.";
+      wxLogError(message.c_str());
       return root->GetLineNumber();
     }
   } else {
+    message = filepath + "  --  "
+              "Cable file is missing units attribute. Aborting.";
+    wxLogError(message.c_str());
     return root->GetLineNumber();
   }
 
@@ -140,8 +179,11 @@ int FileHandler::LoadCable(const std::string& filepath,
   cable.component_shell.coefficients_polynomial_creep.clear();
   cable.component_shell.coefficients_polynomial_loadstrain.clear();
 
-  int line_number = CableXmlHandler::ParseNode(root, cable);
+  int line_number = CableXmlHandler::ParseNode(root, filepath, cable);
   if (line_number != 0) {
+    message = filepath + ":" + std::to_string(line_number) + "  --  "
+              "Cable file contains a critical parsing error. Aborting.";
+    wxLogError(message.c_str());
     return line_number;
   }
 
@@ -163,26 +205,45 @@ int FileHandler::LoadCable(const std::string& filepath,
 
 int FileHandler::LoadConfigFile(const std::string& filepath,
                                 SpanAnalyzerConfig& config) {
+  std::string message = "Loading config file: " + filepath;
+  wxLogMessage(message.c_str());
+
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
+    message = "Config file (" + filepath + ") does not exist. Keeping "
+              "application defaults.";
+    wxLogError(message.c_str());
     return -1;
   }
 
   // uses an xml document to load config file
   wxXmlDocument doc;
   if (doc.Load(filepath) == false) {
+    message = filepath + "  --  "
+              "Config file contains an invalid xml structure. Keeping "
+              "application defaults.";
+    wxLogError(message.c_str());
     return -1;
   }
 
   // checks for valid xml root
   const wxXmlNode* root = doc.GetRoot();
   if (root->GetName() != "span_analyzer_config") {
+    message = filepath + "  --  "
+              "Config file contains an invalid xml root. Keeping "
+              "application defaults.";
+    wxLogError(message.c_str());
     return root->GetLineNumber();
   }
 
   // parses the XML node and loads into the config struct
-  int line_number = SpanAnalyzerConfigXmlHandler::ParseNode(root, config);
+  int line_number = SpanAnalyzerConfigXmlHandler::ParseNode(root, filepath,
+                                                            config);
   if (line_number != 0) {
+    message = filepath + ":" + std::to_string(line_number) + "  --  "
+              "Config file contains a critical parsing error. Keeping "
+              "application defaults.";
+    wxLogError(message.c_str());
     return line_number;
   }
 
@@ -192,6 +253,10 @@ int FileHandler::LoadConfigFile(const std::string& filepath,
 void FileHandler::SaveAppData(const std::string& filepath,
                               const SpanAnalyzerData& data,
                               const units::UnitSystem& units) {
+  // logs
+  std::string message = "Saving application data file: " + filepath;
+  wxLogMessage(message.c_str());
+
   // creates a copy of the data
   SpanAnalyzerData data_converted = data;
 
@@ -231,6 +296,10 @@ void FileHandler::SaveAppData(const std::string& filepath,
 
 void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
                             const units::UnitSystem& units) {
+  // logs
+  std::string message = "Saving cable file: " + filepath;
+  wxLogMessage(message.c_str());
+
   // creates a copy of the cable and converts to different unit style
   Cable cable_converted = cable;
   CableUnitConverter::ConvertUnitStyle(units,
@@ -256,6 +325,10 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
 
 void FileHandler::SaveConfigFile(const std::string& filepath,
                                  const SpanAnalyzerConfig& config) {
+  // logs
+  std::string message = "Saving config file: " + filepath;
+  wxLogMessage(message.c_str());
+
   // generates an xml node
   wxXmlNode* root = SpanAnalyzerConfigXmlHandler::CreateNode(config);
 

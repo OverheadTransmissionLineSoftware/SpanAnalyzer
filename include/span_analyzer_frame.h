@@ -7,6 +7,8 @@
 #include "wx/docview.h"
 #include "wx/dnd.h"
 
+#include "log_dialog.h"
+
 /// \par OVERVIEW
 ///
 /// This class is the drop target for an application document file.
@@ -70,7 +72,20 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   ///   The event.
   void OnMenuHelpAbout(wxCommandEvent& event);
 
+  /// \brief Handles the view->log menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuViewLog(wxCommandEvent& event);
+
+  /// \brief Gets the log dialog.
+  /// \return The log dialog.
+  LogDialog* dialog_log();
+
  private:
+  /// \var dialog_log_
+  ///   The log dialog.
+  LogDialog* dialog_log_;
+
   DECLARE_EVENT_TABLE()
 };
 

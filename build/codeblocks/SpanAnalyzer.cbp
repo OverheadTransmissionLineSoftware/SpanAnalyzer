@@ -71,6 +71,7 @@
 		<Unit filename="../../include/error_message_dialog.h" />
 		<Unit filename="../../include/file_handler.h" />
 		<Unit filename="../../include/line_cable_xml_handler.h" />
+		<Unit filename="../../include/log_dialog.h" />
 		<Unit filename="../../include/preferences_dialog.h" />
 		<Unit filename="../../include/results_pane.h" />
 		<Unit filename="../../include/sag_tension_analysis_results.h" />
@@ -102,6 +103,7 @@
 		<Unit filename="../../res/error_message_dialog.xrc" />
 		<Unit filename="../../res/icon.ico" />
 		<Unit filename="../../res/icon.xpm" />
+		<Unit filename="../../res/log_dialog.xrc" />
 		<Unit filename="../../res/preferences_dialog.xrc" />
 		<Unit filename="../../res/results_pane.xrc" />
 		<Unit filename="../../res/sag_tension_table_panel.xrc" />
@@ -125,6 +127,7 @@
 		<Unit filename="../../src/error_message_dialog.cc" />
 		<Unit filename="../../src/file_handler.cc" />
 		<Unit filename="../../src/line_cable_xml_handler.cc" />
+		<Unit filename="../../src/log_dialog.cc" />
 		<Unit filename="../../src/preferences_dialog.cc" />
 		<Unit filename="../../src/results_pane.cc" />
 		<Unit filename="../../src/sag_tension_table_panel.cc" />

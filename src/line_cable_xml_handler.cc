@@ -87,6 +87,7 @@ wxXmlNode* LineCableXmlHandler::CreateNode(
 
 int LineCableXmlHandler::ParseNode(
     const wxXmlNode* root,
+    const std::string& filepath,
     const std::list<const Cable*>* cables,
     const std::list<WeatherLoadCase>* weathercases,
     LineCable& linecable) {
@@ -103,7 +104,7 @@ int LineCableXmlHandler::ParseNode(
 
   // sends to proper parsing function
   if (version == "1") {
-    return ParseNodeV1(root, cables, weathercases, linecable);
+    return ParseNodeV1(root, filepath, cables, weathercases, linecable);
   } else {
     return root->GetLineNumber();
   }
@@ -111,9 +112,13 @@ int LineCableXmlHandler::ParseNode(
 
 int LineCableXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
+    const std::string& filepath,
     const std::list<const Cable*>* cables,
     const std::list<WeatherLoadCase>* weathercases,
     LineCable& linecable) {
+
+  wxString message;
+
   // evaluates each child node
   const wxXmlNode* node = root->GetChildren();
   while (node != nullptr) {
@@ -134,19 +139,27 @@ int LineCableXmlHandler::ParseNodeV1(
 
       // checks if match was found
       if (linecable.cable == nullptr) {
-        return node->GetLineNumber();
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid cable. Couldn't find " + content;
+        wxLogError(message);
       }
     } else if (title == "cable_constraint") {
       const int line_number = CableConstraintXmlHandler::ParseNode(
-          node, weathercases, linecable.constraint);
+          node, filepath, weathercases, linecable.constraint);
       if (line_number != 0) {
-        return line_number;
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid cable constraint.";
+        wxLogError(message);
+        linecable.constraint = CableConstraint();
       }
     } else if (title == "vector_3d") {
       const int line_number = Vector3dXmlHandler::ParseNode(
-          node, linecable.spacing_attachments_ruling_span);
+          node, filepath, linecable.spacing_attachments_ruling_span);
       if(line_number != 0) {
-        return line_number;
+        message = FileAndLineNumber(filepath, node)
+                  + "Invalid attachment spacing vector.";
+        wxLogError(message);
+        linecable.spacing_attachments_ruling_span = Vector3d();
       }
     } else if (title == "weather_load_case") {
       const wxString name = node->GetAttribute("name");
@@ -164,7 +177,10 @@ int LineCableXmlHandler::ParseNodeV1(
 
         // checks if match was found
         if (linecable.weathercase_stretch_creep == nullptr) {
-          return node->GetLineNumber();
+          message = FileAndLineNumber(filepath, node)
+                    + "Invalid creep stretch weathercase. Couldn't find "
+                    + content;
+          wxLogError(message);
         }
       } else if (name == "stretch_load") {
         // initializes the weathercase and attempts to find a match
@@ -180,17 +196,21 @@ int LineCableXmlHandler::ParseNodeV1(
 
         // checks if match was found
         if (linecable.weathercase_stretch_creep == nullptr) {
-          return node->GetLineNumber();
+          message = FileAndLineNumber(filepath, node)
+                    + "Invalid load stretch weathercase. Couldn't find "
+                    + content;
+          wxLogError(message);
         }
       }
     } else {
-      // node is not recognized by ther parser
-      return node->GetLineNumber();
+      message = FileAndLineNumber(filepath, node)
+                + "XML node isn't recognized.";
+      wxLogError(message);
     }
 
     node = node->GetNext();
   }
 
-  // if it gets to this point, no errors were encountered
+  // if it gets to this point, no critical errors were encountered
   return 0;
 }

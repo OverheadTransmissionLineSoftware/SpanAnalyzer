@@ -35,24 +35,36 @@ class SpanAnalyzerConfigXmlHandler : public XmlHandler {
   /// \brief Parses an XML node and populates the config settings.
   /// \param[in] root
   ///   The XML root node for the config settings.
+  /// \param[in] filepath
+  ///   The filepath that the xml node was loaded from. This is for logging
+  ///   purposes only and can be left blank.
   /// \param[out] config
   ///   The config settings that are populated.
-  /// \return The file line number of the node if the content could not be
-  ///   converted to the expected data type. Returns 0 if no errors were
-  ///   encountered.
+  /// \return The file line number of a critical error. Returns 0 if no critical
+  ///   errors were encountered.
+  /// Critical errors cause the parsing to abort, but are not logged.
+  /// Non-critical errors are directed to the active application log target. If
+  /// the property is not recognized, it is kept at the default setting.
   static int ParseNode(const wxXmlNode* root,
+                       const std::string& filepath,
                        SpanAnalyzerConfig& config);
 
  private:
   /// \brief Parses a version 1 XML node and populates the config settings.
   /// \param[in] root
   ///   The XML root node for the config settings.
+  /// \param[in] filepath
+  ///   The filepath that the xml node was loaded from. This is for logging
+  ///   purposes only and can be left blank.
   /// \param[out] config
   ///   The config settings that are populated.
-  /// \return The file line number of the node if the content could not be
-  ///   converted to the expected data type. Returns 0 if no errors were
-  ///   encountered.
+  /// \return The file line number of a critical error. Returns 0 if no critical
+  ///   errors were encountered.
+  /// Critical errors cause the parsing to abort, but are not logged.
+  /// Non-critical errors are directed to the active application log target. If
+  /// the property is not recognized, it is kept at the default setting.
   static int ParseNodeV1(const wxXmlNode* root,
+                         const std::string& filepath,
                          SpanAnalyzerConfig& config);
 };
 

@@ -118,6 +118,11 @@ bool SpanAnalyzerApp::OnInit() {
     return false;
   };
 
+  path.SetName("log_dialog");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
+    return false;
+  };
+
   path.SetName("preferences_dialog");
   if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
@@ -157,57 +162,46 @@ bool SpanAnalyzerApp::OnInit() {
   frame_ = new SpanAnalyzerFrame(manager_doc_);
   SetTopWindow(frame_);
 
-  // checks if config file exists, creates one if not
+  // sets application logging to a modeless dialog managed by the frame
+  wxLogTextCtrl* log = new wxLogTextCtrl(frame_->dialog_log()->textctrl());
+  wxLog::SetActiveTarget(log);
+
+  // manually initailizes application config defaults
+  config_.filepath_data = directory_ + "appdata.xml";
+  config_.level_log = wxLOG_Message;
+  config_.perspective = "";
+  config_.size_frame = wxSize(0, 0);
+  config_.units = units::UnitSystem::kImperial;
+
+  // loads config settings from file
+  // any settings defined in the file will override the app defaults
+  // filehandler handles all logging
   path = filepath_config_;
-  if (path.Exists() == false) {
-    // manually initializes config
-    config_.filepath_data = "";
-    config_.perspective = "";
-    config_.size_frame = wxSize(0, 0);
-    config_.units = units::UnitSystem::kImperial;
+  FileHandler::LoadConfigFile(filepath_config_, config_);
 
-    // saves config file
-    FileHandler::SaveConfigFile(filepath_config_, config_);
-  }
-
-  // load config file
-  const int status_config = FileHandler::LoadConfigFile(filepath_config_,
-                                                        config_);
-  if (status_config != 0) {
-    // notifies user to correct
-    wxMessageBox("Config file: " + filepath_config_ + "Error on line:"
-                 + std::to_string(status_config));
-
-    return false;
-  };
+  // sets log level specified in app config
+  wxLog::SetLogLevel(config_.level_log);
 
   // checks if data file exists, creates one if not
   path = config_.filepath_data;
   if (path.Exists() == false) {
+    // logs
+    wxLogError("Applicaton data file could not be located. Setting to "
+               "application default.");
+
     // defines default data file path and updates config
     path = wxFileName(directory_, "appdata", "xml");
     config_.filepath_data = path.GetFullPath();
 
-    // saves new data file if default file doesn't exist
+    // saves new data file if default file doesn't already exist
     if (path.Exists() == false) {
       FileHandler::SaveAppData(config_.filepath_data, data_, config_.units);
-
-      // notifies user
-      wxMessageBox("Data file could not be located. New file has been created: "
-        + path.GetFullPath());
     }
   }
 
   // loads application data file
-  const int status_data = FileHandler::LoadAppData(config_.filepath_data,
-                                                    config_.units, data_);
-  if (status_data != 0) {
-    // notifies user to correct
-    wxMessageBox("Data file: " + config_.filepath_data + "Error on line:"
-                 + std::to_string(status_data));
-
-    return false;
-  }
+  // filehandler handles all logging
+  FileHandler::LoadAppData(config_.filepath_data, config_.units, data_);
 
   // loads a document if defined in command line
   if (filepath_start_ != wxEmptyString) {

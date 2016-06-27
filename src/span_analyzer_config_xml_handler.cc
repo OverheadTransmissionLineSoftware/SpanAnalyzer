@@ -27,6 +27,18 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
 
   // adds child nodes for struct parameters
 
+  // creates log level node
+  title = "level_log";
+  if (config.level_log == wxLOG_Error) {
+    content = "Error";
+  } else if (config.level_log == wxLOG_Message) {
+    content = "Message";
+  } else {
+    content = "";
+  }
+  node_element = CreateElementNodeWithContent(title, content);
+  node_root->AddChild(node_element);
+
   // creates filepath-data node
   title = "filepath_data";
   content = config.filepath_data;
@@ -66,6 +78,7 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
 }
 
 int SpanAnalyzerConfigXmlHandler::ParseNode(const wxXmlNode* root,
+                                            const std::string& filepath,
                                             SpanAnalyzerConfig& config) {
   // checks for valid root node
   if (root->GetName() != "span_analyzer_config") {
@@ -80,14 +93,17 @@ int SpanAnalyzerConfigXmlHandler::ParseNode(const wxXmlNode* root,
 
   // sends to proper parsing function
   if (version == "1") {
-    return ParseNodeV1(root, config);
+    return ParseNodeV1(root, filepath, config);
   } else {
     return root->GetLineNumber();
   }
 }
 
 int SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
+                                              const std::string& filepath,
                                               SpanAnalyzerConfig& config) {
+  std::string message;
+
   // evaluates each child node
   const wxXmlNode* node = root->GetChildren();
   while (node != nullptr) {
@@ -96,6 +112,22 @@ int SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
 
     if (title == "filepath_data") {
       config.filepath_data = content;
+      if (config.filepath_data.empty() == true) {
+        message = FileAndLineNumber(filepath, node)
+                  + "Application data file isn't defined. Keeping default "
+                  "setting.";
+        wxLogError(message.c_str());
+      }
+    } else if (title == "level_log") {
+      if (content == "Error") {
+        config.level_log = wxLOG_Error;
+      } else if (content == "Message") {
+        config.level_log = wxLOG_Message;
+      } else {
+        message = FileAndLineNumber(filepath, node)
+                  + "Logging level isn't recognized. Keeping default setting.";
+        wxLogError(message.c_str());
+      }
     } else if (title == "size_frame") {
       std::string str;
       str = node->GetAttribute("x");
@@ -110,11 +142,14 @@ int SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
       } else if (content == "Imperial") {
         config.units = units::UnitSystem::kImperial;
       } else {
-        return node->GetLineNumber();
+        message = FileAndLineNumber(filepath, node)
+                  + "Unit system isn't recognized. Keeping default setting.";
+        wxLogError(message.c_str());
       }
     } else {
-      // node is not recognized by ther parser
-      return node->GetLineNumber();
+      message = FileAndLineNumber(filepath, node)
+                + "XML node isn't recognized. Skipping.";
+      wxLogError(message.c_str());
     }
 
     node = node->GetNext();

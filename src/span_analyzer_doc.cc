@@ -222,9 +222,21 @@ bool SpanAnalyzerDoc::IsUniqueWeathercase(
 
 /// \todo This needs to check for weathercase duplicates and remove them if necessary.
 wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
+  std::string message;
+
+  message = "Loading document file: " + this->GetFilename();
+  wxLogMessage(message.c_str());
+
   // attempts to load an xml document from the input stream
   wxXmlDocument doc_xml;
   if (doc_xml.Load(stream) == false) {
+    // notifies user of error
+    message = GetFilename() + "  --  "
+              "Document file contains an invalid xml structure. The document "
+              "will close.";
+    wxLogError(message.c_str());
+    wxMessageBox(message);
+
     // sets stream to invalid state and returns
     stream.Reset(wxSTREAM_READ_ERROR);
     return stream;
@@ -234,9 +246,10 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   const wxXmlNode* root = doc_xml.GetRoot();
   if (root->GetName() != "span_analyzer_doc") {
     // notifies user of error
-    wxString message = "Span Analyzer Document Error\n"
-                       "File doesn't begin with the correct xml node. \n\n"
-                       "The document will close.";
+    message = GetFilename() + "  --  "
+              "Document file contains an invalid xml root. The document "
+              "will close.";
+    wxLogError(message.c_str());
     wxMessageBox(message);
 
     // sets stream to invalide state and returns
@@ -254,9 +267,10 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
       units_file = units::UnitSystem::kMetric;
     } else {
       // notifies user of error
-      wxString message = "Span Analyzer Document Error\n"
-                         "Parser didn't recognize unit system. \n\n"
-                         "The document will close.";
+      message = GetFilename() + "  --  "
+                "Document file contains an invalid units attribute. The "
+                "document will close.";
+      wxLogError(message.c_str());
       wxMessageBox(message);
 
       // sets stream to invalide state and returns
@@ -265,9 +279,10 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
     }
   } else {
     // notifies user of error
-    wxString message = "Span Analyzer Document Error\n"
-                       "Parser didn't recognize unit system. \n\n"
-                       "The document will close.";
+    message = GetFilename() + "  --  "
+              "Document file is missing units attribute. The document will "
+              "close.";
+    wxLogError(message.c_str());
     wxMessageBox(message);
 
     // sets stream to invalide state and returns
@@ -277,13 +292,13 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
 
   // parses the XML node and loads into the document
   int line_number = SpanAnalyzerDocXmlHandler::ParseNode(
-      root, &wxGetApp().data()->cablefiles, *this, units_file);
+      root, this->GetFilename(), &wxGetApp().data()->cablefiles, *this);
   if (line_number != 0) {
     // notifies user of error
-    wxString message = "Span Analyzer Document Error: "
-                       "Line " + std::to_wstring(line_number) + "\n"
-                       "Parser didn't recognize input.\n\n"
-                       "The document will close.";
+    message = GetFilename() + ":" + std::to_string(line_number) + "  --  "
+              "Document file contains a critical parsing error. The document "
+              "will close.";
+    wxLogError(message.c_str());
     wxMessageBox(message);
 
     // marks document as unmodified to avoid additional popup
@@ -377,6 +392,10 @@ void SpanAnalyzerDoc::ReplaceWeathercase(
 }
 
 wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
+  // logs
+  std::string message = "Saving document file: " + GetFilename();
+  wxLogMessage(message.c_str());
+
   // gets the unit system from app config
   units::UnitSystem units = wxGetApp().config()->units;
 

@@ -86,7 +86,7 @@ class CableFileManagerDialog : public wxDialog {
   ///   The application cables.
   std::list<CableFile>* cablefiles_;
 
-  /// \var cablefiless_modified_
+  /// \var cablefiles_modified_
   ///   The cables that are modified by the manager.
   std::list<CableFile> cablefiles_modified_;
 

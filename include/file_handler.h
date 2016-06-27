@@ -50,9 +50,10 @@ class FileHandler {
   ///   The unit system to convert to.
   /// \param[out] cable
   ///   The cable that is populated.
-  /// \return The file line number of the node if the content could not be
-  ///   converted to the expected data type. Returns 0 if no errors were
-  ///   encountered.
+  /// \return The file line number of a critical error. Returns 0 if no critical
+  ///   errors were encountered.
+  /// Critical errors cause the loading to abort, but are not logged.
+  /// Non-critical errors are directed to the active application log target.
   static int LoadCable(const std::string& filepath,
                        const units::UnitSystem& units,
                        Cable& cable);

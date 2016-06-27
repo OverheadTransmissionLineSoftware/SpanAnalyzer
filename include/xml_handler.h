@@ -43,6 +43,17 @@ class XmlHandler {
       const std::string& content,
       const wxXmlAttribute* attribute = nullptr);
 
+  /// \brief Gets a formatted string that contains the filepath and line number
+  ///   of the node.
+  /// \param[in] filepath
+  ///   The filepath.
+  /// \param[in] node
+  ///   The xml node.
+  /// \return A formatted string containing the filepath and line number of the
+  ///   node.
+  static wxString FileAndLineNumber(const wxString& filepath,
+                                    const wxXmlNode* node);
+
   /// \brief Parses the content stored in a child 'text' type node.
   /// \param[in] node
   ///   The 'element' node that contains the text node.

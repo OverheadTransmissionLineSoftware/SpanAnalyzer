@@ -115,89 +115,139 @@ void ResultsPane::UpdateAnalysisWeathercaseSetChoice() {
   UpdateSelectedWeathercases();
 }
 
+/// \todo add a log message in here for the analysis time
 void ResultsPane::UpdateSagTensionResults() {
+  std::list <ErrorMessage> errors;
+  std::string message;
+
+  // clears cached results
+  results_.descriptions_weathercase.clear();
+  results_.results_initial.clear();
+  results_.results_load.clear();
+
   // gets activated span
-  const Span* span = view_->pane_edit()->SpanActivated();
-  if (span == nullptr) {
-    results_.descriptions_weathercase.clear();
-    results_.results_initial.clear();
-    results_.results_load.clear();
-
+  results_.span = view_->pane_edit()->SpanActivated();
+  if (results_.span == nullptr) {
     return;
   }
 
-  // checks if weathercases have been selected
+  // validates span
+  if (results_.span->Validate(false, &errors) == false) {
+    // logs errors
+    for (auto iter = errors.cbegin(); iter != errors.cend(); iter++) {
+      const ErrorMessage& error = *iter;
+      message = "Span: " + results_.span->name + "  --  "
+                + error.description;
+      wxLogError(message.c_str());
+    }
+
+    wxLogMessage("Span validation errors are present. Aborting analysis.");
+    return;
+  }
+
+  // checks if weathercase set has been selected
   if (weathercases_selected_ == nullptr) {
-    results_.descriptions_weathercase.clear();
-    results_.results_initial.clear();
-    results_.results_load.clear();
-
     return;
   }
+
+  wxLogMessage("Running sag-tension analysis.");
 
   // sets up reloader
   LineCableReloader reloader;
-  reloader.set_line_cable(&span->linecable);
+  reloader.set_line_cable(&results_.span->linecable);
   reloader.set_length_unloaded_unstretched_adjustment(0);
-  reloader.set_condition_reloaded(CableConditionType::kInitial);
 
-  // updates span reference
-  results_.span = span;
-
-  // updates weathercase descriptions
-  results_.descriptions_weathercase.clear();
+  // runs analysis for each weathercase
   for (auto iter = weathercases_selected_->cbegin();
        iter != weathercases_selected_->cend(); iter++) {
     const WeatherLoadCase& weathercase = *iter;
+
+
+    // validates and logs any errors
+    errors.clear();
+    bool is_valid_weathercase = weathercase.Validate(false, &errors);
+    for (auto iter = errors.cbegin(); iter != errors.cend(); iter++) {
+      const ErrorMessage& error = *iter;
+      message = weathercase.description + " weathercase  --  "
+                + error.description;
+      wxLogError(message.c_str());
+    }
+
+    // caches description
     results_.descriptions_weathercase.push_back(weathercase.description);
-  }
-
-  // updates initial results
-  results_.results_initial.clear();
-  reloader.set_condition_reloaded(CableConditionType::kInitial);
-  for (auto iter = weathercases_selected_->cbegin();
-       iter != weathercases_selected_->cend(); iter++) {
-    const WeatherLoadCase& weathercase = *iter;
 
     // updates reloader with weathercase
     reloader.set_weathercase_reloaded(&weathercase);
 
-    // calculates results and adds to list
-    Catenary3d catenary = reloader.CatenaryReloaded();
-
+    // if valid, calculates value and adds to cache
+    // if invalid, adds invalid result to cache
+    Catenary3d catenary;
     SagTensionAnalysisResult result;
-    result.tension_horizontal = catenary.tension_horizontal();
-    result.tension_horizontal_core = reloader.TensionHorizontalComponent(
-        CableElongationModel::ComponentType::kCore);
-    result.tension_horizontal_shell = reloader.TensionHorizontalComponent(
-        CableElongationModel::ComponentType::kShell);
-    result.weight_unit = catenary.weight_unit();
+    if (is_valid_weathercase == true) {
+      // analyzes and caches initial condition results
+      // validates reloader and logs any errors
+      reloader.set_condition_reloaded(CableConditionType::kInitial);
+      errors.clear();
+      if (reloader.Validate(false, &errors) == false) {
+        message = "Reloader error for " + weathercase.description
+                  + " weathercase when determining the Initial condition.";
+        wxLogError(message.c_str());
 
-    results_.results_initial.push_back(result);
-  }
+        for (auto iter = errors.cbegin(); iter != errors.cend(); iter++) {
+          const ErrorMessage& error = *iter;
+          std::string message = error.title + "  --  "
+                                + error.description;
+          wxLogError(message.c_str());
+        }
+      } else {
+        catenary = reloader.CatenaryReloaded();
 
-  // updates load results
-  results_.results_load.clear();
-  reloader.set_condition_reloaded(CableConditionType::kLoad);
-  for (auto iter = weathercases_selected_->cbegin();
-       iter != weathercases_selected_->cend(); iter++) {
-    const WeatherLoadCase& weathercase = *iter;
+        result.tension_horizontal = catenary.tension_horizontal();
+        result.tension_horizontal_core = reloader.TensionHorizontalComponent(
+            CableElongationModel::ComponentType::kCore);
+        result.tension_horizontal_shell = reloader.TensionHorizontalComponent(
+            CableElongationModel::ComponentType::kShell);
+        result.weight_unit = catenary.weight_unit();
 
-    // updates reloader with weathercase
-    reloader.set_weathercase_reloaded(&weathercase);
+        results_.results_initial.push_back(result);
+      }
 
-    // calculates results and adds to list
-    Catenary3d catenary = reloader.CatenaryReloaded();
+      // analyzes and caches initial condition results
+      // validates reloader and logs any errors
+      reloader.set_condition_reloaded(CableConditionType::kLoad);
+      errors.clear();
+      if (reloader.Validate(false, &errors) == false) {
+        message = "Reloader error for " + weathercase.description
+                  + "weathercase when determining the Final-Load condition.";
+        wxLogError(message.c_str());
 
-    SagTensionAnalysisResult result;
-    result.tension_horizontal = catenary.tension_horizontal();
-    result.tension_horizontal_core = reloader.TensionHorizontalComponent(
-        CableElongationModel::ComponentType::kCore);
-    result.tension_horizontal_shell = reloader.TensionHorizontalComponent(
-        CableElongationModel::ComponentType::kShell);
-    result.weight_unit = catenary.weight_unit();
+        for (auto iter = errors.cbegin(); iter != errors.cend(); iter++) {
+          const ErrorMessage& error = *iter;
+          std::string message = error.title + "  --  "
+                                + error.description;
+          wxLogError(message.c_str());
+        }
+      } else {
+        catenary = reloader.CatenaryReloaded();
 
-    results_.results_load.push_back(result);
+        result.tension_horizontal = catenary.tension_horizontal();
+        result.tension_horizontal_core = reloader.TensionHorizontalComponent(
+            CableElongationModel::ComponentType::kCore);
+        result.tension_horizontal_shell = reloader.TensionHorizontalComponent(
+            CableElongationModel::ComponentType::kShell);
+        result.weight_unit = catenary.weight_unit();
+
+        results_.results_load.push_back(result);
+      }
+    } else {
+      result.tension_horizontal = -999999;
+      result.tension_horizontal_core = -999999;
+      result.tension_horizontal_shell = -999999;
+      result.weight_unit = Vector3d();
+
+      results_.results_initial.push_back(result);
+      results_.results_load.push_back(result);
+    }
   }
 }
 
