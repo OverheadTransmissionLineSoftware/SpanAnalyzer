@@ -4,6 +4,7 @@
 #ifndef OTLS_SPANANALYZER_SPANANALYZERFRAME_H_
 #define OTLS_SPANANALYZER_SPANANALYZERFRAME_H_
 
+#include "wx/aui/framemanager.h"
 #include "wx/docview.h"
 #include "wx/dnd.h"
 
@@ -85,6 +86,10 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   /// \var dialog_log_
   ///   The log dialog.
   LogDialog* dialog_log_;
+
+  /// \var manager_
+  ///   The AUI manager.
+  wxAuiManager manager_;
 
   DECLARE_EVENT_TABLE()
 };

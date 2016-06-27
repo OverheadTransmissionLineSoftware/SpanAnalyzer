@@ -71,6 +71,9 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
   // sets the drag and drop target
   SetDropTarget(new DocumentFileDropTarget(this));
 
+  // tells aui manager to manage this frame
+  manager_.SetManagedWindow(this);
+
   // creates the log dialog
   dialog_log_ = new LogDialog(this);
 }
@@ -83,6 +86,8 @@ SpanAnalyzerFrame::~SpanAnalyzerFrame() {
   } else {
     config->size_frame = this->GetSize();
   }
+
+  manager_.UnInit();
 }
 
 void SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases(

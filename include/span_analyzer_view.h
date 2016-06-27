@@ -6,7 +6,6 @@
 
 #include <list>
 
-#include "wx/aui/framemanager.h"
 #include "wx/docview.h"
 
 class EditPane;
@@ -96,15 +95,7 @@ class SpanAnalyzerView : public wxView {
   /// \return The results pane.
   ResultsPane* pane_results();
 
-  /// \brief Gets the perspective.
-  /// \return The string-encoded perspective.
-  wxString GetPerspective();
-
  private:
-  /// \var manager_
-  ///   The AUI manager.
-  wxAuiManager manager_;
-
   /// \var pane_edit_
   ///   The edit pane.
   EditPane* pane_edit_;

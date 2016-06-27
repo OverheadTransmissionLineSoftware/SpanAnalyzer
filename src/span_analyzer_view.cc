@@ -28,8 +28,8 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   SetFrame(frame);
   Activate(true);
 
-  // tells aui manager to manage this frame
-  manager_.SetManagedWindow(frame);
+  // gets aui manager
+  wxAuiManager* manager = wxAuiManager::GetManager(frame);
 
   // creates AUI windows and adds to manager
   wxAuiPaneInfo info;
@@ -38,7 +38,7 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   info.Name("Results");
   info.CenterPane();
   pane_results_ = new ResultsPane(frame, this);
-  manager_.AddPane(pane_results_, info);
+  manager->AddPane(pane_results_, info);
 
   info = wxAuiPaneInfo();
   info.Name("Edit");
@@ -47,14 +47,14 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   info.Caption("Edit");
   info.CloseButton(false);
   pane_edit_ = new EditPane(frame, this);
-  manager_.AddPane(pane_edit_, info);
+  manager->AddPane(pane_edit_, info);
 
   // loads perspective and updates
   std::string perspective = wxGetApp().config()->perspective;
   if (perspective == "") {
-    manager_.Update();
+    manager->Update();
   } else {
-    manager_.LoadPerspective(wxGetApp().config()->perspective);
+    manager->LoadPerspective(wxGetApp().config()->perspective);
   }
 
   return true;
@@ -65,15 +65,18 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
     return false;
   }
 
+  // gets aui manager from main frame
+  wxAuiManager* manager = wxAuiManager::GetManager(GetFrame());
+
   // saves AUI perspective
-  wxGetApp().config()->perspective = manager_.SavePerspective();
+  wxGetApp().config()->perspective = manager->SavePerspective();
 
-  // detaches frames and un-init manager
-  manager_.DetachPane(pane_edit_);
-  manager_.DetachPane(pane_results_);
-  manager_.UnInit();
+  // detaches panes and un-init manager
+  manager->DetachPane(pane_edit_);
+  manager->DetachPane(pane_results_);
+  manager->Update();
 
-  // destroys frames
+  // destroys panes
   pane_edit_->Destroy();
   pane_results_->Destroy();
 
@@ -103,8 +106,4 @@ EditPane* SpanAnalyzerView::pane_edit() {
 
 ResultsPane* SpanAnalyzerView::pane_results() {
   return pane_results_;
-}
-
-wxString SpanAnalyzerView::GetPerspective() {
-  return manager_.SavePerspective();
 }
