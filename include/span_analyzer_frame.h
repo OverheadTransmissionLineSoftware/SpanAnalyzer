@@ -8,7 +8,7 @@
 #include "wx/docview.h"
 #include "wx/dnd.h"
 
-#include "log_dialog.h"
+#include "log_pane.h"
 
 /// \par OVERVIEW
 ///
@@ -78,14 +78,14 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   ///   The event.
   void OnMenuViewLog(wxCommandEvent& event);
 
-  /// \brief Gets the log dialog.
-  /// \return The log dialog.
-  LogDialog* dialog_log();
+  /// \brief Gets the log pane.
+  /// \return The log pane.
+  LogPane* pane_log();
 
  private:
-  /// \var dialog_log_
-  ///   The log dialog.
-  LogDialog* dialog_log_;
+  /// \var pane_log_
+  ///   The log pane.
+  LogPane* pane_log_;
 
   /// \var manager_
   ///   The AUI manager.

@@ -121,11 +121,6 @@ bool SpanAnalyzerApp::OnInit() {
     return false;
   };
 
-  path.SetName("log_dialog");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
   path.SetName("preferences_dialog");
   if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
@@ -166,7 +161,7 @@ bool SpanAnalyzerApp::OnInit() {
   SetTopWindow(frame_);
 
   // sets application logging to a modeless dialog managed by the frame
-  wxLogTextCtrl* log = new wxLogTextCtrl(frame_->dialog_log()->textctrl());
+  wxLogTextCtrl* log = new wxLogTextCtrl(frame_->pane_log()->textctrl());
   wxLog::SetActiveTarget(log);
 
   // manually initailizes application config defaults
