@@ -10,12 +10,13 @@
 #include "edit_pane.h"
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
+#include "span_analyzer_view.h"
 
 BEGIN_EVENT_TABLE(ResultsPane, wxPanel)
   EVT_CHOICE(XRCID("choice_weathercase_set"), ResultsPane::OnChoiceWeathercaseSet)
 END_EVENT_TABLE()
 
-ResultsPane::ResultsPane(wxWindow* parent, SpanAnalyzerView* view) {
+ResultsPane::ResultsPane(wxWindow* parent, wxView* view) {
   // loads dialog from virtual xrc file system
   wxXmlResource::Get()->LoadPanel(this, parent, "results_pane");
 
@@ -27,9 +28,6 @@ ResultsPane::ResultsPane(wxWindow* parent, SpanAnalyzerView* view) {
 
   // creates notebook and adds child notebook pages
   wxNotebook* notebook = XRCCTRL(*this, "notebook_results", wxNotebook);
-
-  //panel_span_ = new SpanPanel(notebook, &results_);
-  //notebook->AddPage(panel_span_, "Span");
 
   panel_table_sagtension_ = new SagTensionTablePanel(notebook, &results_);
   notebook->AddPage(panel_table_sagtension_, "Sag-Tension Table");
@@ -48,25 +46,55 @@ void ResultsPane::Update(wxObject* hint) {
     // do nothing, this is only passed when pane is created
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit) {
+    // updates class results
     UpdateAnalysisWeathercaseSetChoice();
     UpdateSagTensionResults();
+
+    // updates managed windows
+    panel_table_sagtension_->Initialize();
+    panel_table_sagtension_->FillResults();
+
+    panel_table_catenary_->Initialize();
+    panel_table_catenary_->FillResults();
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelPreferencesEdit) {
+    // updates class results
      UpdateSagTensionResults();
+
+    // updates managed windows
+    panel_table_sagtension_->FillResults();
+    panel_table_catenary_->FillResults();
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelSpansEdit) {
+    // updates class results
     UpdateSagTensionResults();
+
+    // updates managed windows
+    panel_table_sagtension_->FillResults();
+    panel_table_catenary_->FillResults();
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelWeathercaseEdit) {
+    // updates class results
     UpdateSagTensionResults();
+
+    // updates managed windows
+    panel_table_sagtension_->Initialize();
+    panel_table_sagtension_->FillResults();
+
+    panel_table_catenary_->Initialize();
+    panel_table_catenary_->FillResults();
   } else if (hint_update->type() ==
       ViewUpdateHint::HintType::kViewWeathercasesSetChange) {
+    // updates class results
     UpdateSagTensionResults();
-  }
 
-  //panel_span_->UpdateView(hint);
-  panel_table_sagtension_->UpdateView(hint);
-  panel_table_catenary_->UpdateView(hint);
+    // updates managed windows
+    panel_table_sagtension_->Initialize();
+    panel_table_sagtension_->FillResults();
+
+    panel_table_catenary_->Initialize();
+    panel_table_catenary_->FillResults();
+  }
 }
 
 const SagTensionAnalysisResultSet& ResultsPane::results() const {
@@ -126,7 +154,8 @@ void ResultsPane::UpdateSagTensionResults() {
   results_.results_load.clear();
 
   // gets activated span
-  results_.span = view_->pane_edit()->SpanActivated();
+  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
+  results_.span = view->pane_edit()->SpanActivated();
   if (results_.span == nullptr) {
     return;
   }
