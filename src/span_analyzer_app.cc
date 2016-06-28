@@ -146,11 +146,6 @@ bool SpanAnalyzerApp::OnInit() {
     return false;
   };
 
-  path.SetName("span_panel");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
   path.SetName("weather_load_case_editor_dialog");
   if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
