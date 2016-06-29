@@ -26,21 +26,31 @@ struct CableFile {
 
 /// \par OVERVIEW
 ///
-/// This struct stores the application data. This information is referenced by a
-/// SpanAnalyzerDocument.
+/// This struct pairs a list of weathercases with a name.
+struct WeatherLoadCaseGroup {
+ public:
+  /// \var name
+  ///   The name of the group.
+  std::string name;
+
+  /// \var weathercases
+  ///   The weathercases in the group.
+  std::list<WeatherLoadCase> weathercases;
+};
+
+/// \par OVERVIEW
+///
+/// This struct stores the application data. This information is available for
+/// reference by the SpanAnalyzerDoc.
 struct SpanAnalyzerData {
  public:
   /// \var cablefiles
   ///   The cable files.
   std::list<CableFile> cablefiles;
 
-  /// \var descriptions_weathercases_analysis
-  ///   The analysis weathercase set descriptions.
-  std::list<std::string> descriptions_weathercases_analysis;
-
-  /// \var weathercases_analysis
-  ///   The analysis weathercase sets.
-  std::list<std::list<WeatherLoadCase>> weathercases_analysis;
+  /// \var groups_weathercase
+  ///   The weathercase groups.
+  std::list<WeatherLoadCaseGroup> groups_weathercase;
 };
 
 #endif //  OTLS_SPANANALYZER_SPANANALYZERDATA_H_

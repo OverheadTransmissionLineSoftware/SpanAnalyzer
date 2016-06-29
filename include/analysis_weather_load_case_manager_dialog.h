@@ -19,22 +19,21 @@ class AnalysisWeatherLoadCaseManagerDialog : public wxDialog {
   AnalysisWeatherLoadCaseManagerDialog(
       wxWindow* parent,
       const units::UnitSystem& units,
-      std::list<std::string>* descriptions_weathercases_analysis,
-      std::list<std::list<WeatherLoadCase>>* weathercases_analysis);
+      std::list<WeatherLoadCaseGroup>* groups_weathercase);
 
   /// \brief Destructor.
   ~AnalysisWeatherLoadCaseManagerDialog();
 
  private:
-  /// \brief Handles the set add button event.
+  /// \brief Handles the group add button event.
   /// \param[in] event
   ///   The event.
-  void OnButtonSetAdd(wxCommandEvent& event);
+  void OnButtonGroupAdd(wxCommandEvent& event);
 
-  /// \brief Handles the set delete button event.
+  /// \brief Handles the group delete button event.
   /// \param[in] event
   ///   The event.
-  void OnButtonSetDelete(wxCommandEvent& event);
+  void OnButtonGroupDelete(wxCommandEvent& event);
 
   /// \brief Handles the weathercase add button event.
   /// \param[in] event
@@ -56,15 +55,15 @@ class AnalysisWeatherLoadCaseManagerDialog : public wxDialog {
   ///   The event.
   void OnClose(wxCloseEvent& event);
 
-  /// \brief Handles the set listbox double click event.
+  /// \brief Handles the group listbox double click event.
   /// \param[in] event
   ///   The event.
-  void OnListBoxSetDoubleClick(wxCommandEvent& event);
+  void OnListBoxGroupDoubleClick(wxCommandEvent& event);
 
-  /// \brief Handles the set listbox selection event.
+  /// \brief Handles the group listbox selection event.
   /// \param[in] event
   ///   The event.
-  void OnListBoxSetSelect(wxCommandEvent& event);
+  void OnListBoxGroupSelect(wxCommandEvent& event);
 
   /// \brief Handles the weathercase listbox double click event.
   /// \param[in] event
@@ -76,15 +75,15 @@ class AnalysisWeatherLoadCaseManagerDialog : public wxDialog {
   ///   The event.
   void OnOk(wxCommandEvent& event);
 
-  /// \brief Handles the set spin button down event.
+  /// \brief Handles the group spin button down event.
   /// \param[in] event
   ///   The event.
-  void OnSpinButtonSetDown(wxSpinEvent& event);
+  void OnSpinButtonGroupDown(wxSpinEvent& event);
 
-  /// \brief Handles the set spin button up event.
+  /// \brief Handles the group spin button up event.
   /// \param[in] event
   ///   The event.
-  void OnSpinButtonSetUp(wxSpinEvent& event);
+  void OnSpinButtonGroupUp(wxSpinEvent& event);
 
   /// \brief Handles the weathercase spin button down event.
   /// \param[in] event
@@ -97,32 +96,24 @@ class AnalysisWeatherLoadCaseManagerDialog : public wxDialog {
   void OnSpinButtonWeathercaseUp(wxSpinEvent& event);
 
   /// \var descriptions_
-  ///   The weathercase set descriptions.
-  std::list<std::string>* descriptions_;
+  ///   The weathercase groups.
+  std::list<WeatherLoadCaseGroup>* groups_;
 
-  /// \var descriptions_modified_
-  ///   The user-modified weathercase set descriptions.
-  std::list<std::string> descriptions_modified_;
+  /// \var sets_modified_
+  ///   The user-modified weathercase groups.
+  std::list<WeatherLoadCaseGroup> groups_modified_;
 
-  /// \var listbox_sets_
-  ///   The listbox containing weathercase sets.
-  wxListBox* listbox_sets_;
+  /// \var index_group_activated_
+  ///   The index of the activated group.
+  int index_group_activated_;
+
+  /// \var listbox_groups_
+  ///   The listbox containing weathercase groups.
+  wxListBox* listbox_groups_;
 
   /// \var listbox_weathercases_
   ///   The listbox containing weathercases.
   wxListBox* listbox_weathercases_;
-
-  /// \var index_set_activated_
-  ///   The index of the activated set.
-  int index_set_activated_;
-
-  /// \var sets_
-  ///   The analysis weathercase sets.
-  std::list<std::list<WeatherLoadCase>>* sets_;
-
-  /// \var sets_modified_
-  ///   The user-modified analysis weathercase sets.
-  std::list<std::list<WeatherLoadCase>> sets_modified_;
 
   /// \var units_
   ///   The unit system.

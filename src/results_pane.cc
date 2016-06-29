@@ -128,12 +128,11 @@ void ResultsPane::UpdateAnalysisWeathercaseSetChoice() {
   // appends project weathercase set, and any stored in the application data
   choice->Append("Project");
 
-  const std::list<std::string>& descriptions =
-      wxGetApp().data()->descriptions_weathercases_analysis;
-  for (auto iter = descriptions.cbegin(); iter != descriptions.cend();
-       iter ++) {
-    const std::string& description = *iter;
-    choice->Append(description);
+  const std::list<WeatherLoadCaseGroup>& groups =
+      wxGetApp().data()->groups_weathercase;
+  for (auto iter = groups.cbegin(); iter != groups.cend(); iter ++) {
+    const WeatherLoadCaseGroup& group = *iter;
+    choice->Append(group.name);
   }
 
   // attempts to find the old weathercase set
@@ -281,6 +280,8 @@ void ResultsPane::UpdateSagTensionResults() {
 }
 
 void ResultsPane::UpdateSelectedWeathercases() {
+  weathercases_selected_ = nullptr;
+
   wxChoice* choice = XRCCTRL(*this, "choice_weathercase_set", wxChoice);
   std::string str_selection = choice->GetStringSelection();
   if (str_selection == "Project") {
@@ -289,26 +290,15 @@ void ResultsPane::UpdateSelectedWeathercases() {
     weathercases_selected_ = &doc->weathercases();
   } else {
     // gets weathercases from app data
-    // searches descriptions to find a match with the choice control
-    const SpanAnalyzerData* data = wxGetApp().data();
-    const std::list<std::string>& descriptions =
-        data->descriptions_weathercases_analysis;
-    std::list<std::string>::const_iterator iter;
-    for (iter = descriptions.cbegin(); iter != descriptions.cend(); iter ++) {
-      const std::string& description = *iter;
-      if (description == str_selection) {
+    const std::list<WeatherLoadCaseGroup>& groups_weathercase =
+         wxGetApp().data()->groups_weathercase;
+    for (auto iter = groups_weathercase.cbegin();
+         iter != groups_weathercase.cend(); iter++) {
+      const WeatherLoadCaseGroup& group = *iter;
+      if (group.name == str_selection) {
+        weathercases_selected_ = &group.weathercases;
         break;
       }
-    }
-
-    // advances the weathercase set iterator the same distance as the
-    // description iterator to find the match
-    if (iter != descriptions.cend()) {
-      const int index = std::distance(descriptions.cbegin(), iter);
-      auto it = std::next(data->weathercases_analysis.cbegin(), index);
-      weathercases_selected_ = &(*it);
-    } else {
-      weathercases_selected_ = nullptr;
     }
   }
 }

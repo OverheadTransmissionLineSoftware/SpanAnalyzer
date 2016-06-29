@@ -11,7 +11,6 @@
 #include "catenary_table_panel.h"
 #include "sag_tension_analysis_results.h"
 #include "sag_tension_table_panel.h"
-#include "span_panel.h"
 
 /// \par OVERVIEW
 ///
@@ -50,10 +49,6 @@ class ResultsPane : public wxPanel {
 
   /// \brief Updates the selected weathercases.
   void UpdateSelectedWeathercases();
-
-  /// \var panel_span_
-  ///   The span panel, which is a notebook page.
-  SpanPanel* panel_span_;
 
   /// \var panel_table_catenary_
   ///   The catenary table panel, which is a notebook page.

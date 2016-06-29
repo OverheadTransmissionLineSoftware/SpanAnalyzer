@@ -108,18 +108,21 @@ void SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases(
   AnalysisWeatherLoadCaseManagerDialog dialog(
       this,
       wxGetApp().config()->units,
-      &data->descriptions_weathercases_analysis,
-      &data->weathercases_analysis);
+      &data->groups_weathercase);
   if (dialog.ShowModal() == wxID_OK) {
     // saves application data
     FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
                              wxGetApp().config()->units);
 
     // posts event to update views
-    ViewUpdateHint hint;
-    hint.set_type(ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit);
-    wxGetApp().manager_doc()->GetCurrentDocument()->UpdateAllViews(nullptr,
-                                                                   &hint);
+    SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
+                               GetCurrentDocument();
+    if (doc != nullptr) {
+      ViewUpdateHint hint;
+      hint.set_type(ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit);
+      wxGetApp().manager_doc()->GetCurrentDocument()->UpdateAllViews(nullptr,
+                                                                     &hint);
+    }
   }
 }
 
@@ -176,10 +179,11 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
   SpanAnalyzerData* data = wxGetApp().data();
   if (units_before != config->units) {
     // converts app data
-    for (auto iter = data->weathercases_analysis.begin();
-         iter != data->weathercases_analysis.end(); iter++) {
-      std::list<WeatherLoadCase>& weathercases = *iter;
-      for (auto it = weathercases.begin(); it != weathercases.end(); it++) {
+    for (auto iter = data->groups_weathercase.begin();
+         iter != data->groups_weathercase.end(); iter++) {
+      WeatherLoadCaseGroup& group = *iter;
+      for (auto it = group.weathercases.begin();
+           it != group.weathercases.end(); it++) {
         WeatherLoadCase& weathercase = *it;
         WeatherLoadCaseUnitConverter::ConvertUnitSystem(
             units_before,
