@@ -48,88 +48,13 @@ CatenaryTablePanel::CatenaryTablePanel(
 CatenaryTablePanel::~CatenaryTablePanel(){
 }
 
-void CatenaryTablePanel::UpdateView(wxObject* hint) {
-  if (hint == nullptr) {
+void CatenaryTablePanel::FillResults() {
+  // makes sure there are blanks already inserted in table
+  const unsigned int kCountItems = listctrl_->GetItemCount();
+  if (kCountItems != results_->descriptions_weathercase.size()) {
     return;
   }
 
-  // interprets hint type
-  ViewUpdateHint* hint_update = (ViewUpdateHint*)hint;
-  if (hint_update->type() ==
-       ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit) {
-    listctrl_->DeleteAllItems();
-    FillData();
-  } else if (hint_update->type() ==
-    ViewUpdateHint::HintType::kModelPreferencesEdit) {
-    FillData();
-  } else if (hint_update->type() ==
-       ViewUpdateHint::HintType::kModelSpansEdit) {
-    FillData();
-  } else if (hint_update->type() ==
-       ViewUpdateHint::HintType::kModelWeathercaseEdit) {
-    listctrl_->DeleteAllItems();
-    FillData();
-  } else if (hint_update->type() ==
-      ViewUpdateHint::HintType::kViewWeathercasesSetChange) {
-    listctrl_->DeleteAllItems();
-    FillData();
-  }
-}
-
-void CatenaryTablePanel::CopyTableToClipboard() {
-  if (wxTheClipboard->Open()) {
-    // creates a single string with all of the table data
-    // the \t character is used to separate entries on the same row
-    // the \n character is used to specify a new line
-    std::string str;
-    const int kRowMax = listctrl_->GetItemCount() - 1;
-    const int kColumnMax = listctrl_->GetColumnCount() - 1;
-    for (int index_row = 0; index_row <= kRowMax; index_row++) {
-
-      for (int index_column = 0; index_column <= kColumnMax; index_column++) {
-        // adds string from row/column index
-        str = str + listctrl_->GetItemText(index_row, index_column);
-
-        // adds tab character for all but the last column
-        if (index_column != kColumnMax) {
-          str = str + "\t";
-        }
-      }
-
-      // adds new line character for all but the last row
-      if (index_row != kRowMax) {
-        str = str + "\n";
-      }
-    }
-
-    // creates a text data object to store clipboard information
-    wxTextDataObject* data = new wxTextDataObject();
-    data->SetText(str);
-
-    // copies to the clipboard
-    wxTheClipboard->SetData(data);
-
-    wxTheClipboard->Close();
-  }
-}
-
-void CatenaryTablePanel::FillBlank() {
-  // gets list of weathercase descriptions
-  const std::list<std::string>& descriptions =
-      results_->descriptions_weathercase;
-
-  // creates as many rows as weathercases
-  for (auto iter = descriptions.cbegin(); iter != descriptions.cend(); iter++) {
-    long index_row = std::distance(descriptions.cbegin(), iter);
-
-    // adds list item (row) to listctrl
-    wxListItem item;
-    item.SetId(index_row);
-    listctrl_->InsertItem(item);
-  }
-}
-
-void CatenaryTablePanel::FillData() {
   // gets data from results pane
   const std::list<SagTensionAnalysisResult>* results = nullptr;
   wxChoice* choice = nullptr;
@@ -139,17 +64,8 @@ void CatenaryTablePanel::FillData() {
     results = &(results_->results_initial);
   } else if (str == "Load") {
     results = &(results_->results_load);
-  }
-
-  if (results == nullptr) {
+  } else {
     return;
-  }
-
-  // makes sure there are blanks already inserted in table
-  const unsigned int kCountItems = listctrl_->GetItemCount();
-  if (kCountItems != results->size()) {
-    listctrl_->DeleteAllItems();
-    FillBlank();
   }
 
   // fills each row with data
@@ -259,12 +175,68 @@ void CatenaryTablePanel::FillData() {
   }
 }
 
+void CatenaryTablePanel::Initialize() {
+  // clears listctrl items
+  listctrl_->DeleteAllItems();
+
+  // gets list of weathercase descriptions
+  const std::list<std::string>& descriptions =
+      results_->descriptions_weathercase;
+
+  // creates as many rows as weathercases
+  for (auto iter = descriptions.cbegin(); iter != descriptions.cend(); iter++) {
+    long index_row = std::distance(descriptions.cbegin(), iter);
+
+    // adds list item (row) to listctrl
+    wxListItem item;
+    item.SetId(index_row);
+    listctrl_->InsertItem(item);
+  }
+}
+
+void CatenaryTablePanel::CopyTableToClipboard() {
+  if (wxTheClipboard->Open()) {
+    // creates a single string with all of the table data
+    // the \t character is used to separate entries on the same row
+    // the \n character is used to specify a new line
+    std::string str;
+    const int kRowMax = listctrl_->GetItemCount() - 1;
+    const int kColumnMax = listctrl_->GetColumnCount() - 1;
+    for (int index_row = 0; index_row <= kRowMax; index_row++) {
+
+      for (int index_column = 0; index_column <= kColumnMax; index_column++) {
+        // adds string from row/column index
+        str = str + listctrl_->GetItemText(index_row, index_column);
+
+        // adds tab character for all but the last column
+        if (index_column != kColumnMax) {
+          str = str + "\t";
+        }
+      }
+
+      // adds new line character for all but the last row
+      if (index_row != kRowMax) {
+        str = str + "\n";
+      }
+    }
+
+    // creates a text data object to store clipboard information
+    wxTextDataObject* data = new wxTextDataObject();
+    data->SetText(str);
+
+    // copies to the clipboard
+    wxTheClipboard->SetData(data);
+
+    wxTheClipboard->Close();
+  }
+}
+
 void CatenaryTablePanel::OnChoiceCondition(wxCommandEvent& event) {
-  FillData();
+  FillResults();
 }
 
 void CatenaryTablePanel::OnChoiceSide(wxCommandEvent& event) {
-  FillData();
+  FillResults();
 }
 
 void CatenaryTablePanel::OnColumnRightClick(wxListEvent& event) {

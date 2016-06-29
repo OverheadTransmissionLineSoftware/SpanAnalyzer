@@ -88,10 +88,11 @@ int FileHandler::LoadAppData(const std::string& filepath,
   }
 
   // converts analysis weathercases to consistent unit style
-  for (auto iter = data.weathercases_analysis.begin();
-       iter != data.weathercases_analysis.end(); iter++) {
-    std::list<WeatherLoadCase>& weathercases = *iter;
-    for (auto it = weathercases.begin(); it != weathercases.end(); it++) {
+  for (auto iter = data.groups_weathercase.begin();
+       iter != data.groups_weathercase.end(); iter++) {
+    WeatherLoadCaseGroup& group = *iter;
+    for (auto it = group.weathercases.begin();
+         it != group.weathercases.end(); it++) {
       WeatherLoadCase& weathercase = *it;
       WeatherLoadCaseUnitConverter::ConvertUnitStyle(
           units_file,
@@ -103,10 +104,11 @@ int FileHandler::LoadAppData(const std::string& filepath,
 
   // converts unit systems if the file doesn't match applicaton config
   if (units_file != wxGetApp().config()->units) {
-    for (auto iter = data.weathercases_analysis.begin();
-         iter != data.weathercases_analysis.end(); iter++) {
-      std::list<WeatherLoadCase>& weathercases = *iter;
-      for (auto it = weathercases.begin(); it != weathercases.end(); it++) {
+    for (auto iter = data.groups_weathercase.begin();
+         iter != data.groups_weathercase.end(); iter++) {
+      WeatherLoadCaseGroup& group = *iter;
+      for (auto it = group.weathercases.begin();
+           it != group.weathercases.end(); it++) {
         WeatherLoadCase& weathercase = *it;
         WeatherLoadCaseUnitConverter::ConvertUnitSystem(
             units_file,
@@ -264,10 +266,11 @@ void FileHandler::SaveAppData(const std::string& filepath,
   // data file
 
   // converts analysis weathercases to different unit style
-  for (auto iter = data_converted.weathercases_analysis.begin();
-       iter != data_converted.weathercases_analysis.end(); iter++) {
-    std::list<WeatherLoadCase>& weathercases = *iter;
-    for (auto it = weathercases.begin(); it != weathercases.end(); it++) {
+  for (auto iter = data_converted.groups_weathercase.begin();
+       iter != data_converted.groups_weathercase.end(); iter++) {
+    WeatherLoadCaseGroup& group = *iter;
+    for (auto it = group.weathercases.begin();
+         it != group.weathercases.end(); it++) {
       WeatherLoadCase& weathercase = *it;
       WeatherLoadCaseUnitConverter::ConvertUnitStyle(
           units,

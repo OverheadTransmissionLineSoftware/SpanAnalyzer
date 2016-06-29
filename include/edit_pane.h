@@ -82,13 +82,10 @@ class WeathercaseTreeCtrl : public wxTreeCtrl {
   /// \brief Destructor.
   ~WeathercaseTreeCtrl();
 
-  /// \brief Updates the treectrl.
-  /// \param[in] hint
-  ///   The hint describing what kind of update is needed. If a nullptr is
-  ///   provided (as is typical when the view is first created), the treectrl
-  ///   will initialize/reset.
-  /// This function is called as part of the view update process.
-  void Update(wxObject* hint);
+  /// \brief Initializes the weathercases in the control.
+  /// This function deletes all tree items and re-populates with weathercases
+  /// in the document.
+  void Initialize();
 
  private:
   /// \brief Adds a weathercase.
@@ -113,11 +110,6 @@ class WeathercaseTreeCtrl : public wxTreeCtrl {
   /// \param[in] id
   ///   The item ID of the selected weathercase.
   void EditWeathercase(const wxTreeItemId& id);
-
-  /// \brief Initializes the weathercases in the control.
-  /// This function deletes all tree items and re-populates with weathercases
-  /// in the document.
-  void InitWeathercases();
 
   /// \brief Handles a context menu selection event.
   /// \param[in] event
@@ -188,18 +180,15 @@ class SpanTreeCtrl : public wxTreeCtrl {
   /// \brief Destructor.
   ~SpanTreeCtrl();
 
+  /// \brief Initializes the spans in the control.
+  /// This function deletes all tree items and re-populates with spans
+  /// in the document.
+  void Initialize();
+
   /// \brief Gets the activated span.
   /// \return The activated span. If no span is activated, a nullptr is
   ///   returned.
   const Span* SpanActivated();
-
-  /// \brief Updates the treectrl.
-  /// \param[in] hint
-  ///   The hint describing what kind of update is needed. If a nullptr is
-  ///   provided (as is typical when the view is first created), the treectrl
-  ///   will initialize/reset.
-  /// This function is called as part of the view update process.
-  void Update(wxObject* hint);
 
  private:
   /// \brief Activates a span in the treectrl.
@@ -229,11 +218,6 @@ class SpanTreeCtrl : public wxTreeCtrl {
   /// \param[in] id
   ///   The item ID of the selected span.
   void EditSpan(const wxTreeItemId& id);
-
-  /// \brief Initializes the spans in the control.
-  /// This function deletes all tree items and re-populates with weathercases
-  /// in the document.
-  void InitSpans();
 
   /// \brief Handles a context menu selection event.
   /// \param[in] event

@@ -31,24 +31,19 @@ class SagTensionTablePanel : public wxPanel {
   /// \brief Destructor.
   ~SagTensionTablePanel();
 
-  /// \brief Updates the pane.
-  /// \param[in] hint
-  ///   The hint describing what kind of update is needed.
-  /// This function is called as part of the view update process.
-  void UpdateView(wxObject* hint = nullptr);
+  /// \brief Fills the listctrl with the analysis results.
+  /// The correct number of items (rows) must already exist in the listctrl.
+  /// This function does not delete or create items, but it will overwrite the
+  /// item values with the results.
+  void FillResults();
+
+  /// \brief Initializes the listctrl by deleting all data and filling with
+  ///   the analysis results.
+  void Initialize();
 
  private:
   /// \brief Copies table information to the clipboard.
   void CopyTableToClipboard();
-
-  /// \brief Generates blank entries in the listctrl.
-  /// This is an optimization so that as filter controls, span selection, etc.
-  /// causes the data to change, the listctrl items still remain. Helps with
-  /// maintaining previously selected rows.
-  void FillBlank();
-
-  /// \brief Fills the listctrl with the analysis results.
-  void FillData();
 
   /// \brief Handles the condition choice event.
   /// \param[in] event

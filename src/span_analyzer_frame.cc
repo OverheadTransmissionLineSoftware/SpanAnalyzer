@@ -71,8 +71,20 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
   // sets the drag and drop target
   SetDropTarget(new DocumentFileDropTarget(this));
 
-  // creates the log dialog
-  dialog_log_ = new LogDialog(this);
+  // tells aui manager to manage this frame
+  manager_.SetManagedWindow(this);
+
+  // creates log AUI window and adds to manager
+  wxAuiPaneInfo info;
+  info.Name("Log");
+  info.Float();
+  info.Caption("Log");
+  info.CloseButton(true);
+  info.Show(false);
+  pane_log_ = new LogPane(this);
+  manager_.AddPane(pane_log_, info);
+
+  manager_.Update();
 }
 
 SpanAnalyzerFrame::~SpanAnalyzerFrame() {
@@ -83,6 +95,8 @@ SpanAnalyzerFrame::~SpanAnalyzerFrame() {
   } else {
     config->size_frame = this->GetSize();
   }
+
+  manager_.UnInit();
 }
 
 void SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases(
@@ -94,18 +108,21 @@ void SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases(
   AnalysisWeatherLoadCaseManagerDialog dialog(
       this,
       wxGetApp().config()->units,
-      &data->descriptions_weathercases_analysis,
-      &data->weathercases_analysis);
+      &data->groups_weathercase);
   if (dialog.ShowModal() == wxID_OK) {
     // saves application data
     FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
                              wxGetApp().config()->units);
 
     // posts event to update views
-    ViewUpdateHint hint;
-    hint.set_type(ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit);
-    wxGetApp().manager_doc()->GetCurrentDocument()->UpdateAllViews(nullptr,
-                                                                   &hint);
+    SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
+                               GetCurrentDocument();
+    if (doc != nullptr) {
+      ViewUpdateHint hint;
+      hint.set_type(ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit);
+      wxGetApp().manager_doc()->GetCurrentDocument()->UpdateAllViews(nullptr,
+                                                                     &hint);
+    }
   }
 }
 
@@ -162,10 +179,11 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
   SpanAnalyzerData* data = wxGetApp().data();
   if (units_before != config->units) {
     // converts app data
-    for (auto iter = data->weathercases_analysis.begin();
-         iter != data->weathercases_analysis.end(); iter++) {
-      std::list<WeatherLoadCase>& weathercases = *iter;
-      for (auto it = weathercases.begin(); it != weathercases.end(); it++) {
+    for (auto iter = data->groups_weathercase.begin();
+         iter != data->groups_weathercase.end(); iter++) {
+      WeatherLoadCaseGroup& group = *iter;
+      for (auto it = group.weathercases.begin();
+           it != group.weathercases.end(); it++) {
         WeatherLoadCase& weathercase = *it;
         WeatherLoadCaseUnitConverter::ConvertUnitSystem(
             units_before,
@@ -228,14 +246,16 @@ void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
 }
 
 void SpanAnalyzerFrame::OnMenuViewLog(wxCommandEvent& event) {
-  if (dialog_log_->IsShown() == false) {
-    // shows dialog
-    dialog_log_->Show(true);
+  wxAuiPaneInfo& info = manager_.GetPane("Log");
+  if (info.IsShown() == false) {
+    info.Show(true);
   } else {
-    dialog_log_->Show(false);
+    info.Show(false);
   }
+
+  manager_.Update();
 }
 
-LogDialog* SpanAnalyzerFrame::dialog_log() {
-  return dialog_log_;
+LogPane* SpanAnalyzerFrame::pane_log() {
+  return pane_log_;
 }

@@ -10,12 +10,13 @@
 #include "edit_pane.h"
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
+#include "span_analyzer_view.h"
 
 BEGIN_EVENT_TABLE(ResultsPane, wxPanel)
   EVT_CHOICE(XRCID("choice_weathercase_set"), ResultsPane::OnChoiceWeathercaseSet)
 END_EVENT_TABLE()
 
-ResultsPane::ResultsPane(wxWindow* parent, SpanAnalyzerView* view) {
+ResultsPane::ResultsPane(wxWindow* parent, wxView* view) {
   // loads dialog from virtual xrc file system
   wxXmlResource::Get()->LoadPanel(this, parent, "results_pane");
 
@@ -27,9 +28,6 @@ ResultsPane::ResultsPane(wxWindow* parent, SpanAnalyzerView* view) {
 
   // creates notebook and adds child notebook pages
   wxNotebook* notebook = XRCCTRL(*this, "notebook_results", wxNotebook);
-
-  //panel_span_ = new SpanPanel(notebook, &results_);
-  //notebook->AddPage(panel_span_, "Span");
 
   panel_table_sagtension_ = new SagTensionTablePanel(notebook, &results_);
   notebook->AddPage(panel_table_sagtension_, "Sag-Tension Table");
@@ -48,25 +46,55 @@ void ResultsPane::Update(wxObject* hint) {
     // do nothing, this is only passed when pane is created
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit) {
+    // updates class results
     UpdateAnalysisWeathercaseSetChoice();
     UpdateSagTensionResults();
+
+    // updates managed windows
+    panel_table_sagtension_->Initialize();
+    panel_table_sagtension_->FillResults();
+
+    panel_table_catenary_->Initialize();
+    panel_table_catenary_->FillResults();
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelPreferencesEdit) {
+    // updates class results
      UpdateSagTensionResults();
+
+    // updates managed windows
+    panel_table_sagtension_->FillResults();
+    panel_table_catenary_->FillResults();
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelSpansEdit) {
+    // updates class results
     UpdateSagTensionResults();
+
+    // updates managed windows
+    panel_table_sagtension_->FillResults();
+    panel_table_catenary_->FillResults();
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelWeathercaseEdit) {
+    // updates class results
     UpdateSagTensionResults();
+
+    // updates managed windows
+    panel_table_sagtension_->Initialize();
+    panel_table_sagtension_->FillResults();
+
+    panel_table_catenary_->Initialize();
+    panel_table_catenary_->FillResults();
   } else if (hint_update->type() ==
       ViewUpdateHint::HintType::kViewWeathercasesSetChange) {
+    // updates class results
     UpdateSagTensionResults();
-  }
 
-  //panel_span_->UpdateView(hint);
-  panel_table_sagtension_->UpdateView(hint);
-  panel_table_catenary_->UpdateView(hint);
+    // updates managed windows
+    panel_table_sagtension_->Initialize();
+    panel_table_sagtension_->FillResults();
+
+    panel_table_catenary_->Initialize();
+    panel_table_catenary_->FillResults();
+  }
 }
 
 const SagTensionAnalysisResultSet& ResultsPane::results() const {
@@ -100,12 +128,11 @@ void ResultsPane::UpdateAnalysisWeathercaseSetChoice() {
   // appends project weathercase set, and any stored in the application data
   choice->Append("Project");
 
-  const std::list<std::string>& descriptions =
-      wxGetApp().data()->descriptions_weathercases_analysis;
-  for (auto iter = descriptions.cbegin(); iter != descriptions.cend();
-       iter ++) {
-    const std::string& description = *iter;
-    choice->Append(description);
+  const std::list<WeatherLoadCaseGroup>& groups =
+      wxGetApp().data()->groups_weathercase;
+  for (auto iter = groups.cbegin(); iter != groups.cend(); iter ++) {
+    const WeatherLoadCaseGroup& group = *iter;
+    choice->Append(group.name);
   }
 
   // attempts to find the old weathercase set
@@ -126,7 +153,8 @@ void ResultsPane::UpdateSagTensionResults() {
   results_.results_load.clear();
 
   // gets activated span
-  results_.span = view_->pane_edit()->SpanActivated();
+  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
+  results_.span = view->pane_edit()->SpanActivated();
   if (results_.span == nullptr) {
     return;
   }
@@ -252,6 +280,8 @@ void ResultsPane::UpdateSagTensionResults() {
 }
 
 void ResultsPane::UpdateSelectedWeathercases() {
+  weathercases_selected_ = nullptr;
+
   wxChoice* choice = XRCCTRL(*this, "choice_weathercase_set", wxChoice);
   std::string str_selection = choice->GetStringSelection();
   if (str_selection == "Project") {
@@ -260,26 +290,15 @@ void ResultsPane::UpdateSelectedWeathercases() {
     weathercases_selected_ = &doc->weathercases();
   } else {
     // gets weathercases from app data
-    // searches descriptions to find a match with the choice control
-    const SpanAnalyzerData* data = wxGetApp().data();
-    const std::list<std::string>& descriptions =
-        data->descriptions_weathercases_analysis;
-    std::list<std::string>::const_iterator iter;
-    for (iter = descriptions.cbegin(); iter != descriptions.cend(); iter ++) {
-      const std::string& description = *iter;
-      if (description == str_selection) {
+    const std::list<WeatherLoadCaseGroup>& groups_weathercase =
+         wxGetApp().data()->groups_weathercase;
+    for (auto iter = groups_weathercase.cbegin();
+         iter != groups_weathercase.cend(); iter++) {
+      const WeatherLoadCaseGroup& group = *iter;
+      if (group.name == str_selection) {
+        weathercases_selected_ = &group.weathercases;
         break;
       }
-    }
-
-    // advances the weathercase set iterator the same distance as the
-    // description iterator to find the match
-    if (iter != descriptions.cend()) {
-      const int index = std::distance(descriptions.cbegin(), iter);
-      auto it = std::next(data->weathercases_analysis.cbegin(), index);
-      weathercases_selected_ = &(*it);
-    } else {
-      weathercases_selected_ = nullptr;
     }
   }
 }

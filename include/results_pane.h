@@ -11,8 +11,6 @@
 #include "catenary_table_panel.h"
 #include "sag_tension_analysis_results.h"
 #include "sag_tension_table_panel.h"
-#include "span_analyzer_view.h"
-#include "span_panel.h"
 
 /// \par OVERVIEW
 ///
@@ -24,7 +22,7 @@ class ResultsPane : public wxPanel {
   ///   The parent window.
   /// \param[in] view
   ///   The view.
-  ResultsPane(wxWindow* parent, SpanAnalyzerView* view);
+  ResultsPane(wxWindow* parent, wxView* view);
 
   /// \brief Destructor.
   ~ResultsPane();
@@ -52,10 +50,6 @@ class ResultsPane : public wxPanel {
   /// \brief Updates the selected weathercases.
   void UpdateSelectedWeathercases();
 
-  /// \var panel_span_
-  ///   The span panel, which is a notebook page.
-  SpanPanel* panel_span_;
-
   /// \var panel_table_catenary_
   ///   The catenary table panel, which is a notebook page.
   CatenaryTablePanel* panel_table_catenary_;
@@ -70,7 +64,7 @@ class ResultsPane : public wxPanel {
 
   /// \var view_
   ///   The view.
-  SpanAnalyzerView* view_;
+  wxView* view_;
 
   /// \var weathercases_selected_
   ///   The selected weathercases to generate results for.

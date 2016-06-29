@@ -41,22 +41,21 @@ wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
   title = "analysis_weather_load_cases";
   node_element = new wxXmlNode(wxXML_ELEMENT_NODE, title);
 
-  for (auto iter = data.weathercases_analysis.cbegin();
-       iter != data.weathercases_analysis.cend(); iter++) {
-    // creates a weathercase set node
+  for (auto iter = data.groups_weathercase.cbegin();
+       iter != data.groups_weathercase.cend(); iter++) {
+    // creates a weathercase group node
     wxXmlNode* sub_node = new wxXmlNode(wxXML_ELEMENT_NODE,
-                                        "analysis_weather_load_case_set");
+                                        "weather_load_case_group");
+
+    // gets weathercase group, iterates through list
+    const WeatherLoadCaseGroup& group = *iter;
 
     // adds name attribute
-    const int index = std::distance(data.weathercases_analysis.cbegin(), iter);
-    auto iter_name = std::next(data.descriptions_weathercases_analysis.cbegin(),
-                               index);
-    sub_node->AddAttribute("name", *iter_name);
+    sub_node->AddAttribute("name", group.name);
 
-    // gets weathercase set, iterates through list
-    const std::list<WeatherLoadCase>& weathercases = *iter;
-    for (auto it = weathercases.cbegin(); it != weathercases.cend(); it++) {
-      // adds a weathercase node to the set node
+    // adds weathercase nodes to the group node
+    for (auto it = group.weathercases.cbegin();
+         it != group.weathercases.cend(); it++) {
       const WeatherLoadCase& weathercase = *it;
       wxXmlNode* node_weathercase =
           WeatherLoadCaseXmlHandler::CreateNode(weathercase, "", units);
@@ -130,9 +129,9 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
       // gets node for analysis weather load case set
       wxXmlNode* sub_node = node->GetChildren();
       while (sub_node != nullptr) {
-        // creates a new weather load case set
-        std::list<WeatherLoadCase> weathercase_set;
-        const std::string str_name = sub_node->GetAttribute("name");
+        // creates a new weather load case group
+        WeatherLoadCaseGroup group;
+        group.name = sub_node->GetAttribute("name");
 
         // gets node for individual weathercases
         wxXmlNode* node_weathercase = sub_node->GetChildren();
@@ -146,21 +145,17 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
 
           // adds to container if parsing was successful
           if (status == 0) {
-            weathercase_set.push_back(weathercase);
+            group.weathercases.push_back(weathercase);
           } else {
             message = FileAndLineNumber(filepath, node_weathercase)
                       + "Invalid weathercase. Skipping.";
             wxLogError(message);
           }
-
           node_weathercase = node_weathercase->GetNext();
         }
 
-        // adds weathercase set description to list
-        data.descriptions_weathercases_analysis.push_back(str_name);
-
-        // adds weathercase set to analysis weathercases list
-        data.weathercases_analysis.push_back(weathercase_set);
+        // adds weathercase group
+        data.groups_weathercase.push_back(group);
 
         sub_node = sub_node->GetNext();
       }

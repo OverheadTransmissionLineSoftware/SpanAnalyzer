@@ -47,10 +47,26 @@ WeathercaseTreeCtrl::WeathercaseTreeCtrl(wxWindow* parent, wxView* view)
 WeathercaseTreeCtrl::~WeathercaseTreeCtrl() {
 }
 
-void WeathercaseTreeCtrl::Update(wxObject* hint) {
-  if (hint == nullptr) {
-    InitWeathercases();
+void WeathercaseTreeCtrl::Initialize() {
+  // gets root item
+  wxTreeItemId root = GetRootItem();
+
+  // deletes all weathercase items in treectrl
+  DeleteChildren(root);
+
+  // adds items for all weathercases in document
+  const std::list<WeatherLoadCase>& weathercases = doc_->weathercases();
+  for (auto iter = weathercases.cbegin(); iter != weathercases.cend();
+       iter++) {
+    const WeatherLoadCase& weathercase = *iter;
+    wxTreeItemId item = AppendItem(root, weathercase.description);
+    WeathercaseTreeItemData* data = new WeathercaseTreeItemData();
+    data->set_iter(iter);
+    SetItemData(item, data);
   }
+
+  // expands root
+  Expand(root);
 }
 
 void WeathercaseTreeCtrl::AddWeathercase() {
@@ -202,28 +218,6 @@ void WeathercaseTreeCtrl::EditWeathercase(const wxTreeItemId& id) {
     hint.set_type(ViewUpdateHint::HintType::kModelWeathercaseEdit);
     doc_->UpdateAllViews(nullptr, &hint);
   }
-}
-
-void WeathercaseTreeCtrl::InitWeathercases() {
-  // gets root item
-  wxTreeItemId root = GetRootItem();
-
-  // deletes all weathercase items in treectrl
-  DeleteChildren(root);
-
-  // adds items for all weathercases in document
-  const std::list<WeatherLoadCase>& weathercases = doc_->weathercases();
-  for (auto iter = weathercases.cbegin(); iter != weathercases.cend();
-       iter++) {
-    const WeatherLoadCase& weathercase = *iter;
-    wxTreeItemId item = AppendItem(root, weathercase.description);
-    WeathercaseTreeItemData* data = new WeathercaseTreeItemData();
-    data->set_iter(iter);
-    SetItemData(item, data);
-  }
-
-  // expands root
-  Expand(root);
 }
 
 void WeathercaseTreeCtrl::OnContextMenuSelect(wxCommandEvent& event) {
@@ -381,6 +375,27 @@ SpanTreeCtrl::SpanTreeCtrl(wxWindow* parent, wxView* view)
 SpanTreeCtrl::~SpanTreeCtrl() {
 }
 
+void SpanTreeCtrl::Initialize() {
+  // gets root item
+  wxTreeItemId root = GetRootItem();
+
+  // deletes all children items
+  DeleteChildren(root);
+
+  // adds items for all spans in document
+  const std::list<Span>& spans = doc_->spans();
+  for (auto iter = spans.cbegin(); iter != spans.cend(); iter++) {
+    const Span& span = *iter;
+    wxTreeItemId item = AppendItem(root, span.name);
+    SpanTreeItemData* data = new SpanTreeItemData();
+    data->set_iter(iter);
+    SetItemData(item, data);
+  }
+
+  // expands root
+  Expand(root);
+}
+
 const Span* SpanTreeCtrl::SpanActivated() {
   if (item_activated_.IsOk()) {
     // gets item data
@@ -389,12 +404,6 @@ const Span* SpanTreeCtrl::SpanActivated() {
     return &(*iter);
   } else {
     return nullptr;
-  }
-}
-
-void SpanTreeCtrl::Update(wxObject* hint) {
-  if (hint == nullptr) {
-    InitSpans();
   }
 }
 
@@ -431,10 +440,25 @@ void SpanTreeCtrl::AddSpan() {
   Span span;
   span.name = "NEW";
 
+  // gets referenced objects and makes sure that they exist
+  const std::list<CableFile>& cablefiles = wxGetApp().data()->cablefiles;
+  if (cablefiles.empty() == true) {
+    wxMessageBox("No cables are currently loaded. Add at least one before "
+                 "adding span.");
+    return;
+  }
+
+  const std::list<WeatherLoadCase>& weathercases = doc_->weathercases();
+  if (weathercases.empty() == true) {
+    wxMessageBox("No weathercases exist in document. Add at least one before "
+                 "adding span.");
+    return;
+  }
+
   SpanEditorDialog dialog(view_->GetFrame(),
-                          &wxGetApp().data()->cablefiles,
-                          &doc_->weathercases(),
-                          units::UnitSystem::kImperial,
+                          &cablefiles,
+                          &weathercases,
+                          wxGetApp().config()->units,
                           &span);
   if (dialog.ShowModal() != wxID_OK) {
     return;
@@ -517,10 +541,25 @@ void SpanTreeCtrl::EditSpan(const wxTreeItemId& id) {
                                       units::UnitStyle::kDifferent,
                                       span);
 
+  // gets referenced objects and makes sure that they exist
+  const std::list<CableFile>& cablefiles = wxGetApp().data()->cablefiles;
+  if (cablefiles.empty() == true) {
+    wxMessageBox("No cables are currently loaded. Add at least one before "
+                 "editing span.");
+    return;
+  }
+
+  const std::list<WeatherLoadCase>& weathercases = doc_->weathercases();
+  if (weathercases.empty() == true) {
+    wxMessageBox("No weathercases exist in document. Add at least one before "
+                 "editing span.");
+    return;
+  }
+
   // creates a span editor dialog
   SpanEditorDialog dialog(view_->GetFrame(),
-                          &wxGetApp().data()->cablefiles,
-                          &doc_->weathercases(),
+                          &cablefiles,
+                          &weathercases,
                           wxGetApp().config()->units,
                           &span);
   if (dialog.ShowModal() == wxID_OK) {
@@ -541,27 +580,6 @@ void SpanTreeCtrl::EditSpan(const wxTreeItemId& id) {
     hint.set_type(ViewUpdateHint::HintType::kModelSpansEdit);
     doc_->UpdateAllViews(nullptr, &hint);
   }
-}
-
-void SpanTreeCtrl::InitSpans() {
-  // gets root item
-  wxTreeItemId root = GetRootItem();
-
-  // deletes all children items
-  DeleteChildren(root);
-
-  // adds items for all spans in document
-  const std::list<Span>& spans = doc_->spans();
-  for (auto iter = spans.cbegin(); iter != spans.cend(); iter++) {
-    const Span& span = *iter;
-    wxTreeItemId item = AppendItem(root, span.name);
-    SpanTreeItemData* data = new SpanTreeItemData();
-    data->set_iter(iter);
-    SetItemData(item, data);
-  }
-
-  // expands root
-  Expand(root);
 }
 
 void SpanTreeCtrl::OnContextMenuSelect(wxCommandEvent& event) {
@@ -719,8 +737,8 @@ EditPane::~EditPane() {
 
 void EditPane::Update(wxObject* hint) {
   if (hint == nullptr) {
-    treectrl_spans_->Update(hint);
-    treectrl_weathercases_->Update(hint);
+    treectrl_spans_->Initialize();
+    treectrl_weathercases_->Initialize();
   }
 }
 

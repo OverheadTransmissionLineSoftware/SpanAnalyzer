@@ -31,7 +31,7 @@
                       <option>0</option>
                       <flag>wxLEFT</flag>
                       <border>5</border>
-                      <object class="wxListBox" name="listbox_sets">
+                      <object class="wxListBox" name="listbox_groups">
                         <style>wxLB_SINGLE</style>
                         <size>250,400</size>
                         <value></value>
@@ -42,7 +42,7 @@
                       <option>0</option>
                       <flag>wxALIGN_CENTER</flag>
                       <border>0</border>
-                      <object class="wxSpinButton" name="spinbutton_sets">
+                      <object class="wxSpinButton" name="spinbutton_groups">
                         <style>wxSP_VERTICAL</style>
                       </object>
                     </object>
@@ -58,7 +58,7 @@
                       <option>0</option>
                       <flag>wxALL</flag>
                       <border>5</border>
-                      <object class="wxButton" name="button_sets_add">
+                      <object class="wxButton" name="button_groups_add">
                         <label>Add</label>
                         <default>0</default>
                       </object>
@@ -67,7 +67,7 @@
                       <option>0</option>
                       <flag>wxALL</flag>
                       <border>5</border>
-                      <object class="wxButton" name="button_sets_delete">
+                      <object class="wxButton" name="button_groups_delete">
                         <label>Delete</label>
                         <default>0</default>
                       </object>
@@ -142,7 +142,7 @@
         </object>
         <object class="sizeritem">
           <option>0</option>
-          <flag>wxALIGN_CENTER</flag>
+          <flag>wxALIGN_RIGHT</flag>
           <border>0</border>
           <object class="wxBoxSizer">
             <orient>wxHORIZONTAL</orient>
@@ -150,18 +150,18 @@
               <option>0</option>
               <flag>wxALL</flag>
               <border>5</border>
-              <object class="wxButton" name="wxID_OK">
-                <label>OK</label>
-                <default>1</default>
+              <object class="wxButton" name="wxID_CANCEL">
+                <label>Cancel</label>
+                <default>0</default>
               </object>
             </object>
             <object class="sizeritem">
               <option>0</option>
               <flag>wxALL</flag>
               <border>5</border>
-              <object class="wxButton" name="wxID_CANCEL">
-                <label>Cancel</label>
-                <default>0</default>
+              <object class="wxButton" name="wxID_OK">
+                <label>OK</label>
+                <default>1</default>
               </object>
             </object>
           </object>
