@@ -440,10 +440,25 @@ void SpanTreeCtrl::AddSpan() {
   Span span;
   span.name = "NEW";
 
+  // gets referenced objects and makes sure that they exist
+  const std::list<CableFile>& cablefiles = wxGetApp().data()->cablefiles;
+  if (cablefiles.empty() == true) {
+    wxMessageBox("No cables are currently loaded. Add at least one before "
+                 "adding span.");
+    return;
+  }
+
+  const std::list<WeatherLoadCase>& weathercases = doc_->weathercases();
+  if (weathercases.empty() == true) {
+    wxMessageBox("No weathercases exist in document. Add at least one before "
+                 "adding span.");
+    return;
+  }
+
   SpanEditorDialog dialog(view_->GetFrame(),
-                          &wxGetApp().data()->cablefiles,
-                          &doc_->weathercases(),
-                          units::UnitSystem::kImperial,
+                          &cablefiles,
+                          &weathercases,
+                          wxGetApp().config()->units,
                           &span);
   if (dialog.ShowModal() != wxID_OK) {
     return;
@@ -526,10 +541,25 @@ void SpanTreeCtrl::EditSpan(const wxTreeItemId& id) {
                                       units::UnitStyle::kDifferent,
                                       span);
 
+  // gets referenced objects and makes sure that they exist
+  const std::list<CableFile>& cablefiles = wxGetApp().data()->cablefiles;
+  if (cablefiles.empty() == true) {
+    wxMessageBox("No cables are currently loaded. Add at least one before "
+                 "editing span.");
+    return;
+  }
+
+  const std::list<WeatherLoadCase>& weathercases = doc_->weathercases();
+  if (weathercases.empty() == true) {
+    wxMessageBox("No weathercases exist in document. Add at least one before "
+                 "editing span.");
+    return;
+  }
+
   // creates a span editor dialog
   SpanEditorDialog dialog(view_->GetFrame(),
-                          &wxGetApp().data()->cablefiles,
-                          &doc_->weathercases(),
+                          &cablefiles,
+                          &weathercases,
                           wxGetApp().config()->units,
                           &span);
   if (dialog.ShowModal() == wxID_OK) {
