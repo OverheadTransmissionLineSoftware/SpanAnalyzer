@@ -95,11 +95,11 @@ class AnalysisWeatherLoadCaseManagerDialog : public wxDialog {
   ///   The event.
   void OnSpinButtonWeathercaseUp(wxSpinEvent& event);
 
-  /// \var descriptions_
+  /// \var groups_
   ///   The weathercase groups.
   std::list<WeatherLoadCaseGroup>* groups_;
 
-  /// \var sets_modified_
+  /// \var groups_modified_
   ///   The user-modified weathercase groups.
   std::list<WeatherLoadCaseGroup> groups_modified_;
 
