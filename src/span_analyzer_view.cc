@@ -3,10 +3,9 @@
 
 #include "span_analyzer_view.h"
 
-#include "span_analyzer_app.h"
-
 #include "edit_pane.h"
 #include "results_pane.h"
+#include "span_analyzer_app.h"
 
 IMPLEMENT_DYNAMIC_CLASS(SpanAnalyzerView, wxView)
 
@@ -20,6 +19,9 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   if (!wxView::OnCreate(doc, flags)) {
     return false;
   }
+
+  // initializes cached references
+  span_ = nullptr;
 
   // gets main application frame
   wxFrame* frame = ((wxFrame *)wxGetApp().GetTopWindow());
@@ -106,4 +108,12 @@ EditPane* SpanAnalyzerView::pane_edit() {
 
 ResultsPane* SpanAnalyzerView::pane_results() {
   return pane_results_;
+}
+
+void SpanAnalyzerView::set_span(const Span* span) {
+  span_ = span;
+}
+
+const Span* SpanAnalyzerView::span() {
+  return span_;
 }

@@ -154,7 +154,7 @@ void ResultsPane::UpdateSagTensionResults() {
 
   // gets activated span
   SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
-  results_.span = view->pane_edit()->SpanActivated();
+  results_.span = view->span();
   if (results_.span == nullptr) {
     return;
   }

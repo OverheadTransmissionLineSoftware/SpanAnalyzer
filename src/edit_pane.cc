@@ -396,17 +396,6 @@ void SpanTreeCtrl::Initialize() {
   Expand(root);
 }
 
-const Span* SpanTreeCtrl::SpanActivated() {
-  if (item_activated_.IsOk()) {
-    // gets item data
-    SpanTreeItemData* data = (SpanTreeItemData*)GetItemData(item_activated_);
-    auto iter = data->iter();
-    return &(*iter);
-  } else {
-    return nullptr;
-  }
-}
-
 void SpanTreeCtrl::ActivateSpan(const wxTreeItemId& id) {
   if (id.IsOk() == false) {
     return;
@@ -428,6 +417,12 @@ void SpanTreeCtrl::ActivateSpan(const wxTreeItemId& id) {
   // bolds new item and caches
   SetItemBold(id, true);
   item_activated_ = id;
+
+  // caches span in view
+  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
+  SpanTreeItemData* data = (SpanTreeItemData*)GetItemData(item_activated_);
+  auto iter = data->iter();
+  view->set_span(&(*iter));
 
   // updates views
   ViewUpdateHint hint;
@@ -740,8 +735,4 @@ void EditPane::Update(wxObject* hint) {
     treectrl_spans_->Initialize();
     treectrl_weathercases_->Initialize();
   }
-}
-
-const Span* EditPane::SpanActivated() {
-  return treectrl_spans_->SpanActivated();
 }

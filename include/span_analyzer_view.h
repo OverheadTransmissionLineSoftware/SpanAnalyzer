@@ -8,8 +8,9 @@
 
 #include "wx/docview.h"
 
+#include "span.h"
+
 class EditPane;
-class MessagesPane;
 class ResultsPane;
 
 /// \par OVERVIEW
@@ -95,6 +96,16 @@ class SpanAnalyzerView : public wxView {
   /// \return The results pane.
   ResultsPane* pane_results();
 
+  /// \brief Sets the activated span.
+  /// \param[in] span
+  ///   The span.
+  void set_span(const Span* span);
+
+  /// \brief Gets the activated span.
+  /// \return The activated span. If no span is activated, a nullptr is
+  ///   returned.
+  const Span* span();
+
  private:
   /// \var pane_edit_
   ///   The edit pane.
@@ -103,6 +114,10 @@ class SpanAnalyzerView : public wxView {
   /// \var pane_results_
   ///   The results pane.
   ResultsPane* pane_results_;
+
+  /// \var span_
+  ///   The span that is currently activated.
+  const Span* span_;
 
   /// \brief This allows wxWidgets to create this class dynamically as part of
   ///   the docview framework.
