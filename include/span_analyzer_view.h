@@ -10,6 +10,7 @@
 #include "wx/docview.h"
 
 #include "edit_pane.h"
+#include "plot_pane.h"
 #include "results_pane.h"
 #include "sag_tension_analysis_results.h"
 #include "span.h"
@@ -93,6 +94,10 @@ class SpanAnalyzerView : public wxView {
   /// \return The edit pane.
   EditPane* pane_edit();
 
+  /// \brief Gets the plot pane.
+  /// \return The plot pane.
+  PlotPane* pane_plot();
+
   /// \brief Gets the results pane.
   /// \return The results pane.
   ResultsPane* pane_results();
@@ -114,12 +119,12 @@ class SpanAnalyzerView : public wxView {
   /// \brief Gets the activated span.
   /// \return The activated span. If no span is activated, a nullptr is
   ///   returned.
-  const Span* span();
+  const Span* span() const;
 
   /// \brief Gets the activated weathercases.
   /// \return The activated weathercases. If no weathercases are activated, a
   ///   nullptr is returned.
-  const std::list<WeatherLoadCase>* weathercases();
+  const std::list<WeatherLoadCase>* weathercases() const;
 
  private:
   /// \brief Updates the sag-tension results.
@@ -128,6 +133,10 @@ class SpanAnalyzerView : public wxView {
   /// \var pane_edit_
   ///   The edit pane.
   EditPane* pane_edit_;
+
+  /// \var pane_plot_
+  ///   The plot pane.
+  PlotPane* pane_plot_;
 
   /// \var pane_results_
   ///   The results pane.

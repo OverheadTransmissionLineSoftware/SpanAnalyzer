@@ -38,8 +38,17 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   wxAuiPaneInfo info;
 
   info = wxAuiPaneInfo();
-  info.Name("Results");
+  info.Name("Plot");
   info.CenterPane();
+  pane_plot_ = new PlotPane(frame, this);
+  manager->AddPane(pane_plot_, info);
+
+  info = wxAuiPaneInfo();
+  info.Name("Results");
+  info.Floatable(true);
+  info.Bottom();
+  info.Caption("Results");
+  info.CloseButton(false);
   pane_results_ = new ResultsPane(frame, this);
   manager->AddPane(pane_results_, info);
 
@@ -76,11 +85,13 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
 
   // detaches panes and un-init manager
   manager->DetachPane(pane_edit_);
+  manager->DetachPane(pane_plot_);
   manager->DetachPane(pane_results_);
   manager->Update();
 
   // destroys panes
   pane_edit_->Destroy();
+  pane_plot_->Destroy();
   pane_results_->Destroy();
 
   // resets frame to document-less state
@@ -103,6 +114,7 @@ void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
 
   // don't need to distinguish sender - all frames are grouped under one view
   pane_edit_->Update(hint);
+  pane_plot_->Update(hint);
   pane_results_->Update(hint);
 }
 
@@ -127,11 +139,11 @@ void SpanAnalyzerView::set_weathercases(
   weathercases_ = weathercases;
 }
 
-const Span* SpanAnalyzerView::span() {
+const Span* SpanAnalyzerView::span() const {
   return span_;
 }
 
-const std::list<WeatherLoadCase>* SpanAnalyzerView::weathercases() {
+const std::list<WeatherLoadCase>* SpanAnalyzerView::weathercases() const {
   return weathercases_;
 }
 
