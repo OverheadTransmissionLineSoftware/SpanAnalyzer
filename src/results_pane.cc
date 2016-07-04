@@ -3,13 +3,10 @@
 
 #include "results_pane.h"
 
-#include "models/sagtension/line_cable_reloader.h"
 #include "wx/notebook.h"
 #include "wx/xrc/xmlres.h"
 
-#include "edit_pane.h"
 #include "span_analyzer_app.h"
-#include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
 
 BEGIN_EVENT_TABLE(ResultsPane, wxPanel)
@@ -26,13 +23,16 @@ ResultsPane::ResultsPane(wxWindow* parent, wxView* view) {
   // initializes weathercase set choice
   UpdateAnalysisWeathercaseSetChoice();
 
-  // creates notebook and adds child notebook pages
+  // creates child windows for displaying results and adds to notebook
+  SpanAnalyzerView* view_app = (SpanAnalyzerView*)view_;
   wxNotebook* notebook = XRCCTRL(*this, "notebook_results", wxNotebook);
 
-  panel_table_sagtension_ = new SagTensionTablePanel(notebook, &results_);
+  panel_table_sagtension_ = new SagTensionTablePanel(notebook,
+                                                     &view_app->results());
   notebook->AddPage(panel_table_sagtension_, "Sag-Tension Table");
 
-  panel_table_catenary_ = new CatenaryTablePanel(notebook, &results_);
+  panel_table_catenary_ = new CatenaryTablePanel(notebook,
+                                                 &view_app->results());
   notebook->AddPage(panel_table_catenary_, "Catenary Table");
 }
 
@@ -46,9 +46,7 @@ void ResultsPane::Update(wxObject* hint) {
     // do nothing, this is only passed when pane is created
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit) {
-    // updates class results
     UpdateAnalysisWeathercaseSetChoice();
-    UpdateSagTensionResults();
 
     // updates managed windows
     panel_table_sagtension_->Initialize();
@@ -58,25 +56,16 @@ void ResultsPane::Update(wxObject* hint) {
     panel_table_catenary_->FillResults();
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelPreferencesEdit) {
-    // updates class results
-     UpdateSagTensionResults();
-
     // updates managed windows
     panel_table_sagtension_->FillResults();
     panel_table_catenary_->FillResults();
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelSpansEdit) {
-    // updates class results
-    UpdateSagTensionResults();
-
     // updates managed windows
     panel_table_sagtension_->FillResults();
     panel_table_catenary_->FillResults();
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelWeathercaseEdit) {
-    // updates class results
-    UpdateSagTensionResults();
-
     // updates managed windows
     panel_table_sagtension_->Initialize();
     panel_table_sagtension_->FillResults();
@@ -85,9 +74,6 @@ void ResultsPane::Update(wxObject* hint) {
     panel_table_catenary_->FillResults();
   } else if (hint_update->type() ==
       ViewUpdateHint::HintType::kViewWeathercasesSetChange) {
-    // updates class results
-    UpdateSagTensionResults();
-
     // updates managed windows
     panel_table_sagtension_->Initialize();
     panel_table_sagtension_->FillResults();
@@ -95,10 +81,6 @@ void ResultsPane::Update(wxObject* hint) {
     panel_table_catenary_->Initialize();
     panel_table_catenary_->FillResults();
   }
-}
-
-const SagTensionAnalysisResultSet& ResultsPane::results() const {
-  return results_;
 }
 
 void ResultsPane::OnChoiceWeathercaseSet(wxCommandEvent& event) {
@@ -140,144 +122,6 @@ void ResultsPane::UpdateAnalysisWeathercaseSetChoice() {
 
   // updates the selected/cached weathercases
   UpdateSelectedWeathercases();
-}
-
-/// \todo add a log message in here for the analysis time
-void ResultsPane::UpdateSagTensionResults() {
-  std::list <ErrorMessage> errors;
-  std::string message;
-
-  // clears cached results
-  results_.descriptions_weathercase.clear();
-  results_.results_initial.clear();
-  results_.results_load.clear();
-
-  // gets activated span
-  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
-  results_.span = view->span();
-  if (results_.span == nullptr) {
-    return;
-  }
-
-  // validates span
-  if (results_.span->Validate(false, &errors) == false) {
-    // logs errors
-    for (auto iter = errors.cbegin(); iter != errors.cend(); iter++) {
-      const ErrorMessage& error = *iter;
-      message = "Span: " + results_.span->name + "  --  "
-                + error.description;
-      wxLogError(message.c_str());
-    }
-
-    wxLogMessage("Span validation errors are present. Aborting analysis.");
-    return;
-  }
-
-  // checks if weathercase set has been selected
-  const std::list<WeatherLoadCase>* weathercases = view->weathercases();
-  if (weathercases == nullptr) {
-    return;
-  }
-
-  wxLogMessage("Running sag-tension analysis.");
-
-  // sets up reloader
-  LineCableReloader reloader;
-  reloader.set_line_cable(&results_.span->linecable);
-  reloader.set_length_unloaded_unstretched_adjustment(0);
-
-  // runs analysis for each weathercase
-  for (auto iter = weathercases->cbegin(); iter != weathercases->cend();
-       iter++) {
-    const WeatherLoadCase& weathercase = *iter;
-
-
-    // validates and logs any errors
-    errors.clear();
-    bool is_valid_weathercase = weathercase.Validate(false, &errors);
-    for (auto iter = errors.cbegin(); iter != errors.cend(); iter++) {
-      const ErrorMessage& error = *iter;
-      message = weathercase.description + " weathercase  --  "
-                + error.description;
-      wxLogError(message.c_str());
-    }
-
-    // caches description
-    results_.descriptions_weathercase.push_back(weathercase.description);
-
-    // updates reloader with weathercase
-    reloader.set_weathercase_reloaded(&weathercase);
-
-    // if valid, calculates value and adds to cache
-    // if invalid, adds invalid result to cache
-    Catenary3d catenary;
-    SagTensionAnalysisResult result;
-    if (is_valid_weathercase == true) {
-      // analyzes and caches initial condition results
-      // validates reloader and logs any errors
-      reloader.set_condition_reloaded(CableConditionType::kInitial);
-      errors.clear();
-      if (reloader.Validate(false, &errors) == false) {
-        message = "Reloader error for " + weathercase.description
-                  + " weathercase when determining the Initial condition.";
-        wxLogError(message.c_str());
-
-        for (auto iter = errors.cbegin(); iter != errors.cend(); iter++) {
-          const ErrorMessage& error = *iter;
-          std::string message = error.title + "  --  "
-                                + error.description;
-          wxLogError(message.c_str());
-        }
-      } else {
-        catenary = reloader.CatenaryReloaded();
-
-        result.tension_horizontal = catenary.tension_horizontal();
-        result.tension_horizontal_core = reloader.TensionHorizontalComponent(
-            CableElongationModel::ComponentType::kCore);
-        result.tension_horizontal_shell = reloader.TensionHorizontalComponent(
-            CableElongationModel::ComponentType::kShell);
-        result.weight_unit = catenary.weight_unit();
-
-        results_.results_initial.push_back(result);
-      }
-
-      // analyzes and caches initial condition results
-      // validates reloader and logs any errors
-      reloader.set_condition_reloaded(CableConditionType::kLoad);
-      errors.clear();
-      if (reloader.Validate(false, &errors) == false) {
-        message = "Reloader error for " + weathercase.description
-                  + "weathercase when determining the Final-Load condition.";
-        wxLogError(message.c_str());
-
-        for (auto iter = errors.cbegin(); iter != errors.cend(); iter++) {
-          const ErrorMessage& error = *iter;
-          std::string message = error.title + "  --  "
-                                + error.description;
-          wxLogError(message.c_str());
-        }
-      } else {
-        catenary = reloader.CatenaryReloaded();
-
-        result.tension_horizontal = catenary.tension_horizontal();
-        result.tension_horizontal_core = reloader.TensionHorizontalComponent(
-            CableElongationModel::ComponentType::kCore);
-        result.tension_horizontal_shell = reloader.TensionHorizontalComponent(
-            CableElongationModel::ComponentType::kShell);
-        result.weight_unit = catenary.weight_unit();
-
-        results_.results_load.push_back(result);
-      }
-    } else {
-      result.tension_horizontal = -999999;
-      result.tension_horizontal_core = -999999;
-      result.tension_horizontal_shell = -999999;
-      result.weight_unit = Vector3d();
-
-      results_.results_initial.push_back(result);
-      results_.results_load.push_back(result);
-    }
-  }
 }
 
 void ResultsPane::UpdateSelectedWeathercases() {

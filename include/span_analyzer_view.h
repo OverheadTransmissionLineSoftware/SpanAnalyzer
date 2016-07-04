@@ -6,10 +6,12 @@
 
 #include <list>
 
+#include "models/transmissionline/weather_load_case.h"
 #include "wx/docview.h"
 
 #include "edit_pane.h"
 #include "results_pane.h"
+#include "sag_tension_analysis_results.h"
 #include "span.h"
 
 /// \par OVERVIEW
@@ -95,6 +97,10 @@ class SpanAnalyzerView : public wxView {
   /// \return The results pane.
   ResultsPane* pane_results();
 
+  /// \brief Gets the sag-tension analysis results.
+  /// \return The sag-tension analysis results.
+  const SagTensionAnalysisResultSet& results() const;
+
   /// \brief Sets the activated span.
   /// \param[in] span
   ///   The span.
@@ -116,6 +122,9 @@ class SpanAnalyzerView : public wxView {
   const std::list<WeatherLoadCase>* weathercases();
 
  private:
+  /// \brief Updates the sag-tension results.
+  void UpdateSagTensionResults();
+
   /// \var pane_edit_
   ///   The edit pane.
   EditPane* pane_edit_;
@@ -123,6 +132,10 @@ class SpanAnalyzerView : public wxView {
   /// \var pane_results_
   ///   The results pane.
   ResultsPane* pane_results_;
+
+  /// \var results_
+  ///   The sag-tension analysis results.
+  SagTensionAnalysisResultSet results_;
 
   /// \var span_
   ///   The span that is currently activated.
