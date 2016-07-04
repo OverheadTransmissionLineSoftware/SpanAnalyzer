@@ -22,6 +22,7 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
 
   // initializes cached references
   span_ = nullptr;
+  weathercases_ = nullptr;
 
   // gets main application frame
   wxFrame* frame = ((wxFrame *)wxGetApp().GetTopWindow());
@@ -114,6 +115,15 @@ void SpanAnalyzerView::set_span(const Span* span) {
   span_ = span;
 }
 
+void SpanAnalyzerView::set_weathercases(
+    const std::list<WeatherLoadCase>* weathercases) {
+  weathercases_ = weathercases;
+}
+
 const Span* SpanAnalyzerView::span() {
   return span_;
+}
+
+const std::list<WeatherLoadCase>* SpanAnalyzerView::weathercases() {
+  return weathercases_;
 }

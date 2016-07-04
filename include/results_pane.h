@@ -4,7 +4,6 @@
 #ifndef OTLS_SPANANALYZER_RESULTSPANE_H_
 #define OTLS_SPANANALYZER_RESULTSPANE_H_
 
-#include "models/transmissionline/weather_load_case.h"
 #include "wx/docview.h"
 #include "wx/wx.h"
 
@@ -65,10 +64,6 @@ class ResultsPane : public wxPanel {
   /// \var view_
   ///   The view.
   wxView* view_;
-
-  /// \var weathercases_selected_
-  ///   The selected weathercases to generate results for.
-  const std::list<WeatherLoadCase>* weathercases_selected_;
 
   DECLARE_EVENT_TABLE()
 };

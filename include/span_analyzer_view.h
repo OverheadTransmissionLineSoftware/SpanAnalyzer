@@ -8,10 +8,9 @@
 
 #include "wx/docview.h"
 
+#include "edit_pane.h"
+#include "results_pane.h"
 #include "span.h"
-
-class EditPane;
-class ResultsPane;
 
 /// \par OVERVIEW
 ///
@@ -101,10 +100,20 @@ class SpanAnalyzerView : public wxView {
   ///   The span.
   void set_span(const Span* span);
 
+  /// \brief Sets the activated weathercases.
+  /// \param[in] weathercases
+  ///   The weathercases.
+  void set_weathercases(const std::list<WeatherLoadCase>* weathercases);
+
   /// \brief Gets the activated span.
   /// \return The activated span. If no span is activated, a nullptr is
   ///   returned.
   const Span* span();
+
+  /// \brief Gets the activated weathercases.
+  /// \return The activated weathercases. If no weathercases are activated, a
+  ///   nullptr is returned.
+  const std::list<WeatherLoadCase>* weathercases();
 
  private:
   /// \var pane_edit_
@@ -118,6 +127,10 @@ class SpanAnalyzerView : public wxView {
   /// \var span_
   ///   The span that is currently activated.
   const Span* span_;
+
+  /// \var weathercases_
+  ///   The weathercases that are currently activated.
+  const std::list<WeatherLoadCase>* weathercases_;
 
   /// \brief This allows wxWidgets to create this class dynamically as part of
   ///   the docview framework.

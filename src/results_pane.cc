@@ -174,7 +174,8 @@ void ResultsPane::UpdateSagTensionResults() {
   }
 
   // checks if weathercase set has been selected
-  if (weathercases_selected_ == nullptr) {
+  const std::list<WeatherLoadCase>* weathercases = view->weathercases();
+  if (weathercases == nullptr) {
     return;
   }
 
@@ -186,8 +187,8 @@ void ResultsPane::UpdateSagTensionResults() {
   reloader.set_length_unloaded_unstretched_adjustment(0);
 
   // runs analysis for each weathercase
-  for (auto iter = weathercases_selected_->cbegin();
-       iter != weathercases_selected_->cend(); iter++) {
+  for (auto iter = weathercases->cbegin(); iter != weathercases->cend();
+       iter++) {
     const WeatherLoadCase& weathercase = *iter;
 
 
@@ -280,14 +281,17 @@ void ResultsPane::UpdateSagTensionResults() {
 }
 
 void ResultsPane::UpdateSelectedWeathercases() {
-  weathercases_selected_ = nullptr;
+  // initializes weathercases cached in view
+  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
+  view->set_weathercases(nullptr);
 
+  // searches the choice control to see if a weathercase group is selected
   wxChoice* choice = XRCCTRL(*this, "choice_weathercase_set", wxChoice);
   std::string str_selection = choice->GetStringSelection();
   if (str_selection == "Project") {
     // gets weathercases from document
     const SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
-    weathercases_selected_ = &doc->weathercases();
+    view->set_weathercases(&doc->weathercases());
   } else {
     // gets weathercases from app data
     const std::list<WeatherLoadCaseGroup>& groups_weathercase =
@@ -296,7 +300,7 @@ void ResultsPane::UpdateSelectedWeathercases() {
          iter != groups_weathercase.cend(); iter++) {
       const WeatherLoadCaseGroup& group = *iter;
       if (group.name == str_selection) {
-        weathercases_selected_ = &group.weathercases;
+        view->set_weathercases(&group.weathercases);
         break;
       }
     }
