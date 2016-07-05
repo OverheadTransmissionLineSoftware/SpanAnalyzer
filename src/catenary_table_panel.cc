@@ -8,6 +8,7 @@
 #include "wx/clipbrd.h"
 #include "wx/xrc/xmlres.h"
 
+#include "span_analyzer_app.h"
 #include "span_analyzer_view.h"
 
 enum {
@@ -15,7 +16,6 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(CatenaryTablePanel, wxPanel)
-  EVT_CHOICE(XRCID("choice_condition"), CatenaryTablePanel::OnChoiceCondition)
   EVT_CHOICE(XRCID("choice_side"), CatenaryTablePanel::OnChoiceSide)
   EVT_LIST_COL_RIGHT_CLICK(wxID_ANY, CatenaryTablePanel::OnColumnRightClick)
   EVT_LIST_ITEM_RIGHT_CLICK(wxID_ANY, CatenaryTablePanel::OnItemRightClick)
@@ -29,14 +29,8 @@ CatenaryTablePanel::CatenaryTablePanel(
 
   results_ = results;
 
-  // intializes choice controls
-  wxChoice* choice = nullptr;
-
-  choice = XRCCTRL(*this, "choice_condition", wxChoice);
-  choice->Append("Initial");
-  choice->Append("Load");
-
-  choice = XRCCTRL(*this, "choice_side", wxChoice);
+  // intializes choice control
+  wxChoice* choice = XRCCTRL(*this, "choice_side", wxChoice);
   choice->Append("");
   choice->Append("BOL");
   choice->Append("AOL");
@@ -55,14 +49,15 @@ void CatenaryTablePanel::FillResults() {
     return;
   }
 
-  // gets data from results pane
+  // gets data based on display condition from view
+  const SpanAnalyzerView* view =
+       (SpanAnalyzerView*)wxGetApp().manager_doc()->GetCurrentView();
+  const CableConditionType& condition = view->condition();
+
   const std::list<SagTensionAnalysisResult>* results = nullptr;
-  wxChoice* choice = nullptr;
-  choice = XRCCTRL(*this, "choice_condition", wxChoice);
-  wxString str = choice->GetStringSelection();
-  if (str == "Initial") {
+  if (condition == CableConditionType::kInitial) {
     results = &(results_->results_initial);
-  } else if (str == "Load") {
+  } else if (condition == CableConditionType::kLoad) {
     results = &(results_->results_load);
   } else {
     return;
@@ -127,7 +122,7 @@ void CatenaryTablePanel::FillResults() {
     listctrl_->SetItem(index_row, index_col, str);
 
     // updates columns that depend on span end selection
-    choice = XRCCTRL(*this, "choice_side", wxChoice);
+    wxChoice* choice = XRCCTRL(*this, "choice_side", wxChoice);
     str = choice->GetStringSelection();
     if (str == "") {
       index_col++;
@@ -229,10 +224,6 @@ void CatenaryTablePanel::CopyTableToClipboard() {
 
     wxTheClipboard->Close();
   }
-}
-
-void CatenaryTablePanel::OnChoiceCondition(wxCommandEvent& event) {
-  FillResults();
 }
 
 void CatenaryTablePanel::OnChoiceSide(wxCommandEvent& event) {

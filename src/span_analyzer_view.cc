@@ -15,6 +15,10 @@ SpanAnalyzerView::SpanAnalyzerView() {
 SpanAnalyzerView::~SpanAnalyzerView() {
 }
 
+const CableConditionType& SpanAnalyzerView::condition() const {
+  return condition_;
+}
+
 bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   if (!wxView::OnCreate(doc, flags)) {
     return false;
@@ -23,6 +27,7 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   // initializes cached references
   span_ = nullptr;
   weathercases_ = nullptr;
+  condition_ = CableConditionType::kInitial;
 
   // gets main application frame
   wxFrame* frame = ((wxFrame *)wxGetApp().GetTopWindow());
@@ -128,6 +133,10 @@ ResultsPane* SpanAnalyzerView::pane_results() {
 
 const SagTensionAnalysisResultSet& SpanAnalyzerView::results() const {
   return results_;
+}
+
+void SpanAnalyzerView::set_condition(const CableConditionType& condition) {
+  condition_ = condition;
 }
 
 void SpanAnalyzerView::set_span(const Span* span) {

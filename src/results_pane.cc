@@ -10,6 +10,7 @@
 #include "span_analyzer_view.h"
 
 BEGIN_EVENT_TABLE(ResultsPane, wxPanel)
+  EVT_CHOICE(XRCID("choice_condition"), ResultsPane::OnChoiceCondition)
   EVT_CHOICE(XRCID("choice_weathercase_set"), ResultsPane::OnChoiceWeathercaseSet)
 END_EVENT_TABLE()
 
@@ -22,6 +23,12 @@ ResultsPane::ResultsPane(wxWindow* parent, wxView* view) {
 
   // initializes weathercase set choice
   UpdateAnalysisWeathercaseSetChoice();
+
+  // intializes condition choice
+  wxChoice* choice = XRCCTRL(*this, "choice_condition", wxChoice);
+  choice->Append("Initial");
+  choice->Append("Load");
+  choice->SetSelection(0);
 
   // creates child windows for displaying results and adds to notebook
   SpanAnalyzerView* view_app = (SpanAnalyzerView*)view_;
@@ -73,6 +80,11 @@ void ResultsPane::Update(wxObject* hint) {
     panel_table_catenary_->Initialize();
     panel_table_catenary_->FillResults();
   } else if (hint_update->type() ==
+      ViewUpdateHint::HintType::kViewConditionChange) {
+    // updates manaaged windows
+    panel_table_sagtension_->FillResults();
+    panel_table_catenary_->FillResults();
+  } else if (hint_update->type() ==
       ViewUpdateHint::HintType::kViewWeathercasesSetChange) {
     // updates managed windows
     panel_table_sagtension_->Initialize();
@@ -81,6 +93,26 @@ void ResultsPane::Update(wxObject* hint) {
     panel_table_catenary_->Initialize();
     panel_table_catenary_->FillResults();
   }
+}
+
+void ResultsPane::OnChoiceCondition(wxCommandEvent& event) {
+  // gets choice selection and updates view cache
+  wxChoice* choice = XRCCTRL(*this, "choice_condition", wxChoice);
+  wxString str = choice->GetStringSelection();
+
+  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
+  if (str == "Initial") {
+    view->set_condition(CableConditionType::kInitial);
+  } else if (str == "Load") {
+    view->set_condition(CableConditionType::kLoad);
+  } else {
+    return;
+  }
+
+  // updates views
+  ViewUpdateHint hint;
+  hint.set_type(ViewUpdateHint::HintType::kViewConditionChange);
+  view_->GetDocument()->UpdateAllViews(nullptr, &hint);
 }
 
 void ResultsPane::OnChoiceWeathercaseSet(wxCommandEvent& event) {

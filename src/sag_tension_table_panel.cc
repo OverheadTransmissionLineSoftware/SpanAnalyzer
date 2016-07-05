@@ -7,6 +7,7 @@
 #include "wx/clipbrd.h"
 #include "wx/xrc/xmlres.h"
 
+#include "span_analyzer_app.h"
 #include "span_analyzer_view.h"
 
 enum {
@@ -14,7 +15,6 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(SagTensionTablePanel, wxPanel)
-  EVT_CHOICE(XRCID("choice_condition"), SagTensionTablePanel::OnChoiceCondition)
   EVT_LIST_COL_RIGHT_CLICK(wxID_ANY, SagTensionTablePanel::OnColumnRightClick)
   EVT_LIST_ITEM_RIGHT_CLICK(wxID_ANY, SagTensionTablePanel::OnItemRightClick)
   EVT_MENU(wxID_ANY, SagTensionTablePanel::OnContextMenuSelect)
@@ -26,11 +26,6 @@ SagTensionTablePanel::SagTensionTablePanel(
   wxXmlResource::Get()->LoadPanel(this, parent, "sag_tension_table_panel");
 
   results_ = results;
-
-  // intializes choice
-  wxChoice* choice = XRCCTRL(*this, "choice_condition", wxChoice);
-  choice->Append("Initial");
-  choice->Append("Load");
 
   // initializes the listctrl
   listctrl_ = XRCCTRL(*this, "listctrl_table", wxListCtrl);
@@ -46,13 +41,15 @@ void SagTensionTablePanel::FillResults() {
     return;
   }
 
-  // gets data based on choice selection
+  // gets data based on display condition from view
+  const SpanAnalyzerView* view =
+       (SpanAnalyzerView*)wxGetApp().manager_doc()->GetCurrentView();
+  const CableConditionType& condition = view->condition();
+
   const std::list<SagTensionAnalysisResult>* results = nullptr;
-  wxChoice* choice = XRCCTRL(*this, "choice_condition", wxChoice);
-  wxString str = choice->GetStringSelection();
-  if (str == "Initial") {
+  if (condition == CableConditionType::kInitial) {
     results = &(results_->results_initial);
-  } else if (str == "Load") {
+  } else if (condition == CableConditionType::kLoad) {
     results = &(results_->results_load);
   } else {
     return;
@@ -169,10 +166,6 @@ void SagTensionTablePanel::CopyTableToClipboard() {
 
     wxTheClipboard->Close();
   }
-}
-
-void SagTensionTablePanel::OnChoiceCondition(wxCommandEvent& event) {
-  FillResults();
 }
 
 void SagTensionTablePanel::OnColumnRightClick(wxListEvent& event) {

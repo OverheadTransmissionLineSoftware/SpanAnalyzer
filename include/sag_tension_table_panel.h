@@ -45,11 +45,6 @@ class SagTensionTablePanel : public wxPanel {
   /// \brief Copies table information to the clipboard.
   void CopyTableToClipboard();
 
-  /// \brief Handles the condition choice event.
-  /// \param[in] event
-  ///   The event.
-  void OnChoiceCondition(wxCommandEvent& event);
-
   /// \brief Handles the column right click event.
   /// \param[in] event
   ///   The event.

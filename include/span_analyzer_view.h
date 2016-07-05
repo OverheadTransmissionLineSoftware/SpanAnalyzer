@@ -28,6 +28,7 @@ class ViewUpdateHint : public wxObject {
     kModelPreferencesEdit,
     kModelSpansEdit,
     kModelWeathercaseEdit,
+    kViewConditionChange,
     kViewWeathercasesSetChange
   };
 
@@ -57,6 +58,10 @@ class SpanAnalyzerView : public wxView {
 
   /// \brief Destructor.
   ~SpanAnalyzerView();
+
+  /// \brief Gets the display cable condition.
+  /// \return The display cable condition.
+  const CableConditionType& condition() const;
 
   /// \brief Handles closing the view.
   /// \param[in] deleteWindow
@@ -106,6 +111,11 @@ class SpanAnalyzerView : public wxView {
   /// \return The sag-tension analysis results.
   const SagTensionAnalysisResultSet& results() const;
 
+  /// \brief Sets the display condition.
+  /// \param[in] condition
+  ///   The display condition.
+  void set_condition(const CableConditionType& condition);
+
   /// \brief Sets the activated span.
   /// \param[in] span
   ///   The span.
@@ -129,6 +139,10 @@ class SpanAnalyzerView : public wxView {
  private:
   /// \brief Updates the sag-tension results.
   void UpdateSagTensionResults();
+
+  /// \var condition_
+  ///   The display cable condition.
+  CableConditionType condition_;
 
   /// \var pane_edit_
   ///   The edit pane.

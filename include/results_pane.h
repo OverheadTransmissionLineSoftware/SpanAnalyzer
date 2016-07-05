@@ -32,6 +32,11 @@ class ResultsPane : public wxPanel {
   void Update(wxObject* hint = nullptr);
 
  private:
+  /// \brief Handles the condition choice event.
+  /// \param[in] event
+  ///   The event.
+  void OnChoiceCondition(wxCommandEvent& event);
+
   /// \brief Handles the weathercase set choice event.
   void OnChoiceWeathercaseSet(wxCommandEvent& event);
 

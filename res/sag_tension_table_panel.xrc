@@ -4,31 +4,6 @@
     <style>wxTAB_TRAVERSAL</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
-      <object class ="sizeritem">
-        <option>0</option>
-        <flag>wxALL</flag>
-        <border>0</border>
-        <object class ="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
-          <object class="sizeritem">
-            <option>0</option>
-            <flag>wxALL</flag>
-            <border>5</border>
-            <object class="wxStaticText" name="statictext_condition">
-              <label>Condition:</label>
-            </object>
-          </object>
-          <object class ="sizeritem">
-            <option>0</option>
-            <flag>wxALL</flag>
-            <border>5</border>
-            <object class="wxChoice" name="choice_condition">
-              <selection>0</selection>
-              <size>100,-1</size>
-            </object>
-          </object>
-        </object>
-      </object>
       <object class="sizeritem">
       <option>1</option>
       <flag>wxALL|wxEXPAND</flag>

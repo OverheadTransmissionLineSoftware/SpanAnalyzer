@@ -49,6 +49,10 @@ void PlotPane::Update(wxObject* hint) {
     UpdatePlot();
     RenderPlot(dc);
   } else if (hint_update->type() ==
+      ViewUpdateHint::HintType::kViewConditionChange) {
+    UpdatePlot();
+    RenderPlot(dc);
+  } else if (hint_update->type() ==
       ViewUpdateHint::HintType::kViewWeathercasesSetChange) {
     UpdatePlot();
     RenderPlot(dc);
