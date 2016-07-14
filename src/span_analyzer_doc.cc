@@ -291,8 +291,9 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   }
 
   // parses the XML node and loads into the document
+  std::string filename = this->GetFilename();
   int line_number = SpanAnalyzerDocXmlHandler::ParseNode(
-      root, this->GetFilename(), &wxGetApp().data()->cablefiles, *this);
+      root, filename, &wxGetApp().data()->cablefiles, *this);
   if (line_number != 0) {
     // notifies user of error
     message = GetFilename() + ":" + std::to_string(line_number) + "  --  "

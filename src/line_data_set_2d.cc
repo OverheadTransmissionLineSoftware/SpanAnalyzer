@@ -3,6 +3,8 @@
 
 #include "line_data_set_2d.h"
 
+#include <algorithm>
+
 LineDataSet2d::LineDataSet2d() {
   is_updated_ = false;
 
