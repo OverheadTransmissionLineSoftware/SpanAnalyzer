@@ -53,11 +53,6 @@ class CatenaryTablePanel : public wxPanel {
   /// \brief Handles the condition choice event.
   /// \param[in] event
   ///   The event.
-  void OnChoiceCondition(wxCommandEvent& event);
-
-  /// \brief Handles the condition choice event.
-  /// \param[in] event
-  ///   The event.
   void OnChoiceSide(wxCommandEvent& event);
 
   /// \brief Handles the column right click event.

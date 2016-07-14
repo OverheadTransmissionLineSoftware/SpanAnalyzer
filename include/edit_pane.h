@@ -185,11 +185,6 @@ class SpanTreeCtrl : public wxTreeCtrl {
   /// in the document.
   void Initialize();
 
-  /// \brief Gets the activated span.
-  /// \return The activated span. If no span is activated, a nullptr is
-  ///   returned.
-  const Span* SpanActivated();
-
  private:
   /// \brief Activates a span in the treectrl.
   /// \param[in] id
@@ -280,10 +275,6 @@ class EditPane : public wxPanel {
 
   /// \brief Destructor.
   ~EditPane();
-
-  /// \brief Gets the span that is activated in the span treectrl.
-  /// \return The activated span.
-  const Span* SpanActivated();
 
   /// \brief Updates the pane.
   /// \param[in] hint

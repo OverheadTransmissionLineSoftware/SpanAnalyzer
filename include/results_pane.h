@@ -4,12 +4,10 @@
 #ifndef OTLS_SPANANALYZER_RESULTSPANE_H_
 #define OTLS_SPANANALYZER_RESULTSPANE_H_
 
-#include "models/transmissionline/weather_load_case.h"
 #include "wx/docview.h"
 #include "wx/wx.h"
 
 #include "catenary_table_panel.h"
-#include "sag_tension_analysis_results.h"
 #include "sag_tension_table_panel.h"
 
 /// \par OVERVIEW
@@ -33,19 +31,17 @@ class ResultsPane : public wxPanel {
   /// This function is called as part of the view update process.
   void Update(wxObject* hint = nullptr);
 
-  /// \brief Gets the sag-tension analysis results.
-  /// \return The sag-tension analysis results.
-  const SagTensionAnalysisResultSet& results() const;
-
  private:
+  /// \brief Handles the condition choice event.
+  /// \param[in] event
+  ///   The event.
+  void OnChoiceCondition(wxCommandEvent& event);
+
   /// \brief Handles the weathercase set choice event.
   void OnChoiceWeathercaseSet(wxCommandEvent& event);
 
   /// \brief Updates the analysis weathercase set choice control.
   void UpdateAnalysisWeathercaseSetChoice();
-
-  /// \brief Updates the sag-tension results.
-  void UpdateSagTensionResults();
 
   /// \brief Updates the selected weathercases.
   void UpdateSelectedWeathercases();
@@ -58,17 +54,9 @@ class ResultsPane : public wxPanel {
   ///   The sag-tension table panel, which is a notebook page.
   SagTensionTablePanel* panel_table_sagtension_;
 
-  /// \var results_
-  ///   The sag-tension analysis results.
-  SagTensionAnalysisResultSet results_;
-
   /// \var view_
   ///   The view.
   wxView* view_;
-
-  /// \var weathercases_selected_
-  ///   The selected weathercases to generate results for.
-  const std::list<WeatherLoadCase>* weathercases_selected_;
 
   DECLARE_EVENT_TABLE()
 };

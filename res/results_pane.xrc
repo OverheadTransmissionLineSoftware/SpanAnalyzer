@@ -28,6 +28,24 @@
                 <content />
               </object>
             </object>
+            <object class="spacer"></object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxStaticText" name="statictext_condition">
+                <label>Condition:</label>
+              </object>
+            </object>
+            <object class ="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxChoice" name="choice_condition">
+                <selection>0</selection>
+                <size>100,-1</size>
+              </object>
+            </object>
           </object>
         </object>
         <object class="sizeritem">

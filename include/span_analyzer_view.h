@@ -6,11 +6,14 @@
 
 #include <list>
 
+#include "models/transmissionline/weather_load_case.h"
 #include "wx/docview.h"
 
-class EditPane;
-class MessagesPane;
-class ResultsPane;
+#include "edit_pane.h"
+#include "plot_pane.h"
+#include "results_pane.h"
+#include "sag_tension_analysis_results.h"
+#include "span.h"
 
 /// \par OVERVIEW
 ///
@@ -25,6 +28,7 @@ class ViewUpdateHint : public wxObject {
     kModelPreferencesEdit,
     kModelSpansEdit,
     kModelWeathercaseEdit,
+    kViewConditionChange,
     kViewWeathercasesSetChange
   };
 
@@ -54,6 +58,10 @@ class SpanAnalyzerView : public wxView {
 
   /// \brief Destructor.
   ~SpanAnalyzerView();
+
+  /// \brief Gets the display cable condition.
+  /// \return The display cable condition.
+  const CableConditionType& condition() const;
 
   /// \brief Handles closing the view.
   /// \param[in] deleteWindow
@@ -91,18 +99,74 @@ class SpanAnalyzerView : public wxView {
   /// \return The edit pane.
   EditPane* pane_edit();
 
+  /// \brief Gets the plot pane.
+  /// \return The plot pane.
+  PlotPane* pane_plot();
+
   /// \brief Gets the results pane.
   /// \return The results pane.
   ResultsPane* pane_results();
 
+  /// \brief Gets the sag-tension analysis results.
+  /// \return The sag-tension analysis results.
+  const SagTensionAnalysisResultSet& results() const;
+
+  /// \brief Sets the display condition.
+  /// \param[in] condition
+  ///   The display condition.
+  void set_condition(const CableConditionType& condition);
+
+  /// \brief Sets the activated span.
+  /// \param[in] span
+  ///   The span.
+  void set_span(const Span* span);
+
+  /// \brief Sets the activated weathercases.
+  /// \param[in] weathercases
+  ///   The weathercases.
+  void set_weathercases(const std::list<WeatherLoadCase>* weathercases);
+
+  /// \brief Gets the activated span.
+  /// \return The activated span. If no span is activated, a nullptr is
+  ///   returned.
+  const Span* span() const;
+
+  /// \brief Gets the activated weathercases.
+  /// \return The activated weathercases. If no weathercases are activated, a
+  ///   nullptr is returned.
+  const std::list<WeatherLoadCase>* weathercases() const;
+
  private:
+  /// \brief Updates the sag-tension results.
+  void UpdateSagTensionResults();
+
+  /// \var condition_
+  ///   The display cable condition.
+  CableConditionType condition_;
+
   /// \var pane_edit_
   ///   The edit pane.
   EditPane* pane_edit_;
 
+  /// \var pane_plot_
+  ///   The plot pane.
+  PlotPane* pane_plot_;
+
   /// \var pane_results_
   ///   The results pane.
   ResultsPane* pane_results_;
+
+  /// \var results_
+  ///   The sag-tension analysis results.
+  SagTensionAnalysisResultSet results_;
+
+  /// \var span_
+  ///   The span that is currently activated.
+  const Span* span_;
+
+  /// \var weathercases_
+  ///   The weathercases that are currently activated.
+  const std::list<WeatherLoadCase>* weathercases_;
 
   /// \brief This allows wxWidgets to create this class dynamically as part of
   ///   the docview framework.
