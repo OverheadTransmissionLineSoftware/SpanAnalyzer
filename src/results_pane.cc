@@ -139,9 +139,7 @@ void ResultsPane::UpdateAnalysisWeathercaseSetChoice() {
   // clears choice control
   choice->Clear();
 
-  // appends project weathercase set, and any stored in the application data
-  choice->Append("Project");
-
+  // appends weathercase groups stored in the application data
   const std::list<WeatherLoadCaseGroup>& groups =
       wxGetApp().data()->groups_weathercase;
   for (auto iter = groups.cbegin(); iter != groups.cend(); iter ++) {
@@ -164,21 +162,16 @@ void ResultsPane::UpdateSelectedWeathercases() {
   // searches the choice control to see if a weathercase group is selected
   wxChoice* choice = XRCCTRL(*this, "choice_weathercase_set", wxChoice);
   std::string str_selection = choice->GetStringSelection();
-  if (str_selection == "Project") {
-    // gets weathercases from document
-    const SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
-    view->set_weathercases(&doc->weathercases());
-  } else {
-    // gets weathercases from app data
-    const std::list<WeatherLoadCaseGroup>& groups_weathercase =
-         wxGetApp().data()->groups_weathercase;
-    for (auto iter = groups_weathercase.cbegin();
-         iter != groups_weathercase.cend(); iter++) {
-      const WeatherLoadCaseGroup& group = *iter;
-      if (group.name == str_selection) {
-        view->set_weathercases(&group.weathercases);
-        break;
-      }
+
+  // gets weathercases from app data
+  const std::list<WeatherLoadCaseGroup>& groups_weathercase =
+       wxGetApp().data()->groups_weathercase;
+  for (auto iter = groups_weathercase.cbegin();
+       iter != groups_weathercase.cend(); iter++) {
+    const WeatherLoadCaseGroup& group = *iter;
+    if (group.name == str_selection) {
+      view->set_weathercases(&group.weathercases);
+      break;
     }
   }
 }

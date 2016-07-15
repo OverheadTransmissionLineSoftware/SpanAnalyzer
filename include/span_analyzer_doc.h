@@ -7,7 +7,6 @@
 #include <list>
 
 #include "models/base/units.h"
-#include "models/transmissionline/weather_load_case.h"
 #include "wx/docview.h"
 
 #include "span.h"
@@ -47,13 +46,6 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return An iterator for the added span.
   std::list<Span>::const_iterator AppendSpan(const Span& span);
 
-  /// \brief Appends a weathercase.
-  /// \param[in] weathercase
-  ///   The weathercase being added.
-  /// \return An iterator for the added weathercase.
-  std::list<WeatherLoadCase>::const_iterator AppendWeathercase(
-      const WeatherLoadCase& weathercase);
-
   /// \brief Converts the document between unit styles.
   /// \param[in] system
   ///   The unit system.
@@ -80,14 +72,6 @@ class SpanAnalyzerDoc : public wxDocument {
   ///  The span element.
   void DeleteSpan(const std::list<Span>::const_iterator& element);
 
-  /// \brief Deletes a weathercase.
-  /// \param[in] element
-  ///   The weathercase element.
-  /// This function will set any object that references the deleted
-  /// weathercase to a nullptr.
-  void DeleteWeathercase(
-      const std::list<WeatherLoadCase>::const_iterator& element);
-
   /// \brief Inserts a span before the specified position.
   /// \param[in] position
   ///   The position to insert the span before.
@@ -97,36 +81,6 @@ class SpanAnalyzerDoc : public wxDocument {
   std::list<Span>::const_iterator InsertSpan(
       const std::list<Span>::const_iterator& position,
       const Span& span);
-
-  /// \brief Inserts a weathercase before the specified position.
-  /// \param[in] position
-  ///   The position to insert the weathercase before.
-  /// \param[in] weathercase
-  ///   The weathercase that is inserted.
-  /// \return An iterator for the inserted weathercase.
-  std::list<WeatherLoadCase>::const_iterator InsertWeathercase(
-      const std::list<WeatherLoadCase>::const_iterator& position,
-      const WeatherLoadCase& weathercase);
-
-  /// \brief Determines if the weathercase is referenced in the spans.
-  /// \param[in] element
-  ///   The weathercase element to compare.
-  /// \return The status if the weathercase is referenced or not.
-  bool IsReferencedWeathercase(
-      const std::list<WeatherLoadCase>::const_iterator& element) const;
-
-  /// \brief Determines if the weathercase description is unique.
-  /// \param[in] description
-  ///   The description to check.
-  /// \param[in] skip
-  ///   The weathercase to skip. This is necessary if you are modifying an
-  ///   existing weathercase.
-  /// \return If the description is unique.
-  /// This function is meant to be used before adding a weathercase to the
-  /// document.
-  bool IsUniqueWeathercase(
-      const std::string& description,
-      const std::list<WeatherLoadCase>::const_iterator* skip = nullptr) const;
 
   /// \brief Loads the document.
   /// \param[in] stream
@@ -143,15 +97,6 @@ class SpanAnalyzerDoc : public wxDocument {
       const std::list<Span>::const_iterator& element,
       const std::list<Span>::const_iterator& position);
 
-  /// \brief Moves the weathercase position.
-  /// \param[in] element
-  ///   The weathercase element.
-  /// \param[in] position
-  ///   The position the weathercase is to be moved before.
-  void MoveWeathercase(
-      const std::list<WeatherLoadCase>::const_iterator& element,
-      const std::list<WeatherLoadCase>::const_iterator& position);
-
   /// \brief Replaces the span.
   /// \param[in] element
   ///   The span element to replace.
@@ -161,17 +106,6 @@ class SpanAnalyzerDoc : public wxDocument {
   /// element.
   void ReplaceSpan(const std::list<Span>::const_iterator& element,
                    const Span& span);
-
-  /// \brief Replaces the weathercase.
-  /// \param[in] element
-  ///   The weathercase element to replace.
-  /// \param[in] weathercase
-  ///   The weathercase that is replacing the weathercase element.
-  /// This function maintains the same memory address for the existing
-  /// weathercase element.
-  void ReplaceWeathercase(
-      const std::list<WeatherLoadCase>::const_iterator& element,
-      const WeatherLoadCase& weathercase);
 
   /// \brief Saves the document.
   /// \param[out] stream
@@ -183,20 +117,11 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return The spans.
   const std::list<Span>& spans() const;
 
-  /// \brief Gets the weathercases.
-  /// \return The weathercases.
-  const std::list<WeatherLoadCase>& weathercases() const;
-
  private:
   /// \var spans_
   ///   The spans. This is a list so spans can be added, deleted, or modified
   ///   with a std container efficiently.
   std::list<Span> spans_;
-
-  /// \var weathercases_
-  ///   The weather cases. This is a list so weathercases can be added, deleted,
-  ///   or modified with a std container efficiently.
-  std::list<WeatherLoadCase> weathercases_;
 
   /// \brief This allows wxWidgets to create this class dynamically as part of
   ///   the docview framework.
