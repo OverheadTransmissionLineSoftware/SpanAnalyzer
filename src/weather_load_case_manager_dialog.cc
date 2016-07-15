@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "analysis_weather_load_case_manager_dialog.h"
+#include "weather_load_case_manager_dialog.h"
 
 #include "wx/spinbutt.h"
 #include "wx/xrc/xmlres.h"
@@ -9,30 +9,30 @@
 #include "weather_load_case_editor_dialog.h"
 #include "weather_load_case_unit_converter.h"
 
-BEGIN_EVENT_TABLE(AnalysisWeatherLoadCaseManagerDialog, wxDialog)
-  EVT_BUTTON(XRCID("button_groups_add"), AnalysisWeatherLoadCaseManagerDialog::OnButtonGroupAdd)
-  EVT_BUTTON(XRCID("button_groups_delete"), AnalysisWeatherLoadCaseManagerDialog::OnButtonGroupDelete)
-  EVT_BUTTON(XRCID("button_weathercases_add"), AnalysisWeatherLoadCaseManagerDialog::OnButtonWeathercaseAdd)
-  EVT_BUTTON(XRCID("button_weathercases_delete"), AnalysisWeatherLoadCaseManagerDialog::OnButtonWeathercaseDelete)
-  EVT_BUTTON(wxID_CANCEL, AnalysisWeatherLoadCaseManagerDialog::OnCancel)
-  EVT_BUTTON(wxID_OK, AnalysisWeatherLoadCaseManagerDialog::OnOk)
-  EVT_CLOSE(AnalysisWeatherLoadCaseManagerDialog::OnClose)
-  EVT_LISTBOX(XRCID("listbox_groups"), AnalysisWeatherLoadCaseManagerDialog::OnListBoxGroupSelect)
-  EVT_LISTBOX_DCLICK(XRCID("listbox_groups"), AnalysisWeatherLoadCaseManagerDialog::OnListBoxGroupDoubleClick)
-  EVT_LISTBOX_DCLICK(XRCID("listbox_weathercases"), AnalysisWeatherLoadCaseManagerDialog::OnListBoxWeatherCaseDoubleClick)
-  EVT_SPIN_DOWN(XRCID("spinbutton_groups"), AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonGroupDown)
-  EVT_SPIN_DOWN(XRCID("spinbutton_weathercases"), AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseDown)
-  EVT_SPIN_UP(XRCID("spinbutton_groups"), AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonGroupUp)
-  EVT_SPIN_UP(XRCID("spinbutton_weathercases"), AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseUp)
+BEGIN_EVENT_TABLE(WeatherLoadCaseManagerDialog, wxDialog)
+  EVT_BUTTON(XRCID("button_groups_add"), WeatherLoadCaseManagerDialog::OnButtonGroupAdd)
+  EVT_BUTTON(XRCID("button_groups_delete"), WeatherLoadCaseManagerDialog::OnButtonGroupDelete)
+  EVT_BUTTON(XRCID("button_weathercases_add"), WeatherLoadCaseManagerDialog::OnButtonWeathercaseAdd)
+  EVT_BUTTON(XRCID("button_weathercases_delete"), WeatherLoadCaseManagerDialog::OnButtonWeathercaseDelete)
+  EVT_BUTTON(wxID_CANCEL, WeatherLoadCaseManagerDialog::OnCancel)
+  EVT_BUTTON(wxID_OK, WeatherLoadCaseManagerDialog::OnOk)
+  EVT_CLOSE(WeatherLoadCaseManagerDialog::OnClose)
+  EVT_LISTBOX(XRCID("listbox_groups"), WeatherLoadCaseManagerDialog::OnListBoxGroupSelect)
+  EVT_LISTBOX_DCLICK(XRCID("listbox_groups"), WeatherLoadCaseManagerDialog::OnListBoxGroupDoubleClick)
+  EVT_LISTBOX_DCLICK(XRCID("listbox_weathercases"), WeatherLoadCaseManagerDialog::OnListBoxWeatherCaseDoubleClick)
+  EVT_SPIN_DOWN(XRCID("spinbutton_groups"), WeatherLoadCaseManagerDialog::OnSpinButtonGroupDown)
+  EVT_SPIN_DOWN(XRCID("spinbutton_weathercases"), WeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseDown)
+  EVT_SPIN_UP(XRCID("spinbutton_groups"), WeatherLoadCaseManagerDialog::OnSpinButtonGroupUp)
+  EVT_SPIN_UP(XRCID("spinbutton_weathercases"), WeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseUp)
 END_EVENT_TABLE()
 
-AnalysisWeatherLoadCaseManagerDialog::AnalysisWeatherLoadCaseManagerDialog(
+WeatherLoadCaseManagerDialog::WeatherLoadCaseManagerDialog(
     wxWindow* parent,
     const units::UnitSystem& units,
     std::list<WeatherLoadCaseGroup>* groups_weathercase) {
   // loads dialog from virtual xrc file system
   wxXmlResource::Get()->LoadDialog(this, parent,
-                                   "analysis_weather_load_case_manager_dialog");
+                                   "weather_load_case_manager_dialog");
 
   // gets listbox references
   listbox_groups_ = XRCCTRL(*this, "listbox_groups", wxListBox);
@@ -58,10 +58,10 @@ AnalysisWeatherLoadCaseManagerDialog::AnalysisWeatherLoadCaseManagerDialog(
   this->Fit();
 }
 
-AnalysisWeatherLoadCaseManagerDialog::~AnalysisWeatherLoadCaseManagerDialog() {
+WeatherLoadCaseManagerDialog::~WeatherLoadCaseManagerDialog() {
 }
 
-void AnalysisWeatherLoadCaseManagerDialog::OnButtonGroupAdd(
+void WeatherLoadCaseManagerDialog::OnButtonGroupAdd(
     wxCommandEvent& event) {
   // gets weathercase group name from user
   std::string name = wxGetTextFromUser("Enter a weathercase group name",
@@ -78,10 +78,13 @@ void AnalysisWeatherLoadCaseManagerDialog::OnButtonGroupAdd(
   listbox_groups_->Append(group.name);
 }
 
-void AnalysisWeatherLoadCaseManagerDialog::OnButtonGroupDelete(
+void WeatherLoadCaseManagerDialog::OnButtonGroupDelete(
     wxCommandEvent& event) {
-  // exits if nothing is selected
   if (index_group_activated_ == wxNOT_FOUND) {
+    // exits if nothing is selected
+    return;
+  } else if (index_group_activated_ == 0) {
+    // exits if default group is selected
     return;
   }
 
@@ -94,7 +97,7 @@ void AnalysisWeatherLoadCaseManagerDialog::OnButtonGroupDelete(
   listbox_weathercases_->Clear();
 }
 
-void AnalysisWeatherLoadCaseManagerDialog::OnButtonWeathercaseAdd(
+void WeatherLoadCaseManagerDialog::OnButtonWeathercaseAdd(
     wxCommandEvent& event) {
   // gets the weathercase group
   auto iter = std::next(groups_modified_.begin(), index_group_activated_);
@@ -119,7 +122,7 @@ void AnalysisWeatherLoadCaseManagerDialog::OnButtonWeathercaseAdd(
   }
 }
 
-void AnalysisWeatherLoadCaseManagerDialog::OnButtonWeathercaseDelete(
+void WeatherLoadCaseManagerDialog::OnButtonWeathercaseDelete(
     wxCommandEvent& event) {
   // gets weathercase listbox index
   const int index = listbox_weathercases_->GetSelection();
@@ -136,16 +139,21 @@ void AnalysisWeatherLoadCaseManagerDialog::OnButtonWeathercaseDelete(
   listbox_weathercases_->Delete(index);
 }
 
-void AnalysisWeatherLoadCaseManagerDialog::OnCancel(wxCommandEvent& event) {
+void WeatherLoadCaseManagerDialog::OnCancel(wxCommandEvent& event) {
   EndModal(wxID_CANCEL);
 }
 
-void AnalysisWeatherLoadCaseManagerDialog::OnClose(wxCloseEvent& event) {
+void WeatherLoadCaseManagerDialog::OnClose(wxCloseEvent& event) {
   EndModal(wxID_CLOSE);
 }
 
-void AnalysisWeatherLoadCaseManagerDialog::OnListBoxGroupDoubleClick(
+void WeatherLoadCaseManagerDialog::OnListBoxGroupDoubleClick(
     wxCommandEvent& event) {
+  // exits if default group is selected
+  if (index_group_activated_ == 0) {
+    return;
+  }
+
   // gets group name
   auto iter = std::next(groups_modified_.begin(), index_group_activated_);
   WeatherLoadCaseGroup& group = *iter;
@@ -165,7 +173,7 @@ void AnalysisWeatherLoadCaseManagerDialog::OnListBoxGroupDoubleClick(
   }
 }
 
-void AnalysisWeatherLoadCaseManagerDialog::OnListBoxGroupSelect(
+void WeatherLoadCaseManagerDialog::OnListBoxGroupSelect(
     wxCommandEvent& event) {
   // gets the set listbox index
   index_group_activated_ = listbox_groups_->GetSelection();
@@ -187,7 +195,7 @@ void AnalysisWeatherLoadCaseManagerDialog::OnListBoxGroupSelect(
   }
 }
 
-void AnalysisWeatherLoadCaseManagerDialog::OnListBoxWeatherCaseDoubleClick(
+void WeatherLoadCaseManagerDialog::OnListBoxWeatherCaseDoubleClick(
     wxCommandEvent& event) {
   // gets the weathercase group
   auto iter_groups = std::next(groups_modified_.begin(),
@@ -228,7 +236,7 @@ void AnalysisWeatherLoadCaseManagerDialog::OnListBoxWeatherCaseDoubleClick(
   }
 }
 
-void AnalysisWeatherLoadCaseManagerDialog::OnOk(wxCommandEvent& event) {
+void WeatherLoadCaseManagerDialog::OnOk(wxCommandEvent& event) {
   // overwrites original data with modified data
   *groups_ = groups_modified_;
 
@@ -236,10 +244,13 @@ void AnalysisWeatherLoadCaseManagerDialog::OnOk(wxCommandEvent& event) {
   EndModal(wxID_OK);
 }
 
-void AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonGroupDown(
+void WeatherLoadCaseManagerDialog::OnSpinButtonGroupDown(
     wxSpinEvent& event) {
-  // exits if nothing is selected
   if (index_group_activated_ == wxNOT_FOUND) {
+    // exits if nothing is selected
+    return;
+  } else if (index_group_activated_ == 0) {
+    // exits if default group is selected
     return;
   }
 
@@ -265,10 +276,16 @@ void AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonGroupDown(
   index_group_activated_ += 1;
 }
 
-void AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonGroupUp(
+void WeatherLoadCaseManagerDialog::OnSpinButtonGroupUp(
     wxSpinEvent& event) {
-  // exits if nothing is selected
   if (index_group_activated_ == wxNOT_FOUND) {
+    // exits if nothing is selected
+    return;
+  } else if (index_group_activated_ == 0) {
+    // exits if default group is selected
+    return;
+  } else if (index_group_activated_ == 1) {
+    // exits if group below default is selected
     return;
   }
 
@@ -293,7 +310,7 @@ void AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonGroupUp(
   index_group_activated_ -= 1;
 }
 
-void AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseDown(
+void WeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseDown(
     wxSpinEvent& event) {
   // gets weathercase index
   const int index = listbox_weathercases_->GetSelection();
@@ -325,7 +342,7 @@ void AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseDown(
   listbox_weathercases_->SetSelection(index + 1);
 }
 
-void AnalysisWeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseUp(
+void WeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseUp(
     wxSpinEvent& event) {
   // gets weathercase index
   const int index = listbox_weathercases_->GetSelection();

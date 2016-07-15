@@ -2,6 +2,29 @@
 <span_analyzer_data version="1" units="Imperial">
   <cables></cables>
   <analysis_weather_load_cases>
+    <weather_load_case_group name="Default">
+      <weather_load_case version="1">
+        <description>0.5-8-0</description>
+        <thickness_ice units="in">0.500</thickness_ice>
+        <density_ice units="lb/ft^3">57.3</density_ice>
+        <pressure_wind units="lb/ft^2">8.0</pressure_wind>
+        <temperature_cable units="deg F">0</temperature_cable>
+      </weather_load_case>
+      <weather_load_case version="1">
+        <description>0.75-8-0</description>
+        <thickness_ice units="in">0.750</thickness_ice>
+        <density_ice units="lb/ft^3">57.3</density_ice>
+        <pressure_wind units="lb/ft^2">8.0</pressure_wind>
+        <temperature_cable units="deg F">0</temperature_cable>
+      </weather_load_case>
+      <weather_load_case version="1">
+        <description>1-8-0</description>
+        <thickness_ice units="in">1.000</thickness_ice>
+        <density_ice units="lb/ft^3">57.3</density_ice>
+        <pressure_wind units="lb/ft^2">8.0</pressure_wind>
+        <temperature_cable units="deg F">0</temperature_cable>
+      </weather_load_case>
+    </weather_load_case_group>
     <weather_load_case_group name="Stringing">
       <weather_load_case version="1">
         <description>0-0-0</description>

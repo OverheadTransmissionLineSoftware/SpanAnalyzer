@@ -91,11 +91,6 @@ bool SpanAnalyzerApp::OnInit() {
   path.AppendDir("res");
   path.SetExt("xrc");
 
-  path.SetName("analysis_weather_load_case_manager_dialog");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
   path.SetName("cable_editor_dialog");
   if (!wxXmlResource::Get()->LoadFile(path)) {
     return false;
@@ -151,6 +146,11 @@ bool SpanAnalyzerApp::OnInit() {
     return false;
   };
 
+  path.SetName("weather_load_case_manager_dialog");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
+    return false;
+  };
+
   // creates main application frame
   frame_ = new SpanAnalyzerFrame(manager_doc_);
   SetTopWindow(frame_);
@@ -195,6 +195,23 @@ bool SpanAnalyzerApp::OnInit() {
   // loads application data file
   // filehandler handles all logging
   FileHandler::LoadAppData(config_.filepath_data, config_.units, data_);
+
+  // adds a default weathercase group if needed
+  bool has_default = false;
+  for (auto iter = data_.groups_weathercase.cbegin();
+       iter != data_.groups_weathercase.cend(); iter++) {
+    const WeatherLoadCaseGroup& group = *iter;
+    if (group.name == "Default") {
+      has_default = true;
+      break;
+    }
+  }
+
+  if (has_default == false) {
+    WeatherLoadCaseGroup group;
+    group.name = "Default";
+    data_.groups_weathercase.push_front(group);
+  }
 
   // loads a document if defined in command line
   if (filepath_start_ != wxEmptyString) {

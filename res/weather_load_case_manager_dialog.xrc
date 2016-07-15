@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <resource version="2.5.3.0">
-	<object class="wxDialog" name="analysis_weather_load_case_manager_dialog">
+	<object class="wxDialog" name="weather_load_case_manager_dialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<exstyle>wxWS_EX_VALIDATE_RECURSIVELY</exstyle>
-		<title>Analysis Weathercase Manager</title>
-    <object class="wxPanel" name="analysis_weather_load_case_manager_panel">
+		<title>Weathercase Manager</title>
+    <object class="wxPanel" name="weather_load_case_manager_panel">
       <style>wxTAB_TRAVERSAL</style>
       <object class="wxBoxSizer">
         <orient>wxVERTICAL</orient>
@@ -170,4 +170,3 @@
     </object>
 	</object>
 </resource>
-

@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_ANALYSISWEATHERLOADCASEMANAGERDIALOG_H_
-#define OTLS_SPANANALYZER_ANALYSISWEATHERLOADCASEMANAGERDIALOG_H_
+#ifndef OTLS_SPANANALYZER_WEATHERLOADCASEMANAGERDIALOG_H_
+#define OTLS_SPANANALYZER_WEATHERLOADCASEMANAGERDIALOG_H_
 
 #include "models/base/units.h"
 #include "wx/wx.h"
@@ -11,18 +11,18 @@
 
 /// \par OVERVIEW
 ///
-/// This dialog manages the application analysis weathercase sets and allows the
+/// This dialog manages the application weathercase groups and allows the
 /// user to edit them.
-class AnalysisWeatherLoadCaseManagerDialog : public wxDialog {
+class WeatherLoadCaseManagerDialog : public wxDialog {
  public:
   /// \brief Constructor.
-  AnalysisWeatherLoadCaseManagerDialog(
+  WeatherLoadCaseManagerDialog(
       wxWindow* parent,
       const units::UnitSystem& units,
       std::list<WeatherLoadCaseGroup>* groups_weathercase);
 
   /// \brief Destructor.
-  ~AnalysisWeatherLoadCaseManagerDialog();
+  ~WeatherLoadCaseManagerDialog();
 
  private:
   /// \brief Handles the group add button event.
@@ -122,4 +122,4 @@ class AnalysisWeatherLoadCaseManagerDialog : public wxDialog {
   DECLARE_EVENT_TABLE()
 };
 
-#endif  // OTLS_SPANANALYZER_ANALYSISWEATHERLOADCASEMANAGERDIALOG_H_
+#endif  // OTLS_SPANANALYZER_WEATHERLOADCASEMANAGERDIALOG_H_

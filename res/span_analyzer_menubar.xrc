@@ -40,8 +40,8 @@
       <object class="wxMenuItem" name="menuitem_edit_cables">
         <label>Cables</label>
       </object>
-      <object class="wxMenuItem" name="menuitem_edit_analysis_weathercases">
-        <label>Analysis Weathercases</label>
+      <object class="wxMenuItem" name="menuitem_edit_weathercases">
+        <label>Weathercases</label>
       </object>
     </object>
     <object class="wxMenu" name="menu_view">
