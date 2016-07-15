@@ -100,16 +100,6 @@ SpanAnalyzerFrame::~SpanAnalyzerFrame() {
 }
 
 void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
-  // checks to make sure document is closed
-  wxDocManager* manager = wxGetApp().manager_doc();
-  if (manager->GetCurrentDocument() != nullptr) {
-    std::string message = "Document is currently open. To modify cables, "
-      "close document and try again.";
-    wxMessageBox(message);
-
-    return;
-  }
-
   // gets application config and data
   const SpanAnalyzerConfig* config = wxGetApp().config();
   SpanAnalyzerData* data = wxGetApp().data();

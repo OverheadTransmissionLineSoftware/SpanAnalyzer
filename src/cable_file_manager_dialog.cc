@@ -10,6 +10,7 @@
 #include "cable_unit_converter.h"
 #include "file_handler.h"
 #include "span_analyzer_app.h"
+#include "span_analyzer_doc.h"
 
 BEGIN_EVENT_TABLE(CableFileManagerDialog, wxDialog)
   EVT_BUTTON(XRCID("button_add"), CableFileManagerDialog::OnButtonAdd)
@@ -63,6 +64,46 @@ CableFileManagerDialog::CableFileManagerDialog(
 CableFileManagerDialog::~CableFileManagerDialog() {
 }
 
+bool CableFileManagerDialog::IsReferencedByDocument(
+    const std::string& name) const {
+  // gets document
+  const SpanAnalyzerDoc* doc =
+      (SpanAnalyzerDoc*)wxGetApp().manager_doc()->GetCurrentDocument();
+  if (doc == nullptr) {
+    return false;
+  }
+
+  // scans all spans to see if cable name is referenced
+  for (auto iter = doc->spans().cbegin(); iter != doc->spans().cend(); iter++) {
+    const Span& span = *iter;
+    if (span.linecable.cable->name == name) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool CableFileManagerDialog::IsUniqueName(const std::string& name,
+                                          const int& index_ignore) const {
+  // scans all cablefiles to see if the cable name is a duplicate
+  for (auto iter = cablefiles_modified_.cbegin();
+       iter != cablefiles_modified_.cend(); iter++) {
+    const CableFile& cablefile = *iter;
+
+    const int index = std::distance(cablefiles_modified_.cbegin(), iter);
+    if (index == index_ignore) {
+      continue;
+    } else {
+      if (cablefile.cable.name == name) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
 void CableFileManagerDialog::OnButtonAdd(wxCommandEvent& event) {
   // opens file dialog to select files to add
   wxFileDialog dialog_file(this, "Open Cable File", "", ".cable",
@@ -99,6 +140,15 @@ void CableFileManagerDialog::OnButtonAdd(wxCommandEvent& event) {
       const int status = FileHandler::LoadCable(cablefile.filepath,
         units_, cablefile.cable);
       if (status != 0) {
+        continue;
+      }
+
+      // determines if cable name is unique
+      bool is_unique = IsUniqueName(cablefile.cable.name);
+      if (is_unique == false) {
+        std::string message = cablefile.filepath + "  --  "
+                              "Cable name is a duplicate. Skipping.";
+        wxLogError(message.c_str());
         continue;
       }
 
@@ -144,10 +194,23 @@ void CableFileManagerDialog::OnButtonEdit(wxCommandEvent& event) {
       units::UnitStyle::kDifferent,
       cablefile.cable);
 
-  // creates dialog to edit cable
-  CableEditorDialog dialog_edit(this, &cablefile.cable, units_);
-  if (dialog_edit.ShowModal() != wxID_OK) {
-    return;
+  // lets user edit cable file
+  // ensures that the cable name is unique
+  bool is_unique = false;
+  while (is_unique == false) {
+    // shows editor dialog
+    CableEditorDialog dialog_edit(this, &cablefile.cable, units_);
+    if (dialog_edit.ShowModal() != wxID_OK) {
+      return;
+    }
+
+    // checks if the cable name is unique
+    is_unique = IsUniqueName(cablefile.cable.name, index_selected_);
+    if (is_unique == false) {
+      std::string message = "Cable name is a duplicate. Please provide "
+                            "another name.";
+      wxMessageBox(message);
+    }
   }
 
   // converts units to consistent unit style
@@ -162,16 +225,32 @@ void CableFileManagerDialog::OnButtonEdit(wxCommandEvent& event) {
 
   // transfers copied cable to original
   *iter = cablefile;
+
+  // updates listctrl
+  listctrl_->SetItem(index_selected_, 0, cablefile.cable.name);
 }
 
 void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
   // creates new cable file
   CableFile cablefile;
 
-  // creates dialog to edit cable
-  CableEditorDialog dialog_edit(this, &cablefile.cable, units_);
-  if (dialog_edit.ShowModal() != wxID_OK) {
-    return;
+  // lets user edit cable file
+  // ensures that the cable name is unique
+  bool is_unique = false;
+  while (is_unique == false) {
+    // shows editor dialog
+    CableEditorDialog dialog_edit(this, &cablefile.cable, units_);
+    if (dialog_edit.ShowModal() != wxID_OK) {
+      return;
+    }
+
+    // checks if the cable name is unique
+    is_unique = IsUniqueName(cablefile.cable.name);
+    if (is_unique == false) {
+      std::string message = "Cable name is a duplicate. Please provide "
+                            "another name.";
+      wxMessageBox(message);
+    }
   }
 
   // converts units to consistent unit style
@@ -241,6 +320,18 @@ void CableFileManagerDialog::OnButtonRemove(wxCommandEvent& event) {
 
   // gets iterator to selected cablefile
   auto iter = std::next(cablefiles_modified_.begin(), index_selected_);
+  const CableFile& cablefile = *iter;
+
+  // checks if the cablefile is referenced by the document
+  bool is_referenced = IsReferencedByDocument(cablefile.cable.name);
+  if (is_referenced == true) {
+    std::string message = cablefile.filepath + "  --  "
+                          "Cable file is currently referenced by the open "
+                          "document.";
+    wxMessageBox(message);
+
+    return;
+  }
 
   // removes from application data
   cablefiles_modified_.erase(iter);
