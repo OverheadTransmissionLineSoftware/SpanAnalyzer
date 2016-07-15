@@ -6,6 +6,8 @@
 #include "wx/spinbutt.h"
 #include "wx/xrc/xmlres.h"
 
+#include "span_analyzer_app.h"
+#include "span_analyzer_doc.h"
 #include "weather_load_case_editor_dialog.h"
 #include "weather_load_case_unit_converter.h"
 
@@ -61,6 +63,62 @@ WeatherLoadCaseManagerDialog::WeatherLoadCaseManagerDialog(
 WeatherLoadCaseManagerDialog::~WeatherLoadCaseManagerDialog() {
 }
 
+bool WeatherLoadCaseManagerDialog::IsReferencedByDocument(
+    const std::string& name) const {
+  // gets document
+  const SpanAnalyzerDoc* doc =
+      (SpanAnalyzerDoc*)wxGetApp().manager_doc()->GetCurrentDocument();
+  if (doc == nullptr) {
+    return false;
+  }
+
+  // scans all spans to see if weathercase is referenced
+  for (auto iter = doc->spans().cbegin(); iter != doc->spans().cend(); iter++) {
+    const Span& span = *iter;
+
+    if (span.linecable.constraint.case_weather->description == name) {
+      return true;
+    }
+
+    if (span.linecable.weathercase_stretch_creep->description == name) {
+      return true;
+    }
+
+    if (span.linecable.weathercase_stretch_load->description == name) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool WeatherLoadCaseManagerDialog::IsUniqueName(const std::string& name,
+                                                const int& index_ignore) const {
+  if (index_group_activated_ < 0) {
+    return false;
+  }
+
+  const WeatherLoadCaseGroup& group =
+      *(std::next(groups_modified_.cbegin(), index_group_activated_));
+
+  // scans all weathercases to see if the name is a duplicate
+  for (auto iter = group.weathercases.cbegin();
+       iter != group.weathercases.cend(); iter++) {
+    const WeatherLoadCase& weathercase = *iter;
+
+    const int index = std::distance(group.weathercases.cbegin(), iter);
+    if (index == index_ignore) {
+      continue;
+    } else {
+      if (weathercase.description == name) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
 void WeatherLoadCaseManagerDialog::OnButtonGroupAdd(
     wxCommandEvent& event) {
   // gets weathercase group name from user
@@ -103,23 +161,40 @@ void WeatherLoadCaseManagerDialog::OnButtonWeathercaseAdd(
   auto iter = std::next(groups_modified_.begin(), index_group_activated_);
   WeatherLoadCaseGroup& group = *iter;
 
-  // creates a weathercase and shows an editor
+  // creates a weathercase
   WeatherLoadCase weathercase;
-  WeatherLoadCaseEditorDialog dialog(this, &weathercase, *units_);
-  if (dialog.ShowModal() == wxID_OK) {
-    // converts weathercase to consistent unit style
-    WeatherLoadCaseUnitConverter::ConvertUnitStyle(
-        *units_,
-        units::UnitStyle::kDifferent,
-        units::UnitStyle::kConsistent,
-        weathercase);
 
-    // adds weathercase to set
-    group.weathercases.push_back(weathercase);
+  // lets user edit weathercase
+  // ensures that the weathercase name is unique
+  bool is_unique = false;
+  while (is_unique == false) {
+    // creates a dialog to let the user edit
+    WeatherLoadCaseEditorDialog dialog(this, &weathercase, *units_);
+    if (dialog.ShowModal() != wxID_OK) {
+      return;
+    }
 
-    // updates weathercase listbox
-    listbox_weathercases_->Append(weathercase.description);
+    // checks if the weathercase name is unique
+    is_unique = IsUniqueName(weathercase.description);
+    if (is_unique == false) {
+      std::string message = "Weathercase name is a duplicate. Please provide "
+                            "another name.";
+      wxMessageBox(message);
+    }
   }
+
+  // converts weathercase to consistent unit style
+  WeatherLoadCaseUnitConverter::ConvertUnitStyle(
+      *units_,
+      units::UnitStyle::kDifferent,
+      units::UnitStyle::kConsistent,
+      weathercase);
+
+  // adds weathercase to set
+  group.weathercases.push_back(weathercase);
+
+  // updates weathercase listbox
+  listbox_weathercases_->Append(weathercase.description);
 }
 
 void WeatherLoadCaseManagerDialog::OnButtonWeathercaseDelete(
@@ -131,8 +206,25 @@ void WeatherLoadCaseManagerDialog::OnButtonWeathercaseDelete(
   auto iter_group = std::next(groups_modified_.begin(), index_group_activated_);
   WeatherLoadCaseGroup& group = *iter_group;
 
-  // erases from weathercase set
+  // gets the weathercase from the group
   auto iter = std::next(group.weathercases.begin(), index);
+  WeatherLoadCase& weathercase = *iter;
+
+  // checks if the weathercase is referenced by the document
+  // only applies if the 'Default' weathercase group is selected
+  if (index_group_activated_ == 0) {
+    bool is_referenced = IsReferencedByDocument(weathercase.description);
+    if (is_referenced == true) {
+      std::string message = weathercase.description + "  --  "
+                            "Weathercase is currently referenced by the open "
+                            "document.";
+      wxMessageBox(message);
+
+      return;
+    }
+  }
+
+  // erases from weathercase set
   group.weathercases.erase(iter);
 
   // updates weathercase listbox
@@ -217,23 +309,38 @@ void WeatherLoadCaseManagerDialog::OnListBoxWeatherCaseDoubleClick(
                                                  units::UnitStyle::kDifferent,
                                                  weathercase);
 
-  // shows an editor
-  WeatherLoadCaseEditorDialog dialog(this, &weathercase, *units_);
-  if (dialog.ShowModal() == wxID_OK) {
-    // converts weathercase to consistent unit style
-    WeatherLoadCaseUnitConverter::ConvertUnitStyle(
-        *units_,
-        units::UnitStyle::kDifferent,
-        units::UnitStyle::kConsistent,
-        weathercase);
+  // lets user edit weathercase
+  // ensures that the weathercase name is unique
+  bool is_unique = false;
+  while (is_unique == false) {
+    // shows an editor
+    WeatherLoadCaseEditorDialog dialog(this, &weathercase, *units_);
+    if (dialog.ShowModal() != wxID_OK) {
+      return;
+    }
 
-    // saves weathercase to modified cases
-    *iter_weathercase = weathercase;
-
-    // updates listbox of description change
-    listbox_weathercases_->SetString(index_weathercases,
-                                     weathercase.description);
+    // checks if the weathercase name is unique
+    is_unique = IsUniqueName(weathercase.description, index_weathercases);
+    if (is_unique == false) {
+      std::string message = "Weathercase name is a duplicate. Please provide "
+                            "another name.";
+      wxMessageBox(message);
+    }
   }
+
+  // converts weathercase to consistent unit style
+  WeatherLoadCaseUnitConverter::ConvertUnitStyle(
+      *units_,
+      units::UnitStyle::kDifferent,
+      units::UnitStyle::kConsistent,
+      weathercase);
+
+  // saves weathercase to modified cases
+  *iter_weathercase = weathercase;
+
+  // updates listbox of description change
+  listbox_weathercases_->SetString(index_weathercases,
+                                   weathercase.description);
 }
 
 void WeatherLoadCaseManagerDialog::OnOk(wxCommandEvent& event) {

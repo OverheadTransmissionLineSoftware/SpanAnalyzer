@@ -25,6 +25,22 @@ class WeatherLoadCaseManagerDialog : public wxDialog {
   ~WeatherLoadCaseManagerDialog();
 
  private:
+  /// \brief Determines if the cable is referenced.
+  /// \param[in] name
+  ///   The name to check.
+  /// \return If the cable file is referenced by the document.
+  /// This function scans the document to see if the cable is referenced.
+  bool IsReferencedByDocument(const std::string& name) const;
+
+  /// \brief Determines if the cable name is unique.
+  /// \param[in] name
+  ///   The name to check.
+  /// \param[in] index_ignore
+  ///   The index to skip (i.e. editing the name of an existing cable).
+  /// \return If the cable name is unique.
+  bool IsUniqueName(const std::string& name,
+                    const int& index_ignore = -1) const;
+
   /// \brief Handles the group add button event.
   /// \param[in] event
   ///   The event.
