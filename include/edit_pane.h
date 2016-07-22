@@ -39,29 +39,29 @@ class SpanTreeItemData : public wxTreeItemData {
 
 /// \par OVERVIEW
 ///
-/// This class provides an interface for modifying the spans in the document.
-/// The treectrl should always be in sync with the spans in the document.
+/// This class is an wxAUI pane that allows the user to edit the document.
 ///
 /// \par ACTIVATED SPAN
 ///
-/// The span that is activated in the tree is the focus of the remaining view
-/// windows.
-class SpanTreeCtrl : public wxTreeCtrl {
+/// The span that is activated in this window is the focus of the other view
+/// panes.
+class EditPane : public wxPanel {
  public:
   /// \brief Constructor.
   /// \param[in] parent
   ///   The parent window.
   /// \param[in] view
   ///   The view.
-  SpanTreeCtrl(wxWindow* parent, wxView* view);
+  EditPane(wxWindow* parent, wxView* view);
 
   /// \brief Destructor.
-  ~SpanTreeCtrl();
+  ~EditPane();
 
-  /// \brief Initializes the spans in the control.
-  /// This function deletes all tree items and re-populates with spans
-  /// in the document.
-  void Initialize();
+  /// \brief Updates the pane.
+  /// \param[in] hint
+  ///   The hint describing what kind of update is needed.
+  /// This function is called as part of the view update process.
+  void Update(wxObject* hint = nullptr);
 
  private:
   /// \brief Activates a span in the treectrl.
@@ -91,6 +91,31 @@ class SpanTreeCtrl : public wxTreeCtrl {
   /// \param[in] id
   ///   The item ID of the selected span.
   void EditSpan(const wxTreeItemId& id);
+
+  /// \brief Initializes the treectrl.
+  /// This function deletes all tree items and re-populates with spans
+  /// in the document.
+  void InitializeTreeCtrl();
+
+  /// \brief Handles the add button event.
+  /// \param[in] event
+  ///   The event.
+  void OnButtonAdd(wxCommandEvent& event);
+
+  /// \brief Handles the copy button event.
+  /// \param[in] event
+  ///   The event.
+  void OnButtonCopy(wxCommandEvent& event);
+
+  /// \brief Handles the delete button event.
+  /// \param[in] event
+  ///   The event.
+  void OnButtonDelete(wxCommandEvent& event);
+
+  /// \brief Handles the edit button event.
+  /// \param[in] event
+  ///   The event.
+  void OnButtonEdit(wxCommandEvent& event);
 
   /// \brief Handles a context menu selection event.
   /// \param[in] event
@@ -136,38 +161,11 @@ class SpanTreeCtrl : public wxTreeCtrl {
   ///   The view.
   wxView* view_;
 
+  /// \var treectrl_
+  ///  The treectrl that shows the document.
+  wxTreeCtrl* treectrl_;
+
   DECLARE_EVENT_TABLE()
-};
-
-/// \par OVERVIEW
-///
-/// This class is an wxAUI pane that holds the weathercase and span treectrls.
-class EditPane : public wxPanel {
- public:
-  /// \brief Constructor.
-  /// \param[in] parent
-  ///   The parent window.
-  /// \param[in] view
-  ///   The view.
-  EditPane(wxWindow* parent, wxView* view);
-
-  /// \brief Destructor.
-  ~EditPane();
-
-  /// \brief Updates the pane.
-  /// \param[in] hint
-  ///   The hint describing what kind of update is needed.
-  /// This function is called as part of the view update process.
-  void Update(wxObject* hint = nullptr);
-
- private:
-  /// \var view_
-  ///   The view.
-  wxView* view_;
-
-  /// \var treectrl_spans_
-  ///  The span treectrl.
-  SpanTreeCtrl* treectrl_spans_;
 };
 
 # endif //  OTLS_SPANANALYZER_EDITPANE_H_
