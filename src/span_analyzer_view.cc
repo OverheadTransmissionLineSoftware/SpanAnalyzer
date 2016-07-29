@@ -15,10 +15,6 @@ SpanAnalyzerView::SpanAnalyzerView() {
 SpanAnalyzerView::~SpanAnalyzerView() {
 }
 
-const CableConditionType& SpanAnalyzerView::condition() const {
-  return condition_;
-}
-
 bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   if (!wxView::OnCreate(doc, flags)) {
     return false;
@@ -26,7 +22,7 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
 
   // initializes cached references
   span_ = nullptr;
-  weathercases_ = nullptr;
+  group_weathercases_ = nullptr;
   condition_ = CableConditionType::kInitial;
 
   // gets main application frame
@@ -123,6 +119,14 @@ void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
   pane_results_->Update(hint);
 }
 
+const CableConditionType& SpanAnalyzerView::condition() const {
+  return condition_;
+}
+
+const WeatherLoadCaseGroup* SpanAnalyzerView::group_weathercases() const {
+  return group_weathercases_;
+}
+
 EditPane* SpanAnalyzerView::pane_edit() {
   return pane_edit_;
 }
@@ -139,21 +143,17 @@ void SpanAnalyzerView::set_condition(const CableConditionType& condition) {
   condition_ = condition;
 }
 
+void SpanAnalyzerView::set_group_weathercase(
+    const WeatherLoadCaseGroup* group) {
+  group_weathercases_ = group;
+}
+
 void SpanAnalyzerView::set_span(const Span* span) {
   span_ = span;
 }
 
-void SpanAnalyzerView::set_weathercases(
-    const std::list<WeatherLoadCase>* weathercases) {
-  weathercases_ = weathercases;
-}
-
 const Span* SpanAnalyzerView::span() const {
   return span_;
-}
-
-const std::list<WeatherLoadCase>* SpanAnalyzerView::weathercases() const {
-  return weathercases_;
 }
 
 /// \todo add a log message in here for the analysis time
@@ -186,8 +186,8 @@ void SpanAnalyzerView::UpdateSagTensionResults() {
     return;
   }
 
-  // checks if weathercase set has been selected
-  if (weathercases_ == nullptr) {
+  // checks if weathercase group has been selected
+  if (group_weathercases_ == nullptr) {
     return;
   }
 
@@ -199,7 +199,9 @@ void SpanAnalyzerView::UpdateSagTensionResults() {
   reloader.set_length_unloaded_unstretched_adjustment(0);
 
   // runs analysis for each weathercase
-  for (auto iter = weathercases_->cbegin(); iter != weathercases_->cend();
+  const std::list<WeatherLoadCase>* weathercases =
+      &group_weathercases_->weathercases;
+  for (auto iter = weathercases->cbegin(); iter != weathercases->cend();
        iter++) {
     const WeatherLoadCase& weathercase = *iter;
 

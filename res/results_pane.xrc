@@ -1,61 +1,71 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <resource version="2.5.3.0">
   <object class="wxPanel" name="results_pane">
-			<style>wxTAB_TRAVERSAL</style>
-      <object class="wxBoxSizer">
-        <orient>wxVERTICAL</orient>
-        <object class="sizeritem">
-          <option>0</option>
-          <flag>wxEXPAND | wxALL</flag>
-          <border>0</border>
-          <object class="wxBoxSizer">
-            <orient>wxHORIZONTAL</orient>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag>wxALL</flag>
-              <border>5</border>
-              <object class="wxStaticText" name="statictext_weathercase_set">
-                <label>Weathercase Set:</label>
-              </object>
-            </object>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag>wxALL</flag>
-              <border>5</border>
-              <object class="wxChoice" name="choice_weathercase_set">
-                <selection>0</selection>
-                <size>200,-1</size>
-                <content />
-              </object>
-            </object>
-            <object class="spacer"></object>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag>wxALL</flag>
-              <border>5</border>
-              <object class="wxStaticText" name="statictext_condition">
-                <label>Condition:</label>
-              </object>
-            </object>
-            <object class ="sizeritem">
-              <option>0</option>
-              <flag>wxALL</flag>
-              <border>5</border>
-              <object class="wxChoice" name="choice_condition">
-                <selection>0</selection>
-                <size>100,-1</size>
-              </object>
+    <style>wxTAB_TRAVERSAL</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <option>0</option>
+        <flag>wxEXPAND | wxALL</flag>
+        <border>0</border>
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxALL|wxALIGN_CENTER</flag>
+            <border>5</border>
+            <object class="wxStaticText" name="statictext_report">
+              <label>Report:</label>
             </object>
           </object>
-        </object>
-        <object class="sizeritem">
-          <option>1</option>
-          <flag>wxEXPAND | wxALL</flag>
-          <border>0</border>
-          <object class="wxNotebook" name="notebook_results">
-            <style>wxNB_TOP</style>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxChoice" name="choice_report">
+              <selection>0</selection>
+              <size>200,-1</size>
+              <content />
+            </object>
+          </object>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxALL|wxALIGN_CENTER</flag>
+            <border>5</border>
+            <object class="wxStaticText" name="statictext_weathercase_group">
+              <label>Weathercase Group:</label>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxChoice" name="choice_weathercase_group">
+              <selection>0</selection>
+              <size>200,-1</size>
+              <content />
+            </object>
+          </object>
+          <object class="spacer"></object>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxALL|wxALIGN_CENTER</flag>
+            <border>5</border>
+            <object class="wxStaticText" name="statictext_condition">
+              <label>Condition:</label>
+            </object>
+          </object>
+          <object class ="sizeritem">
+            <option>0</option>
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxChoice" name="choice_condition">
+              <selection>0</selection>
+              <size>100,-1</size>
+            </object>
           </object>
         </object>
       </object>
-		</object>
+    </object>
+  </object>
 </resource>
