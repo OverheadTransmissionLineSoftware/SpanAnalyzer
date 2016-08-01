@@ -4,6 +4,8 @@
 #ifndef OTLS_SPANANALYZER_REPORTTABLE_H_
 #define OTLS_SPANANALYZER_REPORTTABLE_H_
 
+#include <list>
+
 #include "wx/listctrl.h"
 #include "wx/wx.h"
 

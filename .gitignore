@@ -16,7 +16,6 @@
 # Visual Studio temp files #
 ############################
 *.db
-*.filters
 *.idb
 *.ilk
 *.lastbuildstate

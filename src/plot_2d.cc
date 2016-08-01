@@ -3,6 +3,8 @@
 
 #include "plot_2d.h"
 
+#include <algorithm>
+
 Plot2d::Plot2d() {
   axis_horizontal_ = PlotAxis(PlotAxis::OrientationType::kHorizontal);
   axis_vertical_ = PlotAxis(PlotAxis::OrientationType::kVertical);

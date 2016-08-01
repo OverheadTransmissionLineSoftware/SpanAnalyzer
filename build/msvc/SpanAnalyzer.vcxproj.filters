@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\src\cable_constraint_xml_handler.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cable_file_manager_dialog.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cable_xml_handler.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cable_unit_converter.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\edit_pane.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\error_message_dialog.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\file_handler.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\line_cable_xml_handler.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\line_data_set_2d.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\line_renderer_2d.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\log_pane.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plot_2d.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plot_axis.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plot_pane.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\preferences_dialog.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\results_pane.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\span.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\span_analyzer_app.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\span_analyzer_config_xml_handler.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\span_analyzer_data_xml_handler.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\span_analyzer_doc.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\span_analyzer_doc_xml_handler.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\span_analyzer_frame.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\span_analyzer_view.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\span_editor_dialog.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\span_unit_converter.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\span_xml_handler.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_xml_handler.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\weather_load_case_editor_dialog.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\weather_load_case_unit_converter.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\weather_load_case_xml_handler.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\xml_handler.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cable_editor_dialog.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\report_table.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\weather_load_case_manager_dialog.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\cable_constraint_xml_handler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\cable_editor_dialog.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\cable_file_manager_dialog.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\cable_unit_converter.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\cable_xml_handler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\edit_pane.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\error_message_dialog.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\line_cable_xml_handler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\line_data_set_2d.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\line_renderer_2d.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\log_pane.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\plot_2d.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\plot_axis.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\plot_pane.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\preferences_dialog.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\results_pane.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sag_tension_analysis_results.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\span_analyzer_data.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\span_analyzer_data_xml_handler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\span_analyzer_doc.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\span_analyzer_doc_xml_handler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\span_analyzer_frame.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\span_analyzer_view.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\span_editor_dialog.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\span_unit_converter.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\span_xml_handler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_xml_handler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\weather_load_case_editor_dialog.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\weather_load_case_unit_converter.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\weather_load_case_xml_handler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\xml_handler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\span.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\span_analyzer_app.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\span_analyzer_config_xml_handler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\file_handler.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\span_analyzer_config.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\report_table.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\weather_load_case_manager_dialog.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\res\cable_editor_dialog.xrc">
+      <Filter>Resources</Filter>
+    </Xml>
+    <Xml Include="..\..\res\cable_file_manager_dialog.xrc">
+      <Filter>Resources</Filter>
+    </Xml>
+    <Xml Include="..\..\res\edit_pane.xrc">
+      <Filter>Resources</Filter>
+    </Xml>
+    <Xml Include="..\..\res\error_message_dialog.xrc">
+      <Filter>Resources</Filter>
+    </Xml>
+    <Xml Include="..\..\res\preferences_dialog.xrc">
+      <Filter>Resources</Filter>
+    </Xml>
+    <Xml Include="..\..\res\results_pane.xrc">
+      <Filter>Resources</Filter>
+    </Xml>
+    <Xml Include="..\..\res\span_analyzer_menubar.xrc">
+      <Filter>Resources</Filter>
+    </Xml>
+    <Xml Include="..\..\res\span_editor_dialog.xrc">
+      <Filter>Resources</Filter>
+    </Xml>
+    <Xml Include="..\..\res\weather_load_case_editor_dialog.xrc">
+      <Filter>Resources</Filter>
+    </Xml>
+    <Xml Include="..\..\appdata.xml">
+      <Filter>Test</Filter>
+    </Xml>
+    <Xml Include="..\..\res\weather_load_case_manager_dialog.xrc">
+      <Filter>Resources</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\test\cables\ACSR_Drake.cable">
+      <Filter>Test</Filter>
+    </None>
+    <None Include="..\..\res\icon.xpm">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="..\..\spananalyzer.conf">
+      <Filter>Test</Filter>
+    </None>
+    <None Include="..\..\test\test.spananalyzer">
+      <Filter>Test</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{a40be0d0-edc4-432e-b3ba-7513c4adecb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test">
+      <UniqueIdentifier>{135c9817-ea18-4724-b49d-e366fb2866bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{acc64a52-ef3a-483b-a9ff-a1d520257a25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{747fee09-212f-4727-b146-f4cec438af22}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\res\icon.ico">
+      <Filter>Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\res\spananalyzer.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
