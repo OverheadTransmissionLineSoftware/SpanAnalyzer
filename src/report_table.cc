@@ -3,6 +3,7 @@
 
 #include "report_table.h"
 
+#include "models/base/helper.h"
 #include "wx/clipbrd.h"
 
 /// \par OVERVIEW
@@ -35,42 +36,49 @@ struct SortData {
 /// wxListCtrl::SetItemData().
 int wxCALLBACK wxListCompareFunction(wxIntPtr item1, wxIntPtr item2,
                                      wxIntPtr data_sort) {
-  // gets sort column
+  // gets sort column and order
   const SortData* data = (SortData*)data_sort;
-
-  // iterator for accessing lists
-  std::list<std::string>::const_iterator it;
 
   // gets string from row1
   const ReportRow* row1 = (ReportRow*)item1;
-  it = std::next(row1->values.cbegin(), data->index);
-  const std::string& str1 = *it;
+  const std::string& str1 = *std::next(row1->values.cbegin(), data->index);
 
   // gets string from row2
   const ReportRow* row2 = (ReportRow*)item2;
-  it = std::next(row2->values.cbegin(), data->index);
-  const std::string& str2 = *it;
+  const std::string& str2 = *std::next(row2->values.cbegin(), data->index);
 
-  // compares strings
-  unsigned int i = 0;
-  while (i < str1.length() && i < str2.length()) {
-    if (tolower(str1[i]) < tolower(str2[i])) {
-      if (data->type == SortOrderType::kAscending) {
-        return -1;
-      } else {
-        return 1;
-      }
-    } else if (tolower(str1[i]) > tolower(str2[i])) {
-      if (data->type == SortOrderType::kAscending) {
-        return 1;
-      } else {
-        return -1;
-      }
+  // attempts to compare strings as numbers
+  int status;
+  if (helper::IsNumeric(str1) && helper::IsNumeric(str2) == true) {
+    const double dbl1 = std::stod(str1);
+    const double dbl2 = std::stod(str2);
+
+    if (dbl1 == dbl2) {
+      status = 0;
+    } else if (dbl1 < dbl2) {
+      status = -1;
+    } else {
+      status = 1;
     }
-    ++i;
-  }
 
-  return ( str1.length() < str2.length() );
+    // applies sort order
+    if (data->type == SortOrderType::kAscending) {
+      return status;
+    } else {
+      return -1 * status;
+    }
+
+  // compares as strings
+  } else {
+    status = helper::CompareStrings(str1, str2);
+
+    // applies sort order
+    if (data->type == SortOrderType::kAscending) {
+      return status;
+    } else {
+      return -1 * status;
+    }
+  }
 }
 
 enum {
