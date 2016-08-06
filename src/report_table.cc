@@ -21,6 +21,15 @@ struct SortData {
   int index;
 };
 
+/// \par OVERVIEW
+///
+/// This is the enumeration for the context menu.
+enum {
+  kCopyHeaders = 0,
+  kCopyRow = 1,
+  kCopyTable = 2
+};
+
 /// \brief This function is used by the wxListCtrl to sort items.
 /// \param[in] item1
 ///   The first item to compare.
@@ -50,6 +59,7 @@ int wxCALLBACK wxListCompareFunction(wxIntPtr item1, wxIntPtr item2,
   // attempts to compare strings as numbers
   int status;
   if (helper::IsNumeric(str1) && helper::IsNumeric(str2) == true) {
+    // compares as numbers
     const double dbl1 = std::stod(str1);
     const double dbl2 = std::stod(str2);
 
@@ -60,34 +70,22 @@ int wxCALLBACK wxListCompareFunction(wxIntPtr item1, wxIntPtr item2,
     } else {
       status = 1;
     }
-
-    // applies sort order
-    if (data->type == SortOrderType::kAscending) {
-      return status;
-    } else {
-      return -1 * status;
-    }
-
-  // compares as strings
   } else {
+    // compares as strings
     status = helper::CompareStrings(str1, str2);
+  }
 
-    // applies sort order
-    if (data->type == SortOrderType::kAscending) {
-      return status;
-    } else {
-      return -1 * status;
-    }
+  // applies sort order
+  if (data->type == SortOrderType::kAscending) {
+    return status;
+  } else {
+    return -1 * status;
   }
 }
 
-enum {
-  kCopyTable = 0,
-  kcopyRow = 1
-};
-
 BEGIN_EVENT_TABLE(ReportTable, wxPanel)
   EVT_LIST_COL_CLICK(wxID_ANY, ReportTable::OnColumnClick)
+  EVT_LIST_COL_RIGHT_CLICK(wxID_ANY, ReportTable::OnColumnRightClick)
   EVT_LIST_ITEM_RIGHT_CLICK(wxID_ANY, ReportTable::OnItemRightClick)
   EVT_MENU(wxID_ANY, ReportTable::OnContextMenuSelect)
 END_EVENT_TABLE()
@@ -108,43 +106,6 @@ ReportTable::ReportTable(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
 }
 
 ReportTable::~ReportTable() {
-}
-
-void ReportTable::CopyReportToClipboard(const bool& is_included_headers) const {
-  if (wxTheClipboard->Open()) {
-    // creates a single string with all of the table data
-    // the \t character is used to separate entries on the same row
-    // the \n character is used to specify a new line
-    std::string str;
-    const int kRowMax = listctrl_->GetItemCount() - 1;
-    const int kColumnMax = listctrl_->GetColumnCount() - 1;
-    for (int index_row = 0; index_row <= kRowMax; index_row++) {
-
-      for (int index_column = 0; index_column <= kColumnMax; index_column++) {
-        // adds string from row/column index
-        str = str + listctrl_->GetItemText(index_row, index_column);
-
-        // adds tab character for all but the last column
-        if (index_column != kColumnMax) {
-          str = str + "\t";
-        }
-      }
-
-      // adds new line character for all but the last row
-      if (index_row != kRowMax) {
-        str = str + "\n";
-      }
-    }
-
-    // creates a text data object to store clipboard information
-    wxTextDataObject* data = new wxTextDataObject();
-    data->SetText(str);
-
-    // copies to the clipboard
-    wxTheClipboard->SetData(data);
-
-    wxTheClipboard->Close();
-  }
 }
 
 void ReportTable::Refresh() {
@@ -212,6 +173,68 @@ void ReportTable::ClearListCtrl() {
   listctrl_->ClearAll();
 }
 
+std::string ReportTable::ClipboardStringHeaders() const {
+  std::string str;
+  const int kColumnMax = listctrl_->GetColumnCount() - 1;
+  for (int index_column = 0; index_column <= kColumnMax; index_column++) {
+    wxListItem item;
+    listctrl_->GetColumn(index_column, item);
+    str = str + item.GetText();
+
+    // adds tab or new line character
+    if (index_column == kColumnMax) {
+      str = str + "\n";
+    } else {
+      str = str + "\t";
+    }
+  }
+
+  return str;
+}
+
+std::string ReportTable::ClipboardStringRow(const int& index) const {
+  // initializes
+  std::string str;
+  const int kColumnMax = listctrl_->GetColumnCount() - 1;
+
+  // iterates over the number of columns
+  for (int index_column = 0; index_column <= kColumnMax; index_column++) {
+    // adds string from row/column index
+    str = str + listctrl_->GetItemText(index, index_column);
+
+    // adds tab or new line character
+    if (index_column == kColumnMax) {
+      str = str + "\n";
+    } else {
+      str = str + "\t";
+    }
+  }
+
+  return str;
+}
+
+std::string ReportTable::ClipBoardStringTable() const {
+  std::string str;
+  const int kRowMax = listctrl_->GetItemCount() - 1;
+  for (int index_row = 0; index_row <= kRowMax; index_row++) {
+    str = str + ClipboardStringRow(index_row);
+  }
+
+  return str;
+}
+
+void ReportTable::CopyToClipboard(const std::string& str) {
+  if (wxTheClipboard->Open()) {
+    // creates a text data object to store clipboard information
+    wxTextDataObject* data = new wxTextDataObject();
+    data->SetText(str);
+
+    // copies to the clipboard and closes
+    wxTheClipboard->SetData(data);
+    wxTheClipboard->Close();
+  }
+}
+
 void ReportTable::OnColumnClick(wxListEvent& event) {
   // gets column index
   const int index_col = event.GetColumn();
@@ -232,26 +255,55 @@ void ReportTable::OnColumnClick(wxListEvent& event) {
   Sort();
 }
 
+void ReportTable::OnColumnRightClick(wxListEvent& event) {
+  // displays a context menu based on the item that was right clicked
+  wxMenu menu;
+  menu.Append(kCopyHeaders, "Copy Headers");
+  menu.Append(kCopyTable, "Copy Table");
+
+  // shows context menu
+  // the event is caught by the the report table
+  PopupMenu(&menu, event.GetPoint());
+
+  // stops processing event (needed to allow pop-up menu to catch its event)
+  event.Skip();
+}
+
 void ReportTable::OnContextMenuSelect(wxCommandEvent& event) {
   // gets context menu selection and sends to handler function
   const int id_event = event.GetId();
-  if (id_event == kCopyTable) {
-    CopyReportToClipboard();
+  if (id_event == kCopyHeaders) {
+    std::string str = ClipboardStringHeaders();
+    CopyToClipboard(str);
+  } else if (id_event == kCopyRow) {
+    long index = SelectedListCtrlItem();
+    std::string str = ClipboardStringRow(index);
+    CopyToClipboard(str);
+  } else if (id_event == kCopyTable) {
+    std::string str = ClipBoardStringTable();
+    CopyToClipboard(str);
   }
 }
 
 void ReportTable::OnItemRightClick(wxListEvent& event) {
   // displays a context menu based on the item that was right clicked
   wxMenu menu;
-  menu.Append(kcopyRow, "Copy Row");
+  menu.Append(kCopyRow, "Copy Row");
   menu.Append(kCopyTable, "Copy Table");
 
   // shows context menu
-  // the event is caught by the edit panel
+  // the event is caught by the report table
   PopupMenu(&menu, event.GetPoint());
 
   // stops processing event (needed to allow pop-up menu to catch its event)
   event.Skip();
+}
+
+long ReportTable::SelectedListCtrlItem() const {
+  // searches for an item that has a selected state
+  // initializes item at -1 so that it searches at beginning
+  // only one item can be selected at a time for this control
+  return listctrl_->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
 }
 
 void ReportTable::Sort() {

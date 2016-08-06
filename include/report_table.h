@@ -96,20 +96,40 @@ class ReportTable : public wxPanel {
   /// \brief Clears the listctrl.
   void ClearListCtrl();
 
-  /// \brief Copies table information to the clipboard.
-  /// This information is copied directly from the listctrl, so it will reflect
-  /// sorting.
-  void CopyReportToClipboard(const bool& is_included_headers = false) const;
+  /// \brief Gets a clipboard string for the column headers.
+  /// \return A concatenated string. Starting from left to right, with each
+  ///   value (column) separated a tab character. The end of the string will
+  ///   contain a new line character.
+  std::string ClipboardStringHeaders() const;
 
-  /// \brief Copies the row to the clipboard.
-  /// This information is copied directly from the listctrl, so it will reflect
-  /// sorting.
-  void CopyRowToClipboard() const;
+  /// \brief Gets a clipboard string for a specific row.
+  /// \param[in] index
+  ///   The row index.
+  /// \return A concatenated string. Starting from left to right, with each
+  ///   value (column) separated a tab character. The end of the string will
+  ///   contain a new line character.
+  std::string ClipboardStringRow(const int& index) const;
+
+  /// \brief Gets a clipboard string for the entire table, excluding headers.
+  /// \return A concatenated string. Starting from left to right, with each
+  ///   value (column) separated a tab character. The end of a row will
+  ///   contain a new line character.
+  std::string ClipBoardStringTable() const;
+
+  /// \brief Copies the string to the clipboard.
+  /// \param[in] str
+  ///   The string.
+  void CopyToClipboard(const std::string& str);
 
   /// \brief Handles the column click event.
   /// \param[in] event
   ///   The event.
   void OnColumnClick(wxListEvent& event);
+
+  /// \brief Handles the column click event.
+  /// \param[in] event
+  ///   The event.
+  void OnColumnRightClick(wxListEvent& event);
 
   /// \brief Handles the context menu select event.
   /// \param[in] event
@@ -120,6 +140,10 @@ class ReportTable : public wxPanel {
   /// \param[in] event
   ///   The event.
   void OnItemRightClick(wxListEvent& event);
+
+  /// \brief Gets the selected listctrl item.
+  /// \return The selected item index. If no item is selected, -1 is returned.
+  long SelectedListCtrlItem() const;
 
   /// \brief Sorts the listctrl.
   void Sort();
