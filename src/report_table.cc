@@ -5,6 +5,10 @@
 
 #include "models/base/helper.h"
 #include "wx/clipbrd.h"
+#include "wx/imaglist.h"
+
+#include "../res/sort_arrow_up.xpm"
+#include "../res/sort_arrow_down.xpm"
 
 /// \par OVERVIEW
 ///
@@ -103,6 +107,12 @@ ReportTable::ReportTable(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(listctrl_, 1, wxEXPAND);
   SetSizer(sizer);
+
+  // assigns images to listctrl
+  wxImageList* images = new wxImageList(16, 16, true);
+  images->Add(wxBITMAP(sort_arrow_down), wxColour(255, 0, 0));
+  images->Add(wxBITMAP(sort_arrow_up), wxColour(255, 0, 0));
+  listctrl_->AssignImageList(images, wxIMAGE_LIST_SMALL);
 }
 
 ReportTable::~ReportTable() {
@@ -236,19 +246,38 @@ void ReportTable::CopyToClipboard(const std::string& str) {
 }
 
 void ReportTable::OnColumnClick(wxListEvent& event) {
-  // gets column index
-  const int index_col = event.GetColumn();
+  // updates sorted column index
+  const int index_sorted_old = index_sorted_;
+  index_sorted_ = event.GetColumn();
 
-  // updates column and sort order
-  if (index_col == index_sorted_) {
+  // updates sort order
+  if (index_sorted_old == index_sorted_) {
+    // inverses sort order if same column is selected
     if (type_sort_ == SortOrderType::kAscending) {
       type_sort_ = SortOrderType::kDescending;
     } else if (type_sort_ == SortOrderType::kDescending) {
       type_sort_ = SortOrderType::kAscending;
     }
-  } else {
-    index_sorted_ = index_col;
+  } else if (index_sorted_old == -1) {
+    // initializes sort order if no columns were sorted before
     type_sort_ = SortOrderType::kAscending;
+  }
+
+  // changes column header images
+  wxListItem item;
+  item.SetMask(wxLIST_MASK_IMAGE);
+
+  if (0 <= index_sorted_old) {
+    item.SetImage(-1);
+    listctrl_->SetColumn(index_sorted_old, item);
+  }
+
+  if (type_sort_ == SortOrderType::kAscending) {
+    item.SetImage(0);
+    listctrl_->SetColumn(index_sorted_, item);
+  } else if (type_sort_ == SortOrderType::kDescending) {
+    item.SetImage(1);
+    listctrl_->SetColumn(index_sorted_, item);
   }
 
   // sorts the listctrl
