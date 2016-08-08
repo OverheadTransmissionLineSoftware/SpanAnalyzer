@@ -54,6 +54,11 @@ class ResultsPane : public wxPanel {
   ///   The event.
   void OnChoiceWeathercaseGroup(wxCommandEvent& event);
 
+  /// \brief Handles the listctrl focus event.
+  /// \param[in] event
+  ///   The event.
+  void OnListCtrlFocus(wxListEvent& event);
+
   /// \brief Updates the report data.
   void UpdateReportData();
 

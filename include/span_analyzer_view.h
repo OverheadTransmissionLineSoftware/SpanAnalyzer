@@ -29,6 +29,7 @@ class ViewUpdateHint : public wxObject {
     kModelSpansEdit,
     kModelWeathercaseEdit,
     kViewConditionChange,
+    kViewWeathercaseChange,
     kViewWeathercasesSetChange
   };
 
@@ -100,6 +101,10 @@ class SpanAnalyzerView : public wxView {
   ///   activated, a nullptr is returned.
   const WeatherLoadCaseGroup* group_weathercases() const;
 
+  /// \brief Gets the selected weathercase index.
+  /// \return The selected weathercase index.
+  const int index_weathercase() const;
+
   /// \brief Gets the edit pane.
   /// \return The edit pane.
   EditPane* pane_edit();
@@ -126,6 +131,11 @@ class SpanAnalyzerView : public wxView {
   ///   The weathercase group.
   void set_group_weathercase(const WeatherLoadCaseGroup* group);
 
+  /// \brief Sets the selected weathercase index.
+  /// \param[in] index_weathercase
+  ///   The selected weathercase index.
+  void set_index_weathercase(const int& index_weathercase);
+
   /// \brief Sets the activated span.
   /// \param[in] span
   ///   The span.
@@ -147,6 +157,10 @@ class SpanAnalyzerView : public wxView {
   /// \var group_weathercases_
   ///   The weathercase group that is currently activated.
   const WeatherLoadCaseGroup* group_weathercases_;
+
+  /// \var index_weathercase_
+  ///   The weathercase index that is currently selected.
+  int index_weathercase_;
 
   /// \var pane_edit_
   ///   The edit pane.

@@ -24,6 +24,7 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   span_ = nullptr;
   group_weathercases_ = nullptr;
   condition_ = CableConditionType::kInitial;
+  index_weathercase_ = -1;
 
   // gets main application frame
   wxFrame* frame = ((wxFrame *)wxGetApp().GetTopWindow());
@@ -127,6 +128,10 @@ const WeatherLoadCaseGroup* SpanAnalyzerView::group_weathercases() const {
   return group_weathercases_;
 }
 
+const int SpanAnalyzerView::index_weathercase() const {
+  return index_weathercase_;
+}
+
 EditPane* SpanAnalyzerView::pane_edit() {
   return pane_edit_;
 }
@@ -146,6 +151,10 @@ void SpanAnalyzerView::set_condition(const CableConditionType& condition) {
 void SpanAnalyzerView::set_group_weathercase(
     const WeatherLoadCaseGroup* group) {
   group_weathercases_ = group;
+}
+
+void SpanAnalyzerView::set_index_weathercase(const int& index_weathercase) {
+  index_weathercase_ = index_weathercase;
 }
 
 void SpanAnalyzerView::set_span(const Span* span) {

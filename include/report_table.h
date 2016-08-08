@@ -71,6 +71,10 @@ class ReportTable : public wxPanel {
   /// \brief Destructor.
   ~ReportTable();
 
+  /// \brief Gets the focused listctrl item index.
+  /// \return The focused item index. If no item is focused, -1 is returned.
+  long IndexFocused() const;
+
   /// \brief Refreshes the listctrl with the data.
   void Refresh();
 
@@ -140,10 +144,6 @@ class ReportTable : public wxPanel {
   /// \param[in] event
   ///   The event.
   void OnItemRightClick(wxListEvent& event);
-
-  /// \brief Gets the selected listctrl item.
-  /// \return The selected item index. If no item is selected, -1 is returned.
-  long SelectedListCtrlItem() const;
 
   /// \brief Sorts the listctrl.
   void Sort();

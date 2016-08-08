@@ -118,6 +118,13 @@ ReportTable::ReportTable(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
 ReportTable::~ReportTable() {
 }
 
+long ReportTable::IndexFocused() const {
+  // searches for an item that has a selected state
+  // initializes item at -1 so that it searches at beginning
+  // only one item can be selected at a time for this control
+  return listctrl_->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_FOCUSED);
+}
+
 void ReportTable::Refresh() {
   // initializes listctrl
   listctrl_->ClearAll();
@@ -305,7 +312,7 @@ void ReportTable::OnContextMenuSelect(wxCommandEvent& event) {
     std::string str = ClipboardStringHeaders();
     CopyToClipboard(str);
   } else if (id_event == kCopyRow) {
-    long index = SelectedListCtrlItem();
+    long index = IndexFocused();
     std::string str = ClipboardStringRow(index);
     CopyToClipboard(str);
   } else if (id_event == kCopyTable) {
@@ -326,13 +333,6 @@ void ReportTable::OnItemRightClick(wxListEvent& event) {
 
   // stops processing event (needed to allow pop-up menu to catch its event)
   event.Skip();
-}
-
-long ReportTable::SelectedListCtrlItem() const {
-  // searches for an item that has a selected state
-  // initializes item at -1 so that it searches at beginning
-  // only one item can be selected at a time for this control
-  return listctrl_->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
 }
 
 void ReportTable::Sort() {

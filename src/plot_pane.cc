@@ -53,6 +53,10 @@ void PlotPane::Update(wxObject* hint) {
     UpdatePlot();
     RenderPlot(dc);
   } else if (hint_update->type() ==
+      ViewUpdateHint::HintType::kViewWeathercaseChange) {
+    UpdatePlot();
+    RenderPlot(dc);
+  } else if (hint_update->type() ==
       ViewUpdateHint::HintType::kViewWeathercasesSetChange) {
     UpdatePlot();
     RenderPlot(dc);
@@ -85,8 +89,22 @@ void PlotPane::UpdatePlot() {
     return;
   }
 
-  /// \todo change this so that it can display final too
-  const SagTensionAnalysisResult& result = *(results.results_initial.cbegin());
+  // gets the result set based on the current display condition
+  const std::list<SagTensionAnalysisResult>* result_list = nullptr;
+  if (view->condition() == CableConditionType::kInitial) {
+    result_list = &results.results_initial;
+  } else if (view->condition() == CableConditionType::kLoad) {
+    result_list = &results.results_load;
+  } else {
+    wxClientDC dc(this);
+    ClearPlot(dc);
+    return;
+  }
+
+  // gets the result from the list
+  const int index_weathercase = view->index_weathercase();
+  const SagTensionAnalysisResult& result =
+      *(std::next(result_list->cbegin(), index_weathercase));
 
   // creates a catenary with the result parameters
   Catenary3d catenary;

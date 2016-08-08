@@ -15,6 +15,7 @@ BEGIN_EVENT_TABLE(ResultsPane, wxPanel)
   EVT_CHOICE(XRCID("choice_condition"), ResultsPane::OnChoiceCondition)
   EVT_CHOICE(XRCID("choice_report"), ResultsPane::OnChoiceReport)
   EVT_CHOICE(XRCID("choice_weathercase_group"), ResultsPane::OnChoiceWeathercaseGroup)
+  EVT_LIST_ITEM_FOCUSED(wxID_ANY, ResultsPane::OnListCtrlFocus)
 END_EVENT_TABLE()
 
 ResultsPane::ResultsPane(wxWindow* parent, wxView* view) {
@@ -148,6 +149,17 @@ void ResultsPane::OnChoiceWeathercaseGroup(wxCommandEvent& event) {
   // updates views
   ViewUpdateHint hint;
   hint.set_type(ViewUpdateHint::HintType::kViewWeathercasesSetChange);
+  view_->GetDocument()->UpdateAllViews(nullptr, &hint);
+}
+
+void ResultsPane::OnListCtrlFocus(wxListEvent& event) {
+  // gets view
+  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
+  view->set_index_weathercase(table_->IndexFocused());
+
+  // updates views
+  ViewUpdateHint hint;
+  hint.set_type(ViewUpdateHint::HintType::kViewWeathercaseChange);
   view_->GetDocument()->UpdateAllViews(nullptr, &hint);
 }
 
