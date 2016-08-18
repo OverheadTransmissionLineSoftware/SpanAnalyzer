@@ -53,13 +53,13 @@ void LineRenderer2d::Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
     wxCoord xg0, yg0;
     wxCoord xg1, yg1;
 
-    xg0 = DataToGraphics(x0, axis_horizontal.min(), axis_horizontal.max(),
+    xg0 = DataToGraphics(x0, axis_horizontal.Min(), axis_horizontal.Max(),
                          rc.GetWidth(), false);
-    yg0 = DataToGraphics(y0, axis_vertical.min(), axis_vertical.max(),
+    yg0 = DataToGraphics(y0, axis_vertical.Min(), axis_vertical.Max(),
                          rc.GetHeight(), true);
-    xg1 = DataToGraphics(x1, axis_horizontal.min(), axis_horizontal.max(),
+    xg1 = DataToGraphics(x1, axis_horizontal.Min(), axis_horizontal.Max(),
                          rc.GetWidth(), false);
-    yg1 = DataToGraphics(y1, axis_vertical.min(), axis_vertical.max(),
+    yg1 = DataToGraphics(y1, axis_vertical.Min(), axis_vertical.Max(),
                          rc.GetHeight(), true);
 
     // draws onto DC
@@ -68,10 +68,10 @@ void LineRenderer2d::Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
 }
 
 wxCoord LineRenderer2d::DataToGraphics(const double& value,
-                                const double& value_min,
-                                const double& value_max,
-                                const int& range_graphics,
-                                const bool& is_vertical) {
+                                       const double& value_min,
+                                       const double& value_max,
+                                       const int& range_graphics,
+                                       const bool& is_vertical) {
   // calcs the value range
   const int range_values = value_max - value_min;
 
@@ -83,6 +83,6 @@ wxCoord LineRenderer2d::DataToGraphics(const double& value,
     k = (value - value_min) / range_values;
   }
 
-  // scales ratio to graphics range and adds minimum
+  // scales to graphics range
   return k * range_graphics;
 }

@@ -3,11 +3,10 @@
 
 #include "plot_pane.h"
 
+#include "models/transmissionline/catenary.h"
+
 #include "line_renderer_2d.h"
 #include "span_analyzer_view.h"
-
-/// TEMPORARY
-#include "models/transmissionline/catenary.h"
 
 BEGIN_EVENT_TABLE(PlotPane, wxPanel)
   EVT_PAINT(PlotPane::OnPaint)
@@ -19,6 +18,7 @@ PlotPane::PlotPane(wxWindow* parent, wxView* view)
   view_ = view;
 
   plot_.set_background(*wxBLACK_BRUSH);
+  plot_.set_ratio_aspect(10);
 }
 
 PlotPane::~PlotPane() {

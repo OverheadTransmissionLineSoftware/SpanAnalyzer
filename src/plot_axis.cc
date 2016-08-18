@@ -8,6 +8,10 @@ PlotAxis::PlotAxis() {
 
 PlotAxis::PlotAxis(PlotAxis::OrientationType orientation) {
   orientation_ = orientation;
+  max_ = -999999;
+  min_ = 999999;
+  position_center_ = -999999;
+  range_ = -999999;
 }
 
 PlotAxis::~PlotAxis() {
@@ -21,22 +25,32 @@ bool PlotAxis::IsVisible(const double& v0, const double& v1) const {
   return (IsVisible(v0) || IsVisible(v1));
 }
 
-double PlotAxis::Range() const {
-  return max_ - min_;
-}
-
-double PlotAxis::max() const {
+double PlotAxis::Max() const {
   return max_;
 }
 
-double PlotAxis::min() const {
+double PlotAxis::Min() const {
   return min_;
 }
 
-void PlotAxis::set_max(const double& max) {
-  max_ = max;
+double PlotAxis::position_center() const {
+  return position_center_;
 }
 
-void PlotAxis::set_min(const double& min) {
-  min_ = min;
+double PlotAxis::range() const {
+  return range_;
+}
+
+void PlotAxis::set_position_center(const double& position_center) {
+  position_center_ = position_center;
+
+  min_ = position_center_ - (range_ / 2);
+  max_ = position_center_ + (range_ / 2);
+}
+
+void PlotAxis::set_range(const double& range) {
+  range_ = range;
+
+  min_ = position_center_ - (range_ / 2);
+  max_ = position_center_ + (range_ / 2);
 }

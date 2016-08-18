@@ -14,6 +14,18 @@
 /// This class renders a line dataset onto a plot.
 class LineRenderer2d {
  public:
+  /// \brief Draws the data onto the device context.
+  /// \param[in] dc
+  ///   The device context.
+  /// \param[in] rc
+  ///   The dc region to draw onto.
+  /// \param[in] axis_horizontal
+  ///   The horizontal plot axis.
+  /// \param[in] axis_vertical
+  ///   The vertical plot axis.
+  void Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
+            const PlotAxis& axis_vertical) const;
+
   /// \brief Gets the dataset.
   /// \return The dataset.
   const LineDataSet2d* dataset() const;
@@ -31,18 +43,6 @@ class LineRenderer2d {
   /// \param[in] pen
   ///   The pen.
   void set_pen(const wxPen* pen);
-
-  /// \brief Draws the data onto the device context.
-  /// \param[in] dc
-  ///   The device context.
-  /// \param[in] rc
-  ///   The dc region to draw onto.
-  /// \param[in] axis_horizontal
-  ///   The horizontal plot axis.
-  /// \param[in] axis_vertical
-  ///   The vertical plot axis.
-  void Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
-            const PlotAxis& axis_vertical) const;
 
  private:
   /// \brief Translates from data to graphics coordinates.
