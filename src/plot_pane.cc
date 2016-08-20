@@ -9,6 +9,9 @@
 #include "span_analyzer_view.h"
 
 BEGIN_EVENT_TABLE(PlotPane, wxPanel)
+  EVT_LEFT_DOWN(PlotPane::OnMouse)
+  EVT_LEFT_UP(PlotPane::OnMouse)
+  EVT_MOTION(PlotPane::OnMouse)
   EVT_PAINT(PlotPane::OnPaint)
 END_EVENT_TABLE()
 
@@ -18,6 +21,7 @@ PlotPane::PlotPane(wxWindow* parent, wxView* view)
   view_ = view;
 
   plot_.set_background(*wxBLACK_BRUSH);
+  plot_.set_is_fitted(true);
   plot_.set_ratio_aspect(10);
 }
 
@@ -65,6 +69,41 @@ void PlotPane::Update(wxObject* hint) {
 
 void PlotPane::ClearPlot(wxDC& dc) {
   dc.Clear();
+}
+
+void PlotPane::OnMouse(wxMouseEvent& event) {
+  if (event.LeftDown() == true) {
+    // caches the mouse coordinates
+    coord_mouse_.x = event.GetX();
+    coord_mouse_.y = event.GetY();
+  } else if (event.LeftUp() == true) {
+    coord_mouse_.x = -999999;
+    coord_mouse_.y = -999999;
+  } else if (event.Dragging() == true) {
+    // disables plot fitting if active
+    if (plot_.is_fitted() == true) {
+      plot_.set_is_fitted(false);
+    }
+
+    // gets updated mouse point from event
+    wxPoint coord_new;
+    coord_new.x = event.GetX();
+    coord_new.y = event.GetY();
+
+    // finds difference between cached and new mouse points
+    // scales to plot data coordinates
+    // applies inversion to make plot track mouse position
+    const double kShiftX = (coord_new.x - coord_mouse_.x) / plot_.scale() * -1;
+    const double kShiftY = (coord_new.y - coord_mouse_.y) / plot_.scale()
+                           / plot_.ratio_aspect();
+    plot_.Shift(kShiftX, kShiftY);
+
+    // updates cached mouse point
+    coord_mouse_ = coord_new;
+
+    // refreshes window
+    this->Refresh();
+  }
 }
 
 void PlotPane::OnPaint(wxPaintEvent& event) {

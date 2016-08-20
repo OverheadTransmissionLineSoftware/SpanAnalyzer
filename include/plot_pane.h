@@ -35,6 +35,9 @@ class PlotPane : public wxPanel {
   /// \brief Clears the plot.
   void ClearPlot(wxDC& dc);
 
+  /// \brief Handles the mouse events.
+  void OnMouse(wxMouseEvent& event);
+
   /// \brief Handles the resize window event.
   void OnPaint(wxPaintEvent& event);
 
@@ -46,6 +49,11 @@ class PlotPane : public wxPanel {
   /// \brief Updates the plot.
   /// This includes re-calculating the points and recreating the renderers.
   void UpdatePlot();
+
+  /// \var coord_mouse_
+  ///   The mouse coordinate. This is only kept up-to-date when the mouse is
+  ///   being dragged.
+  wxPoint coord_mouse_;
 
   /// \var dataset_catenary_
   ///   The catenary plot dataset.
