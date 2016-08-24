@@ -91,11 +91,9 @@ void PlotPane::OnMouse(wxMouseEvent& event) {
     coord_new.y = event.GetY();
 
     // finds difference between cached and new mouse points
-    // scales to plot data coordinates
     // applies inversion to make plot track mouse position
-    const double kShiftX = (coord_new.x - coord_mouse_.x) / plot_.scale() * -1;
-    const double kShiftY = (coord_new.y - coord_mouse_.y) / plot_.scale()
-                           / plot_.ratio_aspect();
+    const double kShiftX = (coord_new.x - coord_mouse_.x) * -1;
+    const double kShiftY = (coord_new.y - coord_mouse_.y);
     plot_.Shift(kShiftX, kShiftY);
 
     // updates cached mouse point
@@ -115,7 +113,7 @@ void PlotPane::OnPaint(wxPaintEvent& event) {
 }
 
 void PlotPane::RenderPlot(wxDC& dc) {
-  plot_.Redraw(dc, GetClientRect());
+  plot_.Render(dc, GetClientRect());
 }
 
 void PlotPane::UpdatePlot() {

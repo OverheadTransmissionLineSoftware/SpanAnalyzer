@@ -6,9 +6,8 @@
 #include <algorithm>
 
 Plot2d::Plot2d() {
-  axis_horizontal_ = PlotAxis(PlotAxis::OrientationType::kHorizontal);
-  axis_vertical_ = PlotAxis(PlotAxis::OrientationType::kVertical);
-
+  offset_.x = -999999;
+  offset_.y = -999999;
   ratio_aspect_ = 1;
   scale_ = -999999;
 
@@ -36,46 +35,43 @@ void Plot2d::ClearRenderers() {
   is_updated_limits_data_ = false;
 }
 
-void Plot2d::Redraw(wxDC& dc, wxRect rc) const {
+void Plot2d::Render(wxDC& dc, wxRect rc) const {
   // sets background color and clears
   dc.SetBackgroundMode(wxSOLID);
   dc.SetBackground(brush_background_);
   dc.Clear();
 
-  // updates plot data limits
-  if (is_updated_limits_data_ == false) {
-    UpdatePlotDataLimits();
+  // fits plot data to graphics rect
+  if (is_fitted_ == true) {
+    // updates plot data limits
+    if (is_updated_limits_data_ == false) {
+      UpdateDataLimits();
+    }
+
+    // updates the offset and scale
+    UpdateOffsetAndScaleToFitData(rc);
   }
 
-  // updates axes to fit plot data
-  if (is_fitted_ == true) {
-    FitPlotDataToRect(rc);
-  } else {
-    UpdatePlotAxesToRect(rc);
-  }
+  // generates plot render axes
+  const PlotAxis axis_horizontal = Axis(rc.GetPosition().x, rc.GetWidth(),
+                                        false);
+  const PlotAxis axis_vertical = Axis(rc.GetPosition().y, rc.GetHeight(),
+                                      true);
 
   // triggers all renderers
   for (auto iter = renderers_.cbegin(); iter != renderers_.cend(); iter++) {
     const LineRenderer2d& renderer = *iter;
-    renderer.Draw(dc, rc, axis_horizontal_, axis_vertical_);
+    renderer.Draw(dc, rc, axis_horizontal, axis_vertical);
   }
 }
 
 void Plot2d::Shift(const double& x, const double& y) {
-  // adjusts the axis center positions
-  const double kPositionX = axis_horizontal_.position_center();
-  const double kPositionY = axis_vertical_.position_center();
+  // converts to data coordinates
+  const double kShiftX = x * scale_;
+  const double kShiftY = y * scale_ / ratio_aspect_;
 
-  axis_horizontal_.set_position_center(kPositionX + x);
-  axis_vertical_.set_position_center(kPositionY + y);
-}
-
-const PlotAxis& Plot2d::axis_horizontal() const {
-  return axis_horizontal_;
-}
-
-const PlotAxis& Plot2d::axis_vertical() const {
-  return axis_vertical_;
+  offset_.x += kShiftX;
+  offset_.y += kShiftY;
 }
 
 wxBrush Plot2d::background() const {
@@ -84,6 +80,10 @@ wxBrush Plot2d::background() const {
 
 bool Plot2d::is_fitted() const {
   return is_fitted_;
+}
+
+Point2d Plot2d::offset() const {
+  return offset_;
 }
 
 double Plot2d::ratio_aspect() const {
@@ -102,6 +102,10 @@ void Plot2d::set_is_fitted(const bool& is_fitted) {
   is_fitted_ = is_fitted;
 }
 
+void Plot2d::set_offset(const Point2d& offset) {
+  offset_ = offset;
+}
+
 void Plot2d::set_ratio_aspect(const double& ratio_aspect) {
   ratio_aspect_ = ratio_aspect;
 }
@@ -110,58 +114,89 @@ void Plot2d::set_scale(const double& scale) {
   scale_ = scale;
 }
 
-void Plot2d::FitPlotDataToRect(const wxRect& rc) const {
-  // compares the aspect ratios of the render and data rectangles to determine
-  // which axis is most space limited
+PlotAxis Plot2d::Axis(const int& position, const int& range,
+                      const bool& is_vertical) const {
+  // initializes axis
+  PlotAxis axis;
+  if (is_vertical == true) {
+    axis = PlotAxis(PlotAxis::OrientationType::kVertical);
+
+    // solves for center graphics position and converts to data coordinates
+    double center = (double)position + ((double)range / 2);
+    center = offset_.y - (center * scale_ / ratio_aspect_);
+    axis.set_position_center(center);
+
+    // solves for range
+    axis.set_range(range * scale_ / ratio_aspect_);
+  } else {
+    axis = PlotAxis(PlotAxis::OrientationType::kHorizontal);
+
+    // solves for center graphics position and converts to data coordiantes
+    double center = (double)position + ((double)range / 2);
+    center = offset_.x + (center * scale_);
+    axis.set_position_center(center);
+
+    // solves for range
+    axis.set_range(range * scale_);
+  }
+
+  return axis;
+}
+
+/// This method compares the aspect ratio (height/width) of the data and the
+/// graphics rect to solve for offset and scaling.
+void Plot2d::UpdateOffsetAndScaleToFitData(const wxRect& rc) const {
+  // checks if rect is valid
   if (rc.GetHeight() == 0 || rc.GetWidth() == 0) {
     return;
   }
 
-  const double kRatioAspectRect = (double)rc.GetHeight() / (double)rc.GetWidth();
+  // gets data rect height/width
+  const double xg = (double)rc.GetWidth();
+  const double yg = (double)rc.GetHeight();
 
-  const double kWidthRender = limits_data_.x_max - limits_data_.x_min;
-  const double kHeightRender = (limits_data_.y_max - limits_data_.y_min)
-                               * ratio_aspect_;
-  const double kRatioAspectData = kHeightRender / kWidthRender;
+  // solves for the data rect height/width
+  double xd = limits_data_.x_max - limits_data_.x_min;
+  double yd = (limits_data_.y_max - limits_data_.y_min) * ratio_aspect_;
 
-  double range_x;
-  double range_y;
-  if (kRatioAspectRect <= kRatioAspectData) {
-    // vertical axis is the most limited, so horizontal range needs adjusted out
-    range_x = (limits_data_.x_max - limits_data_.x_min)
-              * (kRatioAspectRect / kRatioAspectData);
-    range_y = limits_data_.y_max - limits_data_.y_min;
+  // compares the aspect ratios of the render and data rectangles to determine
+  // which axis is most space limited
+  const double kRatioAspectGraph = yg / xg;
+  const double kRatioAspectData = yd / xd;
+
+  // vertical axis controls
+  if (kRatioAspectGraph <= kRatioAspectData) {
+    // solves for scale
+    scale_ = yd / yg;
+
+    // solves for new data rect width
+    xd = xg * (yd / yg);
+
+    // solves for x average
+    const double xavg = (limits_data_.x_max - limits_data_.x_min) / 2;
+
+    // solves for upper left corner of graphics rect, but in data coordinates
+    offset_.x = xavg - (xd / 2);
+    offset_.y = limits_data_.y_max;
+
+  // horizontal axis controls
   } else {
-    // horizontal axis is the most limited, so vertical range needs adjusted out
-    range_x = limits_data_.x_max - limits_data_.x_min;
-    range_y = (limits_data_.y_max - limits_data_.y_min)
-              * (kRatioAspectRect / kRatioAspectData);
+    // solves for scale
+    scale_ = xd / xg;
+
+    // solves for new data rect height
+    yd = yg * (xd / xg);
+
+    // solves for y average
+    const double yavg = (limits_data_.y_max - limits_data_.y_min) / 2;
+
+    // solves for upper left corner of graphics rect, but in data coordinates
+    offset_.x = limits_data_.x_min;
+    offset_.y = yavg + (yd  / ratio_aspect_ / 2);
   }
-
-  // updates axis ranges
-  axis_horizontal_.set_range(range_x);
-  axis_vertical_.set_range(range_y);
-
-  // updates axis center positions
-  axis_horizontal_.set_position_center(
-      (limits_data_.x_min + limits_data_.x_max) / 2);
-  axis_vertical_.set_position_center(
-      (limits_data_.y_min + limits_data_.y_max) / 2);
-
-  // updates scale - any axis could be used
-  scale_ = rc.GetWidth() / axis_horizontal_.range();
 }
 
-void Plot2d::UpdatePlotAxesToRect(const wxRect& rc) const {
-  // solves for the axis ranges
-  const double kRangeX = rc.GetWidth() / scale_;
-  const double kRangeY = rc.GetHeight() / scale_ / ratio_aspect_;
-
-  axis_horizontal_.set_range(kRangeX);
-  axis_vertical_.set_range(kRangeY);
-}
-
-void Plot2d::UpdatePlotDataLimits() const {
+void Plot2d::UpdateDataLimits() const {
   // searches all the datasets and finds the min/max values for each axis
   double x_min = 999999;
   double x_max = -999999;
