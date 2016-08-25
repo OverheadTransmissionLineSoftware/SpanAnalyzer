@@ -173,7 +173,7 @@ void Plot2d::UpdateOffsetAndScaleToFitData(const wxRect& rc) const {
     xd = xg * (yd / yg);
 
     // solves for x average
-    const double xavg = (limits_data_.x_max - limits_data_.x_min) / 2;
+    const double xavg = (limits_data_.x_max + limits_data_.x_min) / 2;
 
     // solves for upper left corner of graphics rect, but in data coordinates
     offset_.x = xavg - (xd / 2);
@@ -188,7 +188,7 @@ void Plot2d::UpdateOffsetAndScaleToFitData(const wxRect& rc) const {
     yd = yg * (xd / xg);
 
     // solves for y average
-    const double yavg = (limits_data_.y_max - limits_data_.y_min) / 2;
+    const double yavg = (limits_data_.y_max + limits_data_.y_min) / 2;
 
     // solves for upper left corner of graphics rect, but in data coordinates
     offset_.x = limits_data_.x_min;
