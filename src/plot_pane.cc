@@ -154,7 +154,7 @@ void PlotPane::UpdatePlot() {
   const int i_max = 100;
   for (int i = 0; i <= i_max; i++) {
     double pos = double(i) / double(i_max);
-    Point3d p = catenary.Coordinate(pos, true);
+    Point3d p = catenary.Coordinate(pos);
     points.push_back(p);
   }
 
