@@ -80,6 +80,11 @@ void PlotPane::OnMouse(wxMouseEvent& event) {
     coord_mouse_.x = -999999;
     coord_mouse_.y = -999999;
   } else if (event.Dragging() == true) {
+    // checks if left button is pressed
+    if (event.LeftIsDown() == false) {
+      return;
+    }
+
     // disables plot fitting if active
     if (plot_.is_fitted() == true) {
       plot_.set_is_fitted(false);
