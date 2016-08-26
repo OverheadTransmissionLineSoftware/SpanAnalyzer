@@ -38,7 +38,7 @@ void LineRenderer2d::Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
 
     // checks whether line end poinits are visible on axis
     if ((axis_horizontal.IsVisible(x0, x1) == false)
-         && (axis_vertical.IsVisible(y0, y1) == false)) {
+         || (axis_vertical.IsVisible(y0, y1) == false)) {
       continue;
     }
 
@@ -73,7 +73,7 @@ wxCoord LineRenderer2d::DataToGraphics(const double& value,
                                        const int& range_graphics,
                                        const bool& is_vertical) {
   // calcs the value range
-  const int range_values = value_max - value_min;
+  const double range_values = value_max - value_min;
 
   // calculates ratio of point along axis
   double k = 0;
