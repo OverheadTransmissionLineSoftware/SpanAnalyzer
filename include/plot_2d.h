@@ -67,11 +67,14 @@ struct Plot2dDataLimits {
 ///
 /// The plot can be shifted on both axes.
 ///
+/// \var ZOOM
+///
+/// This plot supports zooming in/out.
+///
 /// \par FUTURE IMPROVEMENTS
 ///
 /// This plot should eventually be capable of the following:
 /// \todo Make this plot accept multiple renderer types via inheritance.
-/// \todo Add scrolling.
 class Plot2d {
  public:
   /// \brief Constructor.
@@ -88,6 +91,12 @@ class Plot2d {
   /// \brief Clears the renderers.
   void ClearRenderers();
 
+  /// \brief Translates a graphics coordinate to a data coordinate.
+  /// \param[in] point_graphics
+  ///   The graphics coordinate.
+  /// \return The data coordinate.
+  Point2d PointGraphicsToData(const wxPoint& point_graphics) const;
+
   /// \brief Renders the plot.
   /// \param[in] dc
   ///   The device context.
@@ -101,6 +110,15 @@ class Plot2d {
   /// \param[in] y
   ///   The amount (in graphics units) to shift the y axis.
   void Shift(const double& x, const double& y);
+
+  /// \brief Zooms the plot.
+  /// \param[in] factor
+  ///   The zoom factor, which is used to adjust the current plot scale.
+  /// \param[in] point
+  ///   The point (in graphics units) to zoom to.
+  /// This function does not render the graph. The function parameters are used
+  /// to update the internal class members only.
+  void Zoom(const double& factor, const wxPoint& point);
 
   /// \brief Gets the background brush.
   /// \return The background brush.

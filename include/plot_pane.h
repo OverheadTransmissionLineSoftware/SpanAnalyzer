@@ -33,12 +33,23 @@ class PlotPane : public wxPanel {
 
  private:
   /// \brief Clears the plot.
+  /// \param[in] dc
+  ///   The device context that is drawn onto.
   void ClearPlot(wxDC& dc);
 
   /// \brief Handles the mouse events.
+  /// \param[in] event
+  ///   The event.
   void OnMouse(wxMouseEvent& event);
 
+  /// \brief Handles the mouse wheel events.
+  /// \param[in] event
+  ///   The event.
+  void OnMouseWheel(wxMouseEvent& event);
+
   /// \brief Handles the resize window event.
+  /// \param[in] event
+  ///   The event.
   void OnPaint(wxPaintEvent& event);
 
   /// \brief Renders the plot within the pane.

@@ -12,6 +12,7 @@ BEGIN_EVENT_TABLE(PlotPane, wxPanel)
   EVT_LEFT_DOWN(PlotPane::OnMouse)
   EVT_LEFT_UP(PlotPane::OnMouse)
   EVT_MOTION(PlotPane::OnMouse)
+  EVT_MOUSEWHEEL(PlotPane::OnMouseWheel)
   EVT_PAINT(PlotPane::OnPaint)
 END_EVENT_TABLE()
 
@@ -107,6 +108,25 @@ void PlotPane::OnMouse(wxMouseEvent& event) {
     // refreshes window
     this->Refresh();
   }
+}
+
+void PlotPane::OnMouseWheel(wxMouseEvent& event) {
+  // zoom factor
+  const double kZoomFactor = 1.2;
+
+  // zoom point
+  wxPoint coord_zoom = event.GetPosition();
+
+  if (event.GetWheelRotation() < 0) {
+    // zooms in
+    plot_.Zoom(kZoomFactor, coord_zoom);
+  } else if (0 < event.GetWheelRotation()) {
+    // zooms out
+    plot_.Zoom(1 / kZoomFactor, coord_zoom);
+  }
+
+  // refreshes window
+  this->Refresh();
 }
 
 void PlotPane::OnPaint(wxPaintEvent& event) {

@@ -35,6 +35,15 @@ void Plot2d::ClearRenderers() {
   is_updated_limits_data_ = false;
 }
 
+Point2d Plot2d::PointGraphicsToData(const wxPoint& point_graphics) const {
+  // scales and applies offset
+  Point2d point;
+  point.x = offset_.x + ((double)point_graphics.x * scale_);
+  point.y = offset_.y - ((double)point_graphics.y * scale_ / ratio_aspect_);
+
+  return point;
+}
+
 void Plot2d::Render(wxDC& dc, wxRect rc) const {
   // sets background color and clears
   dc.SetBackgroundMode(wxSOLID);
@@ -72,6 +81,24 @@ void Plot2d::Shift(const double& x, const double& y) {
 
   offset_.x += kShiftX;
   offset_.y += kShiftY;
+}
+
+void Plot2d::Zoom(const double& factor, const wxPoint& point) {
+  // caches the data point corresponding to the graphics point
+  const Point2d point_old = PointGraphicsToData(point);
+
+  // updates the scale
+  scale_ *= factor;
+
+  // calculates a data point corresponding to the graphics point
+  Point2d point_new = PointGraphicsToData(point);
+
+  // updates offset
+  offset_.x -= (point_new.x - point_old.x);
+  offset_.y -= (point_new.y - point_old.y);
+
+  // removes fitting
+  is_fitted_ = false;
 }
 
 wxBrush Plot2d::background() const {
