@@ -31,14 +31,6 @@ class PlotAxis {
   /// \return If the point is visible on the axis.
   bool IsVisible(const double& v) const;
 
-  /// \brief Determines whether the either of points are visible.
-  /// \param[in] v0
-  ///   The starting value.
-  /// \param[in] v1
-  ///   The ending value.
-  /// \return If any of the values are visible on the axis.
-  bool IsVisible(const double& v0, const double& v1) const;
-
   /// \brief Gets the maximum rendered data value.
   /// \return The maximum rendered data value.
   double Max() const;

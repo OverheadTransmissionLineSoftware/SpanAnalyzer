@@ -21,10 +21,6 @@ bool PlotAxis::IsVisible(const double& v) const {
   return (v >= min_ && v <= max_);
 }
 
-bool PlotAxis::IsVisible(const double& v0, const double& v1) const {
-  return (IsVisible(v0) || IsVisible(v1));
-}
-
 double PlotAxis::Max() const {
   return max_;
 }
