@@ -66,7 +66,7 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
   wxXmlResource::Get()->LoadMenuBar(this, "span_analyzer_menubar");
 
   // sets the frame icon
-  SetIcon(wxICON(icon));
+  SetIcon(wxIcon(icon_xpm));
 
   // sets the drag and drop target
   SetDropTarget(new DocumentFileDropTarget(this));
