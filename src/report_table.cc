@@ -110,8 +110,10 @@ ReportTable::ReportTable(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
 
   // assigns images to listctrl
   wxImageList* images = new wxImageList(16, 16, true);
-  images->Add(wxBITMAP(sort_arrow_down), wxColour(255, 0, 0));
-  images->Add(wxBITMAP(sort_arrow_up), wxColour(255, 0, 0));
+  images->Add(wxBitmap(sort_arrow_down_xpm, wxBITMAP_TYPE_XPM),
+                       wxColour(255, 0, 0));
+  images->Add(wxBitmap(sort_arrow_up_xpm, wxBITMAP_TYPE_XPM),
+                       wxColour(255, 0, 0));
   listctrl_->AssignImageList(images, wxIMAGE_LIST_SMALL);
 }
 
@@ -146,6 +148,7 @@ void ReportTable::Refresh() {
     wxListItem item;
     item.SetId(i);
     item.SetData((long)&row);
+    item.SetImage(-1);
     listctrl_->InsertItem(item);
 
     // fills remaining values for each column
