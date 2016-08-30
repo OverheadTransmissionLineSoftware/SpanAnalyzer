@@ -165,6 +165,11 @@ void PlotPane::UpdatePlot() {
 
   // gets the result from the list
   const int index_weathercase = view->index_weathercase();
+  if (index_weathercase < 0) {
+    plot_.ClearRenderers();
+    return;
+  }
+
   const SagTensionAnalysisResult& result =
       *(std::next(result_list->cbegin(), index_weathercase));
 
