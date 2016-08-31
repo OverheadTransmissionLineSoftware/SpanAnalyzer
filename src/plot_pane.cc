@@ -8,9 +8,18 @@
 #include "line_renderer_2d.h"
 #include "span_analyzer_view.h"
 
+/// \par OVERVIEW
+///
+/// This is the enumeration for the context menu.
+enum {
+  kFitPlotData = 0,
+};
+
 BEGIN_EVENT_TABLE(PlotPane, wxPanel)
   EVT_LEFT_DOWN(PlotPane::OnMouse)
   EVT_LEFT_UP(PlotPane::OnMouse)
+  EVT_RIGHT_DOWN(PlotPane::OnMouse)
+  EVT_MENU(wxID_ANY, PlotPane::OnContextMenuSelect)
   EVT_MOTION(PlotPane::OnMouse)
   EVT_MOUSEWHEEL(PlotPane::OnMouseWheel)
   EVT_PAINT(PlotPane::OnPaint)
@@ -72,6 +81,20 @@ void PlotPane::ClearPlot(wxDC& dc) {
   dc.Clear();
 }
 
+void PlotPane::OnContextMenuSelect(wxCommandEvent& event) {
+  // gets context menu selection and sends to handler function
+  const int id_event = event.GetId();
+  if (id_event == kFitPlotData) {
+    // toggles plot fit
+    if (plot_.is_fitted() == true) {
+      plot_.set_is_fitted(false);
+    } else {
+      plot_.set_is_fitted(true);
+      this->Refresh();
+    }
+  }
+}
+
 void PlotPane::OnMouse(wxMouseEvent& event) {
   if (event.LeftDown() == true) {
     // caches the mouse coordinates
@@ -80,6 +103,19 @@ void PlotPane::OnMouse(wxMouseEvent& event) {
   } else if (event.LeftUp() == true) {
     coord_mouse_.x = -999999;
     coord_mouse_.y = -999999;
+  } else if (event.RightDown() == true) {
+    // builds a context menu
+    wxMenu menu;
+
+    menu.AppendCheckItem(kFitPlotData, "Fit Plot");
+    menu.Check(kFitPlotData, plot_.is_fitted());
+
+    // shows context menu
+    // the event is caught by the pane
+    PopupMenu(&menu, event.GetPosition());
+
+    // stops processing event (needed to allow pop-up menu to catch its event)
+    event.Skip();
   } else if (event.Dragging() == true) {
     // checks if left button is pressed
     if (event.LeftIsDown() == false) {

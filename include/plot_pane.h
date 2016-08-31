@@ -37,6 +37,11 @@ class PlotPane : public wxPanel {
   ///   The device context that is drawn onto.
   void ClearPlot(wxDC& dc);
 
+  /// \brief Handles the context menu select event.
+  /// \param[in] event
+  ///   The event.
+  void OnContextMenuSelect(wxCommandEvent& event);
+
   /// \brief Handles the mouse events.
   /// \param[in] event
   ///   The event.
