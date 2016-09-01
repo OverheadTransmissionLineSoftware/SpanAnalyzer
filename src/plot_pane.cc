@@ -18,6 +18,7 @@ enum {
 BEGIN_EVENT_TABLE(PlotPane, wxPanel)
   EVT_LEFT_DOWN(PlotPane::OnMouse)
   EVT_LEFT_UP(PlotPane::OnMouse)
+  EVT_ENTER_WINDOW(PlotPane::OnMouse)
   EVT_RIGHT_DOWN(PlotPane::OnMouse)
   EVT_MENU(wxID_ANY, PlotPane::OnContextMenuSelect)
   EVT_MOTION(PlotPane::OnMouse)
@@ -96,27 +97,7 @@ void PlotPane::OnContextMenuSelect(wxCommandEvent& event) {
 }
 
 void PlotPane::OnMouse(wxMouseEvent& event) {
-  if (event.LeftDown() == true) {
-    // caches the mouse coordinates
-    coord_mouse_.x = event.GetX();
-    coord_mouse_.y = event.GetY();
-  } else if (event.LeftUp() == true) {
-    coord_mouse_.x = -999999;
-    coord_mouse_.y = -999999;
-  } else if (event.RightDown() == true) {
-    // builds a context menu
-    wxMenu menu;
-
-    menu.AppendCheckItem(kFitPlotData, "Fit Plot");
-    menu.Check(kFitPlotData, plot_.is_fitted());
-
-    // shows context menu
-    // the event is caught by the pane
-    PopupMenu(&menu, event.GetPosition());
-
-    // stops processing event (needed to allow pop-up menu to catch its event)
-    event.Skip();
-  } else if (event.Dragging() == true) {
+  if (event.Dragging() == true) {
     // checks if left button is pressed
     if (event.LeftIsDown() == false) {
       return;
@@ -143,6 +124,29 @@ void PlotPane::OnMouse(wxMouseEvent& event) {
 
     // refreshes window
     this->Refresh();
+  } else if (event.Entering() == true) {
+    // forces the pane to get focus, which helps catch mouse events
+    this->SetFocus();
+  } else if (event.LeftDown() == true) {
+    // caches the mouse coordinates
+    coord_mouse_.x = event.GetX();
+    coord_mouse_.y = event.GetY();
+  } else if (event.LeftUp() == true) {
+    coord_mouse_.x = -999999;
+    coord_mouse_.y = -999999;
+  } else if (event.RightDown() == true) {
+    // builds a context menu
+    wxMenu menu;
+
+    menu.AppendCheckItem(kFitPlotData, "Fit Plot");
+    menu.Check(kFitPlotData, plot_.is_fitted());
+
+    // shows context menu
+    // the event is caught by the pane
+    PopupMenu(&menu, event.GetPosition());
+
+    // stops processing event (needed to allow pop-up menu to catch its event)
+    event.Skip();
   }
 }
 
