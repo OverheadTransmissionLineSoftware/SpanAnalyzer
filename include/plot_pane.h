@@ -42,6 +42,11 @@ class PlotPane : public wxPanel {
   ///   The event.
   void OnContextMenuSelect(wxCommandEvent& event);
 
+  /// \brief Handles the erase background event.
+  /// \param[in] event
+  ///   The event.
+  void OnEraseBackground(wxEraseEvent& event);
+
   /// \brief Handles the mouse events.
   /// \param[in] event
   ///   The event.
@@ -65,6 +70,11 @@ class PlotPane : public wxPanel {
   /// \brief Updates the plot.
   /// This includes re-calculating the points and recreating the renderers.
   void UpdatePlot();
+
+  /// \var bitmap_buffer_
+  ///   The bitmap that is used as a device context buffer. Keeping this cached
+  ///   helps speed up redraws.
+  wxBitmap bitmap_buffer_;
 
   /// \var coord_mouse_
   ///   The mouse coordinate. This is only kept up-to-date when the mouse is

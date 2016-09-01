@@ -4,6 +4,7 @@
 #include "plot_pane.h"
 
 #include "models/transmissionline/catenary.h"
+#include "wx/dcbuffer.h"
 
 #include "line_renderer_2d.h"
 #include "span_analyzer_view.h"
@@ -16,6 +17,7 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(PlotPane, wxPanel)
+  EVT_ERASE_BACKGROUND(PlotPane::OnEraseBackground)
   EVT_LEFT_DOWN(PlotPane::OnMouse)
   EVT_LEFT_UP(PlotPane::OnMouse)
   EVT_ENTER_WINDOW(PlotPane::OnMouse)
@@ -34,47 +36,57 @@ PlotPane::PlotPane(wxWindow* parent, wxView* view)
   plot_.set_background(*wxBLACK_BRUSH);
   plot_.set_is_fitted(true);
   plot_.set_ratio_aspect(10);
+
+  // setting to avoid flickering
+  this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 }
 
 PlotPane::~PlotPane() {
 }
 
 void PlotPane::Update(wxObject* hint) {
+  // typically only null on initialization
+  if (hint == nullptr) {
+    return;
+  }
+
+  // gets a buffered dc to prevent flickering
   wxClientDC dc(this);
+  wxBufferedDC dc_buf(&dc, bitmap_buffer_);
 
   // interprets hint
   ViewUpdateHint* hint_update = (ViewUpdateHint*)hint;
   if (hint_update == nullptr) {
     UpdatePlot();
-    RenderPlot(dc);
+    RenderPlot(dc_buf);
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit) {
     UpdatePlot();
-    RenderPlot(dc);
+    RenderPlot(dc_buf);
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelPreferencesEdit) {
     UpdatePlot();
-    RenderPlot(dc);
+    RenderPlot(dc_buf);
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelSpansEdit) {
     UpdatePlot();
-    RenderPlot(dc);
+    RenderPlot(dc_buf);
   } else if (hint_update->type() ==
        ViewUpdateHint::HintType::kModelWeathercaseEdit) {
     UpdatePlot();
-    RenderPlot(dc);
+    RenderPlot(dc_buf);
   } else if (hint_update->type() ==
       ViewUpdateHint::HintType::kViewConditionChange) {
     UpdatePlot();
-    RenderPlot(dc);
+    RenderPlot(dc_buf);
   } else if (hint_update->type() ==
       ViewUpdateHint::HintType::kViewWeathercaseChange) {
     UpdatePlot();
-    RenderPlot(dc);
+    RenderPlot(dc_buf);
   } else if (hint_update->type() ==
       ViewUpdateHint::HintType::kViewWeathercasesSetChange) {
     UpdatePlot();
-    RenderPlot(dc);
+    RenderPlot(dc_buf);
   }
 }
 
@@ -94,6 +106,13 @@ void PlotPane::OnContextMenuSelect(wxCommandEvent& event) {
       this->Refresh();
     }
   }
+}
+
+/// This function overrides the typical window erase background event handling.
+/// When used in conjuction with double-buffered device contexts, it will
+/// prevent flickering.
+void PlotPane::OnEraseBackground(wxEraseEvent& event) {
+  // do nothing
 }
 
 void PlotPane::OnMouse(wxMouseEvent& event) {
@@ -171,7 +190,8 @@ void PlotPane::OnMouseWheel(wxMouseEvent& event) {
 
 void PlotPane::OnPaint(wxPaintEvent& event) {
   // gets a device context
-  wxPaintDC dc(this);
+  // a buffered device context helps prevent flickering
+  wxBufferedPaintDC dc(this, bitmap_buffer_);
 
   // renders
   RenderPlot(dc);
