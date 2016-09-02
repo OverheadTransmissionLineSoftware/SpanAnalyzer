@@ -130,6 +130,7 @@ void WeatherLoadCaseManagerDialog::OnButtonGroupAdd(
 
   // adds to the group list
   WeatherLoadCaseGroup group;
+  group.name = name;
   groups_modified_.push_back(group);
 
   // updates the listbox
