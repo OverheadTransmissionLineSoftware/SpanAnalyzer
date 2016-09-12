@@ -84,7 +84,7 @@ class ResultsPane : public wxPanel {
   ///   The report data.
   ReportData data_;
 
-  /// \var listctrl_
+  /// \var table_
   ///   The report table used to display the results.
   ReportTable* table_;
 

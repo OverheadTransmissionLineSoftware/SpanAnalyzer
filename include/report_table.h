@@ -86,7 +86,7 @@ class ReportTable : public wxPanel {
   long index_sorted() const;
 
   /// \brief Sets the data to be displayed.
-  /// \param[n] data
+  /// \param[in] data
   ///   The data.
   void set_data(const ReportData* data);
 

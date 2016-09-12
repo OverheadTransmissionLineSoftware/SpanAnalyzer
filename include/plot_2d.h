@@ -22,11 +22,11 @@ struct Plot2dDataLimits {
   ///   The minimum x value.
   double x_min;
 
-  /// \var x_max
+  /// \var y_max
   ///   The maximum y value.
   double y_max;
 
-  /// \var x_max
+  /// \var y_min
   ///   The minimum y value.
   double y_min;
 };
@@ -63,11 +63,11 @@ struct Plot2dDataLimits {
 /// The plot can fit the data to a specific device context size. It will keep
 /// the aspect ratio that is currently set.
 ///
-/// \var SHIFTING
+/// \par SHIFTING
 ///
 /// The plot can be shifted on both axes.
 ///
-/// \var ZOOM
+/// \par ZOOM
 ///
 /// This plot supports zooming in/out.
 ///
@@ -180,6 +180,8 @@ class Plot2d {
                 const bool& is_vertical) const;
 
   /// \brief Updates the plot offset and scale to encapsulate the plot data.
+  /// \param[in] rc
+  ///   The graphics rectangle.
   /// This is typically done when fitting the data to the graphics rect.
   void UpdateOffsetAndScaleToFitData(const wxRect& rc) const;
 
