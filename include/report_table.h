@@ -81,6 +81,10 @@ class ReportTable : public wxPanel {
   /// \brief Gets the data that is displayed.
   const ReportData* data() const;
 
+  /// \brief Gets the sorted column index.
+  /// \return The sorted column index.
+  long index_sorted() const;
+
   /// \brief Sets the data to be displayed.
   /// \param[n] data
   ///   The data.
@@ -101,7 +105,30 @@ class ReportTable : public wxPanel {
   ///   The index to be focused.
   void set_index_focused(const long& index);
 
- private:
+  /// \brief Sets the sorted column index.
+  /// \param[in] index
+  ///   The index to be sorted.
+  /// Requires a Refresh() in order to take effect.
+  void set_index_sorted(const long& index);
+
+  /// \brief Sets the sort type.
+  /// \param[in] type_sort
+  ///   The sort type.
+  /// Requires a Refresh() in order to take effect.
+  void set_type_sort(const SortOrderType& type_sort);
+
+  /// \brief Gets the type of sorting being applied.
+  /// \return The sort type that is being applied.
+  SortOrderType type_sort() const;
+
+private:
+  /// \brief Changes the column header sort image.
+  /// \param[in] index
+  ///   The column index.
+  /// \param[in] type_sort
+  ///   The sort type.
+  void ChangeColumnSortImage(const int& index, const SortOrderType& type_sort);
+
   /// \brief Clears the listctrl.
   void ClearListCtrl();
 

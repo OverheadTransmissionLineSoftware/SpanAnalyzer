@@ -159,12 +159,21 @@ void ReportTable::Refresh() {
     }
   }
 
-  // sorts
+  // updates the column image and sorts
+  if (listctrl_->GetColumnCount() <= index_sorted_) {
+    index_sorted_ = -1;
+  }
+
+  ChangeColumnSortImage(index_sorted_, type_sort_);
   Sort();
 }
 
 const ReportData* ReportTable::data() const {
   return data_;
+}
+
+long ReportTable::index_sorted() const {
+  return index_sorted_;
 }
 
 void ReportTable::set_data(const ReportData* data) {
@@ -197,6 +206,44 @@ void ReportTable::set_index_focused(const long& index) {
   }
 
   listctrl_->SetItemState(index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+}
+
+void ReportTable::set_index_sorted(const long& index) {
+  if (index < 0) {
+    index_sorted_ = -1;
+  } else if (listctrl_->GetColumnCount() <= index) {
+    index_sorted_ = -1;
+  } else {
+    index_sorted_ = index;
+  }
+}
+
+void ReportTable::set_type_sort(const SortOrderType& type_sort) {
+  type_sort_ = type_sort;
+}
+
+SortOrderType ReportTable::type_sort() const {
+  return type_sort_;
+}
+
+void ReportTable::ChangeColumnSortImage(const int& index,
+                                        const SortOrderType& type_sort) {
+  if (index < 0) {
+    return;
+  }
+  
+  wxListItem item;
+  item.SetMask(wxLIST_MASK_IMAGE);
+
+  if (type_sort == SortOrderType::kAscending) {
+    item.SetImage(0);
+  } else if (type_sort == SortOrderType::kDescending) {
+    item.SetImage(1);
+  } else {
+    item.SetImage(-1);
+  }
+
+  listctrl_->SetColumn(index, item);
 }
 
 void ReportTable::ClearListCtrl() {
@@ -284,21 +331,8 @@ void ReportTable::OnColumnClick(wxListEvent& event) {
   }
 
   // changes column header images
-  wxListItem item;
-  item.SetMask(wxLIST_MASK_IMAGE);
-
-  if (0 <= index_sorted_old) {
-    item.SetImage(-1);
-    listctrl_->SetColumn(index_sorted_old, item);
-  }
-
-  if (type_sort_ == SortOrderType::kAscending) {
-    item.SetImage(0);
-    listctrl_->SetColumn(index_sorted_, item);
-  } else if (type_sort_ == SortOrderType::kDescending) {
-    item.SetImage(1);
-    listctrl_->SetColumn(index_sorted_, item);
-  }
+  ChangeColumnSortImage(index_sorted_old, SortOrderType::kNone);
+  ChangeColumnSortImage(index_sorted_, type_sort_);
 
   // sorts the listctrl
   Sort();

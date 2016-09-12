@@ -60,7 +60,7 @@ ResultsPane::~ResultsPane() {
 
 void ResultsPane::Update(wxObject* hint) {
   // caches focused index
-  const long index = table_->IndexFocused();
+  const long index_focus = table_->IndexFocused();
 
   // interprets hint
   ViewUpdateHint* hint_update = (ViewUpdateHint*)hint;
@@ -97,7 +97,7 @@ void ResultsPane::Update(wxObject* hint) {
   }
 
   table_->set_formatting_column(0, 200, wxLIST_FORMAT_LEFT);
-  table_->set_index_focused(index);
+  table_->set_index_focused(index_focus);
 }
 
 void ResultsPane::OnChoiceCondition(wxCommandEvent& event) {
