@@ -4,7 +4,6 @@
 #include "span_analyzer_doc_xml_handler.h"
 
 #include "span_xml_handler.h"
-#include "weather_load_case_xml_handler.h"
 
 SpanAnalyzerDocXmlHandler::SpanAnalyzerDocXmlHandler() {
 }
@@ -27,21 +26,6 @@ wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
 
   // adds child nodes for parameters
 
-  // creates weather load cases node
-  title = "weather_load_cases";
-  node_element = new wxXmlNode(wxXML_ELEMENT_NODE, title);
-  const std::list<WeatherLoadCase>& weathercases = doc.weathercases();
-  for (auto iter = weathercases.cbegin(); iter != weathercases.cend();
-       iter++) {
-    // gets weathercase
-    const WeatherLoadCase& weathercase = *iter;
-
-    // creates weather load case node and adds to root
-    node_element->AddChild(
-        WeatherLoadCaseXmlHandler::CreateNode(weathercase, "", units));
-  }
-  node_root->AddChild(node_element);
-
   // creates spans node
   title = "spans";
   node_element = new wxXmlNode(wxXML_ELEMENT_NODE, title);
@@ -63,6 +47,7 @@ int SpanAnalyzerDocXmlHandler::ParseNode(
     const wxXmlNode* root,
     const std::string& filepath,
     const std::list<CableFile>* cablefiles,
+    const std::list<WeatherLoadCase>* weathercases,
     SpanAnalyzerDoc& doc) {
   // checks for valid root node
   if (root->GetName() != "span_analyzer_doc") {
@@ -77,7 +62,7 @@ int SpanAnalyzerDocXmlHandler::ParseNode(
 
   // sends to proper parsing function
   if (version == "1") {
-    return ParseNodeV1(root, filepath, cablefiles, doc);
+    return ParseNodeV1(root, filepath, cablefiles, weathercases, doc);
   } else {
     return root->GetLineNumber();
   }
@@ -87,6 +72,7 @@ int SpanAnalyzerDocXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
     const std::string& filepath,
     const std::list<CableFile>* cablefiles,
+    const std::list<WeatherLoadCase>* weathercases,
     SpanAnalyzerDoc& doc) {
 
   wxString message;
@@ -97,34 +83,7 @@ int SpanAnalyzerDocXmlHandler::ParseNodeV1(
     const wxString title = node->GetName();
     const wxString content = ParseElementNodeWithContent(node);
 
-    if (title == "weather_load_cases") {
-      // parses each weathercase xml node
-      const wxXmlNode* sub_node = node->GetChildren();
-      while(sub_node != nullptr) {
-        wxString sub_title = sub_node->GetName();
-        if (sub_title == "weather_load_case") {
-          // creates new weathercase and parses node
-          WeatherLoadCase weathercase;
-          int line_number = WeatherLoadCaseXmlHandler::ParseNode(sub_node,
-                                                                 filepath,
-                                                                 weathercase);
-
-          // adds if no critical errors were encountered during parsing
-          if (line_number == 0) {
-            doc.AppendWeathercase(weathercase);
-          } else {
-            message = FileAndLineNumber(filepath, sub_node)
-                      + "Invalid weathercase. Skipping.";
-            wxLogError(message);
-          }
-        } else {
-          message = FileAndLineNumber(filepath, sub_node)
-                    + "XML node isn't recognized. Skipping.";
-          wxLogError(message);
-        }
-        sub_node = sub_node->GetNext();
-      }
-    } else if (title == "spans") {
+    if (title == "spans") {
       // parses each span xml node
       const wxXmlNode* sub_node = node->GetChildren();
       while(sub_node != nullptr) {
@@ -133,7 +92,7 @@ int SpanAnalyzerDocXmlHandler::ParseNodeV1(
           // creates new weathercase and parses node
           Span span;
           const int line_number = SpanXmlHandler::ParseNode(
-              sub_node, filepath, cablefiles, &doc.weathercases(), span);
+              sub_node, filepath, cablefiles, weathercases, span);
 
           // adds if no critical errors were encountered during parsing
           if (line_number == 0) {

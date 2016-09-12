@@ -52,6 +52,10 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   /// \param[in] cablefiles
   ///   A list of cables files that is matched against a cable description. If
   ///   found, a pointer will be set to the matching cable.
+  /// \param[in] weathercases
+  ///   A list of weathercases that is matched against a weathercase
+  ///   description. If found, a pointer will be set to the matching
+  ///   weathercase.
   /// \param[out] doc
   ///   The document that is populated.
   /// \return The file line number of a critical error. Returns 0 if no critical
@@ -62,6 +66,7 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   static int ParseNode(const wxXmlNode* root,
                        const std::string& filepath,
                        const std::list<CableFile>* cablefiles,
+                       const std::list<WeatherLoadCase>* weathercases,
                        SpanAnalyzerDoc& doc);
 
  private:
@@ -74,6 +79,10 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   /// \param[in] cablefiles
   ///   A list of cable files that is matched against a cable description. If
   ///   found, a pointer will be set to the matching cable.
+  /// \param[in] weathercases
+  ///   A list of weathercases that is matched against a weathercase
+  ///   description. If found, a pointer will be set to the matching
+  ///   weathercase.
   /// \param[out] doc
   ///   The document that is populated.
   /// \return The file line number of a critical error. Returns 0 if no critical
@@ -84,6 +93,7 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   static int ParseNodeV1(const wxXmlNode* root,
                          const std::string& filepath,
                          const std::list<CableFile>* cablefiles,
+                         const std::list<WeatherLoadCase>* weathercases,
                          SpanAnalyzerDoc& doc);
 };
 

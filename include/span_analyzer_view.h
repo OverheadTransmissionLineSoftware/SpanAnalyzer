@@ -6,7 +6,6 @@
 
 #include <list>
 
-#include "models/transmissionline/weather_load_case.h"
 #include "wx/docview.h"
 
 #include "edit_pane.h"
@@ -14,6 +13,7 @@
 #include "results_pane.h"
 #include "sag_tension_analysis_results.h"
 #include "span.h"
+#include "span_analyzer_data.h"
 
 /// \par OVERVIEW
 ///
@@ -29,6 +29,7 @@ class ViewUpdateHint : public wxObject {
     kModelSpansEdit,
     kModelWeathercaseEdit,
     kViewConditionChange,
+    kViewWeathercaseChange,
     kViewWeathercasesSetChange
   };
 
@@ -58,10 +59,6 @@ class SpanAnalyzerView : public wxView {
 
   /// \brief Destructor.
   ~SpanAnalyzerView();
-
-  /// \brief Gets the display cable condition.
-  /// \return The display cable condition.
-  const CableConditionType& condition() const;
 
   /// \brief Handles closing the view.
   /// \param[in] deleteWindow
@@ -95,6 +92,19 @@ class SpanAnalyzerView : public wxView {
   /// This function is called by wxWidgets.
   virtual void OnUpdate(wxView *sender, wxObject *hint = nullptr);
 
+  /// \brief Gets the display cable condition.
+  /// \return The display cable condition.
+  const CableConditionType& condition() const;
+
+  /// \brief Gets the activated weathercase group.
+  /// \return The activated weathercase group. If no weathercase group is
+  ///   activated, a nullptr is returned.
+  const WeatherLoadCaseGroup* group_weathercases() const;
+
+  /// \brief Gets the selected weathercase index.
+  /// \return The selected weathercase index.
+  const int index_weathercase() const;
+
   /// \brief Gets the edit pane.
   /// \return The edit pane.
   EditPane* pane_edit();
@@ -116,25 +126,25 @@ class SpanAnalyzerView : public wxView {
   ///   The display condition.
   void set_condition(const CableConditionType& condition);
 
+  /// \brief Sets the weathercase group.
+  /// \param[in] group
+  ///   The weathercase group.
+  void set_group_weathercase(const WeatherLoadCaseGroup* group);
+
+  /// \brief Sets the selected weathercase index.
+  /// \param[in] index_weathercase
+  ///   The selected weathercase index.
+  void set_index_weathercase(const int& index_weathercase);
+
   /// \brief Sets the activated span.
   /// \param[in] span
   ///   The span.
   void set_span(const Span* span);
 
-  /// \brief Sets the activated weathercases.
-  /// \param[in] weathercases
-  ///   The weathercases.
-  void set_weathercases(const std::list<WeatherLoadCase>* weathercases);
-
   /// \brief Gets the activated span.
   /// \return The activated span. If no span is activated, a nullptr is
   ///   returned.
   const Span* span() const;
-
-  /// \brief Gets the activated weathercases.
-  /// \return The activated weathercases. If no weathercases are activated, a
-  ///   nullptr is returned.
-  const std::list<WeatherLoadCase>* weathercases() const;
 
  private:
   /// \brief Updates the sag-tension results.
@@ -143,6 +153,14 @@ class SpanAnalyzerView : public wxView {
   /// \var condition_
   ///   The display cable condition.
   CableConditionType condition_;
+
+  /// \var group_weathercases_
+  ///   The weathercase group that is currently activated.
+  const WeatherLoadCaseGroup* group_weathercases_;
+
+  /// \var index_weathercase_
+  ///   The weathercase index that is currently selected.
+  int index_weathercase_;
 
   /// \var pane_edit_
   ///   The edit pane.
@@ -163,10 +181,6 @@ class SpanAnalyzerView : public wxView {
   /// \var span_
   ///   The span that is currently activated.
   const Span* span_;
-
-  /// \var weathercases_
-  ///   The weathercases that are currently activated.
-  const std::list<WeatherLoadCase>* weathercases_;
 
   /// \brief This allows wxWidgets to create this class dynamically as part of
   ///   the docview framework.

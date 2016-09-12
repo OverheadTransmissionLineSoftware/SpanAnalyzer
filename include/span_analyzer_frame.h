@@ -53,15 +53,15 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   /// \brief Destructor.
   ~SpanAnalyzerFrame();
 
-  /// \brief Handles the edit->edit weather cases menu click event.
-  /// \param[in] event
-  ///   The event.
-  void OnMenuEditAnalysisWeathercases(wxCommandEvent& event);
-
   /// \brief Handles the edit->cables menu click event.
   /// \param[in] event
   ///   The event.
   void OnMenuEditCables(wxCommandEvent& event);
+
+  /// \brief Handles the edit->edit weather cases menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuEditWeathercases(wxCommandEvent& event);
 
   /// \brief Handles the file->preferences menu click event.
   /// \param[in] event

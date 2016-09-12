@@ -7,14 +7,21 @@
 #include "wx/docview.h"
 #include "wx/wx.h"
 
-#include "catenary_table_panel.h"
-#include "sag_tension_table_panel.h"
+#include "report_table.h"
 
 /// \par OVERVIEW
 ///
 /// This class is a wxAUI pane that holds all of the results display/controls.
 class ResultsPane : public wxPanel {
  public:
+  /// \brief These are the types of reports that can be displayed.
+  enum class ReportType {
+    kCatenary,
+    kCatenaryEndpoints,
+    kSagTension,
+    kTensionDistribution,
+  };
+
   /// \brief Constructor.
   /// \param[in] parent
   ///   The parent window.
@@ -37,22 +44,53 @@ class ResultsPane : public wxPanel {
   ///   The event.
   void OnChoiceCondition(wxCommandEvent& event);
 
-  /// \brief Handles the weathercase set choice event.
-  void OnChoiceWeathercaseSet(wxCommandEvent& event);
+  /// \brief Handles the report choice event.
+  /// \param[in] event
+  ///   The event.
+  void OnChoiceReport(wxCommandEvent& event);
 
-  /// \brief Updates the analysis weathercase set choice control.
-  void UpdateAnalysisWeathercaseSetChoice();
+  /// \brief Handles the weathercase set choice event.
+  /// \param[in] event
+  ///   The event.
+  void OnChoiceWeathercaseGroup(wxCommandEvent& event);
+
+  /// \brief Handles the listctrl focus event.
+  /// \param[in] event
+  ///   The event.
+  void OnListCtrlFocus(wxListEvent& event);
+
+  /// \brief Updates the report data.
+  void UpdateReportData();
+
+  /// \brief Updates the report data with catenary results.
+  void UpdateReportDataCatenary();
+
+  /// \brief Updates the report data with catenary endpoint results.
+  void UpdateReportDataCatenaryEndpoints();
+
+  /// \brief Updates the report data with sag-tension results.
+  void UpdateReportDataSagTension();
+
+  /// \brief Updates the report data with tension distribution results.
+  void UpdateReportDataTensionDistribution();
+
+  /// \brief Updates the weathercase group choice control.
+  void UpdateWeathercaseGroupChoice();
 
   /// \brief Updates the selected weathercases.
-  void UpdateSelectedWeathercases();
+  void UpdateWeathercaseGroupSelected();
 
-  /// \var panel_table_catenary_
-  ///   The catenary table panel, which is a notebook page.
-  CatenaryTablePanel* panel_table_catenary_;
+  /// \var data_
+  ///   The report data.
+  ReportData data_;
 
-  /// \var panel_table_sagtension_
-  ///   The sag-tension table panel, which is a notebook page.
-  SagTensionTablePanel* panel_table_sagtension_;
+  /// \var table_
+  ///   The report table used to display the results.
+  ReportTable* table_;
+
+  /// \var type_report_
+  ///   The report type to display.
+  ReportType type_report_;
 
   /// \var view_
   ///   The view.

@@ -6,7 +6,8 @@
 
 /// \par OVERVIEW
 ///
-/// This is a helper class that keeps track of the data range being rendered.
+/// This class keeps track of the data values that are visible along a single
+/// axis (either vertical or horizontal).
 class PlotAxis {
  public:
   /// The plot axis orientation type.
@@ -30,48 +31,52 @@ class PlotAxis {
   /// \return If the point is visible on the axis.
   bool IsVisible(const double& v) const;
 
-  /// \brief Determines whether the either of points are visible.
-  /// \param[in] v0
-  ///   The starting value.
-  /// \param[in] v1
-  ///   The ending value.
-  /// \return If any of the values are visible on the axis.
-  bool IsVisible(const double& v0, const double& v1) const;
+  /// \brief Gets the maximum rendered data value.
+  /// \return The maximum rendered data value.
+  double Max() const;
+
+  /// \brief Gets the minimum rendered data value.
+  /// \return The minimum rendered data value.
+  double Min() const;
+
+  /// \brief Gets the center position value.
+  /// \return The center position.
+  double position_center() const;
 
   /// \brief Gets the range (distance) between min/max values.
   /// \return The range (distance) between min/max values.
-  double Range() const;
+  double range() const;
 
-  /// \brief Gets the maximum rendered value on the axis.
-  /// \return The maximum rendered value.
-  double max() const;
+  /// \brief Sets the center position.
+  /// \param[in] position_center
+  ///   The center position.
+  void set_position_center(const double& position_center);
 
-  /// \brief Gets the minimum rendered value on the axis.
-  /// \return The minimum rendered value on the axis.
-  double min() const;
-
-  /// \brief Sets the maximum rendered value on the axis.
-  /// \param[in] max
-  ///   The maximum value.
-  void set_max(const double& max);
-
-  /// \brief Sets the minimum rendered value on the axis.
-  /// \param[in] min
-  ///   The minimum value.
-  void set_min(const double& min);
+  /// \brief Sets the range.
+  /// \param[in] range
+  ///   The range.
+  void set_range(const double& range);
 
  private:
+  /// \var max_
+  ///   The maximum data value to be rendered on the axis.
+  double max_;
+
+  /// \var min_
+  ///   The minimum data value to be rendered on the axis.
+  double min_;
+
   /// \var orientation_
   ///   The type of orientation.
   OrientationType orientation_;
 
-  /// \var max_
-  ///   The maximum value to be rendered on the axis.
-  double max_;
+  /// \var position_center_
+  ///   The data position/value at the center of the axis.
+  double position_center_;
 
-  /// \var min_
-  ///   The minimum value to be rendered on the axis.
-  double min_;
+  /// \var range_
+  ///   The distance between the max/min data values, centered on the position.
+  double range_;
 };
 
 #endif //  OTLS_SPANANALYZER_PLOTAXIS_H_

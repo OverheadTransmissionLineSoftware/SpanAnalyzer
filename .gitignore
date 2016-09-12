@@ -16,16 +16,16 @@
 # Visual Studio temp files #
 ############################
 *.db
-*.filters
 *.idb
 *.ilk
+*.iobj
+*.ipdb
 *.lastbuildstate
 *.opendb
 *.pdb
 *.res
 *.suo
 *.tlog
-*.user
 
 # doxygen generated files #
 ###########################

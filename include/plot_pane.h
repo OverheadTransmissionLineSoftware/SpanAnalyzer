@@ -33,9 +33,33 @@ class PlotPane : public wxPanel {
 
  private:
   /// \brief Clears the plot.
+  /// \param[in] dc
+  ///   The device context that is drawn onto.
   void ClearPlot(wxDC& dc);
 
+  /// \brief Handles the context menu select event.
+  /// \param[in] event
+  ///   The event.
+  void OnContextMenuSelect(wxCommandEvent& event);
+
+  /// \brief Handles the erase background event.
+  /// \param[in] event
+  ///   The event.
+  void OnEraseBackground(wxEraseEvent& event);
+
+  /// \brief Handles the mouse events.
+  /// \param[in] event
+  ///   The event.
+  void OnMouse(wxMouseEvent& event);
+
+  /// \brief Handles the mouse wheel events.
+  /// \param[in] event
+  ///   The event.
+  void OnMouseWheel(wxMouseEvent& event);
+
   /// \brief Handles the resize window event.
+  /// \param[in] event
+  ///   The event.
   void OnPaint(wxPaintEvent& event);
 
   /// \brief Renders the plot within the pane.
@@ -46,6 +70,16 @@ class PlotPane : public wxPanel {
   /// \brief Updates the plot.
   /// This includes re-calculating the points and recreating the renderers.
   void UpdatePlot();
+
+  /// \var bitmap_buffer_
+  ///   The bitmap that is used as a device context buffer. Keeping this cached
+  ///   helps speed up redraws.
+  wxBitmap bitmap_buffer_;
+
+  /// \var coord_mouse_
+  ///   The mouse coordinate. This is only kept up-to-date when the mouse is
+  ///   being dragged.
+  wxPoint coord_mouse_;
 
   /// \var dataset_catenary_
   ///   The catenary plot dataset.

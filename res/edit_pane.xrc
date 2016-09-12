@@ -3,27 +3,57 @@
   <object class="wxPanel" name="edit_pane">
     <style>wxTAB_TRAVERSAL</style>
     <object class="wxBoxSizer">
-      <orient>wxHORIZONTAL</orient>
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <option>0</option>
+        <flag>wxEXPAND|wxALL</flag>
+        <border>0</border>
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxEXPAND|wxALL</flag>
+            <border>0</border>
+            <object class="wxButton" name="button_add">
+              <label>A</label>
+              <size>50,35</size>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxEXPAND|wxALL</flag>
+            <border>0</border>
+            <object class="wxButton" name="button_delete">
+              <label>D</label>
+              <size>50,35</size>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxEXPAND|wxALL</flag>
+            <border>0</border>
+            <object class="wxButton" name="button_copy">
+              <label>C</label>
+              <size>50,35</size>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxEXPAND|wxALL</flag>
+            <border>0</border>
+            <object class="wxButton" name="button_edit">
+              <label>E</label>
+              <size>50,35</size>
+            </object>
+          </object>
+        </object>
+      </object>
       <object class="sizeritem">
         <option>1</option>
-        <flag>wxEXPAND | wxALL</flag>
-        <border>5</border>
-        <object class="wxNotebook" name="notebook">
-          <style>wxNB_BOTTOM</style>
-          <object class="notebookpage">
-            <label>Spans</label>
-            <object class="wxPanel" name="panel_spans">
-              <style>wxTAB_TRAVERSAL</style>
-              <size>500,-1</size>
-            </object>
-          </object>
-          <object class="notebookpage">
-            <label>Weathercases</label>
-            <object class="wxPanel" name="panel_weathercases">
-              <style>wxTAB_TRAVERSAL</style>
-              <size>500,-1</size>
-            </object>
-          </object>
+        <flag>wxEXPAND|wxALL</flag>
+        <border>0</border>
+        <object class="wxTreeCtrl" name="treectrl">
+          <style>wxTR_DEFAULT_STYLE|wxTR_HAS_BUTTONS</style>
         </object>
       </object>
     </object>

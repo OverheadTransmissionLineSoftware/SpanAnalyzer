@@ -4,6 +4,7 @@
 #ifndef OTLS_SPANANALYZER_PLOT2D_H_
 #define OTLS_SPANANALYZER_PLOT2D_H_
 
+#include "models/base/point.h"
 #include "wx/wx.h"
 
 #include "line_renderer_2d.h"
@@ -11,24 +12,69 @@
 
 /// \par OVERVIEW
 ///
-/// This class is a 2D plot.
+/// This struct contains mix/max values for the x and y axis.
+struct Plot2dDataLimits {
+  /// \var x_max
+  ///   The maximum x value.
+  double x_max;
+
+  /// \var x_min
+  ///   The minimum x value.
+  double x_min;
+
+  /// \var y_max
+  ///   The maximum y value.
+  double y_max;
+
+  /// \var y_min
+  ///   The minimum y value.
+  double y_min;
+};
+
+/// \par OVERVIEW
+///
+/// This class is a 2D plot. It accepts data/renderers and renders them onto a
+/// device context.
+///
+/// There are two coordinate systems that are used in this class: data and
+/// graphics. The data coordinate system is used to define most class
+/// parameters. However, most of the functions for manipulating the plot accept
+/// graphics coordinates and convert them to data coordinates internally as
+/// needed.
 ///
 /// \par RENDERERS
 ///
-/// This plot supports multiple renderers, so the data may be added in
-/// successive layers.
+/// This plot uses individual renderers of varying types to render the data onto
+/// the device context. Multiple renderers may be added to create successive
+/// layers to be drawn.
 ///
-/// \par AXES
+/// Note that this plot copies the renderers as they are added to the class, but
+/// does NOT own the datasets that are referenced by the renderers. This is done
+/// by design, as this class is purely a data visualizer.
 ///
-/// The plot does not currently render any axes. Internally it does use a
-/// plot axis to manage the boundaries of the data to be plotted.
+/// \par ASPECT RATIO
+///
+/// This plot allows the vertical and horizontal axes to have different scales.
+/// The data will stay in the native units, but the vertical graphics
+/// coordinates will be scaled by the aspect ratio factor (V/H) when rendered.
+///
+/// \par FIT
+///
+/// The plot can fit the data to a specific device context size. It will keep
+/// the aspect ratio that is currently set.
+///
+/// \par SHIFTING
+///
+/// The plot can be shifted on both axes.
+///
+/// \par ZOOM
+///
+/// This plot supports zooming in/out.
 ///
 /// \par FUTURE IMPROVEMENTS
 ///
 /// This plot should eventually be capable of the following:
 /// \todo Make this plot accept multiple renderer types via inheritance.
-/// \todo Add fixed H:V scale.
-/// \todo Add scrolling.
 class Plot2d {
  public:
   /// \brief Constructor.
@@ -45,41 +91,136 @@ class Plot2d {
   /// \brief Clears the renderers.
   void ClearRenderers();
 
-  /// \brief Redraws the plot.
+  /// \brief Translates a graphics coordinate to a data coordinate.
+  /// \param[in] point_graphics
+  ///   The graphics coordinate.
+  /// \return The data coordinate.
+  Point2d PointGraphicsToData(const wxPoint& point_graphics) const;
+
+  /// \brief Renders the plot.
   /// \param[in] dc
   ///   The device context.
   /// \param[in] rc
-  ///   The dc region to draw onto.
-  void Redraw(wxDC& dc, wxRect rc) const;
+  ///   The rectangle of the rendering region.
+  void Render(wxDC& dc, wxRect rc) const;
+
+  /// \brief Shifts the plot.
+  /// \param[in] x
+  ///   The amount (in graphics units) to shift the x axis.
+  /// \param[in] y
+  ///   The amount (in graphics units) to shift the y axis.
+  void Shift(const double& x, const double& y);
+
+  /// \brief Zooms the plot.
+  /// \param[in] factor
+  ///   The zoom factor, which is used to adjust the current plot scale.
+  /// \param[in] point
+  ///   The point (in graphics units) to zoom to.
+  /// This function does not render the graph. The function parameters are used
+  /// to update the internal class members only.
+  void Zoom(const double& factor, const wxPoint& point);
 
   /// \brief Gets the background brush.
   /// \return The background brush.
   wxBrush background() const;
+
+  /// \brief Gets if the plot data is fitted when rendered.
+  /// \return If the plot data is fitted when rendered.
+  bool is_fitted() const;
+
+  /// \brief Gets the offset.
+  /// \return The offset.
+  Point2d offset() const;
+
+  /// \brief Gets the aspect ratio.
+  /// \return The aspect ratio.
+  double ratio_aspect() const;
+
+  /// \brief Gets the scaling factor.
+  /// \return The scaling factor.
+  double scale() const;
 
   /// \brief Sets the background brush.
   /// \param[in] brush
   ///   The background brush.
   void set_background(const wxBrush& brush);
 
+  /// \brief Sets if the plot data is fitted when rendered.
+  /// \param[in] is_fitted
+  ///   An indicator that determines if the plot data is fitted to the window
+  ///   when rendered.
+  void set_is_fitted(const bool& is_fitted);
+
+  /// \brief Sets the offset.
+  /// \param[in] offset
+  ///   The offset.
+  void set_offset(const Point2d& offset);
+
+  /// \brief Sets the aspect ratio.
+  /// \param[in] ratio_aspect
+  ///   The aspect ratio.
+  void set_ratio_aspect(const double& ratio_aspect);
+
+  /// \brief Sets the scale.
+  /// \param[in] scale
+  ///   The scaling factor.
+  void set_scale(const double& scale);
+
  private:
-  /// \brief Updates the plot axes.
-  void UpdatePloxAxes() const;
+  /// \brief Gets a plot axis used for rendering.
+  /// \param[in] position
+  ///   The upper/left coordinate component of the graphics rectangle.
+  /// \param[in] range
+  ///   The height/width of the graphics rectangle.
+  /// \param[in] is_vertical
+  ///   An indicator that adjusts whether the aspect ratio is used.
+  /// \return A plot axis (in data coordinates) of the area being rendered.
+  ///   These axes are needed by the renderers to draw onto the graphics rect.
+  PlotAxis Axis(const int& position, const int& range,
+                const bool& is_vertical) const;
 
-  /// \var axis_horizontal_
-  ///   The horizontal axis.
-  mutable PlotAxis axis_horizontal_;
+  /// \brief Updates the plot offset and scale to encapsulate the plot data.
+  /// \param[in] rc
+  ///   The graphics rectangle.
+  /// This is typically done when fitting the data to the graphics rect.
+  void UpdateOffsetAndScaleToFitData(const wxRect& rc) const;
 
-  /// \var axis_vertical_
-  ///   The vertical axis.
-  mutable PlotAxis axis_vertical_;
+  /// \brief Updates the data boundaries.
+  void UpdateDataLimits() const;
 
   /// \var brush_background_
   ///   The background brush.
   wxBrush brush_background_;
 
-  /// \var is_updated_axes_
-  ///   An indicator that tells if the plot is updated.
-  mutable bool is_updated_axes_;
+  /// \var limits_data_
+  ///   The plot data min/max values.
+  mutable Plot2dDataLimits limits_data_;
+
+  /// \var is_fitted_
+  ///   An indicator that tells if the plot is fitted to the graphics rect on a
+  ///   redraw.
+  bool is_fitted_;
+
+  /// \var is_updated_limits_data_
+  ///   An indicator that tells if the data limits are updated.
+  mutable bool is_updated_limits_data_;
+
+  /// \var offset_
+  ///   The upper left coordinate of the rendered data. This aligns with the
+  ///   graphics origin coordinate, which is always (0,0). This value is used to
+  ///   translate between graphics and data coordinates.
+  mutable Point2d offset_;
+
+  /// \var ratio_aspect_
+  ///   The ratio of the vertical and horizontal units (V / H). When rendering
+  ///   the vertical axis is scaled by this ratio, while the horizontal axis
+  ///   remains unchanged.
+  double ratio_aspect_;
+
+  /// \var scale_
+  ///   The multiplication factor used to scale graphics coordinates to the data
+  ///   coordinates.
+  mutable double scale_;
 
   /// \var renderers_
   ///   The list of renderers.

@@ -14,6 +14,18 @@
 /// This class renders a line dataset onto a plot.
 class LineRenderer2d {
  public:
+  /// \brief Draws the data onto the device context.
+  /// \param[in] dc
+  ///   The device context.
+  /// \param[in] rc
+  ///   The dc region to draw onto.
+  /// \param[in] axis_horizontal
+  ///   The horizontal plot axis.
+  /// \param[in] axis_vertical
+  ///   The vertical plot axis.
+  void Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
+            const PlotAxis& axis_vertical) const;
+
   /// \brief Gets the dataset.
   /// \return The dataset.
   const LineDataSet2d* dataset() const;
@@ -32,19 +44,41 @@ class LineRenderer2d {
   ///   The pen.
   void set_pen(const wxPen* pen);
 
-  /// \brief Draws the data onto the device context.
-  /// \param[in] dc
-  ///   The device context.
-  /// \param[in] rc
-  ///   The dc region to draw onto.
-  /// \param[in] axis_horizontal
-  ///   The horizontal plot axis.
-  /// \param[in] axis_vertical
-  ///   The vertical plot axis.
-  void Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
-            const PlotAxis& axis_vertical) const;
-
  private:
+  /// \brief Clips the points to fit the horizontal axis.
+  /// \param[in] axis
+  ///   The axis, which contains the bounds/limits.
+  /// \param[in] x_vis
+  ///   The visible x coordinate.
+  /// \param[in] y_vis
+  ///   The visible y coordinate.
+  /// \param[in,out] x
+  ///   The x coordinate that needs clipped. At the start of the function
+  ///   this coordinate is not visible.
+  /// \param[in,out] y
+  ///   The x coordinate that needs clipped. At the start of the function
+  ///   this coordinate is not visible.
+  static void ClipHorizontal(const PlotAxis& axis,
+                             const double& x_vis, const double& y_vis,
+                             double& x, double& y);
+
+  /// \brief Clips the points to fit the horizontal axis.
+  /// \param[in] axis
+  ///   The axis, which contains the bounds/limits.
+  /// \param[in] x_vis
+  ///   The visible x coordinate.
+  /// \param[in] y_vis
+  ///   The visible y coordinate.
+  /// \param[in,out] x
+  ///   The x coordinate that needs clipped. At the start of the function
+  ///   this coordinate is not visible.
+  /// \param[in,out] y
+  ///   The x coordinate that needs clipped. At the start of the function
+  ///   this coordinate is not visible.
+  static void ClipVertical(const PlotAxis& axis,
+                           const double& x_vis, const double& y_vis,
+                           double& x, double& y);
+
   /// \brief Translates from data to graphics coordinates.
   /// \param[in] value
   ///   The data value to convert.

@@ -8,7 +8,6 @@
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc_xml_handler.h"
 #include "span_unit_converter.h"
-#include "weather_load_case_unit_converter.h"
 
 IMPLEMENT_DYNAMIC_CLASS(SpanAnalyzerDoc, wxDocument)
 
@@ -27,27 +26,11 @@ std::list<Span>::const_iterator SpanAnalyzerDoc::AppendSpan(
   return std::prev(spans_.end());
 }
 
-std::list<WeatherLoadCase>::const_iterator SpanAnalyzerDoc::AppendWeathercase(
-    const WeatherLoadCase& weathercase) {
-  weathercases_.push_back(weathercase);
-
-  Modify(true);
-
-  return std::prev(weathercases_.cend());
-}
-
 void SpanAnalyzerDoc::ConvertUnitStyle(const units::UnitSystem& system,
                                        const units::UnitStyle& style_from,
                                        const units::UnitStyle& style_to) {
   if (style_from == style_to) {
     return;
-  }
-
-  // converts weathercases
-  for (auto it = weathercases_.begin(); it != weathercases_.end(); it++) {
-    WeatherLoadCase& weathercase = *it;
-    WeatherLoadCaseUnitConverter::ConvertUnitStyle(system, style_from,
-                                                   style_to, weathercase);
   }
 
   // converts spans
@@ -62,13 +45,6 @@ void SpanAnalyzerDoc::ConvertUnitSystem(const units::UnitSystem& system_from,
                                         const units::UnitSystem& system_to) {
   if (system_from == system_to) {
     return;
-  }
-
-  // converts weathercases
-  for (auto it = weathercases_.begin(); it != weathercases_.end(); it++) {
-    WeatherLoadCase& weathercase = *it;
-    WeatherLoadCaseUnitConverter::ConvertUnitSystem(system_from, system_to,
-                                                    weathercase);
   }
 
   // converts spans
@@ -91,45 +67,7 @@ void SpanAnalyzerDoc::DeleteSpan(
   Modify(true);
 }
 
-void SpanAnalyzerDoc::DeleteWeathercase(
-    const std::list<WeatherLoadCase>::const_iterator& element) {
-  const WeatherLoadCase* weathercase = &(*element);
-
-  // searches all spans and sets reference to nullptr if address matches
-  for (auto iter = spans_.begin(); iter != spans_.end(); iter++) {
-    Span& span = *iter;
-    const WeatherLoadCase* weathercase_span = nullptr;
-
-    // compares constraint weathercase
-    weathercase_span = span.linecable.constraint.case_weather;
-    if (weathercase_span == weathercase) {
-      span.linecable.constraint.case_weather = nullptr;
-    }
-
-    // compares stretch-creep weathercase
-    weathercase_span = span.linecable.weathercase_stretch_creep;
-    if (weathercase_span == weathercase) {
-      span.linecable.weathercase_stretch_creep = nullptr;
-    }
-
-    // compares stretch-load weathercase
-    weathercase_span = span.linecable.weathercase_stretch_load;
-    if (weathercase_span == weathercase) {
-      span.linecable.weathercase_stretch_load = nullptr;
-    }
-  }
-
-  // gets iterator with edit capability
-  const unsigned int index = std::distance(weathercases_.cbegin(), element);
-  auto iter = std::next(weathercases_.begin(), index);
-
-  // deletes from weathercases list
-  weathercases_.erase(iter);
-
-  Modify(true);
-}
-
-  std::list<Span>::const_iterator SpanAnalyzerDoc::InsertSpan(
+std::list<Span>::const_iterator SpanAnalyzerDoc::InsertSpan(
       const std::list<Span>::const_iterator& position,
       const Span& span) {
   // gets iterator with edit capability
@@ -144,83 +82,6 @@ void SpanAnalyzerDoc::DeleteWeathercase(
   return std::prev(position);
 }
 
-std::list<WeatherLoadCase>::const_iterator SpanAnalyzerDoc::InsertWeathercase(
-    const std::list<WeatherLoadCase>::const_iterator& position,
-    const WeatherLoadCase& weathercase) {
-  // gets iterator with edit capability
-  const unsigned int index = std::distance(weathercases_.cbegin(), position);
-  auto iter = std::next(weathercases_.begin(), index);
-
-  // adds weathercase to list
-  weathercases_.insert(iter, weathercase);
-
-  Modify(true);
-
-  return std::prev(position);
-}
-
-/// This function compares the memory address of the weathercases.
-bool SpanAnalyzerDoc::IsReferencedWeathercase(
-    const std::list<WeatherLoadCase>::const_iterator& element) const {
-  // gets weathercase
-  const WeatherLoadCase* weathercase = &(*element);
-
-  // searches all spans to see if weathercase address matches
-  for (auto iter = spans_.cbegin(); iter != spans_.cend(); iter++) {
-    const Span& span = *iter;
-    const WeatherLoadCase* weathercase_span = nullptr;
-
-    // compares constraint weathercase
-    weathercase_span = span.linecable.constraint.case_weather;
-    if (weathercase_span == weathercase) {
-      return true;
-    }
-
-    // compares stretch-creep weathercase
-    weathercase_span = span.linecable.weathercase_stretch_creep;
-    if (weathercase_span == weathercase) {
-      return true;
-    }
-
-    // compares stretch-load weathercase
-    weathercase_span = span.linecable.weathercase_stretch_load;
-    if (weathercase_span == weathercase) {
-      return true;
-    }
-  }
-
-  // weathercase is not referenced
-  return false;
-}
-
-bool SpanAnalyzerDoc::IsUniqueWeathercase(
-    const std::string& description,
-    const std::list<WeatherLoadCase>::const_iterator* skip) const {
-  // gets the weathercase that will be skipped
-  const WeatherLoadCase* weathercase_skip = nullptr;
-  if (skip != nullptr) {
-    weathercase_skip = &(**skip);
-  }
-
-  // searches weathercases for matching description
-  for (auto iter = weathercases_.cbegin(); iter != weathercases_.cend();
-       iter++) {
-    const WeatherLoadCase* weathercase = &(*iter);
-
-    if (description == weathercase->description) {
-      if (weathercase_skip == weathercase) {
-        // do nothing - continue searching
-      } else {
-        return false;
-      }
-    }
-  }
-
-  // no existing descriptions matched
-  return true;
-}
-
-/// \todo This needs to check for weathercase duplicates and remove them if necessary.
 wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   std::string message;
 
@@ -292,8 +153,15 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
 
   // parses the XML node and loads into the document
   std::string filename = this->GetFilename();
+
+  const std::list<WeatherLoadCase>& weathercases =
+      wxGetApp().data()->groups_weathercase.cbegin()->weathercases;
+
+  const std::list<CableFile>& cablefiles =
+      wxGetApp().data()->cablefiles;
+
   int line_number = SpanAnalyzerDocXmlHandler::ParseNode(
-      root, filename, &wxGetApp().data()->cablefiles, *this);
+      root, filename, &cablefiles, &weathercases, *this);
   if (line_number != 0) {
     // notifies user of error
     message = GetFilename() + ":" + std::to_string(line_number) + "  --  "
@@ -347,25 +215,6 @@ void SpanAnalyzerDoc::MoveSpan(
   return;
 }
 
-void SpanAnalyzerDoc::MoveWeathercase(
-      const std::list<WeatherLoadCase>::const_iterator& element,
-      const std::list<WeatherLoadCase>::const_iterator& position) {
-  // gets iterators with edit capability
-  const unsigned int index_element =
-      std::distance(weathercases_.cbegin(), element);
-  auto iter_element = std::next(weathercases_.begin(), index_element);
-
-  const unsigned int index_position =
-      std::distance(weathercases_.cbegin(), position);
-  auto iter_position = std::next(weathercases_.begin(), index_position);
-
-  weathercases_.splice(iter_position, weathercases_, iter_element);
-
-  Modify(true);
-
-  return;
-}
-
 void SpanAnalyzerDoc::ReplaceSpan(
     const std::list<Span>::const_iterator& element,
     const Span& span) {
@@ -375,19 +224,6 @@ void SpanAnalyzerDoc::ReplaceSpan(
 
   // replaces span in list
   *iter = Span(span);
-
-  Modify(true);
-}
-
-void SpanAnalyzerDoc::ReplaceWeathercase(
-    const std::list<WeatherLoadCase>::const_iterator& element,
-    const WeatherLoadCase& weathercase) {
-  // gets iterator with edit capability
-  const unsigned int index = std::distance(weathercases_.cbegin(), element);
-  auto iter = std::next(weathercases_.begin(), index);
-
-  // replaces weathercase in list
-  *iter = WeatherLoadCase(weathercase);
 
   Modify(true);
 }
@@ -431,8 +267,4 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
 
 const std::list<Span>& SpanAnalyzerDoc::spans() const {
   return spans_;
-}
-
-const std::list<WeatherLoadCase>& SpanAnalyzerDoc::weathercases() const {
-  return weathercases_;
 }

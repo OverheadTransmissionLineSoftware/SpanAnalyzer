@@ -6,7 +6,6 @@
 #include "wx/aboutdlg.h"
 #include "wx/xrc/xmlres.h"
 
-#include "analysis_weather_load_case_manager_dialog.h"
 #include "cable_file_manager_dialog.h"
 #include "cable_unit_converter.h"
 #include "file_handler.h"
@@ -14,6 +13,7 @@
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
+#include "weather_load_case_manager_dialog.h"
 #include "weather_load_case_unit_converter.h"
 
 #include "../res/icon.xpm"
@@ -53,8 +53,8 @@ bool DocumentFileDropTarget::OnDropFiles(wxCoord x, wxCoord y,
 }
 
 BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxFrame)
-  EVT_MENU(XRCID("menuitem_edit_analysis_weathercases"), SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases)
   EVT_MENU(XRCID("menuitem_edit_cables"), SpanAnalyzerFrame::OnMenuEditCables)
+  EVT_MENU(XRCID("menuitem_edit_weathercases"), SpanAnalyzerFrame::OnMenuEditWeathercases)
   EVT_MENU(XRCID("menuitem_file_preferences"), SpanAnalyzerFrame::OnMenuFilePreferences)
   EVT_MENU(XRCID("menuitem_help_about"), SpanAnalyzerFrame::OnMenuHelpAbout)
   EVT_MENU(XRCID("menuitem_view_log"), SpanAnalyzerFrame::OnMenuViewLog)
@@ -66,7 +66,7 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
   wxXmlResource::Get()->LoadMenuBar(this, "span_analyzer_menubar");
 
   // sets the frame icon
-  SetIcon(wxICON(icon));
+  SetIcon(wxIcon(icon_xpm));
 
   // sets the drag and drop target
   SetDropTarget(new DocumentFileDropTarget(this));
@@ -99,44 +99,7 @@ SpanAnalyzerFrame::~SpanAnalyzerFrame() {
   manager_.UnInit();
 }
 
-void SpanAnalyzerFrame::OnMenuEditAnalysisWeathercases(
-    wxCommandEvent& event) {
-  // gets application data
-  SpanAnalyzerData* data = wxGetApp().data();
-
-  // shows an editor
-  AnalysisWeatherLoadCaseManagerDialog dialog(
-      this,
-      wxGetApp().config()->units,
-      &data->groups_weathercase);
-  if (dialog.ShowModal() == wxID_OK) {
-    // saves application data
-    FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
-                             wxGetApp().config()->units);
-
-    // posts event to update views
-    SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
-                               GetCurrentDocument();
-    if (doc != nullptr) {
-      ViewUpdateHint hint;
-      hint.set_type(ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit);
-      wxGetApp().manager_doc()->GetCurrentDocument()->UpdateAllViews(nullptr,
-                                                                     &hint);
-    }
-  }
-}
-
 void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
-  // checks to make sure document is closed
-  wxDocManager* manager = wxGetApp().manager_doc();
-  if (manager->GetCurrentDocument() != nullptr) {
-    std::string message = "Document is currently open. To modify cables, "
-      "close document and try again.";
-    wxMessageBox(message);
-
-    return;
-  }
-
   // gets application config and data
   const SpanAnalyzerConfig* config = wxGetApp().config();
   SpanAnalyzerData* data = wxGetApp().data();
@@ -156,6 +119,33 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
        iter++) {
     CableFile& cablefile = *iter;
     FileHandler::LoadCable(cablefile.filepath, config->units, cablefile.cable);
+  }
+}
+
+void SpanAnalyzerFrame::OnMenuEditWeathercases(
+    wxCommandEvent& event) {
+  // gets application data
+  SpanAnalyzerData* data = wxGetApp().data();
+
+  // shows an editor
+  WeatherLoadCaseManagerDialog dialog(
+      this,
+      wxGetApp().config()->units,
+      &data->groups_weathercase);
+  if (dialog.ShowModal() == wxID_OK) {
+    // saves application data
+    FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
+                             wxGetApp().config()->units);
+
+    // posts event to update views
+    SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
+                               GetCurrentDocument();
+    if (doc != nullptr) {
+      ViewUpdateHint hint;
+      hint.set_type(ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit);
+      wxGetApp().manager_doc()->GetCurrentDocument()->UpdateAllViews(nullptr,
+                                                                     &hint);
+    }
   }
 }
 

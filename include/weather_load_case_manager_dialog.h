@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_ANALYSISWEATHERLOADCASEMANAGERDIALOG_H_
-#define OTLS_SPANANALYZER_ANALYSISWEATHERLOADCASEMANAGERDIALOG_H_
+#ifndef OTLS_SPANANALYZER_WEATHERLOADCASEMANAGERDIALOG_H_
+#define OTLS_SPANANALYZER_WEATHERLOADCASEMANAGERDIALOG_H_
 
 #include "models/base/units.h"
 #include "wx/wx.h"
@@ -11,20 +11,36 @@
 
 /// \par OVERVIEW
 ///
-/// This dialog manages the application analysis weathercase sets and allows the
+/// This dialog manages the application weathercase groups and allows the
 /// user to edit them.
-class AnalysisWeatherLoadCaseManagerDialog : public wxDialog {
+class WeatherLoadCaseManagerDialog : public wxDialog {
  public:
   /// \brief Constructor.
-  AnalysisWeatherLoadCaseManagerDialog(
+  WeatherLoadCaseManagerDialog(
       wxWindow* parent,
       const units::UnitSystem& units,
       std::list<WeatherLoadCaseGroup>* groups_weathercase);
 
   /// \brief Destructor.
-  ~AnalysisWeatherLoadCaseManagerDialog();
+  ~WeatherLoadCaseManagerDialog();
 
  private:
+  /// \brief Determines if the cable is referenced.
+  /// \param[in] name
+  ///   The name to check.
+  /// \return If the cable file is referenced by the document.
+  /// This function scans the document to see if the cable is referenced.
+  bool IsReferencedByDocument(const std::string& name) const;
+
+  /// \brief Determines if the cable name is unique.
+  /// \param[in] name
+  ///   The name to check.
+  /// \param[in] index_ignore
+  ///   The index to skip (i.e. editing the name of an existing cable).
+  /// \return If the cable name is unique.
+  bool IsUniqueName(const std::string& name,
+                    const int& index_ignore = -1) const;
+
   /// \brief Handles the group add button event.
   /// \param[in] event
   ///   The event.
@@ -122,4 +138,4 @@ class AnalysisWeatherLoadCaseManagerDialog : public wxDialog {
   DECLARE_EVENT_TABLE()
 };
 
-#endif  // OTLS_SPANANALYZER_ANALYSISWEATHERLOADCASEMANAGERDIALOG_H_
+#endif  // OTLS_SPANANALYZER_WEATHERLOADCASEMANAGERDIALOG_H_
