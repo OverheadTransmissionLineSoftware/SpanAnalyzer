@@ -59,6 +59,9 @@ ResultsPane::~ResultsPane() {
 }
 
 void ResultsPane::Update(wxObject* hint) {
+  // caches focused index
+  const long index = table_->IndexFocused();
+
   // interprets hint
   ViewUpdateHint* hint_update = (ViewUpdateHint*)hint;
   if (hint_update == nullptr) {
@@ -85,12 +88,16 @@ void ResultsPane::Update(wxObject* hint) {
     UpdateReportData();
     table_->Refresh();
   } else if (hint_update->type() ==
+      ViewUpdateHint::HintType::kViewWeathercaseChange) {
+    return;
+  } else if (hint_update->type() ==
       ViewUpdateHint::HintType::kViewWeathercasesSetChange) {
     UpdateReportData();
     table_->Refresh();
   }
 
   table_->set_formatting_column(0, 200, wxLIST_FORMAT_LEFT);
+  table_->set_index_focused(index);
 }
 
 void ResultsPane::OnChoiceCondition(wxCommandEvent& event) {
@@ -133,9 +140,11 @@ void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
 
   // this update only affects this pane, so a view update is not sent
   // updates the report data and table
+  const long index = table_->IndexFocused();
   UpdateReportData();
   table_->Refresh();
   table_->set_formatting_column(0, 200, wxLIST_FORMAT_LEFT);
+  table_->set_index_focused(index);
 }
 
 void ResultsPane::OnChoiceWeathercaseGroup(wxCommandEvent& event) {

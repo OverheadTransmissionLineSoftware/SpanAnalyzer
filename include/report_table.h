@@ -54,15 +54,15 @@ enum class SortOrderType {
 ///
 /// \par SORTING
 ///
-/// Srting is handled by the listctrl and does NOT affect the sort order of the
+/// Sorting is handled by the listctrl and does NOT affect the sort order of the
 /// provided data, but rather, just inside the control itself. It is structured
 /// this way to use the wxListCtrl::Sort function.
 ///
 /// \par COPY TO CLIPBOARD
 ///
-/// This class supports several copy to clipboard commands: copy a row, column,
-/// or the entire table. All of the data is taken from the listctrl itself, so
-/// it will reflect the sorted order (if any).
+/// This class supports several copy to clipboard commands. All of the data is
+/// taken from the listctrl itself, so it will reflect the sorted order (if
+/// any).
 class ReportTable : public wxPanel {
  public:
   /// \brief Constructor.
@@ -96,6 +96,11 @@ class ReportTable : public wxPanel {
   void set_formatting_column(const int& column, const int& width,
                              const wxListColumnFormat& align);
 
+  /// \brief Sets the focused row index.
+  /// \param[in] index
+  ///   The index to be focused.
+  void set_index_focused(const long& index);
+
  private:
   /// \brief Clears the listctrl.
   void ClearListCtrl();
@@ -110,13 +115,13 @@ class ReportTable : public wxPanel {
   /// \param[in] index
   ///   The row index.
   /// \return A concatenated string. Starting from left to right, with each
-  ///   value (column) separated a tab character. The end of the string will
+  ///   value (column) separated by a tab character. The end of the string will
   ///   contain a new line character.
   std::string ClipboardStringRow(const int& index) const;
 
   /// \brief Gets a clipboard string for the entire table, excluding headers.
   /// \return A concatenated string. Starting from left to right, with each
-  ///   value (column) separated a tab character. The end of a row will
+  ///   value (column) separated by a tab character. The end of a row will
   ///   contain a new line character.
   std::string ClipBoardStringTable() const;
 
@@ -148,13 +153,13 @@ class ReportTable : public wxPanel {
   /// \brief Sorts the listctrl.
   void Sort();
 
-  /// \var index_sorted_
-  ///   The column index that is currently sorted. Set to -1 if none are sorted.
-  int index_sorted_;
-
   /// \var data_
   ///   The data that is passed onto the listctrl.
   const ReportData* data_;
+
+  /// \var index_sorted_
+  ///   The column index that is currently sorted. Set to -1 if none are sorted.
+  int index_sorted_;
 
   /// \var type_sort_
   ///   The type of sorting that is currently applied.

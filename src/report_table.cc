@@ -187,6 +187,18 @@ void ReportTable::set_formatting_column(const int& column, const int& width,
   listctrl_->SetColumn(column, item);
 }
 
+void ReportTable::set_index_focused(const long& index) {
+  if (index < 0) {
+    return;
+  }
+
+  if (listctrl_->GetItemCount() <= index) {
+    return;
+  }
+
+  listctrl_->SetItemState(index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+}
+
 void ReportTable::ClearListCtrl() {
   listctrl_->ClearAll();
 }
@@ -337,7 +349,7 @@ void ReportTable::OnItemRightClick(wxListEvent& event) {
 }
 
 void ReportTable::Sort() {
-  // checks if row is selected
+  // checks if sort column is selected
   if (index_sorted_ < 0) {
     return;
   }
