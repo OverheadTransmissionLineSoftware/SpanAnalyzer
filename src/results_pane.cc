@@ -554,12 +554,25 @@ void ResultsPane::UpdateWeathercaseGroupSelected() {
   // gets weathercases from app data
   const std::list<WeatherLoadCaseGroup>& groups_weathercase =
        wxGetApp().data()->groups_weathercase;
+  const WeatherLoadCaseGroup* group = nullptr;
   for (auto iter = groups_weathercase.cbegin();
        iter != groups_weathercase.cend(); iter++) {
-    const WeatherLoadCaseGroup& group = *iter;
-    if (group.name == str_selection) {
-      view->set_group_weathercase(&group);
+    const WeatherLoadCaseGroup& group_temp = *iter;
+    if (group_temp.name == str_selection) {
+      group = &group_temp;
       break;
     }
+  }
+
+  // updates view with weathercase group
+  view->set_group_weathercase(group);
+
+  if (group == nullptr) {
+    return;
+  }
+
+  // updates the view if the index if it is not valid anymore
+  if ((int)group->weathercases.size() <= view->index_weathercase()) {
+    view->set_index_weathercase(-1);
   }
 }
