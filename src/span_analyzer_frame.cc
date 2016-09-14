@@ -120,6 +120,16 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
     CableFile& cablefile = *iter;
     FileHandler::LoadCable(cablefile.filepath, config->units, cablefile.cable);
   }
+
+  // updates document/views
+  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
+                             GetCurrentDocument();
+  if (doc != nullptr) {
+    doc->RunAnalysis();
+
+    UpdateHint hint(HintType::kCablesEdit);
+    doc->UpdateAllViews(nullptr, &hint);
+  }
 }
 
 void SpanAnalyzerFrame::OnMenuEditWeathercases(
@@ -137,14 +147,14 @@ void SpanAnalyzerFrame::OnMenuEditWeathercases(
     FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
                              wxGetApp().config()->units);
 
-    // posts event to update views
+    // updates document/views
     SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
                                GetCurrentDocument();
     if (doc != nullptr) {
-      ViewUpdateHint hint;
-      hint.set_type(ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit);
-      wxGetApp().manager_doc()->GetCurrentDocument()->UpdateAllViews(nullptr,
-                                                                     &hint);
+      doc->RunAnalysis();
+
+      UpdateHint hint(HintType::kWeathercasesEdit);
+      doc->UpdateAllViews(nullptr, &hint);
     }
   }
 }
@@ -191,15 +201,15 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
           cablefile.cable);
     }
 
-    // converts doc
+    // updates document/views
     SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
                                GetCurrentDocument();
     if (doc != nullptr) {
       doc->ConvertUnitSystem(units_before, config->units);
+      doc->RunAnalysis();
 
       // updates views
-      ViewUpdateHint hint;
-      hint.set_type(ViewUpdateHint::HintType::kModelPreferencesEdit);
+      UpdateHint hint(HintType::kPreferencesEdit);
       doc->UpdateAllViews(nullptr, &hint);
     }
   }

@@ -7,6 +7,7 @@
 #include "wx/dcbuffer.h"
 
 #include "line_renderer_2d.h"
+#include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
 
 /// \par OVERVIEW
@@ -55,36 +56,26 @@ void PlotPane::Update(wxObject* hint) {
   wxBufferedDC dc_buf(&dc, bitmap_buffer_);
 
   // interprets hint
-  ViewUpdateHint* hint_update = (ViewUpdateHint*)hint;
+  UpdateHint* hint_update = (UpdateHint*)hint;
   if (hint_update == nullptr) {
     UpdatePlot();
     RenderPlot(dc_buf);
-  } else if (hint_update->type() ==
-       ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit) {
+  } else if (hint_update->type() == HintType::kCablesEdit) {
     UpdatePlot();
     RenderPlot(dc_buf);
-  } else if (hint_update->type() ==
-       ViewUpdateHint::HintType::kModelPreferencesEdit) {
+  } else if (hint_update->type() == HintType::kPreferencesEdit) {
     UpdatePlot();
     RenderPlot(dc_buf);
-  } else if (hint_update->type() ==
-       ViewUpdateHint::HintType::kModelSpansEdit) {
+  } else if (hint_update->type() == HintType::kSpansEdit) {
     UpdatePlot();
     RenderPlot(dc_buf);
-  } else if (hint_update->type() ==
-       ViewUpdateHint::HintType::kModelWeathercaseEdit) {
+  } else if (hint_update->type() == HintType::kWeathercasesEdit) {
     UpdatePlot();
     RenderPlot(dc_buf);
-  } else if (hint_update->type() ==
-      ViewUpdateHint::HintType::kViewConditionChange) {
+  } else if (hint_update->type() == HintType::kWeathercaseSelect) {
     UpdatePlot();
     RenderPlot(dc_buf);
-  } else if (hint_update->type() ==
-      ViewUpdateHint::HintType::kViewWeathercaseChange) {
-    UpdatePlot();
-    RenderPlot(dc_buf);
-  } else if (hint_update->type() ==
-      ViewUpdateHint::HintType::kViewWeathercasesSetChange) {
+  } else if (hint_update->type() == HintType::kWeathercasesSelect) {
     UpdatePlot();
     RenderPlot(dc_buf);
   }
@@ -202,40 +193,44 @@ void PlotPane::RenderPlot(wxDC& dc) {
 }
 
 void PlotPane::UpdatePlot() {
-  // gets the results
+  // gets view settings
   SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
-  const SagTensionAnalysisResultSet& results = view->results();
-  if (results.descriptions_weathercase.empty() == true) {
+  const WeatherLoadCaseGroup* group_weathercases = view->group_weathercases();
+  const CableConditionType& condition = view->condition();
+  const int index_weathercase = view->index_weathercase();
+
+  if (group_weathercases == nullptr) {
     wxClientDC dc(this);
     ClearPlot(dc);
     return;
   }
 
-  // gets the result set based on the current display condition
-  const std::list<SagTensionAnalysisResult>* result_list = nullptr;
-  if (view->condition() == CableConditionType::kInitial) {
-    result_list = &results.results_initial;
-  } else if (view->condition() == CableConditionType::kLoad) {
-    result_list = &results.results_load;
-  } else {
+  if (index_weathercase < 0) {
+    wxClientDC dc(this);
+    ClearPlot(dc);
+    return;
+  }
+
+  // gets filtered results from doc
+  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  const std::list<SagTensionAnalysisResult>& results =
+      doc->ResultsFiltered(*group_weathercases, condition);
+  if (results.empty() == true) {
     wxClientDC dc(this);
     ClearPlot(dc);
     return;
   }
 
   // gets the result from the list
-  const int index_weathercase = view->index_weathercase();
-  if (index_weathercase < 0) {
-    plot_.ClearRenderers();
-    return;
-  }
-
   const SagTensionAnalysisResult& result =
-      *(std::next(result_list->cbegin(), index_weathercase));
+      *(std::next(results.cbegin(), index_weathercase));
+
+  // gets span from document
+  const Span* span = doc->SpanAnalysis();
 
   // creates a catenary with the result parameters
   Catenary3d catenary;
-  catenary.set_spacing_endpoints(results.span->spacing_catenary);
+  catenary.set_spacing_endpoints(span->spacing_catenary);
   catenary.set_tension_horizontal(result.tension_horizontal);
   catenary.set_weight_unit(result.weight_unit);
 

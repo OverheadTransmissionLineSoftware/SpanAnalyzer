@@ -8,14 +8,14 @@
 
 #include "models/base/vector.h"
 
-#include "span.h"
+#include "span_analyzer_data.h"
 
 /// \par OVERVIEW
 ///
 /// This represents a single sag-tension analysis result.
 ///
 /// The sag-tension solution is fairly computationally expensive. Using these
-/// results, a catenary can be created to generate further analsyis results.
+/// results, a catenary can be created to generate further analysis results.
 struct SagTensionAnalysisResult {
   /// \var tension_horizontal
   ///   The horizontal tension of the cable.
@@ -36,12 +36,12 @@ struct SagTensionAnalysisResult {
 
 /// \par OVERVIEW
 ///
-/// This represents the sag-tension analysis results for a single set of
+/// This represents the sag-tension analysis results for a single group of
 /// weathercases.
-struct SagTensionAnalysisResultSet {
-  /// \var descriptions_weathercase
-  ///   The descriptions of the analysis weathercases.
-  std::list<std::string> descriptions_weathercase;
+struct SagTensionAnalysisResultGroup {
+  /// \var group_weathercases
+  ///   The weathercase group. This is for reference only.
+  const WeatherLoadCaseGroup* group_weathercases;
 
   /// \var results_initial
   ///   The sag-tension results for the initial cable condition.
@@ -50,10 +50,6 @@ struct SagTensionAnalysisResultSet {
   /// \var results_load
   ///   The sag-tension results for the load cable condition.
   std::list<SagTensionAnalysisResult> results_load;
-
-  /// \var span
-  ///   The span corresponding to the sag-tension result set.
-  const Span* span;
 };
 
 #endif  // OTLS_SPANANALYZER_SAGTENSIONANALYSISRESULTS_H_

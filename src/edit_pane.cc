@@ -7,7 +7,6 @@
 
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
-#include "span_analyzer_view.h"
 #include "span_editor_dialog.h"
 #include "span_unit_converter.h"
 
@@ -39,9 +38,6 @@ EditPane::EditPane(wxWindow* parent, wxView* view) {
 
   // saves view reference
   view_ = view;
-
-  // gets the document
-  doc_ = (SpanAnalyzerDoc*)view_->GetDocument();
 
   // sets up treectrl
   treectrl_ = XRCCTRL(*this, "treectrl", wxTreeCtrl);
@@ -80,17 +76,12 @@ void EditPane::ActivateSpan(const wxTreeItemId& id) {
   treectrl_->SetItemBold(id, true);
   item_activated_ = id;
 
-  // caches span in view
-  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
+  // updates document
+  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
   SpanTreeItemData* data =
       (SpanTreeItemData*)treectrl_->GetItemData(item_activated_);
   auto iter = data->iter();
-  view->set_span(&(*iter));
-
-  // updates views
-  ViewUpdateHint hint;
-  hint.set_type(ViewUpdateHint::HintType::kModelSpansEdit);
-  view_->GetDocument()->UpdateAllViews(nullptr, &hint);
+  doc->SetSpanAnalysis(&(*iter));
 }
 
 void EditPane::AddSpan() {
@@ -124,7 +115,8 @@ void EditPane::AddSpan() {
   }
 
   // adds to document
-  auto iter = doc_->AppendSpan(span);
+  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  auto iter = doc->AppendSpan(span);
 
   // adds to treectrl
   wxTreeItemId id = treectrl_->AppendItem(treectrl_->GetRootItem(), span.name);
@@ -142,7 +134,9 @@ void EditPane::CopySpan(const wxTreeItemId& id) {
 
   // gets position and inserts to document
   auto position = std::next(item->iter());
-  auto iter = doc_->InsertSpan(position, span);
+
+  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  auto iter = doc->InsertSpan(position, span);
 
   // adds to treectrl
   wxTreeItemId id_item = treectrl_->InsertItem(
@@ -157,37 +151,29 @@ void EditPane::DeleteSpan(const wxTreeItemId& id) {
   SpanTreeItemData* item = (SpanTreeItemData*)treectrl_->GetItemData(id);
 
   // erases from document and treectrl
-  doc_->DeleteSpan(item->iter());
+  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  doc->DeleteSpan(item->iter());
 
   if (item_activated_ == id) {
     item_activated_ = (wxTreeItemId)0l;
   }
 
   treectrl_->Delete(id);
-
-  // updates view
-  ViewUpdateHint hint;
-  hint.set_type(ViewUpdateHint::HintType::kModelSpansEdit);
-  doc_->UpdateAllViews(nullptr, &hint);
 }
 
 void EditPane::DeleteSpans() {
   // gets list and size
-  const std::list<Span>& spans = doc_->spans();
+  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  const std::list<Span>& spans = doc->spans();
 
   // deletes spans from doc
   for (auto iter = spans.cbegin(); iter != spans.cend(); iter++) {
-    doc_->DeleteSpan(iter);
+    doc->DeleteSpan(iter);
   }
 
   // deletes spans from treectrl
   wxTreeItemId root = treectrl_->GetRootItem();
   treectrl_->DeleteChildren(root);
-
-  // updates view
-  ViewUpdateHint hint;
-  hint.set_type(ViewUpdateHint::HintType::kModelSpansEdit);
-  doc_->UpdateAllViews(nullptr, &hint);
 }
 
 void EditPane::EditSpan(const wxTreeItemId& id) {
@@ -231,15 +217,11 @@ void EditPane::EditSpan(const wxTreeItemId& id) {
                                         span);
 
     // updates document
-    doc_->ReplaceSpan(item->iter(), span);
+    SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+    doc->ReplaceSpan(item->iter(), span);
 
     // updates treectrl name
     treectrl_->SetItemText(id, span.name);
-
-    // updates view
-    ViewUpdateHint hint;
-    hint.set_type(ViewUpdateHint::HintType::kModelSpansEdit);
-    doc_->UpdateAllViews(nullptr, &hint);
   }
 }
 
@@ -378,7 +360,8 @@ void EditPane::OnDragEnd(wxTreeEvent& event) {
   std::advance(iter_destination, 1);
 
   // modifies document
-  doc_->MoveSpan(iter_source, iter_destination);
+  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  doc->MoveSpan(iter_source, iter_destination);
 
   // modifies treectrl
   wxString desc = treectrl_->GetItemText(item_source);
@@ -400,11 +383,6 @@ void EditPane::OnDragEnd(wxTreeEvent& event) {
     item_activated_ = item_source;
     treectrl_->SetItemBold(item_source);
   }
-
-  // updates views
-  ViewUpdateHint hint;
-  hint.set_type(ViewUpdateHint::HintType::kModelSpansEdit);
-  doc_->UpdateAllViews(nullptr, &hint);
 }
 
 void EditPane::OnItemActivate(wxTreeEvent& event) {

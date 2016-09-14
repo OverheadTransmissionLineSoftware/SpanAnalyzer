@@ -8,6 +8,7 @@
 #include "wx/wx.h"
 
 #include "report_table.h"
+#include "sag_tension_analysis_results.h"
 
 /// \par OVERVIEW
 ///
@@ -63,16 +64,40 @@ class ResultsPane : public wxPanel {
   void UpdateReportData();
 
   /// \brief Updates the report data with catenary results.
-  void UpdateReportDataCatenary();
+  /// \param[in] weathercases
+  ///   The weathercases that are selected by the view.
+  /// \param[in] results
+  ///   The filtered results from the document.
+  void UpdateReportDataCatenary(
+      const std::list<WeatherLoadCase>* weathercases,
+      const std::list<SagTensionAnalysisResult>& results);
 
   /// \brief Updates the report data with catenary endpoint results.
-  void UpdateReportDataCatenaryEndpoints();
+  /// \param[in] weathercases
+  ///   The weathercases that are selected by the view.
+  /// \param[in] results
+  ///   The filtered results from the document.
+  void UpdateReportDataCatenaryEndpoints(
+      const std::list<WeatherLoadCase>* weathercases,
+      const std::list<SagTensionAnalysisResult>& results);
 
   /// \brief Updates the report data with sag-tension results.
-  void UpdateReportDataSagTension();
+  /// \param[in] weathercases
+  ///   The weathercases that are selected by the view.
+  /// \param[in] results
+  ///   The filtered results from the document.
+  void UpdateReportDataSagTension(
+      const std::list<WeatherLoadCase>* weathercases,
+      const std::list<SagTensionAnalysisResult>& results);
 
   /// \brief Updates the report data with tension distribution results.
-  void UpdateReportDataTensionDistribution();
+  /// \param[in] weathercases
+  ///   The weathercases that are selected by the view.
+  /// \param[in] results
+  ///   The filtered results from the document.
+  void UpdateReportDataTensionDistribution(
+      const std::list<WeatherLoadCase>* weathercases,
+      const std::list<SagTensionAnalysisResult>& results);
 
   /// \brief Updates the weathercase group choice control.
   void UpdateWeathercaseGroupChoice();

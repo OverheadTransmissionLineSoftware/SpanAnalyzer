@@ -11,42 +11,6 @@
 #include "edit_pane.h"
 #include "plot_pane.h"
 #include "results_pane.h"
-#include "sag_tension_analysis_results.h"
-#include "span.h"
-#include "span_analyzer_data.h"
-
-/// \par OVERVIEW
-///
-/// This class is a used in the view update process. Any information that is
-/// helpful is added to the class so the remaining views can update.
-class ViewUpdateHint : public wxObject {
- public:
-  /// This enum class contains types of view update hints.
-  enum class HintType {
-    kModelAnalysisWeathercaseEdit,
-    kModelCableEdit,
-    kModelPreferencesEdit,
-    kModelSpansEdit,
-    kModelWeathercaseEdit,
-    kViewConditionChange,
-    kViewWeathercaseChange,
-    kViewWeathercasesSetChange
-  };
-
-  /// \brief Sets the hint type.
-  /// \param[in] type
-  ///   The hint type.
-  void set_type(const HintType& type) {type_ = type;};
-
-  /// \brief Gets the hint type.
-  /// \return The hint type.
-  const HintType& type() const {return type_;};
-
- private:
-  /// \var type_
-  ///   The hint type.
-  HintType type_;
-};
 
 /// \par OVERVIEW
 ///
@@ -117,10 +81,6 @@ class SpanAnalyzerView : public wxView {
   /// \return The results pane.
   ResultsPane* pane_results();
 
-  /// \brief Gets the sag-tension analysis results.
-  /// \return The sag-tension analysis results.
-  const SagTensionAnalysisResultSet& results() const;
-
   /// \brief Sets the display condition.
   /// \param[in] condition
   ///   The display condition.
@@ -136,20 +96,7 @@ class SpanAnalyzerView : public wxView {
   ///   The selected weathercase index.
   void set_index_weathercase(const int& index_weathercase);
 
-  /// \brief Sets the activated span.
-  /// \param[in] span
-  ///   The span.
-  void set_span(const Span* span);
-
-  /// \brief Gets the activated span.
-  /// \return The activated span. If no span is activated, a nullptr is
-  ///   returned.
-  const Span* span() const;
-
  private:
-  /// \brief Updates the sag-tension results.
-  void UpdateSagTensionResults();
-
   /// \var condition_
   ///   The display cable condition.
   CableConditionType condition_;
@@ -173,14 +120,6 @@ class SpanAnalyzerView : public wxView {
   /// \var pane_results_
   ///   The results pane.
   ResultsPane* pane_results_;
-
-  /// \var results_
-  ///   The sag-tension analysis results.
-  SagTensionAnalysisResultSet results_;
-
-  /// \var span_
-  ///   The span that is currently activated.
-  const Span* span_;
 
   /// \brief This allows wxWidgets to create this class dynamically as part of
   ///   the docview framework.
