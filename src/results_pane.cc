@@ -15,7 +15,7 @@ BEGIN_EVENT_TABLE(ResultsPane, wxPanel)
   EVT_CHOICE(XRCID("choice_condition"), ResultsPane::OnChoiceCondition)
   EVT_CHOICE(XRCID("choice_report"), ResultsPane::OnChoiceReport)
   EVT_CHOICE(XRCID("choice_weathercase_group"), ResultsPane::OnChoiceWeathercaseGroup)
-  EVT_LIST_ITEM_FOCUSED(wxID_ANY, ResultsPane::OnListCtrlFocus)
+  EVT_LIST_ITEM_SELECTED(wxID_ANY, ResultsPane::OnListCtrlSelect)
 END_EVENT_TABLE()
 
 ResultsPane::ResultsPane(wxWindow* parent, wxView* view) {
@@ -59,9 +59,6 @@ ResultsPane::~ResultsPane() {
 }
 
 void ResultsPane::Update(wxObject* hint) {
-  // caches focused index
-  const long index_focus = table_->IndexFocused();
-
   // interprets hint
   UpdateHint* hint_update = (UpdateHint*)hint;
   if (hint_update == nullptr) {
@@ -81,14 +78,12 @@ void ResultsPane::Update(wxObject* hint) {
     table_->Refresh();
   } else if (hint_update->type() == HintType::kWeathercaseSelect) {
     // do nothing
-  }
-  else if (hint_update->type() == HintType::kWeathercasesSelect) {
+  } else if (hint_update->type() == HintType::kWeathercasesSelect) {
     UpdateReportData();
     table_->Refresh();
   }
 
   table_->set_formatting_column(0, 200, wxLIST_FORMAT_LEFT);
-  table_->set_index_focused(index_focus);
 }
 
 void ResultsPane::OnChoiceCondition(wxCommandEvent& event) {
@@ -130,11 +125,9 @@ void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
 
   // this update only affects this pane, so a view update is not sent
   // updates the report data and table
-  const long index = table_->IndexFocused();
   UpdateReportData();
   table_->Refresh();
   table_->set_formatting_column(0, 200, wxLIST_FORMAT_LEFT);
-  table_->set_index_focused(index);
 }
 
 void ResultsPane::OnChoiceWeathercaseGroup(wxCommandEvent& event) {
@@ -150,10 +143,16 @@ void ResultsPane::OnChoiceWeathercaseGroup(wxCommandEvent& event) {
   view_->GetDocument()->UpdateAllViews(nullptr, &hint);
 }
 
-void ResultsPane::OnListCtrlFocus(wxListEvent& event) {
+void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
+  // gets selected index
+  const long index_selected = event.GetItem().GetId();
+
+  // updates report table
+  table_->set_index_selected(index_selected);
+
   // gets view
   SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
-  view->set_index_weathercase(table_->IndexFocused());
+  view->set_index_weathercase(index_selected);
 
   // updates views
   UpdateHint hint(HintType::kWeathercaseSelect);

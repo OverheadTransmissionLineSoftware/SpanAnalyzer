@@ -71,15 +71,15 @@ class ReportTable : public wxPanel {
   /// \brief Destructor.
   ~ReportTable();
 
-  /// \brief Gets the focused listctrl item index.
-  /// \return The focused item index. If no item is focused, -1 is returned.
-  long IndexFocused() const;
-
   /// \brief Refreshes the listctrl with the data.
   void Refresh();
 
   /// \brief Gets the data that is displayed.
   const ReportData* data() const;
+
+  /// \brief Gets the selected item index.
+  /// \return The selected item index. If no item is selected, -1 is returned.
+  long index_selected() const;
 
   /// \brief Gets the sorted column index.
   /// \return The sorted column index.
@@ -100,10 +100,11 @@ class ReportTable : public wxPanel {
   void set_formatting_column(const int& column, const int& width,
                              const wxListColumnFormat& align);
 
-  /// \brief Sets the focused row index.
+  /// \brief Sets the selected row index.
   /// \param[in] index
-  ///   The index to be focused.
-  void set_index_focused(const long& index);
+  ///   The index to be selected.
+  /// Requires a Refresh() in order to take effect.
+  void set_index_selected(const long& index);
 
   /// \brief Sets the sorted column index.
   /// \param[in] index
@@ -184,9 +185,14 @@ private:
   ///   The data that is passed onto the listctrl.
   const ReportData* data_;
 
+  /// \var index_selected_
+  ///   The row index to select during a refresh. Set to -1 if nothing is
+  ///   selected.
+  long index_selected_;
+
   /// \var index_sorted_
   ///   The column index that is currently sorted. Set to -1 if none are sorted.
-  int index_sorted_;
+  long index_sorted_;
 
   /// \var type_sort_
   ///   The type of sorting that is currently applied.
