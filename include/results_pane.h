@@ -70,7 +70,7 @@ class ResultsPane : public wxPanel {
   ///   The filtered results from the document.
   void UpdateReportDataCatenary(
       const std::list<WeatherLoadCase>* weathercases,
-      const std::list<SagTensionAnalysisResult>& results);
+      const std::list<SagTensionAnalysisResult>* results);
 
   /// \brief Updates the report data with catenary endpoint results.
   /// \param[in] weathercases
@@ -79,7 +79,7 @@ class ResultsPane : public wxPanel {
   ///   The filtered results from the document.
   void UpdateReportDataCatenaryEndpoints(
       const std::list<WeatherLoadCase>* weathercases,
-      const std::list<SagTensionAnalysisResult>& results);
+      const std::list<SagTensionAnalysisResult>* results);
 
   /// \brief Updates the report data with sag-tension results.
   /// \param[in] weathercases
@@ -88,7 +88,7 @@ class ResultsPane : public wxPanel {
   ///   The filtered results from the document.
   void UpdateReportDataSagTension(
       const std::list<WeatherLoadCase>* weathercases,
-      const std::list<SagTensionAnalysisResult>& results);
+      const std::list<SagTensionAnalysisResult>* results);
 
   /// \brief Updates the report data with tension distribution results.
   /// \param[in] weathercases
@@ -97,7 +97,7 @@ class ResultsPane : public wxPanel {
   ///   The filtered results from the document.
   void UpdateReportDataTensionDistribution(
       const std::list<WeatherLoadCase>* weathercases,
-      const std::list<SagTensionAnalysisResult>& results);
+      const std::list<SagTensionAnalysisResult>* results);
 
   /// \brief Updates the weathercase group choice control.
   void UpdateWeathercaseGroupChoice();

@@ -7,7 +7,6 @@
 
 AnalysisController::AnalysisController() {
   data_ = nullptr;
-  is_updated_ = false;
   span_ = nullptr;
 
   reloader_.set_length_unloaded_unstretched_adjustment(-999999);
@@ -64,9 +63,6 @@ void AnalysisController::RunAnalysis() const {
   // un-inits reloader
   reloader_.set_line_cable(&span_->linecable);
   reloader_.set_length_unloaded_unstretched_adjustment(0);
-
-  // updates indicator
-  is_updated_ = true;
 }
 
 const SpanAnalyzerData* AnalysisController::data() const {
@@ -75,23 +71,15 @@ const SpanAnalyzerData* AnalysisController::data() const {
 
 const std::list<SagTensionAnalysisResultGroup>& AnalysisController::results()
     const {
-  if (is_updated_ == false) {
-    RunAnalysis();
-  }
-
   return results_;
 }
 
 void AnalysisController::set_data(const SpanAnalyzerData* data) {
   data_ = data;
-
-  is_updated_ = false;
 }
 
 void AnalysisController::set_span(const Span* span) {
   span_ = span;
-
-  is_updated_ = false;
 }
 
 const Span* AnalysisController::span() const {

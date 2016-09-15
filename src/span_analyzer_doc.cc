@@ -267,24 +267,31 @@ void SpanAnalyzerDoc::ReplaceSpan(
   }
 }
 
-const std::list<SagTensionAnalysisResultGroup>& SpanAnalyzerDoc::Results()
+const std::list<SagTensionAnalysisResultGroup>* SpanAnalyzerDoc::Results()
     const {
-  return controller_analysis_.results();
+  return &controller_analysis_.results();
 }
 
-const std::list<SagTensionAnalysisResult>& SpanAnalyzerDoc::ResultsFiltered(
+const std::list<SagTensionAnalysisResult>* SpanAnalyzerDoc::ResultsFiltered(
     const WeatherLoadCaseGroup& group_weathercases,
     const CableConditionType& condition) const {
   // gets the results
-  const std::list<SagTensionAnalysisResultGroup>& results = Results();
+  const std::list<SagTensionAnalysisResultGroup>* results = Results();
+  if (results == nullptr) {
+    return nullptr;
+  }
 
   // searches results groups for a matching weathercase group
   const SagTensionAnalysisResultGroup* group_results = nullptr;
-  for (auto iter = results.cbegin(); iter != results.cend(); iter++) {
+  for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
     group_results = &(*iter);
     if (group_results->group_weathercases == &group_weathercases) {
       break;
     }
+  }
+
+  if (group_results == nullptr) {
+    return nullptr;
   }
 
   // gets the result list based on the current display condition
@@ -295,7 +302,7 @@ const std::list<SagTensionAnalysisResult>& SpanAnalyzerDoc::ResultsFiltered(
     list_results = &group_results->results_load;
   }
 
-  return *list_results;
+  return list_results;
 }
 
 void SpanAnalyzerDoc::RunAnalysis() const {

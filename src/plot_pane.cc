@@ -58,31 +58,27 @@ void PlotPane::Update(wxObject* hint) {
   // interprets hint
   UpdateHint* hint_update = (UpdateHint*)hint;
   if (hint_update == nullptr) {
-    UpdatePlot();
+    UpdatePlotRenderers();
     RenderPlot(dc_buf);
   } else if (hint_update->type() == HintType::kCablesEdit) {
-    UpdatePlot();
+    UpdatePlotRenderers();
     RenderPlot(dc_buf);
   } else if (hint_update->type() == HintType::kPreferencesEdit) {
-    UpdatePlot();
+    UpdatePlotRenderers();
     RenderPlot(dc_buf);
   } else if (hint_update->type() == HintType::kSpansEdit) {
-    UpdatePlot();
+    UpdatePlotRenderers();
     RenderPlot(dc_buf);
   } else if (hint_update->type() == HintType::kWeathercasesEdit) {
-    UpdatePlot();
+    UpdatePlotRenderers();
     RenderPlot(dc_buf);
   } else if (hint_update->type() == HintType::kWeathercaseSelect) {
-    UpdatePlot();
+    UpdatePlotRenderers();
     RenderPlot(dc_buf);
   } else if (hint_update->type() == HintType::kWeathercasesSelect) {
-    UpdatePlot();
+    UpdatePlotRenderers();
     RenderPlot(dc_buf);
   }
-}
-
-void PlotPane::ClearPlot(wxDC& dc) {
-  dc.Clear();
 }
 
 void PlotPane::OnContextMenuSelect(wxCommandEvent& event) {
@@ -192,7 +188,7 @@ void PlotPane::RenderPlot(wxDC& dc) {
   plot_.Render(dc, GetClientRect());
 }
 
-void PlotPane::UpdatePlot() {
+void PlotPane::UpdatePlotRenderers() {
   // gets view settings
   SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
   const WeatherLoadCaseGroup* group_weathercases = view->group_weathercases();
@@ -200,30 +196,30 @@ void PlotPane::UpdatePlot() {
   const int index_weathercase = view->index_weathercase();
 
   if (group_weathercases == nullptr) {
-    wxClientDC dc(this);
-    ClearPlot(dc);
+    dataset_catenary_ = LineDataSet2d();
+    plot_.ClearRenderers();
     return;
   }
 
   if (index_weathercase < 0) {
-    wxClientDC dc(this);
-    ClearPlot(dc);
+    dataset_catenary_ = LineDataSet2d();
+    plot_.ClearRenderers();
     return;
   }
 
   // gets filtered results from doc
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
-  const std::list<SagTensionAnalysisResult>& results =
+  const std::list<SagTensionAnalysisResult>* results =
       doc->ResultsFiltered(*group_weathercases, condition);
-  if (results.empty() == true) {
-    wxClientDC dc(this);
-    ClearPlot(dc);
+  if (results == nullptr) {
+    dataset_catenary_ = LineDataSet2d();
+    plot_.ClearRenderers();
     return;
   }
 
   // gets the result from the list
   const SagTensionAnalysisResult& result =
-      *(std::next(results.cbegin(), index_weathercase));
+      *(std::next(results->cbegin(), index_weathercase));
 
   // gets span from document
   const Span* span = doc->SpanAnalysis();
@@ -233,6 +229,8 @@ void PlotPane::UpdatePlot() {
   catenary.set_spacing_endpoints(span->spacing_catenary);
   catenary.set_tension_horizontal(result.tension_horizontal);
   catenary.set_weight_unit(result.weight_unit);
+
+  /// \todo remove/minimize copying for faster redraws
 
   // calculates points
   std::list<Point3d> points;

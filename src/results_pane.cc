@@ -174,7 +174,7 @@ void ResultsPane::UpdateReportData() {
 
   // gets results from document
   const SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
-  const std::list<SagTensionAnalysisResult>& results =
+  const std::list<SagTensionAnalysisResult>* results =
       doc->ResultsFiltered(*group_weathercases, condition);
 
   // selects based on report type
@@ -191,7 +191,7 @@ void ResultsPane::UpdateReportData() {
 
 void ResultsPane::UpdateReportDataCatenary(
     const std::list<WeatherLoadCase>* weathercases,
-    const std::list<SagTensionAnalysisResult>& results) {
+    const std::list<SagTensionAnalysisResult>* results) {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
@@ -212,7 +212,7 @@ void ResultsPane::UpdateReportDataCatenary(
   }
 
   // checks if results has any data
-  if (results.empty() == true) {
+  if (results == nullptr) {
     return;
   }
 
@@ -221,12 +221,12 @@ void ResultsPane::UpdateReportDataCatenary(
   const Span* span = doc->SpanAnalysis();
 
   // fills each row with data
-  for (auto iter = results.cbegin(); iter != results.cend(); iter++) {
+  for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
     // creates a report row, which will be filled out by each result
     ReportRow row;
 
     // gets the weathercase description
-    const int index = std::distance(results.cbegin(), iter);
+    const int index = std::distance(results->cbegin(), iter);
     const WeatherLoadCase& weathercase = *std::next(weathercases->cbegin(),
                                                     index);
     const std::string& description = weathercase.description;
@@ -289,7 +289,7 @@ void ResultsPane::UpdateReportDataCatenary(
 
 void ResultsPane::UpdateReportDataCatenaryEndpoints(
     const std::list<WeatherLoadCase>* weathercases,
-    const std::list<SagTensionAnalysisResult>& results) {
+    const std::list<SagTensionAnalysisResult>* results) {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
@@ -310,7 +310,7 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
   }
 
   // checks if results has any data
-  if (results.empty() == true) {
+  if (results == nullptr) {
     return;
   }
 
@@ -319,12 +319,12 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
   const Span* span = doc->SpanAnalysis();
 
   // fills each row with data
-  for (auto iter = results.cbegin(); iter != results.cend(); iter++) {
+  for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
     // creates a report row, which will be filled out by each result
     ReportRow row;
 
     // gets the weathercase description
-    const int index = std::distance(results.cbegin(), iter);
+    const int index = std::distance(results->cbegin(), iter);
     const WeatherLoadCase& weathercase = *std::next(weathercases->cbegin(),
                                                     index);
     const std::string& description = weathercase.description;
@@ -385,7 +385,7 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
 
 void ResultsPane::UpdateReportDataSagTension(
     const std::list<WeatherLoadCase>* weathercases,
-    const std::list<SagTensionAnalysisResult>& results) {
+    const std::list<SagTensionAnalysisResult>* results) {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
@@ -404,17 +404,17 @@ void ResultsPane::UpdateReportDataSagTension(
   }
 
   // checks if results has any data
-  if (results.empty() == true) {
+  if (results == nullptr) {
     return;
   }
 
   // fills each row with data
-  for (auto iter = results.cbegin(); iter != results.cend(); iter++) {
+  for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
     // creates a report row, which will be filled out by each result
     ReportRow row;
 
     // gets the weathercase description
-    const int index = std::distance(results.cbegin(), iter);
+    const int index = std::distance(results->cbegin(), iter);
     const WeatherLoadCase& weathercase = *std::next(weathercases->cbegin(),
                                                     index);
     const std::string& description = weathercase.description;
@@ -461,7 +461,7 @@ void ResultsPane::UpdateReportDataSagTension(
 
 void ResultsPane::UpdateReportDataTensionDistribution(
     const std::list<WeatherLoadCase>* weathercases,
-    const std::list<SagTensionAnalysisResult>& results) {
+    const std::list<SagTensionAnalysisResult>* results) {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
@@ -477,17 +477,17 @@ void ResultsPane::UpdateReportDataTensionDistribution(
   }
 
   // checks if results has any data
-  if (results.empty() == true) {
+  if (results == nullptr) {
     return;
   }
 
   // fills each row with data
-  for (auto iter = results.cbegin(); iter != results.cend(); iter++) {
+  for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
     // creates a report row, which will be filled out by each result
     ReportRow row;
 
     // gets the weathercase description
-    const int index = std::distance(results.cbegin(), iter);
+    const int index = std::distance(results->cbegin(), iter);
     const WeatherLoadCase& weathercase = *std::next(weathercases->cbegin(),
                                                     index);
     const std::string& description = weathercase.description;

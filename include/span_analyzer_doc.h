@@ -54,13 +54,6 @@ class UpdateHint : public wxObject {
 /// information for a SpanAnalyzer project file. It also holds all of the
 /// sag-tension results that are calculated for the selected span.
 ///
-/// \par CONST REFERENCE
-///
-/// Document data access is provided via const references. This is typically
-/// viewed with caution because the referenced object can be destroyed. Since
-/// this document will always exist when a view attempts to access it, it
-/// should not be an issue.
-///
 /// \par SPANS
 ///
 /// The document holds all of the spans that can be analyzed and allows them to
@@ -188,16 +181,18 @@ class SpanAnalyzerDoc : public wxDocument {
                    const Span& span);
 
   /// \brief Gets the sag-tension results.
-  /// \return The sag-tension results.
-  const std::list<SagTensionAnalysisResultGroup>& Results() const;
+  /// \return The sag-tension results. If no results are available, a nullptr
+  ///   is returned.
+  const std::list<SagTensionAnalysisResultGroup>* Results() const;
 
   /// \brief Gets a set of filtered results.
   /// \param[in] group_weathercases
   ///   The weathercase group.
   /// \param[in] condition
   ///   The cable condition.
-  /// \return A list of filtered results.
-  const std::list<SagTensionAnalysisResult>& ResultsFiltered(
+  /// \return A list of filtered results. If no results are available, a
+  ///   nullptr is returned.
+  const std::list<SagTensionAnalysisResult>* ResultsFiltered(
       const WeatherLoadCaseGroup& group_weathercases,
       const CableConditionType& condition) const;
 
