@@ -106,6 +106,9 @@
     <ClCompile Include="..\..\src\weather_load_case_manager_dialog.cc">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\analysis_controller.cc">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\cable_constraint_xml_handler.h">
@@ -220,6 +223,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\weather_load_case_manager_dialog.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\analysis_controller.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
