@@ -21,6 +21,16 @@
 /// The form controls and layout are defined in the XRC file. The values are
 /// transferred between the controls and the converted cable data via
 /// validators.
+///
+/// \par SPAN TYPES
+///
+/// This editor allows two different types/modes for the span - ruling and
+/// dead-end spans. This form toggles between the different modes by enabling
+/// and disabling controls as needed.
+///
+/// Ruling spans have no vertical sag-tension geometry, but allow the catenary
+/// geometry to be different. Dead-end spans have a vertical sag-tension
+/// geometry, but the catenary geometry is identical.
 class SpanEditorDialog : public wxDialog {
  public:
   /// \brief Default constructor.
@@ -79,6 +89,19 @@ class SpanEditorDialog : public wxDialog {
 
   /// \brief Sets the control validators on the form.
   void SetValidators();
+
+  /// \brief Toggles the catenary geometry controls.
+  /// \param[in] is_enabled
+  ///   Whether the controls are enabled.
+  void ToggleCatenaryGeometrySpacingControls(const bool& is_enabled);
+
+  /// \brief Toggles the controls to dead-end span mode.
+  /// Controls are disabled, but the values are not cleared.
+  void ToggleDeadEndSpanModeControls();
+
+  /// \brief Toggles the controls to ruling span mode.
+  /// Controls are disabled, but the values are not cleared.
+  void ToggleRulingSpanModeControls();
 
   /// \brief Transfers data that isn't tied to a validator from the span object
   ///   to the window.

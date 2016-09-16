@@ -25,6 +25,7 @@ SpanEditorDialog::SpanEditorDialog(
     Span* span) {
   // loads dialog from virtual xrc file system
   wxXmlResource::Get()->LoadDialog(this, parent, "span_editor_dialog");
+  this->Fit();
 
   // saves constructor parameters to class
   SetUnitsStaticText(units);
@@ -38,13 +39,15 @@ SpanEditorDialog::SpanEditorDialog(
   // sets form validators to transfer between controls data and controls
   SetValidators();
 
-  // inits choice controls on form
+  // inits form controls
   InitChoiceControls();
+  if (span_modified_.type == Span::Type::kDeadendSpan) {
+    ToggleDeadEndSpanModeControls();
+  } else if (span_modified_.type == Span::Type::kRulingSpan) {
+    ToggleRulingSpanModeControls();
+  }
 
   TransferCustomDataToWindow();
-
-  // fits the dialog around the sizers
-  this->Fit();
 }
 
 SpanEditorDialog::~SpanEditorDialog() {
@@ -114,84 +117,22 @@ void SpanEditorDialog::OnCheckboxMatchGeometry(wxCommandEvent& event) {
   wxCheckBox* checkbox = XRCCTRL(*this, "checkbox_match_constraint_geometry",
                                 wxCheckBox);
 
-  // gets textctrls associated with catenary spacing
-  wxTextCtrl* textctrl_horizontal =
-      XRCCTRL(*this, "textctrl_catenary_spacing_horizontal", wxTextCtrl);
-  wxTextCtrl* textctrl_vertical =
-      XRCCTRL(*this, "textctrl_catenary_spacing_vertical", wxTextCtrl);
-
   // enables/disables catenary spacing textctrls
   if (checkbox->IsChecked() == false) {
-    textctrl_horizontal->Enable(true);
-    textctrl_vertical->Enable(true);
+    ToggleCatenaryGeometrySpacingControls(true);
   } else {
-    textctrl_horizontal->SetValue("");
-    textctrl_horizontal->Enable(false);
-
-    textctrl_vertical->SetValue("");
-    textctrl_vertical->Enable(false);
+    ToggleCatenaryGeometrySpacingControls(false);
   }
 }
 
 void SpanEditorDialog::OnChoiceType(wxCommandEvent& event) {
-  wxCheckBox* checkbox = nullptr;
-  wxTextCtrl* textctrl = nullptr;
-
   // gets selected span type
   wxChoice* choice = XRCCTRL(*this, "choice_span_type", wxChoice);
   wxString str_selection = choice->GetStringSelection();
   if (str_selection == "Deadend") {
-    // enables constraint geometry controls
-    textctrl = XRCCTRL(*this, "textctrl_constraint_spacing_vertical",
-                       wxTextCtrl);
-    textctrl->Enable(true);
-
-    // clears and disables catenary geometry controls
-    checkbox = XRCCTRL(*this, "checkbox_match_constraint_geometry", wxCheckBox);
-    checkbox->Enable(false);
-
-    textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_horizontal",
-                       wxTextCtrl);
-    textctrl->SetValue("");
-    textctrl->Enable(false);
-
-    textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_vertical",
-                       wxTextCtrl);
-    textctrl->SetValue("");
-    textctrl->Enable(false);
+    ToggleDeadEndSpanModeControls();
   } else if (str_selection == "Ruling Span") {
-    // clears and disables constraint geometry controls
-    textctrl = XRCCTRL(*this, "textctrl_constraint_spacing_vertical",
-                       wxTextCtrl);
-    textctrl->SetValue("");
-    textctrl->Enable(false);
-
-    // enables catenary geometry match checkbox
-    wxCheckBox* checkbox = XRCCTRL(*this, "checkbox_match_constraint_geometry",
-                                   wxCheckBox);
-    checkbox = XRCCTRL(*this, "checkbox_match_constraint_geometry",
-                        wxCheckBox);
-    checkbox->Enable(true);
-
-    if (checkbox->IsChecked() == false) {
-      // enables catenary geometry textctrls
-      textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_horizontal",
-                         wxTextCtrl);
-      textctrl->Enable(true);
-
-      textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_vertical",
-                         wxTextCtrl);
-      textctrl->Enable(true);
-    } else {
-      // disables catenary geometry textctrls
-      textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_horizontal",
-                         wxTextCtrl);
-      textctrl->Enable(false);
-
-      textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_vertical",
-                         wxTextCtrl);
-      textctrl->Enable(false);
-    }
+    ToggleRulingSpanModeControls();
   }
 }
 
@@ -210,9 +151,6 @@ void SpanEditorDialog::OnOk(wxCommandEvent &event) {
 
   // validates span data
   std::list<ErrorMessage> messages;
-
-  /// \todo Validate if catenary can be solved for.
-
   if (span_modified_.Validate(true, &messages) == true) {
 
     // updates original cable reference based on user form edits
@@ -297,6 +235,94 @@ void SpanEditorDialog::SetValidators() {
                      wxTextCtrl);
   textctrl->SetValidator(
       wxFloatingPointValidator<double>(precision, nullptr, style));
+}
+
+void SpanEditorDialog::ToggleCatenaryGeometrySpacingControls(
+    const bool& is_enabled) {
+  wxStaticText* statictext = nullptr;
+  wxTextCtrl* textctrl = nullptr;
+
+  // toggles horizontal spacing controls
+  statictext = XRCCTRL(*this, "statictext_catenary_spacing_horizontal",
+                       wxStaticText);
+  statictext->Enable(is_enabled);
+  statictext = XRCCTRL(*this, "statictext_catenary_spacing_horizontal_units",
+                       wxStaticText);
+  statictext->Enable(is_enabled);
+  textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_horizontal",
+                     wxTextCtrl);
+  if (is_enabled == false) {
+    textctrl->Clear();
+  }
+  textctrl->Enable(is_enabled);
+
+  // toggles vertical spacing controls
+  statictext = XRCCTRL(*this, "statictext_catenary_spacing_vertical",
+                       wxStaticText);
+  statictext->Enable(is_enabled);
+  statictext = XRCCTRL(*this, "statictext_catenary_spacing_vertical_units",
+                       wxStaticText);
+  statictext->Enable(is_enabled);
+  textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_vertical",
+                     wxTextCtrl);
+  if (is_enabled == false) {
+    textctrl->Clear();
+  }
+  textctrl->Enable(is_enabled);
+}
+
+void SpanEditorDialog::ToggleDeadEndSpanModeControls() {
+  wxCheckBox* checkbox = nullptr;
+  wxStaticText* statictext = nullptr;
+  wxTextCtrl* textctrl = nullptr;
+
+  // enables vertical constraint geometry controls
+  statictext = XRCCTRL(*this, "statictext_constraint_spacing_vertical",
+                       wxStaticText);
+  statictext->Enable(true);
+  statictext = XRCCTRL(*this, "statictext_constraint_spacing_vertical_units",
+                       wxStaticText);
+  statictext->Enable(true);
+  textctrl = XRCCTRL(*this, "textctrl_constraint_spacing_vertical",
+                     wxTextCtrl);
+  textctrl->Clear();
+  textctrl->Enable(true);
+
+  // disables catenary geometry controls
+  checkbox = XRCCTRL(*this, "checkbox_match_constraint_geometry",
+                     wxCheckBox);
+  checkbox->Enable(false);
+
+  ToggleCatenaryGeometrySpacingControls(false);
+}
+
+void SpanEditorDialog::ToggleRulingSpanModeControls() {
+  wxCheckBox* checkbox = nullptr;
+  wxStaticText* statictext = nullptr;
+  wxTextCtrl* textctrl = nullptr;
+
+  // disables vertical constraint geometry controls
+  statictext = XRCCTRL(*this, "statictext_constraint_spacing_vertical",
+                       wxStaticText);
+  statictext->Enable(false);
+  statictext = XRCCTRL(*this, "statictext_constraint_spacing_vertical_units",
+                       wxStaticText);
+  statictext->Enable(false);
+  textctrl = XRCCTRL(*this, "textctrl_constraint_spacing_vertical",
+                     wxTextCtrl);
+  textctrl->Clear();
+  textctrl->Enable(false);
+
+  // enables catenary geometry match checkbox
+  checkbox = XRCCTRL(*this, "checkbox_match_constraint_geometry",
+                     wxCheckBox);
+  checkbox->Enable(true);
+
+  if (checkbox->IsChecked() == false) {
+    ToggleCatenaryGeometrySpacingControls(true);
+  } else {
+    ToggleCatenaryGeometrySpacingControls(false);
+  }
 }
 
 void SpanEditorDialog::TransferCustomDataFromWindow() {
@@ -506,8 +532,6 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
         span_modified_.linecable.spacing_attachments_ruling_span.z(),
         1);
     textctrl->SetValue(str);
-  } else if (span_modified_.type == Span::Type::kRulingSpan) {
-    textctrl->SetValue("0");
   }
 
   // transfers stretch-load weathercase
@@ -520,49 +544,39 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
   }
 
   // transfers catenary geometry
-  if (span_modified_.type == Span::Type::kDeadendSpan) {
-    // disables catenary geometry controls
-    wxCheckBox* checkbox = XRCCTRL(*this, "checkbox_match_constraint_geometry",
-                                    wxCheckBox);
-    checkbox->Enable(false);
+  const Vector3d& spacing_constraint =
+      span_modified_.linecable.spacing_attachments_ruling_span;
+  const Vector3d& spacing_catenary = span_modified_.spacing_catenary;
 
+  /// \todo add equals operator to Models library to simplify this
+  const bool is_match =
+      ((spacing_constraint.x() == spacing_catenary.x())
+        && (spacing_constraint.y() == spacing_catenary.y())
+        && (spacing_constraint.z() == spacing_catenary.z()));
+  if (is_match == true) {
+    wxCheckBox* checkbox = XRCCTRL(*this, "checkbox_match_constraint_geometry",
+                                   wxCheckBox);
+    checkbox->SetValue(true);
+
+    ToggleCatenaryGeometrySpacingControls(false);
+  } else {
+    // toggles checkbox
+    wxCheckBox* checkbox = XRCCTRL(*this, "checkbox_match_constraint_geometry",
+                                   wxCheckBox);
+    checkbox->SetValue(false);
+
+    // toggles catenary spacing controls
+    ToggleCatenaryGeometrySpacingControls(true);
+
+    // updates textctrls
     textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_horizontal",
                        wxTextCtrl);
-    textctrl->Enable(false);
+    str = helper::DoubleToFormattedString(spacing_catenary.x(), 1);
+    textctrl->SetValue(str);
 
     textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_vertical",
                        wxTextCtrl);
-    textctrl->Enable(false);
-  } else if (span_modified_.type == Span::Type::kRulingSpan) {
-    const Vector3d& spacing_constraint =
-        span_modified_.linecable.spacing_attachments_ruling_span;
-    const Vector3d& spacing_catenary = span_modified_.spacing_catenary;
-
-    /// \todo add equals operator to Models library to simplify this
-    if ((spacing_constraint.x() == spacing_catenary.x())
-        && (spacing_constraint.y() == spacing_catenary.y())
-        && (spacing_constraint.z() == spacing_catenary.z())) {
-      wxCheckBox* checkbox = XRCCTRL(*this, "checkbox_match_constraint_geometry",
-                                     wxCheckBox);
-      checkbox->SetValue(true);
-
-      textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_horizontal",
-                         wxTextCtrl);
-      textctrl->Enable(false);
-
-      textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_vertical",
-                         wxTextCtrl);
-      textctrl->Enable(false);
-    } else {
-      textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_horizontal",
-                         wxTextCtrl);
-      str = helper::DoubleToFormattedString(spacing_catenary.x(), 1);
-      textctrl->SetValue(str);
-
-      textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_vertical",
-                         wxTextCtrl);
-      str = helper::DoubleToFormattedString(spacing_catenary.z(), 1);
-      textctrl->SetValue(str);
-    }
+    str = helper::DoubleToFormattedString(spacing_catenary.z(), 1);
+    textctrl->SetValue(str);
   }
 }
