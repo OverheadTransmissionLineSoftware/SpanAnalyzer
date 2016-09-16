@@ -55,16 +55,34 @@ void SpanAnalyzerDoc::ConvertUnitSystem(const units::UnitSystem& system_from,
 }
 
 
-void SpanAnalyzerDoc::DeleteSpan(
+std::list<Span>::const_iterator SpanAnalyzerDoc::DeleteSpan(
     const std::list<Span>::const_iterator& element) {
   // gets iterator with edit capability
   const unsigned int index = std::distance(spans_.cbegin(), element);
   auto iter = std::next(spans_.begin(), index);
 
-  // deletes from span list
-  spans_.erase(iter);
+  // determines if span matches analysis span
+  bool is_selected = false;
+  if (&(*iter) == controller_analysis_.span()) {
+    is_selected = true;
+  }
 
+  // deletes from span list
+  const auto iter_next = spans_.erase(iter);
+
+  // marks as modified
   Modify(true);
+
+  // updates if span matched analysis span
+  if (is_selected == true) {
+    controller_analysis_.set_span(nullptr);
+    controller_analysis_.ClearResults();
+
+    UpdateHint hint(HintType::kSpansEdit);
+    UpdateAllViews(nullptr, &hint);
+  }
+
+  return iter_next;
 }
 
 std::list<Span>::const_iterator SpanAnalyzerDoc::InsertSpan(
@@ -215,6 +233,14 @@ void SpanAnalyzerDoc::MoveSpan(
   return;
 }
 
+bool SpanAnalyzerDoc::OnCreate(const wxString& path, long flags) {
+  // initializes analysis controller
+  controller_analysis_.set_data(wxGetApp().data());
+
+  // calls base class function
+  return wxDocument::OnCreate(path, flags);
+}
+
 void SpanAnalyzerDoc::ReplaceSpan(
     const std::list<Span>::const_iterator& element,
     const Span& span) {
@@ -222,10 +248,67 @@ void SpanAnalyzerDoc::ReplaceSpan(
   const unsigned int index = std::distance(spans_.cbegin(), element);
   auto iter = std::next(spans_.begin(), index);
 
+  // determines if span matches analysis span
+  bool is_selected = false;
+  if (&(*iter) == controller_analysis_.span()) {
+    is_selected = true;
+  }
+
   // replaces span in list
   *iter = Span(span);
 
+  // sets document flag as modified
   Modify(true);
+
+  // updates if span matched analysis span
+  if (is_selected == true) {
+    controller_analysis_.RunAnalysis();
+
+    UpdateHint hint(HintType::kSpansEdit);
+    UpdateAllViews(nullptr, &hint);
+  }
+}
+
+const std::list<SagTensionAnalysisResultGroup>* SpanAnalyzerDoc::Results()
+    const {
+  return &controller_analysis_.results();
+}
+
+const std::list<SagTensionAnalysisResult>* SpanAnalyzerDoc::ResultsFiltered(
+    const WeatherLoadCaseGroup& group_weathercases,
+    const CableConditionType& condition) const {
+  // gets the results
+  const std::list<SagTensionAnalysisResultGroup>* results = Results();
+  if (results == nullptr) {
+    return nullptr;
+  }
+
+  // searches results groups for a matching weathercase group
+  const SagTensionAnalysisResultGroup* group_results = nullptr;
+  for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
+    group_results = &(*iter);
+    if (group_results->group_weathercases == &group_weathercases) {
+      break;
+    }
+  }
+
+  if (group_results == nullptr) {
+    return nullptr;
+  }
+
+  // gets the result list based on the current display condition
+  const std::list<SagTensionAnalysisResult>* list_results = nullptr;
+  if (condition == CableConditionType::kInitial) {
+    list_results = &group_results->results_initial;
+  } else if (condition == CableConditionType::kLoad) {
+    list_results = &group_results->results_load;
+  }
+
+  return list_results;
+}
+
+void SpanAnalyzerDoc::RunAnalysis() const {
+  controller_analysis_.RunAnalysis();
 }
 
 wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
@@ -263,6 +346,18 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
                    units::UnitStyle::kConsistent);
 
   return stream;
+}
+
+void SpanAnalyzerDoc::SetSpanAnalysis(const Span* span) {
+  controller_analysis_.set_span(span);
+  controller_analysis_.RunAnalysis();
+
+  UpdateHint hint(HintType::kSpansEdit);
+  UpdateAllViews(nullptr, &hint);
+}
+
+const Span* SpanAnalyzerDoc::SpanAnalysis() const {
+  return controller_analysis_.span();
 }
 
 const std::list<Span>& SpanAnalyzerDoc::spans() const {

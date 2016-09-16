@@ -107,9 +107,13 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
   // creates and shows the cable file manager dialog
   CableFileManagerDialog dialog(this, config->units, &data->cablefiles);
   if (dialog.ShowModal() == wxID_OK) {
+    wxBusyCursor cursor;
+
     // saves application data
     FileHandler::SaveAppData(config->filepath_data, *data, config->units);
   }
+
+  wxBusyCursor cursor;
 
   // reloads all cable files in case things get out of sync
   // i.e. user edits cable file, but doesn't accept any changes in file manager
@@ -119,6 +123,16 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
        iter++) {
     CableFile& cablefile = *iter;
     FileHandler::LoadCable(cablefile.filepath, config->units, cablefile.cable);
+  }
+
+  // updates document/views
+  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
+                             GetCurrentDocument();
+  if (doc != nullptr) {
+    doc->RunAnalysis();
+
+    UpdateHint hint(HintType::kCablesEdit);
+    doc->UpdateAllViews(nullptr, &hint);
   }
 }
 
@@ -133,18 +147,20 @@ void SpanAnalyzerFrame::OnMenuEditWeathercases(
       wxGetApp().config()->units,
       &data->groups_weathercase);
   if (dialog.ShowModal() == wxID_OK) {
+    wxBusyCursor cursor;
+
     // saves application data
     FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
                              wxGetApp().config()->units);
 
-    // posts event to update views
+    // updates document/views
     SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
                                GetCurrentDocument();
     if (doc != nullptr) {
-      ViewUpdateHint hint;
-      hint.set_type(ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit);
-      wxGetApp().manager_doc()->GetCurrentDocument()->UpdateAllViews(nullptr,
-                                                                     &hint);
+      doc->RunAnalysis();
+
+      UpdateHint hint(HintType::kWeathercasesEdit);
+      doc->UpdateAllViews(nullptr, &hint);
     }
   }
 }
@@ -162,6 +178,8 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
   if (preferences.ShowModal() != wxID_OK) {
     return;
   }
+
+  wxBusyCursor cursor;
 
   // application data change is implemented on app restart
 
@@ -191,15 +209,15 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
           cablefile.cable);
     }
 
-    // converts doc
+    // updates document/views
     SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
                                GetCurrentDocument();
     if (doc != nullptr) {
       doc->ConvertUnitSystem(units_before, config->units);
+      doc->RunAnalysis();
 
       // updates views
-      ViewUpdateHint hint;
-      hint.set_type(ViewUpdateHint::HintType::kModelPreferencesEdit);
+      UpdateHint hint(HintType::kPreferencesEdit);
       doc->UpdateAllViews(nullptr, &hint);
     }
   }

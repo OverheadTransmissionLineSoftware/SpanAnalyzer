@@ -5,17 +5,17 @@
 
 #include "models/base/helper.h"
 #include "models/transmissionline/catenary.h"
-#include "wx/notebook.h"
 #include "wx/xrc/xmlres.h"
 
 #include "span_analyzer_app.h"
+#include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
 
 BEGIN_EVENT_TABLE(ResultsPane, wxPanel)
   EVT_CHOICE(XRCID("choice_condition"), ResultsPane::OnChoiceCondition)
   EVT_CHOICE(XRCID("choice_report"), ResultsPane::OnChoiceReport)
   EVT_CHOICE(XRCID("choice_weathercase_group"), ResultsPane::OnChoiceWeathercaseGroup)
-  EVT_LIST_ITEM_FOCUSED(wxID_ANY, ResultsPane::OnListCtrlFocus)
+  EVT_LIST_ITEM_SELECTED(wxID_ANY, ResultsPane::OnListCtrlSelect)
 END_EVENT_TABLE()
 
 ResultsPane::ResultsPane(wxWindow* parent, wxView* view) {
@@ -59,48 +59,36 @@ ResultsPane::~ResultsPane() {
 }
 
 void ResultsPane::Update(wxObject* hint) {
-  // caches focused index
-  const long index_focus = table_->IndexFocused();
-
   // interprets hint
-  ViewUpdateHint* hint_update = (ViewUpdateHint*)hint;
+  UpdateHint* hint_update = (UpdateHint*)hint;
   if (hint_update == nullptr) {
     // do nothing, this is only passed when pane is created
-  } else if (hint_update->type() ==
-       ViewUpdateHint::HintType::kModelAnalysisWeathercaseEdit) {
+  } else if (hint_update->type() == HintType::kCablesEdit) {
+    UpdateReportData();
+    table_->Refresh();
+  } else if (hint_update->type() == HintType::kPreferencesEdit) {
+    UpdateReportData();
+    table_->Refresh();
+  } else if (hint_update->type() == HintType::kSpansEdit) {
+    UpdateReportData();
+    table_->Refresh();
+  } else if (hint_update->type() == HintType::kWeathercasesEdit) {
     UpdateWeathercaseGroupChoice();
     UpdateReportData();
     table_->Refresh();
-  } else if (hint_update->type() ==
-       ViewUpdateHint::HintType::kModelPreferencesEdit) {
-    UpdateReportData();
-    table_->Refresh();
-  } else if (hint_update->type() ==
-       ViewUpdateHint::HintType::kModelSpansEdit) {
-    UpdateReportData();
-    table_->Refresh();
-  } else if (hint_update->type() ==
-       ViewUpdateHint::HintType::kModelWeathercaseEdit) {
-    UpdateReportData();
-    table_->Refresh();
-  } else if (hint_update->type() ==
-      ViewUpdateHint::HintType::kViewConditionChange) {
-    UpdateReportData();
-    table_->Refresh();
-  } else if (hint_update->type() ==
-      ViewUpdateHint::HintType::kViewWeathercaseChange) {
-    return;
-  } else if (hint_update->type() ==
-      ViewUpdateHint::HintType::kViewWeathercasesSetChange) {
+  } else if (hint_update->type() == HintType::kWeathercaseSelect) {
+    // do nothing
+  } else if (hint_update->type() == HintType::kWeathercasesSelect) {
     UpdateReportData();
     table_->Refresh();
   }
 
   table_->set_formatting_column(0, 200, wxLIST_FORMAT_LEFT);
-  table_->set_index_focused(index_focus);
 }
 
 void ResultsPane::OnChoiceCondition(wxCommandEvent& event) {
+  // not creating busy cursor to avoid cursor flicker
+
   // gets choice selection and updates view cache
   wxChoice* choice = XRCCTRL(*this, "choice_condition", wxChoice);
   wxString str = choice->GetStringSelection();
@@ -115,12 +103,13 @@ void ResultsPane::OnChoiceCondition(wxCommandEvent& event) {
   }
 
   // updates views
-  ViewUpdateHint hint;
-  hint.set_type(ViewUpdateHint::HintType::kViewConditionChange);
+  UpdateHint hint(HintType::kWeathercasesSelect);
   view_->GetDocument()->UpdateAllViews(nullptr, &hint);
 }
 
 void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
+  // not creating busy cursor to avoid cursor flicker
+
   // gets choice selection
   wxChoice* choice = XRCCTRL(*this, "choice_report", wxChoice);
   wxString str = choice->GetStringSelection();
@@ -140,14 +129,14 @@ void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
 
   // this update only affects this pane, so a view update is not sent
   // updates the report data and table
-  const long index = table_->IndexFocused();
   UpdateReportData();
   table_->Refresh();
   table_->set_formatting_column(0, 200, wxLIST_FORMAT_LEFT);
-  table_->set_index_focused(index);
 }
 
 void ResultsPane::OnChoiceWeathercaseGroup(wxCommandEvent& event) {
+  // not creating busy cursor to avoid cursor flicker
+
   // gets weathercase set from application data
   wxChoice* choice = XRCCTRL(*this, "choice_weathercase_group", wxChoice);
   wxString str_selection = choice->GetStringSelection();
@@ -156,36 +145,63 @@ void ResultsPane::OnChoiceWeathercaseGroup(wxCommandEvent& event) {
   UpdateWeathercaseGroupSelected();
 
   // updates views
-  ViewUpdateHint hint;
-  hint.set_type(ViewUpdateHint::HintType::kViewWeathercasesSetChange);
+  UpdateHint hint(HintType::kWeathercasesSelect);
   view_->GetDocument()->UpdateAllViews(nullptr, &hint);
 }
 
-void ResultsPane::OnListCtrlFocus(wxListEvent& event) {
-  // gets view
+void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
+  // not creating busy cursor to avoid cursor flicker
+
+  // gets selected index
+  const long index_selected = event.GetItem().GetId();
+
+  // updates report table
+  table_->set_index_selected(index_selected);
+
+  // updates view index
+  // the selected report table index may be different than the report data index
+  // due to sorting, so the index needs to be converted to match the correct
+  // analysis result index
   SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
-  view->set_index_weathercase(table_->IndexFocused());
+  view->set_index_weathercase(table_->IndexReportRow(index_selected));
 
   // updates views
-  ViewUpdateHint hint;
-  hint.set_type(ViewUpdateHint::HintType::kViewWeathercaseChange);
+  UpdateHint hint(HintType::kWeathercaseSelect);
   view_->GetDocument()->UpdateAllViews(nullptr, &hint);
 }
 
 void ResultsPane::UpdateReportData() {
+  // gets view display information
+  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
+  const WeatherLoadCaseGroup* group_weathercases = view->group_weathercases();
+  const CableConditionType& condition = view->condition();
+
+  // gets weathercases
+  const std::list<WeatherLoadCase>* weathercases = nullptr;
+  if (group_weathercases != nullptr) {
+    weathercases = &group_weathercases->weathercases;
+  }
+
+  // gets results from document
+  const SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  const std::list<SagTensionAnalysisResult>* results =
+      doc->ResultsFiltered(*group_weathercases, condition);
+
   // selects based on report type
   if (type_report_ == ReportType::kCatenary) {
-    UpdateReportDataCatenary();
+    UpdateReportDataCatenary(weathercases, results);
   } else if (type_report_ == ReportType::kCatenaryEndpoints) {
-    UpdateReportDataCatenaryEndpoints();
+    UpdateReportDataCatenaryEndpoints(weathercases, results);
   } else if (type_report_ == ReportType::kSagTension) {
-    UpdateReportDataSagTension();
+    UpdateReportDataSagTension(weathercases, results);
   } else if (type_report_ == ReportType::kTensionDistribution) {
-    UpdateReportDataTensionDistribution();
+    UpdateReportDataTensionDistribution(weathercases, results);
   }
 }
 
-void ResultsPane::UpdateReportDataCatenary() {
+void ResultsPane::UpdateReportDataCatenary(
+    const std::list<WeatherLoadCase>* weathercases,
+    const std::list<SagTensionAnalysisResult>* results) {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
@@ -200,21 +216,19 @@ void ResultsPane::UpdateReportDataCatenary() {
   data_.headers.push_back("Ls");
   data_.headers.push_back("Swing");
 
-  // gets data based on display condition from view
-  const SpanAnalyzerView* view =
-       (SpanAnalyzerView*)wxGetApp().manager_doc()->GetCurrentView();
-
-  const SagTensionAnalysisResultSet& set_results = view->results();
-
-  const CableConditionType& condition = view->condition();
-  const std::list<SagTensionAnalysisResult>* results = nullptr;
-  if (condition == CableConditionType::kInitial) {
-    results = &(view->results().results_initial);
-  } else if (condition == CableConditionType::kLoad) {
-    results = &(view->results().results_load);
-  } else {
+  // checks if weathercases are specified
+  if (weathercases == nullptr) {
     return;
   }
+
+  // checks if results has any data
+  if (results == nullptr) {
+    return;
+  }
+
+  // gets the selected span from the document
+  const SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  const Span* span = doc->SpanAnalysis();
 
   // fills each row with data
   for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
@@ -223,15 +237,16 @@ void ResultsPane::UpdateReportDataCatenary() {
 
     // gets the weathercase description
     const int index = std::distance(results->cbegin(), iter);
-    const std::string& description =
-        *std::next(set_results.descriptions_weathercase.cbegin(), index);
+    const WeatherLoadCase& weathercase = *std::next(weathercases->cbegin(),
+                                                    index);
+    const std::string& description = weathercase.description;
 
     // gets the sag-tension result
     const SagTensionAnalysisResult& result = *iter;
 
     // creates a catenary to calculate results
     Catenary3d catenary;
-    catenary.set_spacing_endpoints(set_results.span->spacing_catenary);
+    catenary.set_spacing_endpoints(span->spacing_catenary);
     catenary.set_tension_horizontal(result.tension_horizontal);
     catenary.set_weight_unit(result.weight_unit);
 
@@ -282,7 +297,9 @@ void ResultsPane::UpdateReportDataCatenary() {
   }
 }
 
-void ResultsPane::UpdateReportDataCatenaryEndpoints() {
+void ResultsPane::UpdateReportDataCatenaryEndpoints(
+    const std::list<WeatherLoadCase>* weathercases,
+    const std::list<SagTensionAnalysisResult>* results) {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
@@ -297,21 +314,19 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints() {
   data_.headers.push_back("Tv");
   data_.headers.push_back("A");
 
-  // gets data based on display condition from view
-  const SpanAnalyzerView* view =
-       (SpanAnalyzerView*)wxGetApp().manager_doc()->GetCurrentView();
-
-  const SagTensionAnalysisResultSet& set_results = view->results();
-
-  const CableConditionType& condition = view->condition();
-  const std::list<SagTensionAnalysisResult>* results = nullptr;
-  if (condition == CableConditionType::kInitial) {
-    results = &(view->results().results_initial);
-  } else if (condition == CableConditionType::kLoad) {
-    results = &(view->results().results_load);
-  } else {
+  // checks if weathercases are specified
+  if (weathercases == nullptr) {
     return;
   }
+
+  // checks if results has any data
+  if (results == nullptr) {
+    return;
+  }
+
+  // gets the selected span from the document
+  const SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  const Span* span = doc->SpanAnalysis();
 
   // fills each row with data
   for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
@@ -320,15 +335,16 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints() {
 
     // gets the weathercase description
     const int index = std::distance(results->cbegin(), iter);
-    const std::string& description =
-        *std::next(set_results.descriptions_weathercase.cbegin(), index);
+    const WeatherLoadCase& weathercase = *std::next(weathercases->cbegin(),
+                                                    index);
+    const std::string& description = weathercase.description;
 
     // gets the sag-tension result
     const SagTensionAnalysisResult& result = *iter;
 
     // creates a catenary to calculate results
     Catenary3d catenary;
-    catenary.set_spacing_endpoints(set_results.span->spacing_catenary);
+    catenary.set_spacing_endpoints(span->spacing_catenary);
     catenary.set_tension_horizontal(result.tension_horizontal);
     catenary.set_weight_unit(result.weight_unit);
 
@@ -377,7 +393,9 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints() {
   }
 }
 
-void ResultsPane::UpdateReportDataSagTension() {
+void ResultsPane::UpdateReportDataSagTension(
+    const std::list<WeatherLoadCase>* weathercases,
+    const std::list<SagTensionAnalysisResult>* results) {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
@@ -390,19 +408,13 @@ void ResultsPane::UpdateReportDataSagTension() {
   data_.headers.push_back("H");
   data_.headers.push_back("H/w");
 
-  // gets data based on display condition from view
-  const SpanAnalyzerView* view =
-       (SpanAnalyzerView*)wxGetApp().manager_doc()->GetCurrentView();
+  // checks if weathercases are specified
+  if (weathercases == nullptr) {
+    return;
+  }
 
-  const SagTensionAnalysisResultSet& set_results = view->results();
-
-  const CableConditionType& condition = view->condition();
-  const std::list<SagTensionAnalysisResult>* results = nullptr;
-  if (condition == CableConditionType::kInitial) {
-    results = &(view->results().results_initial);
-  } else if (condition == CableConditionType::kLoad) {
-    results = &(view->results().results_load);
-  } else {
+  // checks if results has any data
+  if (results == nullptr) {
     return;
   }
 
@@ -413,8 +425,9 @@ void ResultsPane::UpdateReportDataSagTension() {
 
     // gets the weathercase description
     const int index = std::distance(results->cbegin(), iter);
-    const std::string& description =
-        *std::next(set_results.descriptions_weathercase.cbegin(), index);
+    const WeatherLoadCase& weathercase = *std::next(weathercases->cbegin(),
+                                                    index);
+    const std::string& description = weathercase.description;
 
     // gets the sag-tension result
     const SagTensionAnalysisResult& result = *iter;
@@ -456,7 +469,9 @@ void ResultsPane::UpdateReportDataSagTension() {
   }
 }
 
-void ResultsPane::UpdateReportDataTensionDistribution() {
+void ResultsPane::UpdateReportDataTensionDistribution(
+    const std::list<WeatherLoadCase>* weathercases,
+    const std::list<SagTensionAnalysisResult>* results) {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
@@ -466,19 +481,13 @@ void ResultsPane::UpdateReportDataTensionDistribution() {
   data_.headers.push_back("Hs");
   data_.headers.push_back("Hc");
 
-  // gets data based on display condition from view
-  const SpanAnalyzerView* view =
-       (SpanAnalyzerView*)wxGetApp().manager_doc()->GetCurrentView();
+  // checks if weathercases are specified
+  if (weathercases == nullptr) {
+    return;
+  }
 
-  const SagTensionAnalysisResultSet& set_results = view->results();
-
-  const CableConditionType& condition = view->condition();
-  const std::list<SagTensionAnalysisResult>* results = nullptr;
-  if (condition == CableConditionType::kInitial) {
-    results = &(view->results().results_initial);
-  } else if (condition == CableConditionType::kLoad) {
-    results = &(view->results().results_load);
-  } else {
+  // checks if results has any data
+  if (results == nullptr) {
     return;
   }
 
@@ -489,8 +498,9 @@ void ResultsPane::UpdateReportDataTensionDistribution() {
 
     // gets the weathercase description
     const int index = std::distance(results->cbegin(), iter);
-    const std::string& description =
-        *std::next(set_results.descriptions_weathercase.cbegin(), index);
+    const WeatherLoadCase& weathercase = *std::next(weathercases->cbegin(),
+                                                    index);
+    const std::string& description = weathercase.description;
 
     // gets the sag-tension result
     const SagTensionAnalysisResult& result = *iter;

@@ -63,6 +63,8 @@ void PreferencesDialog::OnButtonCancel(wxCommandEvent& event) {
 /// \param[in] event
 ///   The event.
 void PreferencesDialog::OnButtonOk(wxCommandEvent& event) {
+  wxBusyCursor cursor;
+
   wxRadioBox* radiobox = nullptr;
 
   // transfers units

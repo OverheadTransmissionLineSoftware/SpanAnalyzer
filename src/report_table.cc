@@ -97,6 +97,7 @@ END_EVENT_TABLE()
 ReportTable::ReportTable(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
   // initializes members
   data_ = nullptr;
+  index_selected_ = -1;
   index_sorted_ = -1;
   type_sort_ = SortOrderType::kNone;
 
@@ -118,14 +119,39 @@ ReportTable::ReportTable(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
 ReportTable::~ReportTable() {
 }
 
-long ReportTable::IndexFocused() const {
-  // searches for an item that has a selected state
-  // initializes item at -1 so that it searches at beginning
-  // only one item can be selected at a time for this control
-  return listctrl_->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_FOCUSED);
+const long ReportTable::IndexReportRow(const long& index_listctrl) {
+  if (index_listctrl < 0) {
+    return -1;
+  } else if (listctrl_->GetItemCount() <= index_listctrl) {
+    return -1;
+  }
+
+  // gets report data for selected index
+  wxListItem item_selected;
+  item_selected.SetId(index_listctrl);
+  item_selected.SetMask(wxLIST_MASK_DATA);
+  listctrl_->GetItem(item_selected);
+
+  ReportRow* row_selected = (ReportRow*)item_selected.GetData();
+
+  // searches report rows and compares memory address until a match is found
+  for (auto iter = data_->rows.cbegin(); iter != data_->rows.cend(); iter++) {
+    const ReportRow* row = &(*iter);
+
+    // found a match, returns index
+    if (row_selected == row) {
+      return std::distance(data_->rows.cbegin(), iter);
+    }
+  }
+
+  // nothing was found
+  return -1;
 }
 
 void ReportTable::Refresh() {
+  // helps reduce flicker
+  listctrl_->Freeze();
+
   // initializes listctrl
   listctrl_->ClearAll();
 
@@ -164,12 +190,28 @@ void ReportTable::Refresh() {
     index_sorted_ = -1;
   }
 
+  // sorts
   ChangeColumnSortImage(index_sorted_, type_sort_);
   Sort();
+
+  // selects item
+  listctrl_->SetItemState(index_selected_, wxLIST_STATE_SELECTED,
+                          wxLIST_STATE_SELECTED);
+
+  // makes sure item is visible in refreshed table
+  if ((0 < index_selected_) && (index_selected_ < listctrl_->GetItemCount())) {
+    listctrl_->EnsureVisible(index_selected_);
+  }
+
+  listctrl_->Thaw();
 }
 
 const ReportData* ReportTable::data() const {
   return data_;
+}
+
+long ReportTable::index_selected() const {
+  return index_selected_;
 }
 
 long ReportTable::index_sorted() const {
@@ -196,16 +238,14 @@ void ReportTable::set_formatting_column(const int& column, const int& width,
   listctrl_->SetColumn(column, item);
 }
 
-void ReportTable::set_index_focused(const long& index) {
+void ReportTable::set_index_selected(const long& index) {
   if (index < 0) {
-    return;
+    index_selected_ = -1;
+  } else if (listctrl_->GetItemCount() <= index) {
+    index_selected_ = -1;
+  } else {
+    index_selected_ = index;
   }
-
-  if (listctrl_->GetItemCount() <= index) {
-    return;
-  }
-
-  listctrl_->SetItemState(index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 }
 
 void ReportTable::set_index_sorted(const long& index) {
@@ -231,7 +271,7 @@ void ReportTable::ChangeColumnSortImage(const int& index,
   if (index < 0) {
     return;
   }
-  
+
   wxListItem item;
   item.SetMask(wxLIST_MASK_IMAGE);
 
@@ -359,8 +399,7 @@ void ReportTable::OnContextMenuSelect(wxCommandEvent& event) {
     std::string str = ClipboardStringHeaders();
     CopyToClipboard(str);
   } else if (id_event == kCopyRow) {
-    long index = IndexFocused();
-    std::string str = ClipboardStringRow(index);
+    std::string str = ClipboardStringRow(index_selected_);
     CopyToClipboard(str);
   } else if (id_event == kCopyTable) {
     std::string str = ClipBoardStringTable();

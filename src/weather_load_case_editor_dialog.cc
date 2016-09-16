@@ -57,6 +57,8 @@ void WeatherLoadCaseEditorDialog::OnOk(wxCommandEvent &event) {
     return;
   }
 
+  wxBusyCursor cursor;
+
   // transfers data from dialog controls to modified weathercase
   this->TransferDataFromWindow();
   weathercase_modified_.description = name_.ToStdString();

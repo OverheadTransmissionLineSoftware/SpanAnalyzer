@@ -32,11 +32,6 @@ class PlotPane : public wxPanel {
   void Update(wxObject* hint = nullptr);
 
  private:
-  /// \brief Clears the plot.
-  /// \param[in] dc
-  ///   The device context that is drawn onto.
-  void ClearPlot(wxDC& dc);
-
   /// \brief Handles the context menu select event.
   /// \param[in] event
   ///   The event.
@@ -67,9 +62,9 @@ class PlotPane : public wxPanel {
   ///   The device context.
   void RenderPlot(wxDC& dc);
 
-  /// \brief Updates the plot.
-  /// This includes re-calculating the points and recreating the renderers.
-  void UpdatePlot();
+  /// \brief Updates the plot renderers.
+  /// This includes re-calculating the dataset.
+  void UpdatePlotRenderers();
 
   /// \var bitmap_buffer_
   ///   The bitmap that is used as a device context buffer. Keeping this cached
