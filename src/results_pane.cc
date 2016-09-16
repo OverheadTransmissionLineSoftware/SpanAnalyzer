@@ -150,9 +150,12 @@ void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
   // updates report table
   table_->set_index_selected(index_selected);
 
-  // gets view
+  // updates view index
+  // the selected report table index may be different than the report data index
+  // due to sorting, so the index needs to be converted to match the correct
+  // analysis result index
   SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
-  view->set_index_weathercase(index_selected);
+  view->set_index_weathercase(table_->IndexReportRow(index_selected));
 
   // updates views
   UpdateHint hint(HintType::kWeathercaseSelect);

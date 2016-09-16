@@ -119,6 +119,35 @@ ReportTable::ReportTable(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
 ReportTable::~ReportTable() {
 }
 
+const long ReportTable::IndexReportRow(const long& index_listctrl) {
+  if (index_listctrl < 0) {
+    return -1;
+  } else if (listctrl_->GetItemCount() <= index_listctrl) {
+    return -1;
+  }
+
+  // gets report data for selected index
+  wxListItem item_selected;
+  item_selected.SetId(index_listctrl);
+  item_selected.SetMask(wxLIST_MASK_DATA);
+  listctrl_->GetItem(item_selected);
+
+  ReportRow* row_selected = (ReportRow*)item_selected.GetData();
+
+  // searches report rows and compares memory address until a match is found
+  for (auto iter = data_->rows.cbegin(); iter != data_->rows.cend(); iter++) {
+    const ReportRow* row = &(*iter);
+
+    // found a match, returns index
+    if (row_selected == row) {
+      return std::distance(data_->rows.cbegin(), iter);
+    }
+  }
+
+  // nothing was found
+  return -1;
+}
+
 void ReportTable::Refresh() {
   // helps reduce flicker
   listctrl_->Freeze();

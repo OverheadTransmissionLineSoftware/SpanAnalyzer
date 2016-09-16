@@ -71,6 +71,12 @@ class ReportTable : public wxPanel {
   /// \brief Destructor.
   ~ReportTable();
 
+  /// \brief Gets the report row index.
+  /// \param[in] index_listctrl
+  ///   The listctrl index, which reflects any sorting that is applied.
+  /// \return The report row index, which does not reflect any sorting.
+  const long IndexReportRow(const long& index_listctrl);
+
   /// \brief Refreshes the listctrl with the data.
   void Refresh();
 
