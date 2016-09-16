@@ -198,6 +198,11 @@ void ReportTable::Refresh() {
   listctrl_->SetItemState(index_selected_, wxLIST_STATE_SELECTED,
                           wxLIST_STATE_SELECTED);
 
+  // makes sure item is visible in refreshed table
+  if ((0 < index_selected_) && (index_selected_ < listctrl_->GetItemCount())) {
+    listctrl_->EnsureVisible(index_selected_);
+  }
+
   listctrl_->Thaw();
 }
 
