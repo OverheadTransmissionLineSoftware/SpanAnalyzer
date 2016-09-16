@@ -55,7 +55,7 @@ void SpanAnalyzerDoc::ConvertUnitSystem(const units::UnitSystem& system_from,
 }
 
 
-void SpanAnalyzerDoc::DeleteSpan(
+std::list<Span>::const_iterator SpanAnalyzerDoc::DeleteSpan(
     const std::list<Span>::const_iterator& element) {
   // gets iterator with edit capability
   const unsigned int index = std::distance(spans_.cbegin(), element);
@@ -68,7 +68,7 @@ void SpanAnalyzerDoc::DeleteSpan(
   }
 
   // deletes from span list
-  spans_.erase(iter);
+  const auto iter_next = spans_.erase(iter);
 
   // marks as modified
   Modify(true);
@@ -81,6 +81,8 @@ void SpanAnalyzerDoc::DeleteSpan(
     UpdateHint hint(HintType::kSpansEdit);
     UpdateAllViews(nullptr, &hint);
   }
+
+  return iter_next;
 }
 
 std::list<Span>::const_iterator SpanAnalyzerDoc::InsertSpan(

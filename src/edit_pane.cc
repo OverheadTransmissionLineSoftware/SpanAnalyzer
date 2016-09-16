@@ -167,8 +167,9 @@ void EditPane::DeleteSpans() {
   const std::list<Span>& spans = doc->spans();
 
   // deletes spans from doc
-  for (auto iter = spans.cbegin(); iter != spans.cend(); iter++) {
-    doc->DeleteSpan(iter);
+  std::list<Span>::const_iterator iter = spans.cbegin();
+  while (iter != spans.cend()) {
+    iter = doc->DeleteSpan(iter);
   }
 
   // deletes spans from treectrl

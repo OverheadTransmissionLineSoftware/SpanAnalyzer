@@ -130,8 +130,10 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \brief Deletes a span.
   /// \param[in] element
   ///   The span element.
+  /// \return The next span element in the list.
   /// This function may trigger an update if it matches the selected span.
-  void DeleteSpan(const std::list<Span>::const_iterator& element);
+  std::list<Span>::const_iterator DeleteSpan(
+      const std::list<Span>::const_iterator& element);
 
   /// \brief Inserts a span before the specified position.
   /// \param[in] position
