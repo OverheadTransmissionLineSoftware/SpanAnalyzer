@@ -87,6 +87,8 @@ void ResultsPane::Update(wxObject* hint) {
 }
 
 void ResultsPane::OnChoiceCondition(wxCommandEvent& event) {
+  // not creating busy cursor to avoid cursor flicker
+
   // gets choice selection and updates view cache
   wxChoice* choice = XRCCTRL(*this, "choice_condition", wxChoice);
   wxString str = choice->GetStringSelection();
@@ -106,6 +108,8 @@ void ResultsPane::OnChoiceCondition(wxCommandEvent& event) {
 }
 
 void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
+  // not creating busy cursor to avoid cursor flicker
+
   // gets choice selection
   wxChoice* choice = XRCCTRL(*this, "choice_report", wxChoice);
   wxString str = choice->GetStringSelection();
@@ -131,6 +135,8 @@ void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
 }
 
 void ResultsPane::OnChoiceWeathercaseGroup(wxCommandEvent& event) {
+  // not creating busy cursor to avoid cursor flicker
+
   // gets weathercase set from application data
   wxChoice* choice = XRCCTRL(*this, "choice_weathercase_group", wxChoice);
   wxString str_selection = choice->GetStringSelection();
@@ -144,6 +150,8 @@ void ResultsPane::OnChoiceWeathercaseGroup(wxCommandEvent& event) {
 }
 
 void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
+  // not creating busy cursor to avoid cursor flicker
+
   // gets selected index
   const long index_selected = event.GetItem().GetId();
 

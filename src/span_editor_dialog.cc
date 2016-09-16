@@ -202,6 +202,8 @@ void SpanEditorDialog::OnOk(wxCommandEvent &event) {
     return;
   }
 
+  wxBusyCursor cursor;
+
   // transfers data from dialog controls
   TransferDataFromWindow();
   TransferCustomDataFromWindow();

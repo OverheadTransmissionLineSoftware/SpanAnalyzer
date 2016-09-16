@@ -307,6 +307,8 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
 }
 
 void CableFileManagerDialog::OnButtonOk(wxCommandEvent &event) {
+  wxBusyCursor cursor;
+
   // copies modified cablefiles to original cablefile list
   *cablefiles_ = cablefiles_modified_;
 

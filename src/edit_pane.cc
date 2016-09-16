@@ -248,10 +248,14 @@ void EditPane::InitializeTreeCtrl() {
 }
 
 void EditPane::OnButtonAdd(wxCommandEvent& event) {
+  // can't create busy cursor, a dialog is used further along
+  
   AddSpan();
 }
 
 void EditPane::OnButtonCopy(wxCommandEvent& event) {
+  wxBusyCursor cursor;
+  
   // gets selected tree item
   wxTreeItemId id_item = treectrl_->GetSelection();
   if (id_item.IsOk() == false) {
@@ -268,6 +272,8 @@ void EditPane::OnButtonCopy(wxCommandEvent& event) {
 }
 
 void EditPane::OnButtonDelete(wxCommandEvent& event) {
+  wxBusyCursor cursor;
+  
   // gets selected tree item
   wxTreeItemId id_item = treectrl_->GetSelection();
   if (id_item.IsOk() == false) {
@@ -284,6 +290,8 @@ void EditPane::OnButtonDelete(wxCommandEvent& event) {
 }
 
 void EditPane::OnButtonEdit(wxCommandEvent& event) {
+  // can't create busy cursor, a dialog is used further along
+
   // gets selected tree item
   wxTreeItemId id_item = treectrl_->GetSelection();
   if (id_item.IsOk() == false) {
@@ -309,16 +317,22 @@ void EditPane::OnContextMenuSelect(wxCommandEvent& event) {
   // gets context menu selection and sends to handler function
   const int id_event = event.GetId();
   if (id_event == kTreeItemActivate) {
+    wxBusyCursor cursor;
     ActivateSpan(id_item);
   } else if (id_event == kTreeItemCopy) {
+    wxBusyCursor cursor;
     CopySpan(id_item);
   } else if (id_event == kTreeItemDelete) {
+    wxBusyCursor cursor;
     DeleteSpan(id_item);
   } else if (id_event == kTreeItemEdit) {
+    // can't create busy cursor, a dialog is used further along
     EditSpan(id_item);
   } else if (id_event == kTreeRootAdd) {
+    // can't create busy cursor, a dialog is used further along
     AddSpan();
   } else if (id_event == kTreeRootDeleteAll) {
+    wxBusyCursor cursor;
     DeleteSpans();
   }
 }
@@ -335,6 +349,8 @@ void EditPane::OnDragBegin(wxTreeEvent& event) {
 }
 
 void EditPane::OnDragEnd(wxTreeEvent& event) {
+  wxBusyCursor cursor;
+  
   // verifies that the end drag is valid
   if ((event.GetItem().IsOk() == false)
       ||(event.GetItem() == treectrl_->GetRootItem())
@@ -386,6 +402,8 @@ void EditPane::OnDragEnd(wxTreeEvent& event) {
 }
 
 void EditPane::OnItemActivate(wxTreeEvent& event) {
+  wxBusyCursor cursor;
+
   // gets activated item from event
   wxTreeItemId id = event.GetItem();
   ActivateSpan(id);

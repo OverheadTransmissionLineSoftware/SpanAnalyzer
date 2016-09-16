@@ -345,6 +345,8 @@ void WeatherLoadCaseManagerDialog::OnListBoxWeatherCaseDoubleClick(
 }
 
 void WeatherLoadCaseManagerDialog::OnOk(wxCommandEvent& event) {
+  wxBusyCursor cursor;
+
   // overwrites original data with modified data
   *groups_ = groups_modified_;
 

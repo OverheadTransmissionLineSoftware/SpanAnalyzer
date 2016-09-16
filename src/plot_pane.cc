@@ -82,6 +82,8 @@ void PlotPane::Update(wxObject* hint) {
 }
 
 void PlotPane::OnContextMenuSelect(wxCommandEvent& event) {
+  // not creating busy cursor to avoid cursor flicker
+
   // gets context menu selection and sends to handler function
   const int id_event = event.GetId();
   if (id_event == kFitPlotData) {

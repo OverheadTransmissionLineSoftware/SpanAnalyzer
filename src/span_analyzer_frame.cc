@@ -106,6 +106,8 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
 
   // creates and shows the cable file manager dialog
   CableFileManagerDialog dialog(this, config->units, &data->cablefiles);
+  
+  wxBusyCursor cursor;
   if (dialog.ShowModal() == wxID_OK) {
     // saves application data
     FileHandler::SaveAppData(config->filepath_data, *data, config->units);
@@ -143,6 +145,8 @@ void SpanAnalyzerFrame::OnMenuEditWeathercases(
       wxGetApp().config()->units,
       &data->groups_weathercase);
   if (dialog.ShowModal() == wxID_OK) {
+    wxBusyCursor cursor;
+
     // saves application data
     FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
                              wxGetApp().config()->units);
@@ -172,6 +176,8 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
   if (preferences.ShowModal() != wxID_OK) {
     return;
   }
+
+  wxBusyCursor cursor;
 
   // application data change is implemented on app restart
 

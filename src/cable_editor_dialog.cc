@@ -54,6 +54,8 @@ void CableEditorDialog::OnOk(wxCommandEvent &event) {
     return;
   }
 
+  wxBusyCursor cursor;
+
   // transfers data from dialog controls to modified cable
   this->TransferDataFromWindow();
   cable_modified_.name = name_.ToStdString();
