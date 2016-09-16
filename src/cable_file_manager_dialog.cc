@@ -113,6 +113,8 @@ void CableFileManagerDialog::OnButtonAdd(wxCommandEvent& event) {
     return;
   }
 
+  wxBusyCursor cursor;
+
   // gets user selected cable file paths
   wxArrayString paths;
   dialog_file.GetPaths(paths);
@@ -213,6 +215,8 @@ void CableFileManagerDialog::OnButtonEdit(wxCommandEvent& event) {
     }
   }
 
+  wxBusyCursor cursor;
+
   // converts units to consistent unit style
   CableUnitConverter::ConvertUnitStyle(
       units_,
@@ -252,6 +256,8 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
       wxMessageBox(message);
     }
   }
+
+  wxBusyCursor cursor;
 
   // converts units to consistent unit style
   CableUnitConverter::ConvertUnitStyle(
@@ -335,6 +341,8 @@ void CableFileManagerDialog::OnButtonRemove(wxCommandEvent& event) {
     return;
   }
 
+  wxBusyCursor cursor;
+
   // removes from application data
   cablefiles_modified_.erase(iter);
 
@@ -364,6 +372,8 @@ void CableFileManagerDialog::OnSpinButtonDown(wxSpinEvent& event) {
   if (index_selected_ == kCount) {
     return;
   }
+
+  wxBusyCursor cursor;
 
   // switches cable files in list using iterators
   auto iter_selection = std::next(cablefiles_modified_.begin(),
@@ -396,6 +406,8 @@ void CableFileManagerDialog::OnSpinButtonUp(wxSpinEvent& event) {
   if (index_selected_ == 0) {
     return;
   }
+
+  wxBusyCursor cursor;
 
   // switches cable files in list using iterators
   auto iter_selection = std::next(cablefiles_modified_.begin(),

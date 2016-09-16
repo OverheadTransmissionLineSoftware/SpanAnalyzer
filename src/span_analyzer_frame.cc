@@ -106,12 +106,14 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
 
   // creates and shows the cable file manager dialog
   CableFileManagerDialog dialog(this, config->units, &data->cablefiles);
-  
-  wxBusyCursor cursor;
   if (dialog.ShowModal() == wxID_OK) {
+    wxBusyCursor cursor;
+
     // saves application data
     FileHandler::SaveAppData(config->filepath_data, *data, config->units);
   }
+
+  wxBusyCursor cursor;
 
   // reloads all cable files in case things get out of sync
   // i.e. user edits cable file, but doesn't accept any changes in file manager

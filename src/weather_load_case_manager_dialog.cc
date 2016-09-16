@@ -128,6 +128,8 @@ void WeatherLoadCaseManagerDialog::OnButtonGroupAdd(
     return;
   }
 
+  wxBusyCursor cursor;
+
   // adds to the group list
   WeatherLoadCaseGroup group;
   group.name = name;
@@ -146,6 +148,8 @@ void WeatherLoadCaseManagerDialog::OnButtonGroupDelete(
     // exits if default group is selected
     return;
   }
+
+  wxBusyCursor cursor;
 
   // erases from the groups
   auto iter = std::next(groups_modified_.begin(), index_group_activated_);
@@ -183,6 +187,8 @@ void WeatherLoadCaseManagerDialog::OnButtonWeathercaseAdd(
       wxMessageBox(message);
     }
   }
+
+  wxBusyCursor cursor;
 
   // converts weathercase to consistent unit style
   WeatherLoadCaseUnitConverter::ConvertUnitStyle(
@@ -225,6 +231,8 @@ void WeatherLoadCaseManagerDialog::OnButtonWeathercaseDelete(
     }
   }
 
+  wxBusyCursor cursor;
+
   // erases from weathercase set
   group.weathercases.erase(iter);
 
@@ -256,6 +264,8 @@ void WeatherLoadCaseManagerDialog::OnListBoxGroupDoubleClick(
                                       "Weathercase Group Name Edit",
                                       group.name);
 
+  wxBusyCursor cursor;
+
   // implements change if user accepts name change
   if (str.empty() == false) {
     // updates list
@@ -273,6 +283,8 @@ void WeatherLoadCaseManagerDialog::OnListBoxGroupSelect(
   if (index_group_activated_ == wxNOT_FOUND) {
     return;
   }
+
+  wxBusyCursor cursor;
 
   // gets the weathercase set from the set list
   auto iter_groups = std::next(groups_modified_.cbegin(),
@@ -329,6 +341,8 @@ void WeatherLoadCaseManagerDialog::OnListBoxWeatherCaseDoubleClick(
     }
   }
 
+  wxBusyCursor cursor;
+
   // converts weathercase to consistent unit style
   WeatherLoadCaseUnitConverter::ConvertUnitStyle(
       *units_,
@@ -370,6 +384,8 @@ void WeatherLoadCaseManagerDialog::OnSpinButtonGroupDown(
     return;
   }
 
+  wxBusyCursor cursor;
+
   // switches groups list using iterators
   auto iter_selection = std::next(groups_modified_.begin(),
                                   index_group_activated_);
@@ -404,6 +420,8 @@ void WeatherLoadCaseManagerDialog::OnSpinButtonGroupUp(
     return;
   }
 
+  wxBusyCursor cursor;
+
   // switches group list using iterators
   auto iter_selection = std::next(groups_modified_.begin(),
                                   index_group_activated_);
@@ -436,6 +454,8 @@ void WeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseDown(
     return;
   }
 
+  wxBusyCursor cursor;
+
   // gets the weathercase set
   auto iter_groups = std::next(groups_modified_.begin(), index_group_activated_);
   WeatherLoadCaseGroup& group = *iter_groups;
@@ -466,6 +486,8 @@ void WeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseUp(
   if (index == 0) {
     return;
   }
+
+  wxBusyCursor cursor;
 
   // gets the weathercase set
   auto iter_groups = std::next(groups_modified_.begin(), index_group_activated_);
