@@ -1,15 +1,65 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
+    <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
+    <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9C31D890-3670-41BF-9891-6B41377ACC6D}</ProjectGuid>
+    <RootNamespace>SpanAnalyzer</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\include;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>WINVER=0x0400;__WXMSW__;_WINDOWS;wxUSE_GUI=1;_CRT_SECURE_NO_WARNINGS;_DEBUG;__WXDEBUG__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..\..\external\wxWidgets\lib\vc_x64_lib;..\..\external\Models\build\msvc\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;wininet.lib;otlsmodels_based.lib;otlsmodels_sagtensiond.lib;otlsmodels_transmissionlined.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxexpatd.lib;wxjpegd.lib;wxmsw31ud_adv.lib;wxmsw31ud_core.lib;wxmsw31ud_xrc.lib;wxpngd.lib;wxregexud.lib;wxscintillad.lib;wxtiffd.lib;wxzlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\include;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>WINVER=0x0400;__WXMSW__;_WINDOWS;wxUSE_GUI=1;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..\..\external\wxWidgets\lib\vc_x64_lib;..\..\external\Models\build\msvc\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;wininet.lib;otlsmodels_base.lib;otlsmodels_sagtension.lib;otlsmodels_transmissionline.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxexpat.lib;wxjpeg.lib;wxmsw31u_adv.lib;wxmsw31u_core.lib;wxmsw31u_xrc.lib;wxpng.lib;wxregexu.lib;wxscintilla.lib;wxtiff.lib;wxzlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\analysis_controller.h" />
     <ClInclude Include="..\..\include\cable_constraint_xml_handler.h" />
@@ -20,28 +70,28 @@
     <ClInclude Include="..\..\include\edit_pane.h" />
     <ClInclude Include="..\..\include\error_message_dialog.h" />
     <ClInclude Include="..\..\include\file_handler.h" />
+    <ClInclude Include="..\..\include\line_cable_xml_handler.h" />
     <ClInclude Include="..\..\include\line_data_set_2d.h" />
     <ClInclude Include="..\..\include\line_renderer_2d.h" />
     <ClInclude Include="..\..\include\log_pane.h" />
     <ClInclude Include="..\..\include\plot_2d.h" />
     <ClInclude Include="..\..\include\plot_axis.h" />
     <ClInclude Include="..\..\include\plot_pane.h" />
+    <ClInclude Include="..\..\include\preferences_dialog.h" />
     <ClInclude Include="..\..\include\report_table.h" />
+    <ClInclude Include="..\..\include\results_pane.h" />
     <ClInclude Include="..\..\include\sag_tension_analysis_results.h" />
+    <ClInclude Include="..\..\include\span.h" />
+    <ClInclude Include="..\..\include\span_analyzer_app.h" />
     <ClInclude Include="..\..\include\span_analyzer_config.h" />
     <ClInclude Include="..\..\include\span_analyzer_config_xml_handler.h" />
     <ClInclude Include="..\..\include\span_analyzer_data.h" />
     <ClInclude Include="..\..\include\span_analyzer_data_xml_handler.h" />
+    <ClInclude Include="..\..\include\span_analyzer_doc.h" />
     <ClInclude Include="..\..\include\span_analyzer_doc_xml_handler.h" />
+    <ClInclude Include="..\..\include\span_analyzer_frame.h" />
     <ClInclude Include="..\..\include\span_analyzer_view.h" />
     <ClInclude Include="..\..\include\span_editor_dialog.h" />
-    <ClInclude Include="..\..\include\line_cable_xml_handler.h" />
-    <ClInclude Include="..\..\include\preferences_dialog.h" />
-    <ClInclude Include="..\..\include\results_pane.h" />
-    <ClInclude Include="..\..\include\span.h" />
-    <ClInclude Include="..\..\include\span_analyzer_app.h" />
-    <ClInclude Include="..\..\include\span_analyzer_frame.h" />
-    <ClInclude Include="..\..\include\span_analyzer_doc.h" />
     <ClInclude Include="..\..\include\span_unit_converter.h" />
     <ClInclude Include="..\..\include\span_xml_handler.h" />
     <ClInclude Include="..\..\include\vector_xml_handler.h" />
@@ -61,25 +111,25 @@
     <ClCompile Include="..\..\src\edit_pane.cc" />
     <ClCompile Include="..\..\src\error_message_dialog.cc" />
     <ClCompile Include="..\..\src\file_handler.cc" />
+    <ClCompile Include="..\..\src\line_cable_xml_handler.cc" />
     <ClCompile Include="..\..\src\line_data_set_2d.cc" />
     <ClCompile Include="..\..\src\line_renderer_2d.cc" />
     <ClCompile Include="..\..\src\log_pane.cc" />
     <ClCompile Include="..\..\src\plot_2d.cc" />
     <ClCompile Include="..\..\src\plot_axis.cc" />
     <ClCompile Include="..\..\src\plot_pane.cc" />
-    <ClCompile Include="..\..\src\report_table.cc" />
-    <ClCompile Include="..\..\src\span_analyzer_config_xml_handler.cc" />
-    <ClCompile Include="..\..\src\span_analyzer_data_xml_handler.cc" />
-    <ClCompile Include="..\..\src\span_analyzer_doc_xml_handler.cc" />
-    <ClCompile Include="..\..\src\span_analyzer_doc.cc" />
-    <ClCompile Include="..\..\src\span_analyzer_view.cc" />
-    <ClCompile Include="..\..\src\span_editor_dialog.cc" />
-    <ClCompile Include="..\..\src\line_cable_xml_handler.cc" />
     <ClCompile Include="..\..\src\preferences_dialog.cc" />
+    <ClCompile Include="..\..\src\report_table.cc" />
     <ClCompile Include="..\..\src\results_pane.cc" />
     <ClCompile Include="..\..\src\span.cc" />
     <ClCompile Include="..\..\src\span_analyzer_app.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_config_xml_handler.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_data_xml_handler.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_doc.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_doc_xml_handler.cc" />
     <ClCompile Include="..\..\src\span_analyzer_frame.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_view.cc" />
+    <ClCompile Include="..\..\src\span_editor_dialog.cc" />
     <ClCompile Include="..\..\src\span_unit_converter.cc" />
     <ClCompile Include="..\..\src\span_xml_handler.cc" />
     <ClCompile Include="..\..\src\vector_xml_handler.cc" />
@@ -90,74 +140,45 @@
     <ClCompile Include="..\..\src\xml_handler.cc" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="..\..\res\cable_editor_dialog.xrc">
-      <SubType>Designer</SubType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    <None Include="..\..\res\cable_editor_dialog.xrc">
       <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Xml>
-    <Xml Include="..\..\res\cable_file_manager_dialog.xrc">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\res\cable_file_manager_dialog.xrc">
       <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Xml>
-    <Xml Include="..\..\res\edit_pane.xrc">
-      <SubType>Designer</SubType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\res\edit_pane.xrc">
       <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Xml>
-    <Xml Include="..\..\res\error_message_dialog.xrc">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\res\error_message_dialog.xrc">
       <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Xml>
+    </None>
     <None Include="..\..\res\icon.xpm" />
-    <Xml Include="..\..\res\span_editor_dialog.xrc">
-      <SubType>Designer</SubType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    <None Include="..\..\res\preferences_dialog.xrc">
       <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Xml>
-    <Xml Include="..\..\res\results_pane.xrc">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Xml>
-    <Xml Include="..\..\res\span_analyzer_menubar.xrc">
-      <SubType>Designer</SubType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Xml>
-    <Xml Include="..\..\res\preferences_dialog.xrc">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Xml>
-    <Xml Include="..\..\res\weather_load_case_editor_dialog.xrc">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Xml>
-    <Xml Include="..\..\res\weather_load_case_manager_dialog.xrc">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Xml>
-    <None Include="..\..\spananalyzer.conf">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="..\..\test\cables\ACSR_Drake.cable">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    <None Include="..\..\res\results_pane.xrc">
+      <FileType>Document</FileType>
     </None>
-    <None Include="..\..\test\test.spananalyzer">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <SubType>Designer</SubType>
+    <None Include="..\..\res\sort_arrow_down.xpm" />
+    <None Include="..\..\res\sort_arrow_up.xpm" />
+    <None Include="..\..\res\span_analyzer_menubar.xrc">
+      <FileType>Document</FileType>
     </None>
+    <None Include="..\..\res\span_editor_dialog.xrc">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\res\weather_load_case_editor_dialog.xrc">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\res\weather_load_case_manager_dialog.xrc">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\spananalyzer.conf" />
+    <None Include="..\..\test\cables\ACSR_Drake.cable" />
+    <None Include="..\..\test\test.spananalyzer" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\appdata.xml" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\res\icon.ico" />
@@ -165,82 +186,6 @@
   <ItemGroup>
     <ResourceCompile Include="..\..\res\spananalyzer.rc" />
   </ItemGroup>
-  <ItemGroup>
-    <Xml Include="..\..\appdata.xml">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <SubType>Designer</SubType>
-    </Xml>
-  </ItemGroup>
-  <PropertyGroup Label="Globals">
-    <ProjectGuid>{603F0AD1-25C8-4439-B93E-1E01A0F074F2}</ProjectGuid>
-    <RootNamespace>SpanAnalyzer</RootNamespace>
-  </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(IncludePath)</IncludePath>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <PreprocessorDefinitions>WIN32;WINVER=0x0400;__WXMSW__;_WINDOWS;wxUSE_GUI=1;_UNICODE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\include;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <MinimalRebuild>false</MinimalRebuild>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;wininet.lib;otlsmodels_base.lib;otlsmodels_sagtension.lib;otlsmodels_transmissionline.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxexpatd.lib;wxjpegd.lib;wxmsw31ud_adv.lib;wxmsw31ud_core.lib;wxmsw31ud_xrc.lib;wxpngd.lib;wxregexud.lib;wxscintillad.lib;wxtiffd.lib;wxzlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\external\wxWidgets\lib\vc_lib;..\..\external\Models\build\msvc\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <SubSystem>Windows</SubSystem>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;WINVER=0x0400;__WXMSW__;_WINDOWS;wxUSE_GUI=1;_UNICODE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\include;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\external\wxWidgets\lib\vc_lib;..\..\external\Models\build\msvc\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;wininet.lib;otlsmodels_base.lib;otlsmodels_sagtension.lib;otlsmodels_transmissionline.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxexpat.lib;wxjpeg.lib;wxmsw31u_adv.lib;wxmsw31u_core.lib;wxmsw31u_xrc.lib;wxpng.lib;wxregexu.lib;wxscintilla.lib;wxtiff.lib;wxzlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
