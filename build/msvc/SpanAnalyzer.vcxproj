@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -39,13 +39,13 @@
     <ClCompile>
       <AdditionalIncludeDirectories>..\..\include;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>WINVER=0x0400;__WXMSW__;_WINDOWS;wxUSE_GUI=1;_CRT_SECURE_NO_WARNINGS;_DEBUG;__WXDEBUG__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CRT_SECURE_NO_DEPRECATE=1;_CRT_NON_CONFORMING_SWPRINTFS=1;_SCL_SECURE_NO_WARNINGS=1;__WXMSW__;_UNICODE;_WINDOWS;NOPCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\..\external\wxWidgets\lib\vc_x64_lib;..\..\external\Models\build\msvc\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;wininet.lib;otlsmodels_based.lib;otlsmodels_sagtensiond.lib;otlsmodels_transmissionlined.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxexpatd.lib;wxjpegd.lib;wxmsw31ud_adv.lib;wxmsw31ud_core.lib;wxmsw31ud_xrc.lib;wxpngd.lib;wxregexud.lib;wxscintillad.lib;wxtiffd.lib;wxzlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>otlsmodels_based.lib;otlsmodels_sagtensiond.lib;otlsmodels_transmissionlined.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxexpatd.lib;wxjpegd.lib;wxmsw31ud_adv.lib;wxmsw31ud_core.lib;wxmsw31ud_xrc.lib;wxpngd.lib;wxregexud.lib;wxscintillad.lib;wxtiffd.lib;wxzlibd.lib;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;winspool.lib;winmm.lib;shell32.lib;shlwapi.lib;comctl32.lib;ole32.lib;oleaut32.lib;uuid.lib;rpcrt4.lib;advapi32.lib;version.lib;wsock32.lib;wininet.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -53,11 +53,11 @@
     <ClCompile>
       <AdditionalIncludeDirectories>..\..\include;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>WINVER=0x0400;__WXMSW__;_WINDOWS;wxUSE_GUI=1;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE=1;_CRT_NON_CONFORMING_SWPRINTFS=1;_SCL_SECURE_NO_WARNINGS=1;__WXMSW__;NDEBUG;_UNICODE;_WINDOWS;NOPCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\..\external\wxWidgets\lib\vc_x64_lib;..\..\external\Models\build\msvc\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;wininet.lib;otlsmodels_base.lib;otlsmodels_sagtension.lib;otlsmodels_transmissionline.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxexpat.lib;wxjpeg.lib;wxmsw31u_adv.lib;wxmsw31u_core.lib;wxmsw31u_xrc.lib;wxpng.lib;wxregexu.lib;wxscintilla.lib;wxtiff.lib;wxzlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>otlsmodels_base.lib;otlsmodels_sagtension.lib;otlsmodels_transmissionline.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxexpat.lib;wxjpeg.lib;wxmsw31u_adv.lib;wxmsw31u_core.lib;wxmsw31u_xrc.lib;wxpng.lib;wxregexu.lib;wxscintilla.lib;wxtiff.lib;wxzlib.lib;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;winspool.lib;winmm.lib;shell32.lib;shlwapi.lib;comctl32.lib;ole32.lib;oleaut32.lib;uuid.lib;rpcrt4.lib;advapi32.lib;version.lib;wsock32.lib;wininet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
