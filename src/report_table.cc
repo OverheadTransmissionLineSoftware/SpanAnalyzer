@@ -130,7 +130,11 @@ const long ReportTable::IndexReportRow(const long& index_listctrl) {
   wxListItem item_selected;
   item_selected.SetId(index_listctrl);
   item_selected.SetMask(wxLIST_MASK_DATA);
-  listctrl_->GetItem(item_selected);
+  const bool status = listctrl_->GetItem(item_selected);
+
+  if (status == false) {
+    wxLogMessage("Couldn't retrieve selected item from listctrl.");
+  }
 
   ReportRow* row_selected = (ReportRow*)item_selected.GetData();
 
@@ -171,7 +175,7 @@ void ReportTable::Refresh() {
     // adds list item (row) to listctrl
     wxListItem item;
     item.SetId(i);
-    item.SetData((long)&row);
+    item.SetData((void*)&row);
     item.SetImage(-1);
     listctrl_->InsertItem(item);
 
