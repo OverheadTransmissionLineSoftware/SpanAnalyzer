@@ -43,6 +43,7 @@ ResultsPane::ResultsPane(wxWindow* parent, wxView* view) {
   choice = XRCCTRL(*this, "choice_condition", wxChoice);
   choice->Append("Initial");
   choice->Append("Load");
+  choice->Append("Creep");
   choice->SetSelection(0);
 
   // creates a report table
@@ -98,6 +99,8 @@ void ResultsPane::OnChoiceCondition(wxCommandEvent& event) {
     view->set_condition(CableConditionType::kInitial);
   } else if (str == "Load") {
     view->set_condition(CableConditionType::kLoad);
+  } else if (str == "Creep") {
+    view->set_condition(CableConditionType::kCreep);
   } else {
     return;
   }

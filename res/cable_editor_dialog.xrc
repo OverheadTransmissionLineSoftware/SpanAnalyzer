@@ -262,10 +262,18 @@
               <flag>wxEXPAND</flag>
               <border>0</border>
               <object class="wxGridSizer">
-                <rows>2</rows>
-                <cols>5</cols>
+                <rows>3</rows>
+                <cols>6</cols>
                 <vgap>0</vgap>
                 <hgap>0</hgap>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALIGN_CENTER|wxALL</flag>
+                  <border>0</border>
+                  <object class="wxStaticText" name="statictext_shell_polynomial_units">
+                    <label>[WWW]</label>
+                  </object>
+                </object>
                 <object class="sizeritem">
                   <option>0</option>
                   <flag>wxALIGN_CENTER|wxALL</flag>
@@ -308,9 +316,17 @@
                 </object>
                 <object class="sizeritem">
                   <option>0</option>
+                  <flag>wxALIGN_CENTER|wxALL</flag>
+                  <border>0</border>
+                  <object class="wxStaticText" name="statictext_shell_stressstrain">
+                    <label>Stress-Strain</label>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
                   <flag>wxALL</flag>
                   <border>0</border>
-                  <object class="wxTextCtrl" name="textctrl_shell_a0">
+                  <object class="wxTextCtrl" name="textctrl_shell_stressstrain_a0">
                     <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
@@ -322,7 +338,7 @@
                   <option>0</option>
                   <flag>wxALL</flag>
                   <border>0</border>
-                  <object class="wxTextCtrl" name="textctrl_shell_a1">
+                  <object class="wxTextCtrl" name="textctrl_shell_stressstrain_a1">
                     <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
@@ -334,7 +350,7 @@
                   <option>0</option>
                   <flag>wxALL</flag>
                   <border>0</border>
-                  <object class="wxTextCtrl" name="textctrl_shell_a2">
+                  <object class="wxTextCtrl" name="textctrl_shell_stressstrain_a2">
                     <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
@@ -346,7 +362,7 @@
                   <option>0</option>
                   <flag>wxALL</flag>
                   <border>0</border>
-                  <object class="wxTextCtrl" name="textctrl_shell_a3">
+                  <object class="wxTextCtrl" name="textctrl_shell_stressstrain_a3">
                     <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
@@ -358,12 +374,80 @@
                   <option>0</option>
                   <flag>wxALL</flag>
                   <border>0</border>
-                  <object class="wxTextCtrl" name="textctrl_shell_a4">
+                  <object class="wxTextCtrl" name="textctrl_shell_stressstrain_a4">
                     <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
                     <maxlength>0</maxlength>
                     <tooltip>A polynomial coefficient that describes how the component elongates when unstretched.</tooltip>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALIGN_CENTER|wxALL</flag>
+                  <border>0</border>
+                  <object class="wxStaticText" name="statictext_shell_creep">
+                    <label>Creep</label>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>0</border>
+                  <object class="wxTextCtrl" name="textctrl_shell_creep_a0">
+                    <size>75,-1</size>
+                    <style>wxTE_CENTRE</style>
+                    <value></value>
+                    <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component stretches over time.</tooltip>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>0</border>
+                  <object class="wxTextCtrl" name="textctrl_shell_creep_a1">
+                    <size>75,-1</size>
+                    <style>wxTE_CENTRE</style>
+                    <value></value>
+                    <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component stretches over time.</tooltip>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>0</border>
+                  <object class="wxTextCtrl" name="textctrl_shell_creep_a2">
+                    <size>75,-1</size>
+                    <style>wxTE_CENTRE</style>
+                    <value></value>
+                    <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component stretches over time.</tooltip>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>0</border>
+                  <object class="wxTextCtrl" name="textctrl_shell_creep_a3">
+                    <size>75,-1</size>
+                    <style>wxTE_CENTRE</style>
+                    <value></value>
+                    <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component stretches over time.</tooltip>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>0</border>
+                  <object class="wxTextCtrl" name="textctrl_shell_creep_a4">
+                    <size>75,-1</size>
+                    <style>wxTE_CENTRE</style>
+                    <value></value>
+                    <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component stretches over time.</tooltip>
                   </object>
                 </object>
               </object>
@@ -449,10 +533,18 @@
               <flag>wxEXPAND</flag>
               <border>0</border>
               <object class="wxGridSizer">
-                <rows>2</rows>
-                <cols>5</cols>
+                <rows>3</rows>
+                <cols>6</cols>
                 <vgap>0</vgap>
                 <hgap>0</hgap>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALIGN_CENTER|wxALL</flag>
+                  <border>0</border>
+                  <object class="wxStaticText" name="statictext_core_polynomial_units">
+                    <label>[WWW]</label>
+                  </object>
+                </object>
                 <object class="sizeritem">
                   <option>0</option>
                   <flag>wxALIGN_CENTER</flag>
@@ -495,9 +587,17 @@
                 </object>
                 <object class="sizeritem">
                   <option>0</option>
+                  <flag>wxALIGN_CENTER|wxALL</flag>
+                  <border>0</border>
+                  <object class="wxStaticText" name="statictext_core_stressstrain">
+                    <label>Stress-Strain</label>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
                   <flag></flag>
                   <border>0</border>
-                  <object class="wxTextCtrl" name="textctrl_core_a0">
+                  <object class="wxTextCtrl" name="textctrl_core_stressstrain_a0">
                     <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
@@ -509,7 +609,7 @@
                   <option>0</option>
                   <flag></flag>
                   <border>0</border>
-                  <object class="wxTextCtrl" name="textctrl_core_a1">
+                  <object class="wxTextCtrl" name="textctrl_core_stressstrain_a1">
                     <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
@@ -521,7 +621,7 @@
                   <option>0</option>
                   <flag></flag>
                   <border>0</border>
-                  <object class="wxTextCtrl" name="textctrl_core_a2">
+                  <object class="wxTextCtrl" name="textctrl_core_stressstrain_a2">
                     <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
@@ -533,7 +633,7 @@
                   <option>0</option>
                   <flag></flag>
                   <border>0</border>
-                  <object class="wxTextCtrl" name="textctrl_core_a3">
+                  <object class="wxTextCtrl" name="textctrl_core_stressstrain_a3">
                     <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
@@ -545,12 +645,80 @@
                   <option>0</option>
                   <flag></flag>
                   <border>0</border>
-                  <object class="wxTextCtrl" name="textctrl_core_a4">
+                  <object class="wxTextCtrl" name="textctrl_core_stressstrain_a4">
                     <size>75,-1</size>
                     <style>wxTE_CENTRE</style>
                     <value></value>
                     <maxlength>0</maxlength>
                     <tooltip>A polynomial coefficient that describes how the component elongates when unstretched.</tooltip>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALIGN_CENTER|wxALL</flag>
+                  <border>0</border>
+                  <object class="wxStaticText" name="statictext_core_creep">
+                    <label>Creep</label>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>0</border>
+                  <object class="wxTextCtrl" name="textctrl_core_creep_a0">
+                    <size>75,-1</size>
+                    <style>wxTE_CENTRE</style>
+                    <value></value>
+                    <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component stretches over time.</tooltip>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>0</border>
+                  <object class="wxTextCtrl" name="textctrl_core_creep_a1">
+                    <size>75,-1</size>
+                    <style>wxTE_CENTRE</style>
+                    <value></value>
+                    <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component stretches over time.</tooltip>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>0</border>
+                  <object class="wxTextCtrl" name="textctrl_core_creep_a2">
+                    <size>75,-1</size>
+                    <style>wxTE_CENTRE</style>
+                    <value></value>
+                    <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component stretches over time.</tooltip>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>0</border>
+                  <object class="wxTextCtrl" name="textctrl_core_creep_a3">
+                    <size>75,-1</size>
+                    <style>wxTE_CENTRE</style>
+                    <value></value>
+                    <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component stretches over time.</tooltip>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>0</border>
+                  <object class="wxTextCtrl" name="textctrl_core_creep_a4">
+                    <size>75,-1</size>
+                    <style>wxTE_CENTRE</style>
+                    <value></value>
+                    <maxlength>0</maxlength>
+                    <tooltip>A polynomial coefficient that describes how the component stretches over time.</tooltip>
                   </object>
                 </object>
               </object>

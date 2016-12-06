@@ -298,7 +298,9 @@ const std::list<SagTensionAnalysisResult>* SpanAnalyzerDoc::ResultsFiltered(
 
   // gets the result list based on the current display condition
   const std::list<SagTensionAnalysisResult>* list_results = nullptr;
-  if (condition == CableConditionType::kInitial) {
+  if (condition == CableConditionType::kCreep) {
+    list_results = &group_results->results_creep;
+  } else if (condition == CableConditionType::kInitial) {
     list_results = &group_results->results_initial;
   } else if (condition == CableConditionType::kLoad) {
     list_results = &group_results->results_load;
