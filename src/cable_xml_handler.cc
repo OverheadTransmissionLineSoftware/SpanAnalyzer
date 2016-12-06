@@ -292,7 +292,7 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
   double value = -999999;
   std::string title;
   std::string content;
-  wxXmlAttribute* attribute = nullptr;
+  wxXmlAttribute attribute;
   wxXmlNode* node_root = nullptr;
   wxXmlNode* node_element = nullptr;
 
@@ -311,11 +311,11 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
   value = cable.area_physical;
   content = helper::DoubleToFormattedString(value, 4);
   if (units == units::UnitSystem::kMetric) {
-    attribute = new wxXmlAttribute("units", "mm^2");
+    attribute = wxXmlAttribute("units", "mm^2");
   } else if (units == units::UnitSystem::kImperial) {
-    attribute = new wxXmlAttribute("units", "in^2");
+    attribute = wxXmlAttribute("units", "in^2");
   }
-  node_element = CreateElementNodeWithContent(title, content, attribute);
+  node_element = CreateElementNodeWithContent(title, content, &attribute);
   node_root->AddChild(node_element);
 
   // creates diameter node and adds to cable node
@@ -323,11 +323,11 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
   value = cable.diameter;
   content = helper::DoubleToFormattedString(value, 3);
   if (units == units::UnitSystem::kMetric) {
-    attribute = new wxXmlAttribute("units", "mm");
+    attribute = wxXmlAttribute("units", "mm");
   } else if (units == units::UnitSystem::kImperial) {
-    attribute = new wxXmlAttribute("units", "in");
+    attribute = wxXmlAttribute("units", "in");
   }
-  node_element = CreateElementNodeWithContent(title, content, attribute);
+  node_element = CreateElementNodeWithContent(title, content, &attribute);
   node_root->AddChild(node_element);
 
   // creates weight-unit node and adds to cable node
@@ -335,11 +335,11 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
   value = cable.weight_unit;
   content = helper::DoubleToFormattedString(value, 3);
   if (units == units::UnitSystem::kMetric) {
-    attribute = new wxXmlAttribute("units", "N/m");
+    attribute = wxXmlAttribute("units", "N/m");
   } else if (units == units::UnitSystem::kImperial) {
-    attribute = new wxXmlAttribute("units", "lbs/feet");
+    attribute = wxXmlAttribute("units", "lbs/feet");
   }
-  node_element = CreateElementNodeWithContent(title, content, attribute);
+  node_element = CreateElementNodeWithContent(title, content, &attribute);
   node_root->AddChild(node_element);
 
   // creates strength-rated node and adds to cable node
@@ -347,11 +347,11 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
   value = cable.strength_rated;
   content = helper::DoubleToFormattedString(value, 0);
   if (units == units::UnitSystem::kMetric) {
-    attribute = new wxXmlAttribute("units", "N");
+    attribute = wxXmlAttribute("units", "N");
   } else if (units == units::UnitSystem::kImperial) {
-    attribute = new wxXmlAttribute("units", "lbs");
+    attribute = wxXmlAttribute("units", "lbs");
   }
-  node_element = CreateElementNodeWithContent(title, content, attribute);
+  node_element = CreateElementNodeWithContent(title, content, &attribute);
   node_root->AddChild(node_element);
 
   // creates temperature-component-properties node and adds to cable node
@@ -359,11 +359,11 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
   value = cable.temperature_properties_components;
   content = helper::DoubleToFormattedString(value, 0);
   if (units == units::UnitSystem::kMetric) {
-    attribute = new wxXmlAttribute("units", "deg C");
+    attribute = wxXmlAttribute("units", "deg C");
   } else if (units == units::UnitSystem::kImperial) {
-    attribute = new wxXmlAttribute("units", "deg F");
+    attribute = wxXmlAttribute("units", "deg F");
   }
-  node_element = CreateElementNodeWithContent(title, content, attribute);
+  node_element = CreateElementNodeWithContent(title, content, &attribute);
   node_root->AddChild(node_element);
 
   // creates component-shell node and adds to cable node
