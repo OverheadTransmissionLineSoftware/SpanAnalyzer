@@ -210,7 +210,7 @@
           <flag></flag>
           <border>0</border>
           <object class="wxFlexGridSizer">
-            <rows>1</rows>
+            <rows>2</rows>
             <cols>2</cols>
             <vgap>0</vgap>
             <hgap>0</hgap>
@@ -220,7 +220,7 @@
               <option>0</option>
               <flag>wxALL</flag>
               <border>5</border>
-              <object class="wxStaticText" name="statictext_stretch_weathercase">
+              <object class="wxStaticText" name="statictext_stretch_load_weathercase">
                 <label>Stretch-Load</label>
               </object>
             </object>
@@ -228,7 +228,25 @@
               <option>0</option>
               <flag>wxALL</flag>
               <border>5</border>
-              <object class="wxChoice" name="choice_stretch_weathercase">
+              <object class="wxChoice" name="choice_stretch_load_weathercase">
+                <selection>0</selection>
+                <size>200,-1</size>
+                <content />
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxStaticText" name="statictext_stretch_creep_weathercase">
+                <label>Stretch-Creep</label>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxChoice" name="choice_stretch_creep_weathercase">
                 <selection>0</selection>
                 <size>200,-1</size>
                 <content />

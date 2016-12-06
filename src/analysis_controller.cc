@@ -144,6 +144,10 @@ void AnalysisController::AnalyzeWeatherCaseGroup(
     const WeatherLoadCase& weathercase = *iter;
     SagTensionAnalysisResult result;
 
+    // appends result for creep condition
+    result = Analyze(weathercase, CableConditionType::kCreep);
+    group_results.results_creep.push_back(result);
+
     // appends a result for initial condition
     result = Analyze(weathercase, CableConditionType::kInitial);
     group_results.results_initial.push_back(result);

@@ -43,6 +43,10 @@ struct SagTensionAnalysisResultGroup {
   ///   The weathercase group. This is for reference only.
   const WeatherLoadCaseGroup* group_weathercases;
 
+  /// \var results_creep
+  ///   The sag-tension results for the creep cable condition.
+  std::list<SagTensionAnalysisResult> results_creep;
+
   /// \var results_initial
   ///   The sag-tension results for the initial cable condition.
   std::list<SagTensionAnalysisResult> results_initial;

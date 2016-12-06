@@ -4,6 +4,13 @@
   <analysis_weather_load_cases>
     <weather_load_case_group name="Default">
       <weather_load_case version="1">
+        <description>0-0-60</description>
+        <thickness_ice units="in">0.000</thickness_ice>
+        <density_ice units="lb/ft^3">0.0</density_ice>
+        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+        <temperature_cable units="deg F">60</temperature_cable>
+      </weather_load_case>
+      <weather_load_case version="1">
         <description>0.5-8-0</description>
         <thickness_ice units="in">0.500</thickness_ice>
         <density_ice units="lb/ft^3">57.3</density_ice>
