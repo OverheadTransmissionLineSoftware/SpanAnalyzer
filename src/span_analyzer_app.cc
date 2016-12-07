@@ -59,6 +59,12 @@ int SpanAnalyzerApp::OnExit() {
   FileHandler::SaveConfigFile(filepath_config_, config_);
 
   // cleans up allocated resources
+  for (auto iter = data_.cablefiles.begin(); iter != data_.cablefiles.end();
+       iter++) {
+    const CableFile* cablefile = *iter;
+    delete cablefile;
+  }
+
   delete manager_doc_;
 
   // continues exit process

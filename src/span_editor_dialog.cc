@@ -19,7 +19,7 @@ END_EVENT_TABLE()
 
 SpanEditorDialog::SpanEditorDialog(
     wxWindow* parent,
-    const std::list<CableFile>* cablefiles,
+    const std::list<CableFile*>* cablefiles,
     const std::list<WeatherLoadCase>* weathercases,
     const units::UnitSystem& units,
     Span* span) {
@@ -65,8 +65,8 @@ void SpanEditorDialog::InitChoiceControls() {
   choice = XRCCTRL(*this, "choice_cable", wxChoice);
   for (auto iter = cablefiles_->cbegin(); iter != cablefiles_->cend();
        iter++) {
-    const CableFile& cablefile = *iter;
-    choice->Append(cablefile.cable.name);
+    const CableFile* cablefile = *iter;
+    choice->Append(cablefile->cable.name);
   }
 
   // populates constraint type choice control
@@ -361,7 +361,7 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
   } else {
     str = choice->GetString(index);
     auto iter = std::next(cablefiles_->cbegin(), index);
-    span_modified_.linecable.cable = &(*iter).cable;
+    span_modified_.linecable.cable = &(*iter)->cable;
   }
 
   // transfers constraint type

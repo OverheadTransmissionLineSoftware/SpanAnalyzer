@@ -46,7 +46,10 @@ struct SpanAnalyzerData {
  public:
   /// \var cablefiles
   ///   The cable files.
-  std::list<CableFile> cablefiles;
+  /// Pointers are used so the list can be sorted and rearranged while keeping
+  /// static memory addresses. This allows the document to consistently
+  /// reference the data. This list has ownership of the pointers.
+  std::list<CableFile*> cablefiles;
 
   /// \var groups_weathercase
   ///   The weathercase groups.
