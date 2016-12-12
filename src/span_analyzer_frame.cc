@@ -115,16 +115,6 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
 
   wxBusyCursor cursor;
 
-  // reloads all cable files in case things get out of sync
-  // i.e. user edits cable file, but doesn't accept any changes in file manager
-  // logs
-  wxLogMessage("Flushing cable files.");
-  for (auto iter = data->cablefiles.begin(); iter != data->cablefiles.end();
-       iter++) {
-    CableFile& cablefile = *iter;
-    FileHandler::LoadCable(cablefile.filepath, config->units, cablefile.cable);
-  }
-
   // updates document/views
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
                              GetCurrentDocument();
@@ -202,11 +192,11 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
 
     for (auto iter = data->cablefiles.begin(); iter != data->cablefiles.end();
          iter++) {
-      CableFile& cablefile = *iter;
+      CableFile* cablefile = *iter;
       CableUnitConverter::ConvertUnitSystem(
           units_before,
           config->units,
-          cablefile.cable);
+          cablefile->cable);
     }
 
     // updates document/views

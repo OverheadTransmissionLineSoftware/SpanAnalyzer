@@ -63,7 +63,7 @@ wxXmlNode* SpanXmlHandler::CreateNode(
 int SpanXmlHandler::ParseNode(
     const wxXmlNode* root,
     const std::string& filepath,
-    const std::list<CableFile>* cablefiles,
+    const std::list<CableFile*>* cablefiles,
     const std::list<WeatherLoadCase>* weathercases,
     Span& span) {
   // checks for valid root node
@@ -88,7 +88,7 @@ int SpanXmlHandler::ParseNode(
 int SpanXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
     const std::string& filepath,
-    const std::list<CableFile>* cablefiles,
+    const std::list<CableFile*>* cablefiles,
     const std::list<WeatherLoadCase>* weathercases,
     Span& span) {
   // variables used to parse XML node
@@ -124,8 +124,8 @@ int SpanXmlHandler::ParseNodeV1(
       std::list<const Cable*> cables;
 
       for (auto iter = cablefiles->begin(); iter != cablefiles->end(); iter++) {
-        const CableFile& cablefile = *iter;
-        const Cable* cable = &cablefile.cable;
+        const CableFile* cablefile = *iter;
+        const Cable* cable = &cablefile->cable;
         cables.push_back(cable);
       }
 

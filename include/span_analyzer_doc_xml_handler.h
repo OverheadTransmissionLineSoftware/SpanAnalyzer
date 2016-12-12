@@ -65,7 +65,7 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   /// the property is recognized, it is set to an invalid state.
   static int ParseNode(const wxXmlNode* root,
                        const std::string& filepath,
-                       const std::list<CableFile>* cablefiles,
+                       const std::list<CableFile*>* cablefiles,
                        const std::list<WeatherLoadCase>* weathercases,
                        SpanAnalyzerDoc& doc);
 
@@ -92,7 +92,7 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   /// the property is recognized, it is set to an invalid state.
   static int ParseNodeV1(const wxXmlNode* root,
                          const std::string& filepath,
-                         const std::list<CableFile>* cablefiles,
+                         const std::list<CableFile*>* cablefiles,
                          const std::list<WeatherLoadCase>* weathercases,
                          SpanAnalyzerDoc& doc);
 };

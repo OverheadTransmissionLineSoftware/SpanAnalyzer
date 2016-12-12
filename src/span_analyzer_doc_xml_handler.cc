@@ -46,7 +46,7 @@ wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
 int SpanAnalyzerDocXmlHandler::ParseNode(
     const wxXmlNode* root,
     const std::string& filepath,
-    const std::list<CableFile>* cablefiles,
+    const std::list<CableFile*>* cablefiles,
     const std::list<WeatherLoadCase>* weathercases,
     SpanAnalyzerDoc& doc) {
   // checks for valid root node
@@ -71,7 +71,7 @@ int SpanAnalyzerDocXmlHandler::ParseNode(
 int SpanAnalyzerDocXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
     const std::string& filepath,
-    const std::list<CableFile>* cablefiles,
+    const std::list<CableFile*>* cablefiles,
     const std::list<WeatherLoadCase>* weathercases,
     SpanAnalyzerDoc& doc) {
 

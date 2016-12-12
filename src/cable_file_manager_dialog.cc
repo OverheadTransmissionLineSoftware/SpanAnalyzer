@@ -28,12 +28,14 @@ END_EVENT_TABLE()
 CableFileManagerDialog::CableFileManagerDialog(
     wxWindow* parent,
     const units::UnitSystem& units,
-    std::list<CableFile>* cablefiles) {
+    std::list<CableFile*>* cablefiles) {
   // loads dialog from virtual xrc file system
   wxXmlResource::Get()->LoadDialog(this, parent, "cable_file_manager_dialog");
 
   // saves references to members
   cablefiles_ = cablefiles;
+  cablefiles_original_ = *cablefiles;
+
   listctrl_ = XRCCTRL(*this, "listctrl_cables", wxListCtrl);
   units_ = units;
 
@@ -46,15 +48,15 @@ CableFileManagerDialog::CableFileManagerDialog(
   for (auto iter = cablefiles_->cbegin(); iter != cablefiles_->cend();
        iter++) {
     long index_row = std::distance(cablefiles_->cbegin(), iter);
-    const CableFile& cablefile = *iter;
+    const CableFile* cablefile = *iter;
 
     // adds list item (row) to listctrl
     wxListItem item;
     item.SetId(index_row);
     listctrl_->InsertItem(item);
 
-    listctrl_->SetItem(index_row, 0, cablefile.cable.name);
-    listctrl_->SetItem(index_row, 1, cablefile.filepath);
+    listctrl_->SetItem(index_row, 0, cablefile->cable.name);
+    listctrl_->SetItem(index_row, 1, cablefile->filepath);
   }
 
   // fits the dialog around the sizers
@@ -62,6 +64,35 @@ CableFileManagerDialog::CableFileManagerDialog(
 }
 
 CableFileManagerDialog::~CableFileManagerDialog() {
+}
+
+void CableFileManagerDialog::DeleteExtraCableFiles(
+    const std::list<CableFile*>* list_keep,
+    std::list<CableFile*>* list_master) {
+  // iterates over master list
+  for (auto iter = list_master->begin(); iter != list_master->end();) {
+    CableFile* cablefile = *iter;
+
+    // searches keep list for a match
+    std::list<CableFile*>::const_iterator iter_keep = list_keep->cbegin();
+    while (iter_keep != list_keep->cend()) {
+      CableFile* cablefile_keep = *iter_keep;
+      if (cablefile == cablefile_keep) {
+        break;
+      } else {
+        iter_keep++;
+      }
+    }
+
+    // increments master list iterator
+    if (iter_keep == list_keep->cend()) {
+      // the cablefile is deallocated
+      iter = list_master->erase(iter);
+      delete cablefile;
+    } else {
+      iter++;
+    }
+  }
 }
 
 bool CableFileManagerDialog::IsReferencedByDocument(
@@ -86,16 +117,16 @@ bool CableFileManagerDialog::IsReferencedByDocument(
 
 bool CableFileManagerDialog::IsUniqueName(const std::string& name,
                                           const int& index_ignore) const {
-  // scans all cablefiles to see if the cable name is a duplicate
+  // scans modified cablefiles to see if the cable name is a duplicate
   for (auto iter = cablefiles_modified_.cbegin();
        iter != cablefiles_modified_.cend(); iter++) {
-    const CableFile& cablefile = *iter;
+    const CableFile* cablefile = *iter;
 
     const int index = std::distance(cablefiles_modified_.cbegin(), iter);
     if (index == index_ignore) {
       continue;
     } else {
-      if (cablefile.cable.name == name) {
+      if (cablefile->cable.name == name) {
         return false;
       }
     }
@@ -127,8 +158,8 @@ void CableFileManagerDialog::OnButtonAdd(wxCommandEvent& event) {
     bool is_loaded = false;
     for (auto iter = cablefiles_modified_.cbegin();
          iter != cablefiles_modified_.cend(); iter++) {
-      const CableFile& cablefile = *iter;
-      if (path == cablefile.filepath) {
+      const CableFile* cablefile = *iter;
+      if (path == cablefile->filepath) {
         is_loaded = true;
         break;
       }
@@ -162,7 +193,9 @@ void CableFileManagerDialog::OnButtonAdd(wxCommandEvent& event) {
         cablefile.cable);
 
       // adds to app data
-      cablefiles_modified_.push_back(cablefile);
+      CableFile* cablefile_new = new CableFile(cablefile);
+      cablefiles_->push_back(cablefile_new);
+      cablefiles_modified_.push_back(cablefile_new);
 
       // adds to listctrl
       const long index = listctrl_->GetItemCount();
@@ -177,6 +210,9 @@ void CableFileManagerDialog::OnButtonAdd(wxCommandEvent& event) {
 }
 
 void CableFileManagerDialog::OnButtonCancel(wxCommandEvent &event) {
+  // deletes any extra cable files
+  DeleteExtraCableFiles(&cablefiles_original_, cablefiles_);
+
   EndModal(wxID_CANCEL);
 }
 
@@ -187,7 +223,7 @@ void CableFileManagerDialog::OnButtonEdit(wxCommandEvent& event) {
 
   // gets cablefile and copies
   auto iter = std::next(cablefiles_modified_.begin(), index_selected_);
-  CableFile cablefile = *iter;
+  CableFile cablefile = **iter;
 
   // converts units to different unit style
   CableUnitConverter::ConvertUnitStyle(
@@ -228,7 +264,7 @@ void CableFileManagerDialog::OnButtonEdit(wxCommandEvent& event) {
   FileHandler::SaveCable(cablefile.filepath, cablefile.cable, units_);
 
   // transfers copied cable to original
-  *iter = cablefile;
+  **iter = cablefile;
 
   // updates listctrl
   listctrl_->SetItem(index_selected_, 0, cablefile.cable.name);
@@ -281,8 +317,8 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
   int index_existing = -1;
   for (auto iter = cablefiles_modified_.cbegin();
     iter != cablefiles_modified_.cend(); iter++) {
-    const CableFile& cablefile_ref = *iter;
-    if (cablefile.filepath == cablefile_ref.filepath) {
+    const CableFile* cablefile_ref = *iter;
+    if (cablefile.filepath == cablefile_ref->filepath) {
       index_existing = std::distance(cablefiles_modified_.cbegin(), iter);
       break;
     }
@@ -291,7 +327,9 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
   // merges cable file into application data and listctrl
   if (index_existing == -1) {
     // adds to end of application data
-    cablefiles_modified_.push_back(cablefile);
+    CableFile* cablefile_new = new CableFile(cablefile);
+    cablefiles_->push_back(cablefile_new);
+    cablefiles_modified_.push_back(cablefile_new);
 
     // adds to end of listctrl
     const long index = listctrl_->GetItemCount();
@@ -304,7 +342,7 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
   } else {
     // replaces existing cable file in application data
     auto iter = std::next(cablefiles_modified_.begin(), index_existing);
-    *iter = cablefile;
+    **iter = cablefile;
 
     // replaces existing listctrl entry
     listctrl_->SetItem(index_existing, 0, cablefile.cable.name);
@@ -314,6 +352,9 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
 
 void CableFileManagerDialog::OnButtonOk(wxCommandEvent &event) {
   wxBusyCursor cursor;
+
+  // deletes any extra cable files
+  DeleteExtraCableFiles(&cablefiles_modified_, cablefiles_);
 
   // copies modified cablefiles to original cablefile list
   *cablefiles_ = cablefiles_modified_;
@@ -328,12 +369,12 @@ void CableFileManagerDialog::OnButtonRemove(wxCommandEvent& event) {
 
   // gets iterator to selected cablefile
   auto iter = std::next(cablefiles_modified_.begin(), index_selected_);
-  const CableFile& cablefile = *iter;
+  const CableFile* cablefile = *iter;
 
   // checks if the cablefile is referenced by the document
-  bool is_referenced = IsReferencedByDocument(cablefile.cable.name);
+  bool is_referenced = IsReferencedByDocument(cablefile->cable.name);
   if (is_referenced == true) {
-    std::string message = cablefile.filepath + "  --  "
+    std::string message = cablefile->filepath + "  --  "
                           "Cable file is currently referenced by the open "
                           "document.";
     wxMessageBox(message);
@@ -343,7 +384,7 @@ void CableFileManagerDialog::OnButtonRemove(wxCommandEvent& event) {
 
   wxBusyCursor cursor;
 
-  // removes from application data
+  // removes from modified list only
   cablefiles_modified_.erase(iter);
 
   // removes from listctrl
@@ -354,6 +395,9 @@ void CableFileManagerDialog::OnButtonRemove(wxCommandEvent& event) {
 }
 
 void CableFileManagerDialog::OnClose(wxCloseEvent &event) {
+  // deletes any extra cable files
+  DeleteExtraCableFiles(&cablefiles_original_, cablefiles_);
+
   EndModal(wxID_CLOSE);
 }
 
@@ -383,7 +427,7 @@ void CableFileManagerDialog::OnSpinButtonDown(wxSpinEvent& event) {
                               iter_selection);
 
   // updates listctrl
-  const CableFile& cablefile = *iter_selection;
+  const CableFile* cablefile = *iter_selection;
 
   listctrl_->DeleteItem(index_selected_);
 
@@ -392,8 +436,8 @@ void CableFileManagerDialog::OnSpinButtonDown(wxSpinEvent& event) {
   item.SetId(index_selected_);
   item.SetState(wxLIST_STATE_SELECTED);
   listctrl_->InsertItem(item);
-  listctrl_->SetItem(index_selected_, 0, cablefile.cable.name);
-  listctrl_->SetItem(index_selected_, 1, cablefile.filepath);
+  listctrl_->SetItem(index_selected_, 0, cablefile->cable.name);
+  listctrl_->SetItem(index_selected_, 1, cablefile->filepath);
 }
 
 void CableFileManagerDialog::OnSpinButtonUp(wxSpinEvent& event) {
@@ -417,7 +461,7 @@ void CableFileManagerDialog::OnSpinButtonUp(wxSpinEvent& event) {
                               iter_selection);
 
   // updates listctrl
-  const CableFile& cablefile = *iter_selection;
+  const CableFile* cablefile = *iter_selection;
 
   listctrl_->DeleteItem(index_selected_);
 
@@ -426,6 +470,6 @@ void CableFileManagerDialog::OnSpinButtonUp(wxSpinEvent& event) {
   item.SetId(index_selected_);
   item.SetState(wxLIST_STATE_SELECTED);
   listctrl_->InsertItem(item);
-  listctrl_->SetItem(index_selected_, 0, cablefile.cable.name);
-  listctrl_->SetItem(index_selected_, 1, cablefile.filepath);
+  listctrl_->SetItem(index_selected_, 0, cablefile->cable.name);
+  listctrl_->SetItem(index_selected_, 1, cablefile->filepath);
 }

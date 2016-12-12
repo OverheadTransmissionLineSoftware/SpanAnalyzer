@@ -175,7 +175,7 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   const std::list<WeatherLoadCase>& weathercases =
       wxGetApp().data()->groups_weathercase.cbegin()->weathercases;
 
-  const std::list<CableFile>& cablefiles =
+  const std::list<CableFile*>& cablefiles =
       wxGetApp().data()->cablefiles;
 
   int line_number = SpanAnalyzerDocXmlHandler::ParseNode(

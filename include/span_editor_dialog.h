@@ -45,7 +45,7 @@ class SpanEditorDialog : public wxDialog {
   /// \param[in] span
   ///   The span to be modified with the dialog.
   SpanEditorDialog(wxWindow* parent,
-                   const std::list<CableFile>* cablefiles,
+                   const std::list<CableFile*>* cablefiles,
                    const std::list<WeatherLoadCase>* weathercases,
                    const units::UnitSystem& units,
                    Span* span);
@@ -113,7 +113,7 @@ class SpanEditorDialog : public wxDialog {
 
   /// \var cablefiles_
   ///   The cable files.
-  const std::list<CableFile>* cablefiles_;
+  const std::list<CableFile*>* cablefiles_;
 
   /// \var span_
   ///   The span that is edited.

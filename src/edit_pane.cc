@@ -90,7 +90,7 @@ void EditPane::AddSpan() {
   span.name = "NEW";
 
   // gets referenced objects and makes sure that they exist
-  const std::list<CableFile>& cablefiles = wxGetApp().data()->cablefiles;
+  const std::list<CableFile*>& cablefiles = wxGetApp().data()->cablefiles;
   if (cablefiles.empty() == true) {
     wxMessageBox("No cables are currently loaded. Add at least one before "
                  "adding span.");
@@ -189,7 +189,7 @@ void EditPane::EditSpan(const wxTreeItemId& id) {
                                       span);
 
   // gets referenced objects and makes sure that they exist
-  const std::list<CableFile>& cablefiles = wxGetApp().data()->cablefiles;
+  const std::list<CableFile*>& cablefiles = wxGetApp().data()->cablefiles;
   if (cablefiles.empty() == true) {
     wxMessageBox("No cables are currently loaded. Add at least one before "
                  "editing span.");

@@ -22,12 +22,21 @@ class CableFileManagerDialog : public wxDialog {
   /// \brief Constructor.
   CableFileManagerDialog(wxWindow* parent,
                          const units::UnitSystem& units,
-                         std::list<CableFile>* cablefiles);
+                         std::list<CableFile*>* cablefiles);
 
   /// \brief Destructor.
   ~CableFileManagerDialog();
 
  private:
+  /// \brief Deletes any extra cable files.
+  /// \param[in] list_keep
+  ///   The list of cable files to keep.
+  /// \param[in] list_master
+  ///   The master list that contains all of the cable files.
+  /// This function will free the allocated memory as well.
+  void DeleteExtraCableFiles(const std::list<CableFile*>* list_keep,
+                             std::list<CableFile*>* list_master);
+
   /// \brief Determines if the cable is referenced.
   /// \param[in] name
   ///   The name to check.
@@ -99,12 +108,21 @@ class CableFileManagerDialog : public wxDialog {
   long index_selected_;
 
   /// \var cablefiles_
-  ///   The application cables.
-  std::list<CableFile>* cablefiles_;
+  ///   The master list of cable files allocated by the application. This list
+  ///   includes the cable files that are in the original and modified lists.
+  ///   When exiting this class, any extra cable files will be deallocated.
+  std::list<CableFile*>* cablefiles_;
 
   /// \var cablefiles_modified_
-  ///   The cables that are modified by the manager.
-  std::list<CableFile> cablefiles_modified_;
+  ///   The cables that are modified by the manager (presented to the user).
+  ///   This list is committed to the master list only when the user selects OK
+  ///   on the form.
+  std::list<CableFile*> cablefiles_modified_;
+
+  /// \var cablefiles_original_
+  ///   The cable files that are originally passed to the dialog. This list is
+  ///   committed to the master list when the user cancels or closes the form.
+  std::list<CableFile*> cablefiles_original_;
 
   /// \var listctrl_
   ///   The listctrl that displays the cables.

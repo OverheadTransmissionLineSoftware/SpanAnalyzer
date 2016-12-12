@@ -29,9 +29,9 @@ wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
 
   for (auto iter = data.cablefiles.cbegin(); iter != data.cablefiles.cend();
        iter++) {
-    const CableFile& cablefile = *iter;
+    const CableFile* cablefile = *iter;
     wxXmlNode* sub_node = CreateElementNodeWithContent("file",
-                                                       cablefile.filepath);
+                                                       cablefile->filepath);
     node_element->AddChild(sub_node);
   }
 
@@ -108,15 +108,15 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
       // gets node for cable file
       wxXmlNode* sub_node = node->GetChildren();
       while (sub_node != nullptr) {
-        CableFile cablefile;
+        CableFile* cablefile = new CableFile();
 
         // gets filepath
-        cablefile.filepath = ParseElementNodeWithContent(sub_node);
+        cablefile->filepath = ParseElementNodeWithContent(sub_node);
 
         // loads cable file
         // filehandler function handles all logging
-        int status =  FileHandler::LoadCable(cablefile.filepath, units,
-                                             cablefile.cable);
+        int status =  FileHandler::LoadCable(cablefile->filepath, units,
+                                             cablefile->cable);
 
         if (status == 0) {
           // adds to data lists
