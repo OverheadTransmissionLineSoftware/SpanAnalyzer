@@ -11,6 +11,7 @@
 #include "edit_pane.h"
 #include "plot_pane.h"
 #include "results_pane.h"
+#include "span_analyzer_data.h"
 
 /// \par OVERVIEW
 ///
@@ -23,6 +24,17 @@ class SpanAnalyzerView : public wxView {
 
   /// \brief Destructor.
   ~SpanAnalyzerView();
+
+  /// \brief Gets the analysis filter for the active filter index.
+  /// \return The analysis filter. If an active analysis filter is not valid
+  ///   a nullptr is returned.
+  const AnalysisFilter* AnalysisFilterActive() const;
+
+  /// \brief Gets the weathercase index for the filter.
+  /// \param[in] filter
+  ///   The analysis filter.
+  /// \return The weathercase index.
+  int IndexWeathercase(const AnalysisFilter& filter) const;
 
   /// \brief Handles closing the view.
   /// \param[in] deleteWindow
@@ -56,18 +68,14 @@ class SpanAnalyzerView : public wxView {
   /// This function is called by wxWidgets.
   virtual void OnUpdate(wxView *sender, wxObject *hint = nullptr);
 
-  /// \brief Gets the display cable condition.
-  /// \return The display cable condition.
-  const CableConditionType& condition() const;
+  /// \brief Gets the activated analysis filter group.
+  /// \return The activated analysis filter group. If no analysis filter group
+  ///   is activated, a nullptr is returned.
+  const AnalysisFilterGroup* group_filters() const;
 
-  /// \brief Gets the activated weathercase group.
-  /// \return The activated weathercase group. If no weathercase group is
-  ///   activated, a nullptr is returned.
-  const WeatherLoadCaseGroup* group_weathercases() const;
-
-  /// \brief Gets the selected weathercase index.
-  /// \return The selected weathercase index.
-  const int index_weathercase() const;
+  /// \brief Gets the selected filter index.
+  /// \return The selected filter index.
+  const int index_filter() const;
 
   /// \brief Gets the edit pane.
   /// \return The edit pane.
@@ -81,33 +89,24 @@ class SpanAnalyzerView : public wxView {
   /// \return The results pane.
   ResultsPane* pane_results();
 
-  /// \brief Sets the display condition.
-  /// \param[in] condition
-  ///   The display condition.
-  void set_condition(const CableConditionType& condition);
-
-  /// \brief Sets the weathercase group.
+  /// \brief Sets the analysis filter group.
   /// \param[in] group
-  ///   The weathercase group.
-  void set_group_weathercase(const WeatherLoadCaseGroup* group);
+  ///   The analysis filter group.
+  void set_group_filters(const AnalysisFilterGroup* group);
 
-  /// \brief Sets the selected weathercase index.
-  /// \param[in] index_weathercase
-  ///   The selected weathercase index.
-  void set_index_weathercase(const int& index_weathercase);
+  /// \brief Sets the selected index of the analysis filter.
+  /// \param[in] index_filter
+  ///   The selected filter index.
+  void set_index_filter(const int& index_filter);
 
  private:
-  /// \var condition_
-  ///   The display cable condition.
-  CableConditionType condition_;
+  /// \var group_filters_
+  ///   The group of filters that is currently activated.
+  const AnalysisFilterGroup* group_filters_;
 
-  /// \var group_weathercases_
-  ///   The weathercase group that is currently activated.
-  const WeatherLoadCaseGroup* group_weathercases_;
-
-  /// \var index_weathercase_
-  ///   The weathercase index that is currently selected.
-  int index_weathercase_;
+  /// \var index_filter_
+  ///   The filter index that is currently selected.
+  int index_filter_;
 
   /// \var pane_edit_
   ///   The edit pane.

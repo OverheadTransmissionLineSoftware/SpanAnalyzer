@@ -172,8 +172,8 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   // parses the XML node and loads into the document
   std::string filename = this->GetFilename();
 
-  const std::list<WeatherLoadCase>& weathercases =
-      wxGetApp().data()->groups_weathercase.cbegin()->weathercases;
+  const std::list<WeatherLoadCase*>& weathercases =
+      wxGetApp().data()->weathercases;
 
   const std::list<CableFile*>& cablefiles =
       wxGetApp().data()->cablefiles;
@@ -235,7 +235,7 @@ void SpanAnalyzerDoc::MoveSpan(
 
 bool SpanAnalyzerDoc::OnCreate(const wxString& path, long flags) {
   // initializes analysis controller
-  controller_analysis_.set_data(wxGetApp().data());
+  controller_analysis_.set_weathercases(&wxGetApp().data()->weathercases);
 
   // calls base class function
   return wxDocument::OnCreate(path, flags);
@@ -269,44 +269,15 @@ void SpanAnalyzerDoc::ReplaceSpan(
   }
 }
 
-const std::list<SagTensionAnalysisResultGroup>* SpanAnalyzerDoc::Results()
-    const {
-  return &controller_analysis_.results();
+const SagTensionAnalysisResult* SpanAnalyzerDoc::Result(
+    const int& index_weathercase,
+    const CableConditionType& condition) const {
+  return controller_analysis_.Result(index_weathercase, condition);
 }
 
-const std::list<SagTensionAnalysisResult>* SpanAnalyzerDoc::ResultsFiltered(
-    const WeatherLoadCaseGroup& group_weathercases,
+const std::vector<SagTensionAnalysisResult>* SpanAnalyzerDoc::Results(
     const CableConditionType& condition) const {
-  // gets the results
-  const std::list<SagTensionAnalysisResultGroup>* results = Results();
-  if (results == nullptr) {
-    return nullptr;
-  }
-
-  // searches results groups for a matching weathercase group
-  const SagTensionAnalysisResultGroup* group_results = nullptr;
-  for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
-    group_results = &(*iter);
-    if (group_results->group_weathercases == &group_weathercases) {
-      break;
-    }
-  }
-
-  if (group_results == nullptr) {
-    return nullptr;
-  }
-
-  // gets the result list based on the current display condition
-  const std::list<SagTensionAnalysisResult>* list_results = nullptr;
-  if (condition == CableConditionType::kCreep) {
-    list_results = &group_results->results_creep;
-  } else if (condition == CableConditionType::kInitial) {
-    list_results = &group_results->results_initial;
-  } else if (condition == CableConditionType::kLoad) {
-    list_results = &group_results->results_load;
-  }
-
-  return list_results;
+  return controller_analysis_.Results(condition);
 }
 
 void SpanAnalyzerDoc::RunAnalysis() const {

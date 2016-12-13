@@ -12,48 +12,40 @@
 #include "weather_load_case_unit_converter.h"
 
 BEGIN_EVENT_TABLE(WeatherLoadCaseManagerDialog, wxDialog)
-  EVT_BUTTON(XRCID("button_groups_add"), WeatherLoadCaseManagerDialog::OnButtonGroupAdd)
-  EVT_BUTTON(XRCID("button_groups_delete"), WeatherLoadCaseManagerDialog::OnButtonGroupDelete)
-  EVT_BUTTON(XRCID("button_weathercases_add"), WeatherLoadCaseManagerDialog::OnButtonWeathercaseAdd)
-  EVT_BUTTON(XRCID("button_weathercases_delete"), WeatherLoadCaseManagerDialog::OnButtonWeathercaseDelete)
+  EVT_BUTTON(XRCID("button_weathercases_add"), WeatherLoadCaseManagerDialog::OnButtonAdd)
+  EVT_BUTTON(XRCID("button_weathercases_delete"), WeatherLoadCaseManagerDialog::OnButtonDelete)
   EVT_BUTTON(wxID_CANCEL, WeatherLoadCaseManagerDialog::OnCancel)
   EVT_BUTTON(wxID_OK, WeatherLoadCaseManagerDialog::OnOk)
   EVT_CLOSE(WeatherLoadCaseManagerDialog::OnClose)
-  EVT_LISTBOX(XRCID("listbox_groups"), WeatherLoadCaseManagerDialog::OnListBoxGroupSelect)
-  EVT_LISTBOX_DCLICK(XRCID("listbox_groups"), WeatherLoadCaseManagerDialog::OnListBoxGroupDoubleClick)
-  EVT_LISTBOX_DCLICK(XRCID("listbox_weathercases"), WeatherLoadCaseManagerDialog::OnListBoxWeatherCaseDoubleClick)
-  EVT_SPIN_DOWN(XRCID("spinbutton_groups"), WeatherLoadCaseManagerDialog::OnSpinButtonGroupDown)
-  EVT_SPIN_DOWN(XRCID("spinbutton_weathercases"), WeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseDown)
-  EVT_SPIN_UP(XRCID("spinbutton_groups"), WeatherLoadCaseManagerDialog::OnSpinButtonGroupUp)
-  EVT_SPIN_UP(XRCID("spinbutton_weathercases"), WeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseUp)
+  EVT_LISTBOX_DCLICK(XRCID("listbox_weathercases"), WeatherLoadCaseManagerDialog::OnListBoxDoubleClick)
+  EVT_SPIN_DOWN(XRCID("spinbutton_weathercases"), WeatherLoadCaseManagerDialog::OnSpinButtonDown)
+  EVT_SPIN_UP(XRCID("spinbutton_weathercases"), WeatherLoadCaseManagerDialog::OnSpinButtonUp)
 END_EVENT_TABLE()
 
 WeatherLoadCaseManagerDialog::WeatherLoadCaseManagerDialog(
     wxWindow* parent,
     const units::UnitSystem& units,
-    std::list<WeatherLoadCaseGroup>* groups_weathercase) {
+    std::list<WeatherLoadCase*>* weathercases) {
   // loads dialog from virtual xrc file system
   wxXmlResource::Get()->LoadDialog(this, parent,
                                    "weather_load_case_manager_dialog");
 
   // gets listbox references
-  listbox_groups_ = XRCCTRL(*this, "listbox_groups", wxListBox);
   listbox_weathercases_ = XRCCTRL(*this, "listbox_weathercases", wxListBox);
 
   // saves references to data
-  groups_ = groups_weathercase;
+  weathercases_ = weathercases;
+  weathercases_original_ = *weathercases;
   units_ = &units;
 
   // makes copies so user can modify
-  groups_modified_ = *groups_;
+  weathercases_modified_ = *weathercases_;
 
-  // fills the listboxes with the set descriptions
-  wxListBox* listbox = nullptr;
-  listbox = XRCCTRL(*this, "listbox_groups", wxListBox);
-  for (auto iter = groups_modified_.cbegin();
-       iter != groups_modified_.cend(); iter++) {
-    const WeatherLoadCaseGroup& group = *iter;
-    listbox->Append(group.name);
+  // fills the listbox with the set descriptions
+  for (auto iter = weathercases_modified_.cbegin();
+       iter != weathercases_modified_.cend(); iter++) {
+    const WeatherLoadCase* weathercase = *iter;
+    listbox_weathercases_->Append(weathercase->description);
   }
 
   // fits the dialog around the sizers
@@ -61,6 +53,35 @@ WeatherLoadCaseManagerDialog::WeatherLoadCaseManagerDialog(
 }
 
 WeatherLoadCaseManagerDialog::~WeatherLoadCaseManagerDialog() {
+}
+
+void WeatherLoadCaseManagerDialog::DeleteExtraWeathercases(
+    const std::list<WeatherLoadCase*>* list_keep,
+    std::list<WeatherLoadCase*>* list_master) {
+  // iterates over master list
+  for (auto iter = list_master->begin(); iter != list_master->end();) {
+    WeatherLoadCase* weathercase = *iter;
+
+    // searches keep list for a match
+    std::list<WeatherLoadCase*>::const_iterator iter_keep = list_keep->cbegin();
+    while (iter_keep != list_keep->cend()) {
+      WeatherLoadCase* weathercase_keep = *iter_keep;
+      if (weathercase == weathercase_keep) {
+        break;
+      } else {
+        iter_keep++;
+      }
+    }
+
+    // increments master list iterator
+    if (iter_keep == list_keep->cend()) {
+      // the cablefile is deallocated
+      iter = list_master->erase(iter);
+      delete weathercase;
+    } else {
+      iter++;
+    }
+  }
 }
 
 bool WeatherLoadCaseManagerDialog::IsReferencedByDocument(
@@ -94,23 +115,16 @@ bool WeatherLoadCaseManagerDialog::IsReferencedByDocument(
 
 bool WeatherLoadCaseManagerDialog::IsUniqueName(const std::string& name,
                                                 const int& index_ignore) const {
-  if (index_group_activated_ < 0) {
-    return false;
-  }
-
-  const WeatherLoadCaseGroup& group =
-      *(std::next(groups_modified_.cbegin(), index_group_activated_));
-
   // scans all weathercases to see if the name is a duplicate
-  for (auto iter = group.weathercases.cbegin();
-       iter != group.weathercases.cend(); iter++) {
-    const WeatherLoadCase& weathercase = *iter;
+  for (auto iter = weathercases_modified_.cbegin();
+       iter != weathercases_modified_.cend(); iter++) {
+    const WeatherLoadCase* weathercase = *iter;
 
-    const int index = std::distance(group.weathercases.cbegin(), iter);
+    const int index = std::distance(weathercases_modified_.cbegin(), iter);
     if (index == index_ignore) {
       continue;
     } else {
-      if (weathercase.description == name) {
+      if (weathercase->description == name) {
         return false;
       }
     }
@@ -119,53 +133,7 @@ bool WeatherLoadCaseManagerDialog::IsUniqueName(const std::string& name,
   return true;
 }
 
-void WeatherLoadCaseManagerDialog::OnButtonGroupAdd(
-    wxCommandEvent& event) {
-  // gets weathercase group name from user
-  std::string name = wxGetTextFromUser("Enter a weathercase group name",
-                                       "Weathercase Group Name");
-  if (name.empty() == true) {
-    return;
-  }
-
-  wxBusyCursor cursor;
-
-  // adds to the group list
-  WeatherLoadCaseGroup group;
-  group.name = name;
-  groups_modified_.push_back(group);
-
-  // updates the listbox
-  listbox_groups_->Append(group.name);
-}
-
-void WeatherLoadCaseManagerDialog::OnButtonGroupDelete(
-    wxCommandEvent& event) {
-  if (index_group_activated_ == wxNOT_FOUND) {
-    // exits if nothing is selected
-    return;
-  } else if (index_group_activated_ == 0) {
-    // exits if default group is selected
-    return;
-  }
-
-  wxBusyCursor cursor;
-
-  // erases from the groups
-  auto iter = std::next(groups_modified_.begin(), index_group_activated_);
-  groups_modified_.erase(iter);
-
-  // updates the listboxes
-  listbox_groups_->Delete(index_group_activated_);
-  listbox_weathercases_->Clear();
-}
-
-void WeatherLoadCaseManagerDialog::OnButtonWeathercaseAdd(
-    wxCommandEvent& event) {
-  // gets the weathercase group
-  auto iter = std::next(groups_modified_.begin(), index_group_activated_);
-  WeatherLoadCaseGroup& group = *iter;
-
+void WeatherLoadCaseManagerDialog::OnButtonAdd(wxCommandEvent& event) {
   // creates a weathercase
   WeatherLoadCase weathercase;
 
@@ -198,115 +166,57 @@ void WeatherLoadCaseManagerDialog::OnButtonWeathercaseAdd(
       weathercase);
 
   // adds weathercase to set
-  group.weathercases.push_back(weathercase);
+  WeatherLoadCase* weathercase_new = new WeatherLoadCase(weathercase);
+  weathercases_->push_back(weathercase_new);
+  weathercases_modified_.push_back(weathercase_new);
 
   // updates weathercase listbox
   listbox_weathercases_->Append(weathercase.description);
 }
 
-void WeatherLoadCaseManagerDialog::OnButtonWeathercaseDelete(
-    wxCommandEvent& event) {
+void WeatherLoadCaseManagerDialog::OnButtonDelete(wxCommandEvent& event) {
   // gets weathercase listbox index
   const int index = listbox_weathercases_->GetSelection();
 
-  // gets the weathercase group from the set list
-  auto iter_group = std::next(groups_modified_.begin(), index_group_activated_);
-  WeatherLoadCaseGroup& group = *iter_group;
-
-  // gets the weathercase from the group
-  auto iter = std::next(group.weathercases.begin(), index);
-  WeatherLoadCase& weathercase = *iter;
+  // gets the weathercase
+  auto iter = std::next(weathercases_modified_.begin(), index);
+  WeatherLoadCase* weathercase = *iter;
 
   // checks if the weathercase is referenced by the document
-  // only applies if the 'Default' weathercase group is selected
-  if (index_group_activated_ == 0) {
-    bool is_referenced = IsReferencedByDocument(weathercase.description);
-    if (is_referenced == true) {
-      std::string message = weathercase.description + "  --  "
-                            "Weathercase is currently referenced by the open "
-                            "document.";
-      wxMessageBox(message);
+  bool is_referenced = IsReferencedByDocument(weathercase->description);
+  if (is_referenced == true) {
+    std::string message = weathercase->description + "  --  "
+                          "Weathercase is currently referenced by the open "
+                          "document.";
+    wxMessageBox(message);
 
-      return;
-    }
+    return;
   }
 
   wxBusyCursor cursor;
 
-  // erases from weathercase set
-  group.weathercases.erase(iter);
+  // removes from modified weathercase set only
+  weathercases_modified_.erase(iter);
 
   // updates weathercase listbox
   listbox_weathercases_->Delete(index);
 }
 
 void WeatherLoadCaseManagerDialog::OnCancel(wxCommandEvent& event) {
+  // deletes any extra weathercases
+  DeleteExtraWeathercases(&weathercases_original_, weathercases_);
+
   EndModal(wxID_CANCEL);
 }
 
 void WeatherLoadCaseManagerDialog::OnClose(wxCloseEvent& event) {
+  // deletes any extra weathercases
+  DeleteExtraWeathercases(&weathercases_original_, weathercases_);
+
   EndModal(wxID_CLOSE);
 }
 
-void WeatherLoadCaseManagerDialog::OnListBoxGroupDoubleClick(
-    wxCommandEvent& event) {
-  // exits if default group is selected
-  if (index_group_activated_ == 0) {
-    return;
-  }
-
-  // gets group name
-  auto iter = std::next(groups_modified_.begin(), index_group_activated_);
-  WeatherLoadCaseGroup& group = *iter;
-
-  // shows a dialog an allows user to edit set name
-  std::string str = wxGetTextFromUser("Enter a weathercase group name:",
-                                      "Weathercase Group Name Edit",
-                                      group.name);
-
-  wxBusyCursor cursor;
-
-  // implements change if user accepts name change
-  if (str.empty() == false) {
-    // updates list
-    group.name = str;
-
-    // updates listbox
-    listbox_groups_->SetString(index_group_activated_, str);
-  }
-}
-
-void WeatherLoadCaseManagerDialog::OnListBoxGroupSelect(
-    wxCommandEvent& event) {
-  // gets the set listbox index
-  index_group_activated_ = listbox_groups_->GetSelection();
-  if (index_group_activated_ == wxNOT_FOUND) {
-    return;
-  }
-
-  wxBusyCursor cursor;
-
-  // gets the weathercase set from the set list
-  auto iter_groups = std::next(groups_modified_.cbegin(),
-                               index_group_activated_);
-  const WeatherLoadCaseGroup& group = *iter_groups;
-
-  // fills the weathercase listbox
-  listbox_weathercases_->Clear();
-  for (auto iter = group.weathercases.cbegin();
-       iter != group.weathercases.cend(); iter++) {
-    const WeatherLoadCase& weathercase = *iter;
-    listbox_weathercases_->Append(weathercase.description);
-  }
-}
-
-void WeatherLoadCaseManagerDialog::OnListBoxWeatherCaseDoubleClick(
-    wxCommandEvent& event) {
-  // gets the weathercase group
-  auto iter_groups = std::next(groups_modified_.begin(),
-                               index_group_activated_);
-  WeatherLoadCaseGroup& group = *iter_groups;
-
+void WeatherLoadCaseManagerDialog::OnListBoxDoubleClick(wxCommandEvent& event) {
   // gets the weathercase listbox index
   const int index_weathercases = listbox_weathercases_->GetSelection();
   if (index_weathercases == wxNOT_FOUND) {
@@ -314,26 +224,26 @@ void WeatherLoadCaseManagerDialog::OnListBoxWeatherCaseDoubleClick(
   }
 
   // gets the weathercase, copies, and converts to different unit style
-  auto iter_weathercase = std::next(group.weathercases.begin(),
+  auto iter_weathercase = std::next(weathercases_modified_.begin(),
                                     index_weathercases);
-  WeatherLoadCase weathercase = *iter_weathercase;
+  WeatherLoadCase* weathercase = *iter_weathercase;
   WeatherLoadCaseUnitConverter::ConvertUnitStyle(*units_,
                                                  units::UnitStyle::kConsistent,
                                                  units::UnitStyle::kDifferent,
-                                                 weathercase);
+                                                 *weathercase);
 
   // lets user edit weathercase
   // ensures that the weathercase name is unique
   bool is_unique = false;
   while (is_unique == false) {
     // shows an editor
-    WeatherLoadCaseEditorDialog dialog(this, &weathercase, *units_);
+    WeatherLoadCaseEditorDialog dialog(this, weathercase, *units_);
     if (dialog.ShowModal() != wxID_OK) {
       return;
     }
 
     // checks if the weathercase name is unique
-    is_unique = IsUniqueName(weathercase.description, index_weathercases);
+    is_unique = IsUniqueName(weathercase->description, index_weathercases);
     if (is_unique == false) {
       std::string message = "Weathercase name is a duplicate. Please provide "
                             "another name.";
@@ -348,98 +258,30 @@ void WeatherLoadCaseManagerDialog::OnListBoxWeatherCaseDoubleClick(
       *units_,
       units::UnitStyle::kDifferent,
       units::UnitStyle::kConsistent,
-      weathercase);
+      *weathercase);
 
   // saves weathercase to modified cases
   *iter_weathercase = weathercase;
 
   // updates listbox of description change
   listbox_weathercases_->SetString(index_weathercases,
-                                   weathercase.description);
+                                   weathercase->description);
 }
 
 void WeatherLoadCaseManagerDialog::OnOk(wxCommandEvent& event) {
   wxBusyCursor cursor;
 
-  // overwrites original data with modified data
-  *groups_ = groups_modified_;
+  // deletes any extra weathercases
+  DeleteExtraWeathercases(&weathercases_modified_, weathercases_);
+
+  // copies modified cable files
+  *weathercases_ = weathercases_modified_;
 
   // ends modal by returning ok indicator
   EndModal(wxID_OK);
 }
 
-void WeatherLoadCaseManagerDialog::OnSpinButtonGroupDown(
-    wxSpinEvent& event) {
-  if (index_group_activated_ == wxNOT_FOUND) {
-    // exits if nothing is selected
-    return;
-  } else if (index_group_activated_ == 0) {
-    // exits if default group is selected
-    return;
-  }
-
-  // exits if the activated set is the last set
-  const int kCount = listbox_groups_->GetCount() - 1;
-  if (index_group_activated_ == kCount) {
-    return;
-  }
-
-  wxBusyCursor cursor;
-
-  // switches groups list using iterators
-  auto iter_selection = std::next(groups_modified_.begin(),
-                                  index_group_activated_);
-  auto iter_position = std::next(iter_selection, 2);
-  groups_modified_.splice(iter_position, groups_modified_, iter_selection);
-
-  // updates listbox
-  const WeatherLoadCaseGroup& group = *iter_selection;
-  listbox_groups_->Delete(index_group_activated_);
-  listbox_groups_->Insert(group.name, index_group_activated_ + 1);
-  listbox_groups_->SetSelection(index_group_activated_ + 1);
-
-  // updates activated index
-  index_group_activated_ += 1;
-}
-
-void WeatherLoadCaseManagerDialog::OnSpinButtonGroupUp(
-    wxSpinEvent& event) {
-  if (index_group_activated_ == wxNOT_FOUND) {
-    // exits if nothing is selected
-    return;
-  } else if (index_group_activated_ == 0) {
-    // exits if default group is selected
-    return;
-  } else if (index_group_activated_ == 1) {
-    // exits if group below default is selected
-    return;
-  }
-
-  // exits if the activated set is the first set
-  if (index_group_activated_ == 0) {
-    return;
-  }
-
-  wxBusyCursor cursor;
-
-  // switches group list using iterators
-  auto iter_selection = std::next(groups_modified_.begin(),
-                                  index_group_activated_);
-  auto iter_position = std::prev(iter_selection, 1);
-  groups_modified_.splice(iter_position, groups_modified_, iter_selection);
-
-  // updates listbox
-  const WeatherLoadCaseGroup& group = *iter_selection;
-  listbox_groups_->Delete(index_group_activated_);
-  listbox_groups_->Insert(group.name, index_group_activated_ - 1);
-  listbox_groups_->SetSelection(index_group_activated_ - 1);
-
-  // updates activated index
-  index_group_activated_ -= 1;
-}
-
-void WeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseDown(
-    wxSpinEvent& event) {
+void WeatherLoadCaseManagerDialog::OnSpinButtonDown(wxSpinEvent& event) {
   // gets weathercase index
   const int index = listbox_weathercases_->GetSelection();
 
@@ -448,32 +290,28 @@ void WeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseDown(
     return;
   }
 
-  // exits if the selected index is the first weathercase
-  const int kCount = listbox_groups_->GetCount() - 1;
+  // exits if the selected index is the last weathercase
+  const int kCount = listbox_weathercases_->GetCount() - 1;
   if (index == kCount) {
     return;
   }
 
   wxBusyCursor cursor;
 
-  // gets the weathercase set
-  auto iter_groups = std::next(groups_modified_.begin(), index_group_activated_);
-  WeatherLoadCaseGroup& group = *iter_groups;
-
   // switches weathercases in list using iterators
-  auto iter_selection = std::next(group.weathercases.begin(), index);
+  auto iter_selection = std::next(weathercases_modified_.begin(), index);
   auto iter_position = std::next(iter_selection, 2);
-  group.weathercases.splice(iter_position, group.weathercases, iter_selection);
+  weathercases_modified_.splice(iter_position, weathercases_modified_,
+                                iter_selection);
 
   // updates listbox
-  const WeatherLoadCase& weathercase = *iter_selection;
+  const WeatherLoadCase* weathercase = *iter_selection;
   listbox_weathercases_->Delete(index);
-  listbox_weathercases_->Insert(weathercase.description, index + 1);
+  listbox_weathercases_->Insert(weathercase->description, index + 1);
   listbox_weathercases_->SetSelection(index + 1);
 }
 
-void WeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseUp(
-    wxSpinEvent& event) {
+void WeatherLoadCaseManagerDialog::OnSpinButtonUp(wxSpinEvent& event) {
   // gets weathercase index
   const int index = listbox_weathercases_->GetSelection();
 
@@ -489,18 +327,15 @@ void WeatherLoadCaseManagerDialog::OnSpinButtonWeathercaseUp(
 
   wxBusyCursor cursor;
 
-  // gets the weathercase set
-  auto iter_groups = std::next(groups_modified_.begin(), index_group_activated_);
-  WeatherLoadCaseGroup& group = *iter_groups;
-
   // switches weathercases in list using iterators
-  auto iter_selection = std::next(group.weathercases.begin(), index);
+  auto iter_selection = std::next(weathercases_modified_.begin(), index);
   auto iter_position = std::prev(iter_selection, 1);
-  group.weathercases.splice(iter_position, group.weathercases, iter_selection);
+  weathercases_modified_.splice(iter_position, weathercases_modified_,
+                                iter_selection);
 
   // updates listbox
-  const WeatherLoadCase& weathercase = *iter_selection;
+  const WeatherLoadCase* weathercase = *iter_selection;
   listbox_weathercases_->Delete(index);
-  listbox_weathercases_->Insert(weathercase.description, index - 1);
+  listbox_weathercases_->Insert(weathercase->description, index - 1);
   listbox_weathercases_->SetSelection(index - 1);
 }

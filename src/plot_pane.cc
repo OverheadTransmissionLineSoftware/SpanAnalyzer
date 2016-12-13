@@ -60,6 +60,15 @@ void PlotPane::Update(wxObject* hint) {
   if (hint_update == nullptr) {
     UpdatePlotRenderers();
     RenderPlot(dc_buf);
+  } else if (hint_update->type() == HintType::kAnalysisFilterGroupEdit) {
+    UpdatePlotRenderers();
+    RenderPlot(dc_buf);
+  } else if (hint_update->type() == HintType::kAnalysisFilterGroupSelect) {
+    UpdatePlotRenderers();
+    RenderPlot(dc_buf);
+  } else if (hint_update->type() == HintType::kAnalysisFilterSelect) {
+    UpdatePlotRenderers();
+    RenderPlot(dc_buf);
   } else if (hint_update->type() == HintType::kCablesEdit) {
     UpdatePlotRenderers();
     RenderPlot(dc_buf);
@@ -70,12 +79,6 @@ void PlotPane::Update(wxObject* hint) {
     UpdatePlotRenderers();
     RenderPlot(dc_buf);
   } else if (hint_update->type() == HintType::kWeathercasesEdit) {
-    UpdatePlotRenderers();
-    RenderPlot(dc_buf);
-  } else if (hint_update->type() == HintType::kWeathercaseSelect) {
-    UpdatePlotRenderers();
-    RenderPlot(dc_buf);
-  } else if (hint_update->type() == HintType::kWeathercasesSelect) {
     UpdatePlotRenderers();
     RenderPlot(dc_buf);
   }
@@ -193,35 +196,35 @@ void PlotPane::RenderPlot(wxDC& dc) {
 void PlotPane::UpdatePlotRenderers() {
   // gets view settings
   SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
-  const WeatherLoadCaseGroup* group_weathercases = view->group_weathercases();
-  const CableConditionType& condition = view->condition();
-  const int index_weathercase = view->index_weathercase();
 
-  if (group_weathercases == nullptr) {
+  // gets filter group
+  const AnalysisFilterGroup* group_filters = view->group_filters();
+  if (group_filters == nullptr) {
     dataset_catenary_ = LineDataSet2d();
     plot_.ClearRenderers();
     return;
   }
 
-  if (index_weathercase < 0) {
+  // gets analysis result filter
+  const AnalysisFilter* filter = view->AnalysisFilterActive();
+  if (filter == nullptr) {
     dataset_catenary_ = LineDataSet2d();
     plot_.ClearRenderers();
     return;
   }
 
-  // gets filtered results from doc
+  // gets weathercase index
+  const int index = view->IndexWeathercase(*filter);
+
+  // gets filtered result from doc
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
-  const std::list<SagTensionAnalysisResult>* results =
-      doc->ResultsFiltered(*group_weathercases, condition);
-  if (results == nullptr) {
+  const SagTensionAnalysisResult* result = doc->Result(index,
+                                                       filter->condition);
+  if (result == nullptr) {
     dataset_catenary_ = LineDataSet2d();
     plot_.ClearRenderers();
     return;
   }
-
-  // gets the result from the list
-  const SagTensionAnalysisResult& result =
-      *(std::next(results->cbegin(), index_weathercase));
 
   // gets span from document
   const Span* span = doc->SpanAnalysis();
@@ -229,8 +232,8 @@ void PlotPane::UpdatePlotRenderers() {
   // creates a catenary with the result parameters
   Catenary3d catenary;
   catenary.set_spacing_endpoints(span->spacing_catenary);
-  catenary.set_tension_horizontal(result.tension_horizontal);
-  catenary.set_weight_unit(result.weight_unit);
+  catenary.set_tension_horizontal(result->tension_horizontal);
+  catenary.set_weight_unit(result->weight_unit);
 
   /// \todo remove/minimize copying for faster redraws
 

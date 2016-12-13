@@ -53,7 +53,7 @@ class CableConstraintXmlHandler : public XmlHandler {
   ///   The filepath that the xml node was loaded from. This is for logging
   ///   purposes only and can be left blank.
   /// \param[in] weathercases
-  ///   A vector of weathercases that is matched against a weathercase
+  ///   A list of weathercases that is matched against a weathercase
   ///   description. If found, a pointer will be set to a matching
   ///   weathercase.
   /// \param[out] constraint
@@ -65,7 +65,7 @@ class CableConstraintXmlHandler : public XmlHandler {
   /// the property is recognized, it is set to an invalid state.
   static int ParseNode(const wxXmlNode* root,
                        const std::string& filepath,
-                       const std::list<WeatherLoadCase>* weathercases,
+                       const std::list<WeatherLoadCase*>* weathercases,
                        CableConstraint& constraint);
 
  private:
@@ -76,7 +76,7 @@ class CableConstraintXmlHandler : public XmlHandler {
   ///   The filepath that the xml node was loaded from. This is for logging
   ///   purposes only and can be left blank.
   /// \param[in] weathercases
-  ///   A vector of weathercases that is matched against a weathercase
+  ///   A list of weathercases that is matched against a weathercase
   ///   description. If found, a pointer will be set to a matching
   ///   weathercase.
   /// \param[out] constraint
@@ -88,7 +88,7 @@ class CableConstraintXmlHandler : public XmlHandler {
   /// the property is recognized, it is set to an invalid state.
   static int ParseNodeV1(const wxXmlNode* root,
                          const std::string& filepath,
-                         const std::list<WeatherLoadCase>* weathercases,
+                         const std::list<WeatherLoadCase*>* weathercases,
                          CableConstraint& constraint);
 };
 

@@ -66,7 +66,7 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   static int ParseNode(const wxXmlNode* root,
                        const std::string& filepath,
                        const std::list<CableFile*>* cablefiles,
-                       const std::list<WeatherLoadCase>* weathercases,
+                       const std::list<WeatherLoadCase*>* weathercases,
                        SpanAnalyzerDoc& doc);
 
  private:
@@ -93,7 +93,7 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   static int ParseNodeV1(const wxXmlNode* root,
                          const std::string& filepath,
                          const std::list<CableFile*>* cablefiles,
-                         const std::list<WeatherLoadCase>* weathercases,
+                         const std::list<WeatherLoadCase*>* weathercases,
                          SpanAnalyzerDoc& doc);
 };
 

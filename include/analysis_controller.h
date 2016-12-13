@@ -4,13 +4,12 @@
 #ifndef OTLS_SPANANALYZER_ANALYSISCONTROLLER_H_
 #define OTLS_SPANANALYZER_ANALYSISCONTROLLER_H_
 
-#include <list>
+#include <vector>
 
 #include "models/sagtension/line_cable_reloader.h"
 
 #include "sag_tension_analysis_results.h"
 #include "span.h"
-#include "span_analyzer_data.h"
 
 /// \par OVERVIEW
 ///
@@ -38,31 +37,44 @@ class AnalysisController {
   /// \brief Clears the sag-tension results.
   void ClearResults();
 
-  /// \brief Runs the sag-tension analysis.
-  void RunAnalysis() const;
-
-  /// \brief Gets the reference data.
-  /// \return The reference data.
-  /// If the results are not updated, this will cause an analysis to run.
-  const SpanAnalyzerData* data() const;
+  /// \brief Gets the sag-tension analyis result.
+  /// \param[in] index_weathercase
+  ///   The weathercase index.
+  /// \param[in] condition
+  ///   The condition.
+  /// \return The sag-tension analysis result. If the index did not match up to
+  ///   the results list, a nullptr is returned.
+  const SagTensionAnalysisResult* Result(
+      const int& index_weathercase,
+      const CableConditionType& condition) const;
 
   /// \brief Gets the sag-tension analysis results.
+  /// \param[in] condition
+  ///   The condition.
   /// \return The sag-tension analysis results.
-  const std::list<SagTensionAnalysisResultGroup>& results() const;
+  const std::vector<SagTensionAnalysisResult>* Results(
+      const CableConditionType& condition) const;
 
-  /// \brief Sets the reference data.
-  /// \param[in] data
-  ///   The reference data.
-  void set_data(const SpanAnalyzerData* data);
+  /// \brief Runs the sag-tension analysis.
+  void RunAnalysis() const;
 
   /// \brief Sets the activated span.
   /// \param[in] span
   ///   The span.
   void set_span(const Span* span);
 
+  /// \brief Sets the weathercases.
+  /// \param[in] weathercases
+  ///   The reference data.
+  void set_weathercases(const std::list<WeatherLoadCase*>* weathercases);
+
   /// \brief Gets the span.
   /// \return The span. If no span is set, a nullptr is returned.
   const Span* span() const;
+
+  /// \brief Gets the weathercases.
+  /// \return The weathercases.
+  const std::list<WeatherLoadCase*>* weathercases() const;
 
  private:
   /// \brief Analyzes a weathercase.
@@ -74,26 +86,30 @@ class AnalysisController {
   SagTensionAnalysisResult Analyze(const WeatherLoadCase& weathercase,
                                    const CableConditionType& condition) const;
 
-  /// \brief Analyzes a weathercase group.
-  /// Results are appended for all weathercase and condition combinations.
-  void AnalyzeWeatherCaseGroup(const WeatherLoadCaseGroup& group) const;
-
-  /// \var data_
-  ///   The reference data.
-  const SpanAnalyzerData* data_;
-
   /// \var reloader_
   ///   The line cable reloader. This solves for the sag-tension results. When
   ///   not running an analysis, this is set to an invalid state.
   mutable LineCableReloader reloader_;
 
-  /// \var results_
-  ///   The sag-tension analysis results.
-  mutable std::list<SagTensionAnalysisResultGroup> results_;
+  /// \var results_creep_
+  ///   The analysis results for the creep condition.
+  mutable std::vector<SagTensionAnalysisResult> results_creep_;
+
+  /// \var results_initial_
+  ///   The analysis results for the initial condition.
+  mutable std::vector<SagTensionAnalysisResult> results_initial_;
+
+  /// \var results_load_
+  ///   The analysis results for the load condition.
+  mutable std::vector<SagTensionAnalysisResult> results_load_;
 
   /// \var span_
   ///   The span being analyzed.
   const Span* span_;
+
+  /// \var weathercases_
+  ///   The weathercases to be analyzed.
+  const std::list<WeatherLoadCase*>* weathercases_;
 };
 
 #endif  // OTLS_SPANANALYZER_ANALYSISCONTROLLER_H_

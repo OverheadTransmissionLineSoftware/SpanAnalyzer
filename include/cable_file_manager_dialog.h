@@ -103,14 +103,10 @@ class CableFileManagerDialog : public wxDialog {
   ///   The event.
   void OnSpinButtonUp(wxSpinEvent& event);
 
-  /// \var index_selected_
-  ///   The index of the selected item in the listctrl.
-  long index_selected_;
-
   /// \var cablefiles_
   ///   The master list of cable files allocated by the application. This list
   ///   includes the cable files that are in the original and modified lists.
-  ///   When exiting this class, any extra cable files will be deallocated.
+  ///   When exiting this dialog, any extra cable files will be deallocated.
   std::list<CableFile*>* cablefiles_;
 
   /// \var cablefiles_modified_
@@ -127,6 +123,10 @@ class CableFileManagerDialog : public wxDialog {
   /// \var listctrl_
   ///   The listctrl that displays the cables.
   wxListCtrl* listctrl_;
+
+  /// \var index_selected_
+  ///   The index of the selected item in the listctrl.
+  long index_selected_;
 
   /// \var units_
   ///   The unit system.

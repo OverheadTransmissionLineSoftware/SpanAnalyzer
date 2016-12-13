@@ -86,6 +86,8 @@ class FileHandler {
   ///   The cable.
   /// \param[in] units
   ///   The current unit system, which will be labeled in the file.
+  /// This function will create a copy of the cable before converting the
+  /// unit style so the cable will not be modified.
   static void SaveCable(const std::string& filepath, const Cable& cable,
                         const units::UnitSystem& units);
 

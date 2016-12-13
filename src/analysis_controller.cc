@@ -6,8 +6,8 @@
 #include "wx/wx.h"
 
 AnalysisController::AnalysisController() {
-  data_ = nullptr;
   span_ = nullptr;
+  weathercases_ = nullptr;
 
   reloader_.set_length_unloaded_unstretched_adjustment(-999999);
   reloader_.set_line_cable(nullptr);
@@ -18,13 +18,50 @@ AnalysisController::~AnalysisController() {
 }
 
 void AnalysisController::ClearResults() {
-  results_.clear();
+  results_creep_.clear();
+  results_initial_.clear();
+  results_load_.clear();
+}
+
+const SagTensionAnalysisResult* AnalysisController::Result(
+    const int& index_weathercase,
+    const CableConditionType& condition) const {
+  // checks index
+  const unsigned int kSizeResults = results_creep_.size();
+  if ((index_weathercase < 0) || (kSizeResults < index_weathercase)) {
+    return nullptr;
+  }
+
+  if (condition == CableConditionType::kCreep) {
+    return &results_creep_.at(index_weathercase);
+  } else if (condition == CableConditionType::kInitial) {
+    return &results_initial_.at(index_weathercase);
+  } else if (condition == CableConditionType::kLoad) {
+    return &results_load_.at(index_weathercase);
+  } else {
+    return nullptr;
+  }
+}
+
+const std::vector<SagTensionAnalysisResult>* AnalysisController::Results(
+    const CableConditionType& condition) const {
+  if (condition == CableConditionType::kCreep) {
+    return &results_creep_;;
+  } else if (condition == CableConditionType::kInitial) {
+    return &results_initial_;
+  } else if (condition == CableConditionType::kLoad) {
+    return &results_load_;
+  } else {
+    return nullptr;
+  }
 }
 
 /// \todo add a log message in here for the analysis time
 void AnalysisController::RunAnalysis() const {
   // clears cached results
-  results_.clear();
+  results_creep_.clear();
+  results_initial_.clear();
+  results_load_.clear();
 
   // checks if span has been selected
   if (span_ == nullptr) {
@@ -53,11 +90,24 @@ void AnalysisController::RunAnalysis() const {
   reloader_.set_line_cable(&span_->linecable);
   reloader_.set_length_unloaded_unstretched_adjustment(0);
 
-  // runs analysis for each weathercase group
-  const std::list<WeatherLoadCaseGroup>& groups = data_->groups_weathercase;
-  for (auto iter = groups.cbegin(); iter != groups.cend(); iter++) {
-    const WeatherLoadCaseGroup& group = *iter;
-    AnalyzeWeatherCaseGroup(group);
+  // runs analysis for each weathercase
+  for (auto iter = weathercases_->cbegin(); iter != weathercases_->cend();
+       iter++) {
+    const WeatherLoadCase* weathercase = *iter;
+
+    SagTensionAnalysisResult result;
+
+    // appends result for creep condition
+    result = Analyze(*weathercase, CableConditionType::kCreep);
+    results_creep_.push_back(result);
+
+    // appends a result for initial condition
+    result = Analyze(*weathercase, CableConditionType::kInitial);
+    results_initial_.push_back(result);
+
+    // appends a result for load condition
+    result = Analyze(*weathercase, CableConditionType::kLoad);
+    results_load_.push_back(result);
   }
 
   // un-inits reloader
@@ -65,25 +115,21 @@ void AnalysisController::RunAnalysis() const {
   reloader_.set_length_unloaded_unstretched_adjustment(0);
 }
 
-const SpanAnalyzerData* AnalysisController::data() const {
-  return data_;
-}
-
-const std::list<SagTensionAnalysisResultGroup>& AnalysisController::results()
-    const {
-  return results_;
-}
-
-void AnalysisController::set_data(const SpanAnalyzerData* data) {
-  data_ = data;
-}
-
 void AnalysisController::set_span(const Span* span) {
   span_ = span;
 }
 
+void AnalysisController::set_weathercases(
+    const std::list<WeatherLoadCase*>* weathercases) {
+  weathercases_ = weathercases;
+}
+
 const Span* AnalysisController::span() const {
   return span_;
+}
+
+const std::list<WeatherLoadCase*>* AnalysisController::weathercases() const {
+  return weathercases_;
 }
 
 SagTensionAnalysisResult AnalysisController::Analyze(
@@ -128,35 +174,8 @@ SagTensionAnalysisResult AnalysisController::Analyze(
       CableElongationModel::ComponentType::kShell);
   result.weight_unit = catenary.weight_unit();
 
+  result.condition = condition;
+  result.weathercase = &weathercase;
+
   return result;
-}
-
-void AnalysisController::AnalyzeWeatherCaseGroup(
-    const WeatherLoadCaseGroup& group) const {
-  // creates a new analysis result group
-  SagTensionAnalysisResultGroup group_results;
-  group_results.group_weathercases = &group;
-
-  // runs analysis for each weathercase
-  const std::list<WeatherLoadCase>* weathercases = &group.weathercases;
-  for (auto iter = weathercases->cbegin(); iter != weathercases->cend();
-       iter++) {
-    const WeatherLoadCase& weathercase = *iter;
-    SagTensionAnalysisResult result;
-
-    // appends result for creep condition
-    result = Analyze(weathercase, CableConditionType::kCreep);
-    group_results.results_creep.push_back(result);
-
-    // appends a result for initial condition
-    result = Analyze(weathercase, CableConditionType::kInitial);
-    group_results.results_initial.push_back(result);
-
-    // appends a result for load condition
-    result = Analyze(weathercase, CableConditionType::kLoad);
-    group_results.results_load.push_back(result);
-  }
-
-  // adds to cached result groups
-  results_.push_back(group_results);
 }

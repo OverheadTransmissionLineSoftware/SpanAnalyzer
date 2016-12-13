@@ -13,15 +13,49 @@ SpanAnalyzerView::SpanAnalyzerView() {
 SpanAnalyzerView::~SpanAnalyzerView() {
 }
 
+const AnalysisFilter* SpanAnalyzerView::AnalysisFilterActive() const {
+  // checks for valid analysis filter group
+  if (group_filters_ == nullptr) {
+    return nullptr;
+  }
+
+  // checks for valid index
+  if ((index_filter_ < 0) || (group_filters_->filters.size() < index_filter_)) {
+    return nullptr;
+  } else {
+    auto iter = group_filters_->filters.cbegin();
+    std::advance(iter, index_filter_);
+    return &(*iter);
+  }
+}
+
+int SpanAnalyzerView::IndexWeathercase(const AnalysisFilter& filter) const {
+  const std::list<WeatherLoadCase*>* weathercases =
+      &wxGetApp().data()->weathercases;
+
+  int index = 0;
+  for (auto iter = weathercases->cbegin(); iter != weathercases->cend();
+       iter++) {
+    const WeatherLoadCase* weathercase = *iter;
+    if (filter.weathercase == weathercase) {
+      return index;
+    } else {
+      index++;
+    }
+  }
+
+  // match wasn't found
+  return -1;
+}
+
 bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   if (!wxView::OnCreate(doc, flags)) {
     return false;
   }
 
   // initializes cached references
-  group_weathercases_ = nullptr;
-  condition_ = CableConditionType::kInitial;
-  index_weathercase_ = -1;
+  group_filters_ = nullptr;
+  index_filter_ = -1;
 
   // gets main application frame
   wxFrame* frame = ((wxFrame *)wxGetApp().GetTopWindow());
@@ -114,16 +148,12 @@ void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
   pane_results_->Update(hint);
 }
 
-const CableConditionType& SpanAnalyzerView::condition() const {
-  return condition_;
+const AnalysisFilterGroup* SpanAnalyzerView::group_filters() const {
+  return group_filters_;
 }
 
-const WeatherLoadCaseGroup* SpanAnalyzerView::group_weathercases() const {
-  return group_weathercases_;
-}
-
-const int SpanAnalyzerView::index_weathercase() const {
-  return index_weathercase_;
+const int SpanAnalyzerView::index_filter() const {
+  return index_filter_;
 }
 
 EditPane* SpanAnalyzerView::pane_edit() {
@@ -134,15 +164,10 @@ ResultsPane* SpanAnalyzerView::pane_results() {
   return pane_results_;
 }
 
-void SpanAnalyzerView::set_condition(const CableConditionType& condition) {
-  condition_ = condition;
+void SpanAnalyzerView::set_group_filters(const AnalysisFilterGroup* group) {
+  group_filters_ = group;
 }
 
-void SpanAnalyzerView::set_group_weathercase(
-    const WeatherLoadCaseGroup* group) {
-  group_weathercases_ = group;
-}
-
-void SpanAnalyzerView::set_index_weathercase(const int& index_weathercase) {
-  index_weathercase_ = index_weathercase;
+void SpanAnalyzerView::set_index_filter(const int& index_filter) {
+  index_filter_ = index_filter;
 }

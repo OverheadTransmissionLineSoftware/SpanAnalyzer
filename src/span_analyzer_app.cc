@@ -65,6 +65,12 @@ int SpanAnalyzerApp::OnExit() {
     delete cablefile;
   }
 
+  for (auto iter = data_.weathercases.begin(); iter != data_.weathercases.end();
+       iter++) {
+    const WeatherLoadCase* weathercase = *iter;
+    delete weathercase;
+  }
+
   delete manager_doc_;
 
   // continues exit process
@@ -96,6 +102,16 @@ bool SpanAnalyzerApp::OnInit() {
   wxFileName path(directory_, "", "");
   path.AppendDir("res");
   path.SetExt("xrc");
+
+  path.SetName("analysis_filter_editor_dialog");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
+    return false;
+  };
+
+  path.SetName("analysis_filter_manager_dialog");
+  if (!wxXmlResource::Get()->LoadFile(path)) {
+    return false;
+  };
 
   path.SetName("cable_editor_dialog");
   if (!wxXmlResource::Get()->LoadFile(path)) {
@@ -191,23 +207,6 @@ bool SpanAnalyzerApp::OnInit() {
   // loads application data file
   // filehandler handles all logging
   FileHandler::LoadAppData(config_.filepath_data, config_.units, data_);
-
-  // adds a default weathercase group if needed
-  bool has_default = false;
-  for (auto iter = data_.groups_weathercase.cbegin();
-       iter != data_.groups_weathercase.cend(); iter++) {
-    const WeatherLoadCaseGroup& group = *iter;
-    if (group.name == "Default") {
-      has_default = true;
-      break;
-    }
-  }
-
-  if (has_default == false) {
-    WeatherLoadCaseGroup group;
-    group.name = "Default";
-    data_.groups_weathercase.push_front(group);
-  }
 
   // loads a document if defined in command line
   if (filepath_start_ != wxEmptyString) {

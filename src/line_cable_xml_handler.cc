@@ -89,7 +89,7 @@ int LineCableXmlHandler::ParseNode(
     const wxXmlNode* root,
     const std::string& filepath,
     const std::list<const Cable*>* cables,
-    const std::list<WeatherLoadCase>* weathercases,
+    const std::list<WeatherLoadCase*>* weathercases,
     LineCable& linecable) {
   // checks for valid root node
   if (root->GetName() != "line_cable") {
@@ -114,7 +114,7 @@ int LineCableXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
     const std::string& filepath,
     const std::list<const Cable*>* cables,
-    const std::list<WeatherLoadCase>* weathercases,
+    const std::list<WeatherLoadCase*>* weathercases,
     LineCable& linecable) {
 
   wxString message;
@@ -168,9 +168,9 @@ int LineCableXmlHandler::ParseNodeV1(
         linecable.weathercase_stretch_creep = nullptr;
         for (auto iter = weathercases->cbegin(); iter != weathercases->cend();
              iter++) {
-          const WeatherLoadCase& weathercase = *iter;
-          if (content == weathercase.description) {
-            linecable.weathercase_stretch_creep = &weathercase;
+          const WeatherLoadCase* weathercase = *iter;
+          if (content == weathercase->description) {
+            linecable.weathercase_stretch_creep = weathercase;
             break;
           }
         }
@@ -187,9 +187,9 @@ int LineCableXmlHandler::ParseNodeV1(
         linecable.weathercase_stretch_load = nullptr;
         for (auto iter = weathercases->cbegin(); iter != weathercases->cend();
              iter++) {
-          const WeatherLoadCase& weathercase = *iter;
-          if (content == weathercase.description) {
-            linecable.weathercase_stretch_load = &weathercase;
+          const WeatherLoadCase* weathercase = *iter;
+          if (content == weathercase->description) {
+            linecable.weathercase_stretch_load = weathercase;
             break;
           }
         }

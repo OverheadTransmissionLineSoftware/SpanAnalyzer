@@ -46,7 +46,7 @@ class SpanEditorDialog : public wxDialog {
   ///   The span to be modified with the dialog.
   SpanEditorDialog(wxWindow* parent,
                    const std::list<CableFile*>* cablefiles,
-                   const std::list<WeatherLoadCase>* weathercases,
+                   const std::list<WeatherLoadCase*>* weathercases,
                    const units::UnitSystem& units,
                    Span* span);
 
@@ -125,7 +125,7 @@ class SpanEditorDialog : public wxDialog {
 
   /// \var weathercases_
   ///   The weathercases.
-  const std::list<WeatherLoadCase>* weathercases_;
+  const std::list<WeatherLoadCase*>* weathercases_;
 
   DECLARE_EVENT_TABLE()
 };

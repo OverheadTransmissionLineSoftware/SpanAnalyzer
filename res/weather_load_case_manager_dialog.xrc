@@ -20,68 +20,6 @@
               <border>0</border>
               <object class="wxStaticBoxSizer">
                 <orient>wxVERTICAL</orient>
-                <label>Sets</label>
-                <object class="sizeritem">
-                  <option>0</option>
-                  <flag></flag>
-                  <border>0</border>
-                  <object class="wxBoxSizer">
-                    <orient>wxHORIZONTAL</orient>
-                    <object class="sizeritem">
-                      <option>0</option>
-                      <flag>wxLEFT</flag>
-                      <border>5</border>
-                      <object class="wxListBox" name="listbox_groups">
-                        <style>wxLB_SINGLE</style>
-                        <size>250,400</size>
-                        <value></value>
-                        <maxlength>0</maxlength>
-                      </object>
-                    </object>
-                    <object class="sizeritem">
-                      <option>0</option>
-                      <flag>wxALIGN_CENTER</flag>
-                      <border>0</border>
-                      <object class="wxSpinButton" name="spinbutton_groups">
-                        <style>wxSP_VERTICAL</style>
-                      </object>
-                    </object>
-                  </object>
-                </object>
-                <object class ="sizeritem">
-                  <option>0</option>
-                  <flag>wxALIGN_CENTER</flag>
-                  <border>0</border>
-                  <object class="wxBoxSizer">
-                    <orient>wxHORIZONTAL</orient>
-                    <object class="sizeritem">
-                      <option>0</option>
-                      <flag>wxALL</flag>
-                      <border>5</border>
-                      <object class="wxButton" name="button_groups_add">
-                        <label>Add</label>
-                        <default>0</default>
-                      </object>
-                    </object>
-                    <object class="sizeritem">
-                      <option>0</option>
-                      <flag>wxALL</flag>
-                      <border>5</border>
-                      <object class="wxButton" name="button_groups_delete">
-                        <label>Delete</label>
-                        <default>0</default>
-                      </object>
-                    </object>
-                  </object>
-                </object>
-              </object>
-            </object>
-            <object class ="sizeritem">
-              <option>0</option>
-              <flag></flag>
-              <border>0</border>
-              <object class="wxStaticBoxSizer">
-                <orient>wxVERTICAL</orient>
                 <label>Weathercases</label>
                 <object class="sizeritem">
                   <option>0</option>

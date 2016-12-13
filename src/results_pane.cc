@@ -12,9 +12,8 @@
 #include "span_analyzer_view.h"
 
 BEGIN_EVENT_TABLE(ResultsPane, wxPanel)
-  EVT_CHOICE(XRCID("choice_condition"), ResultsPane::OnChoiceCondition)
   EVT_CHOICE(XRCID("choice_report"), ResultsPane::OnChoiceReport)
-  EVT_CHOICE(XRCID("choice_weathercase_group"), ResultsPane::OnChoiceWeathercaseGroup)
+  EVT_CHOICE(XRCID("choice_filter_group"), ResultsPane::OnChoiceFilterGroup)
   EVT_LIST_ITEM_SELECTED(wxID_ANY, ResultsPane::OnListCtrlSelect)
 END_EVENT_TABLE()
 
@@ -35,16 +34,8 @@ ResultsPane::ResultsPane(wxWindow* parent, wxView* view) {
   choice->Append("Catenary - Endpoints");
   choice->SetSelection(0);
 
-  // initializes weathercase set choice
-  UpdateWeathercaseGroupChoice();
-  choice = XRCCTRL(*this, "choice_weathercase_group", wxChoice);
-
-  // intializes condition choice
-  choice = XRCCTRL(*this, "choice_condition", wxChoice);
-  choice->Append("Initial");
-  choice->Append("Load");
-  choice->Append("Creep");
-  choice->SetSelection(0);
+  // initializes filter group choice
+  UpdateFilterGroupChoice();
 
   // creates a report table
   table_ = new ReportTable(this);
@@ -64,6 +55,15 @@ void ResultsPane::Update(wxObject* hint) {
   UpdateHint* hint_update = (UpdateHint*)hint;
   if (hint_update == nullptr) {
     // do nothing, this is only passed when pane is created
+  } else if (hint_update->type() == HintType::kAnalysisFilterGroupEdit) {
+    UpdateFilterGroupChoice();
+    UpdateReportData();
+    table_->Refresh();
+  } else if (hint_update->type() == HintType::kAnalysisFilterGroupSelect) {
+    UpdateReportData();
+    table_->Refresh();
+  } else if (hint_update->type() == HintType::kAnalysisFilterSelect) {
+    // do nothing
   } else if (hint_update->type() == HintType::kCablesEdit) {
     UpdateReportData();
     table_->Refresh();
@@ -74,12 +74,6 @@ void ResultsPane::Update(wxObject* hint) {
     UpdateReportData();
     table_->Refresh();
   } else if (hint_update->type() == HintType::kWeathercasesEdit) {
-    UpdateWeathercaseGroupChoice();
-    UpdateReportData();
-    table_->Refresh();
-  } else if (hint_update->type() == HintType::kWeathercaseSelect) {
-    // do nothing
-  } else if (hint_update->type() == HintType::kWeathercasesSelect) {
     UpdateReportData();
     table_->Refresh();
   }
@@ -87,26 +81,18 @@ void ResultsPane::Update(wxObject* hint) {
   table_->set_formatting_column(0, 200, wxLIST_FORMAT_LEFT);
 }
 
-void ResultsPane::OnChoiceCondition(wxCommandEvent& event) {
+void ResultsPane::OnChoiceFilterGroup(wxCommandEvent& event) {
   // not creating busy cursor to avoid cursor flicker
 
-  // gets choice selection and updates view cache
-  wxChoice* choice = XRCCTRL(*this, "choice_condition", wxChoice);
-  wxString str = choice->GetStringSelection();
+  // gets weathercase set from application data
+  wxChoice* choice = XRCCTRL(*this, "choice_filter_group", wxChoice);
+  wxString str_selection = choice->GetStringSelection();
 
-  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
-  if (str == "Initial") {
-    view->set_condition(CableConditionType::kInitial);
-  } else if (str == "Load") {
-    view->set_condition(CableConditionType::kLoad);
-  } else if (str == "Creep") {
-    view->set_condition(CableConditionType::kCreep);
-  } else {
-    return;
-  }
+  // updates the selected/cached weathercases
+  UpdateFilterGroupSelected();
 
   // updates views
-  UpdateHint hint(HintType::kWeathercasesSelect);
+  UpdateHint hint(HintType::kAnalysisFilterGroupSelect);
   view_->GetDocument()->UpdateAllViews(nullptr, &hint);
 }
 
@@ -137,21 +123,6 @@ void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
   table_->set_formatting_column(0, 200, wxLIST_FORMAT_LEFT);
 }
 
-void ResultsPane::OnChoiceWeathercaseGroup(wxCommandEvent& event) {
-  // not creating busy cursor to avoid cursor flicker
-
-  // gets weathercase set from application data
-  wxChoice* choice = XRCCTRL(*this, "choice_weathercase_group", wxChoice);
-  wxString str_selection = choice->GetStringSelection();
-
-  // updates the selected/cached weathercases
-  UpdateWeathercaseGroupSelected();
-
-  // updates views
-  UpdateHint hint(HintType::kWeathercasesSelect);
-  view_->GetDocument()->UpdateAllViews(nullptr, &hint);
-}
-
 void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
   // not creating busy cursor to avoid cursor flicker
 
@@ -166,51 +137,121 @@ void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
   // due to sorting, so the index needs to be converted to match the correct
   // analysis result index
   SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
-  view->set_index_weathercase(table_->IndexReportRow(index_selected));
+  view->set_index_filter(table_->IndexReportRow(index_selected));
 
   // updates views
-  UpdateHint hint(HintType::kWeathercaseSelect);
+  UpdateHint hint(HintType::kAnalysisFilterSelect);
   view_->GetDocument()->UpdateAllViews(nullptr, &hint);
+}
+
+void ResultsPane::UpdateFilterGroupChoice() {
+  // gets choice control
+  wxChoice* choice = XRCCTRL(*this, "choice_filter_group", wxChoice);
+
+  // saves current choice string
+  std::string str_choice = choice->GetStringSelection();
+
+  // clears choice control
+  choice->Clear();
+
+  // appends filter groups stored in the application data
+  const std::list<AnalysisFilterGroup>& groups =
+      wxGetApp().data()->groups_filters;
+  for (auto iter = groups.cbegin(); iter != groups.cend(); iter ++) {
+    const AnalysisFilterGroup& group = *iter;
+    choice->Append(group.name);
+  }
+
+  // attempts to find the old filter group
+  choice->SetSelection(choice->FindString(str_choice));
+
+  // updates the selected/cached filter
+  UpdateFilterGroupSelected();
+}
+
+void ResultsPane::UpdateFilterGroupSelected() {
+  // initializes filters cached in view
+  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
+  view->set_group_filters(nullptr);
+
+  // searches the choice control to see if a filter group is selected
+  wxChoice* choice = XRCCTRL(*this, "choice_filter_group", wxChoice);
+  std::string str_selection = choice->GetStringSelection();
+
+  // gets filter groups from app data
+  const std::list<AnalysisFilterGroup>& groups_filter =
+       wxGetApp().data()->groups_filters;
+  const AnalysisFilterGroup* group = nullptr;
+  for (auto iter = groups_filter.cbegin(); iter != groups_filter.cend();
+       iter++) {
+    const AnalysisFilterGroup& group_temp = *iter;
+    if (group_temp.name == str_selection) {
+      group = &group_temp;
+      break;
+    }
+  }
+
+  // updates view with filter group
+  view->set_group_filters(group);
+
+  if (group == nullptr) {
+    return;
+  }
+
+  // updates the view if the index if it is not valid anymore
+  if ((int)group->filters.size() <= view->index_filter()) {
+    view->set_index_filter(-1);
+  }
 }
 
 void ResultsPane::UpdateReportData() {
   // gets view display information
   SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
-  const WeatherLoadCaseGroup* group_weathercases = view->group_weathercases();
-  const CableConditionType& condition = view->condition();
+  const AnalysisFilterGroup* group_filters = view->group_filters();
 
-  // gets weathercases
-  const std::list<WeatherLoadCase>* weathercases = nullptr;
-  if (group_weathercases != nullptr) {
-    weathercases = &group_weathercases->weathercases;
+  // gets filters
+  const std::list<AnalysisFilter>* filters = nullptr;
+  if (group_filters != nullptr) {
+    filters = &group_filters->filters;
   }
 
-  // gets results from document
+  // creates a list of results depending on filter
   const SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
-  const std::list<SagTensionAnalysisResult>* results =
-      doc->ResultsFiltered(*group_weathercases, condition);
+  std::list<const SagTensionAnalysisResult*> results;
+
+  if (filters != nullptr) {
+    for (auto iter = filters->cbegin(); iter != filters->cend(); iter++) {
+      const AnalysisFilter& filter = *iter;
+      const int index = view->IndexWeathercase(filter);
+      const SagTensionAnalysisResult* result = doc->Result(index,
+                                                           filter.condition);
+      if (result != nullptr) {
+        results.push_back(result);
+      }
+    }
+  }
 
   // selects based on report type
   if (type_report_ == ReportType::kCatenary) {
-    UpdateReportDataCatenary(weathercases, results);
+    UpdateReportDataCatenary(&results);
   } else if (type_report_ == ReportType::kCatenaryEndpoints) {
-    UpdateReportDataCatenaryEndpoints(weathercases, results);
+    UpdateReportDataCatenaryEndpoints(&results);
   } else if (type_report_ == ReportType::kSagTension) {
-    UpdateReportDataSagTension(weathercases, results);
+    UpdateReportDataSagTension(&results);
   } else if (type_report_ == ReportType::kTensionDistribution) {
-    UpdateReportDataTensionDistribution(weathercases, results);
+    UpdateReportDataTensionDistribution(&results);
   }
 }
 
 void ResultsPane::UpdateReportDataCatenary(
-    const std::list<WeatherLoadCase>* weathercases,
-    const std::list<SagTensionAnalysisResult>* results) {
+    const std::list<const SagTensionAnalysisResult*>* results) {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
 
   // fills column headers
   data_.headers.push_back("Weathercase");
+  data_.headers.push_back("Condition");
   data_.headers.push_back("H");
   data_.headers.push_back("w");
   data_.headers.push_back("H/w");
@@ -219,13 +260,8 @@ void ResultsPane::UpdateReportDataCatenary(
   data_.headers.push_back("Ls");
   data_.headers.push_back("Swing");
 
-  // checks if weathercases are specified
-  if (weathercases == nullptr) {
-    return;
-  }
-
   // checks if results has any data
-  if (results == nullptr) {
+  if (results->empty() == true) {
     return;
   }
 
@@ -235,30 +271,38 @@ void ResultsPane::UpdateReportDataCatenary(
 
   // fills each row with data
   for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
+    const SagTensionAnalysisResult* result = *iter;
+
     // creates a report row, which will be filled out by each result
     ReportRow row;
 
-    // gets the weathercase description
-    const int index = std::distance(results->cbegin(), iter);
-    const WeatherLoadCase& weathercase = *std::next(weathercases->cbegin(),
-                                                    index);
-    const std::string& description = weathercase.description;
+    // gets the weathercase string
+    const std::string& str_weathercase = result->weathercase->description;
 
-    // gets the sag-tension result
-    const SagTensionAnalysisResult& result = *iter;
+    // gets condition string
+    std::string str_condition;
+    if (result->condition == CableConditionType::kCreep) {
+      str_condition = "Creep";
+    } else if (result->condition == CableConditionType::kInitial) {
+      str_condition = "Initial";
+    } else if (result->condition == CableConditionType::kLoad) {
+      str_condition = "Load";
+    }
 
     // creates a catenary to calculate results
     Catenary3d catenary;
     catenary.set_spacing_endpoints(span->spacing_catenary);
-    catenary.set_tension_horizontal(result.tension_horizontal);
-    catenary.set_weight_unit(result.weight_unit);
+    catenary.set_tension_horizontal(result->tension_horizontal);
+    catenary.set_weight_unit(result->weight_unit);
 
     double value;
     std::string str;
 
     // adds weathercase
-    str = description;
-    row.values.push_back(str);
+    row.values.push_back(str_weathercase);
+
+    // adds condition
+    row.values.push_back(str_condition);
 
     // adds H
     value = catenary.tension_horizontal();
@@ -301,14 +345,14 @@ void ResultsPane::UpdateReportDataCatenary(
 }
 
 void ResultsPane::UpdateReportDataCatenaryEndpoints(
-    const std::list<WeatherLoadCase>* weathercases,
-    const std::list<SagTensionAnalysisResult>* results) {
+    const std::list<const SagTensionAnalysisResult*>* results) {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
 
   // fills column headers
   data_.headers.push_back("Weathercase");
+  data_.headers.push_back("Condition");
   data_.headers.push_back("Ts");
   data_.headers.push_back("Tv");
   data_.headers.push_back("A");
@@ -317,13 +361,8 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
   data_.headers.push_back("Tv");
   data_.headers.push_back("A");
 
-  // checks if weathercases are specified
-  if (weathercases == nullptr) {
-    return;
-  }
-
   // checks if results has any data
-  if (results == nullptr) {
+  if (results->empty() == true) {
     return;
   }
 
@@ -333,30 +372,38 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
 
   // fills each row with data
   for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
+    const SagTensionAnalysisResult* result = *iter;
+
     // creates a report row, which will be filled out by each result
     ReportRow row;
 
-    // gets the weathercase description
-    const int index = std::distance(results->cbegin(), iter);
-    const WeatherLoadCase& weathercase = *std::next(weathercases->cbegin(),
-                                                    index);
-    const std::string& description = weathercase.description;
+    // gets the weathercase string
+    const std::string& str_weathercase = result->weathercase->description;
 
-    // gets the sag-tension result
-    const SagTensionAnalysisResult& result = *iter;
+    // gets condition string
+    std::string str_condition;
+    if (result->condition == CableConditionType::kCreep) {
+      str_condition = "Creep";
+    } else if (result->condition == CableConditionType::kInitial) {
+      str_condition = "Initial";
+    } else if (result->condition == CableConditionType::kLoad) {
+      str_condition = "Load";
+    }
 
     // creates a catenary to calculate results
     Catenary3d catenary;
     catenary.set_spacing_endpoints(span->spacing_catenary);
-    catenary.set_tension_horizontal(result.tension_horizontal);
-    catenary.set_weight_unit(result.weight_unit);
+    catenary.set_tension_horizontal(result->tension_horizontal);
+    catenary.set_weight_unit(result->weight_unit);
 
     double value;
     std::string str;
 
     // adds weathercase
-    str = description;
-    row.values.push_back(str);
+    row.values.push_back(str_weathercase);
+
+    // adds condition
+    row.values.push_back(str_condition);
 
     // adds Ts
     value = catenary.Tension(0);
@@ -397,73 +444,76 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
 }
 
 void ResultsPane::UpdateReportDataSagTension(
-    const std::list<WeatherLoadCase>* weathercases,
-    const std::list<SagTensionAnalysisResult>* results) {
+    const std::list<const SagTensionAnalysisResult*>* results) {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
 
   // fills column headers
   data_.headers.push_back("Weathercase");
+  data_.headers.push_back("Condition");
   data_.headers.push_back("Wv");
   data_.headers.push_back("Wt");
   data_.headers.push_back("Wr");
   data_.headers.push_back("H");
   data_.headers.push_back("H/w");
 
-  // checks if weathercases are specified
-  if (weathercases == nullptr) {
-    return;
-  }
-
   // checks if results has any data
-  if (results == nullptr) {
+  if (results->empty() == true) {
     return;
   }
 
   // fills each row with data
   for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
+    const SagTensionAnalysisResult* result = *iter;
+
     // creates a report row, which will be filled out by each result
     ReportRow row;
 
-    // gets the weathercase description
-    const int index = std::distance(results->cbegin(), iter);
-    const WeatherLoadCase& weathercase = *std::next(weathercases->cbegin(),
-                                                    index);
-    const std::string& description = weathercase.description;
+    // gets the weathercase string
+    const std::string& str_weathercase = result->weathercase->description;
 
-    // gets the sag-tension result
-    const SagTensionAnalysisResult& result = *iter;
+    // gets condition string
+    std::string str_condition;
+    if (result->condition == CableConditionType::kCreep) {
+      str_condition = "Creep";
+    } else if (result->condition == CableConditionType::kInitial) {
+      str_condition = "Initial";
+    } else if (result->condition == CableConditionType::kLoad) {
+      str_condition = "Load";
+    }
 
     double value;
     std::string str;
 
     // adds weathercase
-    str = description;
-    row.values.push_back(str);
+    row.values.push_back(str_weathercase);
+
+    // adds condition
+    row.values.push_back(str_condition);
 
     // adds Wv
-    value = result.weight_unit.z();
+    value = result->weight_unit.z();
     str = helper::DoubleToFormattedString(value, 3);
     row.values.push_back(str);
 
     // adds Wt
-    value = result.weight_unit.y();
+    value = result->weight_unit.y();
     str = helper::DoubleToFormattedString(value, 3);
     row.values.push_back(str);
 
     // adds Wr
-    value = result.weight_unit.Magnitude();
+    value = result->weight_unit.Magnitude();
     str = helper::DoubleToFormattedString(value, 3);
     row.values.push_back(str);
 
     // adds H
-    value = result.tension_horizontal;
+    value = result->tension_horizontal;
     str = helper::DoubleToFormattedString(value, 1);
     row.values.push_back(str);
 
     // adds H/w
-    value = result.tension_horizontal / result.weight_unit.Magnitude();
+    value = result->tension_horizontal / result->weight_unit.Magnitude();
     str = helper::DoubleToFormattedString(value, 1);
     row.values.push_back(str);
 
@@ -473,119 +523,62 @@ void ResultsPane::UpdateReportDataSagTension(
 }
 
 void ResultsPane::UpdateReportDataTensionDistribution(
-    const std::list<WeatherLoadCase>* weathercases,
-    const std::list<SagTensionAnalysisResult>* results) {
+    const std::list<const SagTensionAnalysisResult*>* results) {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
 
   // fills column headers
   data_.headers.push_back("Weathercase");
+  data_.headers.push_back("Condition");
   data_.headers.push_back("Hs");
   data_.headers.push_back("Hc");
 
-  // checks if weathercases are specified
-  if (weathercases == nullptr) {
-    return;
-  }
-
   // checks if results has any data
-  if (results == nullptr) {
+  if (results->empty() == true) {
     return;
   }
 
   // fills each row with data
   for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
+    const SagTensionAnalysisResult* result = *iter;
+
     // creates a report row, which will be filled out by each result
     ReportRow row;
 
-    // gets the weathercase description
-    const int index = std::distance(results->cbegin(), iter);
-    const WeatherLoadCase& weathercase = *std::next(weathercases->cbegin(),
-                                                    index);
-    const std::string& description = weathercase.description;
+    // gets the weathercase string
+    const std::string& str_weathercase = result->weathercase->description;
 
-    // gets the sag-tension result
-    const SagTensionAnalysisResult& result = *iter;
+    // gets condition string
+    std::string str_condition;
+    if (result->condition == CableConditionType::kCreep) {
+      str_condition = "Creep";
+    } else if (result->condition == CableConditionType::kInitial) {
+      str_condition = "Initial";
+    } else if (result->condition == CableConditionType::kLoad) {
+      str_condition = "Load";
+    }
 
     double value;
     std::string str;
 
     // adds weathercase
-    str = description;
-    row.values.push_back(str);
+    row.values.push_back(str_weathercase);
+
+    // adds condition
+    row.values.push_back(str_condition);
 
     // adds Hs
-    value = result.tension_horizontal_shell;
+    value = result->tension_horizontal_shell;
     str = helper::DoubleToFormattedString(value, 1);
     row.values.push_back(str);
 
     // adds Hc
-    value = result.tension_horizontal_core;
+    value = result->tension_horizontal_core;
     str = helper::DoubleToFormattedString(value, 1);
     row.values.push_back(str);
 
     // appends row to list
     data_.rows.push_back(row);
-  }
-}
-
-void ResultsPane::UpdateWeathercaseGroupChoice() {
-  // gets choice control
-  wxChoice* choice = XRCCTRL(*this, "choice_weathercase_group", wxChoice);
-
-  // saves current choice string
-  std::string str_choice = choice->GetStringSelection();
-
-  // clears choice control
-  choice->Clear();
-
-  // appends weathercase groups stored in the application data
-  const std::list<WeatherLoadCaseGroup>& groups =
-      wxGetApp().data()->groups_weathercase;
-  for (auto iter = groups.cbegin(); iter != groups.cend(); iter ++) {
-    const WeatherLoadCaseGroup& group = *iter;
-    choice->Append(group.name);
-  }
-
-  // attempts to find the old weathercase set
-  choice->SetSelection(choice->FindString(str_choice));
-
-  // updates the selected/cached weathercases
-  UpdateWeathercaseGroupSelected();
-}
-
-void ResultsPane::UpdateWeathercaseGroupSelected() {
-  // initializes weathercases cached in view
-  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
-  view->set_group_weathercase(nullptr);
-
-  // searches the choice control to see if a weathercase group is selected
-  wxChoice* choice = XRCCTRL(*this, "choice_weathercase_group", wxChoice);
-  std::string str_selection = choice->GetStringSelection();
-
-  // gets weathercases from app data
-  const std::list<WeatherLoadCaseGroup>& groups_weathercase =
-       wxGetApp().data()->groups_weathercase;
-  const WeatherLoadCaseGroup* group = nullptr;
-  for (auto iter = groups_weathercase.cbegin();
-       iter != groups_weathercase.cend(); iter++) {
-    const WeatherLoadCaseGroup& group_temp = *iter;
-    if (group_temp.name == str_selection) {
-      group = &group_temp;
-      break;
-    }
-  }
-
-  // updates view with weathercase group
-  view->set_group_weathercase(group);
-
-  if (group == nullptr) {
-    return;
-  }
-
-  // updates the view if the index if it is not valid anymore
-  if ((int)group->weathercases.size() <= view->index_weathercase()) {
-    view->set_index_weathercase(-1);
   }
 }

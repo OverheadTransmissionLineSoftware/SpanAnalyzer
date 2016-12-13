@@ -19,47 +19,46 @@ class WeatherLoadCaseManagerDialog : public wxDialog {
   WeatherLoadCaseManagerDialog(
       wxWindow* parent,
       const units::UnitSystem& units,
-      std::list<WeatherLoadCaseGroup>* groups_weathercase);
+      std::list<WeatherLoadCase*>* weathercases);
 
   /// \brief Destructor.
   ~WeatherLoadCaseManagerDialog();
 
  private:
-  /// \brief Determines if the cable is referenced.
+  /// \brief Deletes any extra weathercases.
+  /// \param[in] list_keep
+  ///   The list of weathercases to keep.
+  /// \param[in] list_master
+  ///   The master list that contains all of the weathercases.
+  /// This function will free the allocated memory as well.
+  void DeleteExtraWeathercases(const std::list<WeatherLoadCase*>* list_keep,
+                               std::list<WeatherLoadCase*>* list_master);
+
+  /// \brief Determines if the weathercase is referenced.
   /// \param[in] name
   ///   The name to check.
-  /// \return If the cable file is referenced by the document.
-  /// This function scans the document to see if the cable is referenced.
+  /// \return If the weathercase is referenced by the document.
+  /// This function scans the document to see if the weathercase is referenced.
   bool IsReferencedByDocument(const std::string& name) const;
 
-  /// \brief Determines if the cable name is unique.
+  /// \brief Determines if the weathercase name is unique.
   /// \param[in] name
   ///   The name to check.
   /// \param[in] index_ignore
-  ///   The index to skip (i.e. editing the name of an existing cable).
-  /// \return If the cable name is unique.
+  ///   The index to skip (i.e. editing the name of an existing weathercase).
+  /// \return If the weathercase is unique.
   bool IsUniqueName(const std::string& name,
                     const int& index_ignore = -1) const;
-
-  /// \brief Handles the group add button event.
-  /// \param[in] event
-  ///   The event.
-  void OnButtonGroupAdd(wxCommandEvent& event);
-
-  /// \brief Handles the group delete button event.
-  /// \param[in] event
-  ///   The event.
-  void OnButtonGroupDelete(wxCommandEvent& event);
 
   /// \brief Handles the weathercase add button event.
   /// \param[in] event
   ///   The event.
-  void OnButtonWeathercaseAdd(wxCommandEvent& event);
+  void OnButtonAdd(wxCommandEvent& event);
 
   /// \brief Handles the weathercase delete button event.
   /// \param[in] event
   ///   The event.
-  void OnButtonWeathercaseDelete(wxCommandEvent& event);
+  void OnButtonDelete(wxCommandEvent& event);
 
   /// \brief Handles the cancel button event.
   /// \param[in] event
@@ -71,61 +70,42 @@ class WeatherLoadCaseManagerDialog : public wxDialog {
   ///   The event.
   void OnClose(wxCloseEvent& event);
 
-  /// \brief Handles the group listbox double click event.
-  /// \param[in] event
-  ///   The event.
-  void OnListBoxGroupDoubleClick(wxCommandEvent& event);
-
-  /// \brief Handles the group listbox selection event.
-  /// \param[in] event
-  ///   The event.
-  void OnListBoxGroupSelect(wxCommandEvent& event);
-
   /// \brief Handles the weathercase listbox double click event.
   /// \param[in] event
   ///   The event.
-  void OnListBoxWeatherCaseDoubleClick(wxCommandEvent& event);
+  void OnListBoxDoubleClick(wxCommandEvent& event);
 
   /// \brief Handles the Ok button event.
   /// \param[in] event
   ///   The event.
   void OnOk(wxCommandEvent& event);
 
-  /// \brief Handles the group spin button down event.
-  /// \param[in] event
-  ///   The event.
-  void OnSpinButtonGroupDown(wxSpinEvent& event);
-
-  /// \brief Handles the group spin button up event.
-  /// \param[in] event
-  ///   The event.
-  void OnSpinButtonGroupUp(wxSpinEvent& event);
-
   /// \brief Handles the weathercase spin button down event.
   /// \param[in] event
   ///   The event.
-  void OnSpinButtonWeathercaseDown(wxSpinEvent& event);
+  void OnSpinButtonDown(wxSpinEvent& event);
 
   /// \brief Handles the weathercase spin button up event.
   /// \param[in] event
   ///   The event.
-  void OnSpinButtonWeathercaseUp(wxSpinEvent& event);
+  void OnSpinButtonUp(wxSpinEvent& event);
 
-  /// \var groups_
-  ///   The weathercase groups.
-  std::list<WeatherLoadCaseGroup>* groups_;
+  /// \var weathercases_
+  ///   The master list of weathercases allocated by the application. This list
+  ///   includes the weathercases that are in the original and modified lists.
+  ///   When exiting this dialog, any extra weathercases will be deallocated.
+  std::list<WeatherLoadCase*>* weathercases_;
 
-  /// \var groups_modified_
-  ///   The user-modified weathercase groups.
-  std::list<WeatherLoadCaseGroup> groups_modified_;
+  /// \var weathercases_modified_
+  ///   The weathercases that are modified by the manager (presented to the
+  ///   user). This list is committed to the master list only when the user
+  ///   selects OKon the form.
+  std::list<WeatherLoadCase*> weathercases_modified_;
 
-  /// \var index_group_activated_
-  ///   The index of the activated group.
-  int index_group_activated_;
-
-  /// \var listbox_groups_
-  ///   The listbox containing weathercase groups.
-  wxListBox* listbox_groups_;
+  /// \var weathercases_original_
+  ///   The weathercases that are originally passed to the dialog. This list is
+  ///   committed to the master list when the user cancels or closes the form.
+  std::list<WeatherLoadCase*> weathercases_original_;
 
   /// \var listbox_weathercases_
   ///   The listbox containing weathercases.

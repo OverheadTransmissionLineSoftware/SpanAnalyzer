@@ -39,7 +39,7 @@ CableFileManagerDialog::CableFileManagerDialog(
   listctrl_ = XRCCTRL(*this, "listctrl_cables", wxListCtrl);
   units_ = units;
 
-  index_selected_ = -1;
+  index_selected_ = wxNOT_FOUND;
 
   // copies list of cables to be modified by manager
   cablefiles_modified_ = *cablefiles_;
@@ -314,7 +314,7 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
   FileHandler::SaveCable(cablefile.filepath, cablefile.cable, units_);
 
   // determines if new cable was saved over loaded cable file
-  int index_existing = -1;
+  int index_existing = wxNOT_FOUND;
   for (auto iter = cablefiles_modified_.cbegin();
     iter != cablefiles_modified_.cend(); iter++) {
     const CableFile* cablefile_ref = *iter;
@@ -325,7 +325,7 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
   }
 
   // merges cable file into application data and listctrl
-  if (index_existing == -1) {
+  if (index_existing == wxNOT_FOUND) {
     // adds to end of application data
     CableFile* cablefile_new = new CableFile(cablefile);
     cablefiles_->push_back(cablefile_new);
@@ -391,7 +391,7 @@ void CableFileManagerDialog::OnButtonRemove(wxCommandEvent& event) {
   listctrl_->DeleteItem(index_selected_);
 
   // resets cached index
-  index_selected_ = -1;
+  index_selected_ = wxNOT_FOUND;
 }
 
 void CableFileManagerDialog::OnClose(wxCloseEvent &event) {
