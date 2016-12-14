@@ -111,7 +111,7 @@ wxXmlNode* CableConstraintXmlHandler::CreateNode(
 int CableConstraintXmlHandler::ParseNode(
     const wxXmlNode* root,
     const std::string& filepath,
-    const std::list<WeatherLoadCase>* weathercases,
+    const std::list<WeatherLoadCase*>* weathercases,
     CableConstraint& constraint) {
   // checks for valid root node
   if (root->GetName() != "cable_constraint") {
@@ -135,7 +135,7 @@ int CableConstraintXmlHandler::ParseNode(
 int CableConstraintXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
     const std::string& filepath,
-    const std::list<WeatherLoadCase>* weathercases,
+    const std::list<WeatherLoadCase*>* weathercases,
     CableConstraint& constraint) {
 
   wxString message;
@@ -174,9 +174,9 @@ int CableConstraintXmlHandler::ParseNodeV1(
       constraint.case_weather = nullptr;
       for (auto iter = weathercases->cbegin(); iter != weathercases->cend();
            iter++) {
-        const WeatherLoadCase& weathercase = *iter;
-        if (content == weathercase.description) {
-          constraint.case_weather = &weathercase;
+        const WeatherLoadCase* weathercase = *iter;
+        if (content == weathercase->description) {
+          constraint.case_weather = weathercase;
           break;
         }
       }

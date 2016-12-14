@@ -1,287 +1,314 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <span_analyzer_data version="1" units="Imperial">
   <cables></cables>
-  <analysis_weather_load_cases>
-    <weather_load_case_group name="Default">
-      <weather_load_case version="1">
-        <description>0-0-60</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">60</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0.5-8-0</description>
-        <thickness_ice units="in">0.500</thickness_ice>
-        <density_ice units="lb/ft^3">57.3</density_ice>
-        <pressure_wind units="lb/ft^2">8.0</pressure_wind>
-        <temperature_cable units="deg F">0</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0.75-8-0</description>
-        <thickness_ice units="in">0.750</thickness_ice>
-        <density_ice units="lb/ft^3">57.3</density_ice>
-        <pressure_wind units="lb/ft^2">8.0</pressure_wind>
-        <temperature_cable units="deg F">0</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>1-8-0</description>
-        <thickness_ice units="in">1.000</thickness_ice>
-        <density_ice units="lb/ft^3">57.3</density_ice>
-        <pressure_wind units="lb/ft^2">8.0</pressure_wind>
-        <temperature_cable units="deg F">0</temperature_cable>
-      </weather_load_case>
-    </weather_load_case_group>
-    <weather_load_case_group name="Stringing">
-      <weather_load_case version="1">
-        <description>0-0-0</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">0</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-30</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">30</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-60</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">60</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-90</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">90</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-120</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">120</temperature_cable>
-      </weather_load_case>
-    </weather_load_case_group>
-    <weather_load_case_group name="Structural">
-      <weather_load_case version="1">
-        <description>0.25-8-15</description>
-        <thickness_ice units="in">0.250</thickness_ice>
-        <density_ice units="lb/ft^3">57.3</density_ice>
-        <pressure_wind units="lb/ft^2">8.0</pressure_wind>
-        <temperature_cable units="deg F">15</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0.5-8-0</description>
-        <thickness_ice units="in">0.500</thickness_ice>
-        <density_ice units="lb/ft^3">57.3</density_ice>
-        <pressure_wind units="lb/ft^2">8.0</pressure_wind>
-        <temperature_cable units="deg F">0</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0.75-8-0</description>
-        <thickness_ice units="in">0.750</thickness_ice>
-        <density_ice units="lb/ft^3">57.3</density_ice>
-        <pressure_wind units="lb/ft^2">8.0</pressure_wind>
-        <temperature_cable units="deg F">0</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>1-8-0</description>
-        <thickness_ice units="in">1.000</thickness_ice>
-        <density_ice units="lb/ft^3">57.3</density_ice>
-        <pressure_wind units="lb/ft^2">8.0</pressure_wind>
-        <temperature_cable units="deg F">0</temperature_cable>
-      </weather_load_case>
-    </weather_load_case_group>
-    <weather_load_case_group name="High Temperature">
-      <weather_load_case version="1">
-        <description>0-0-0</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">0</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-30</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">30</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-60</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">60</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-90</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">90</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-120</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">120</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-122 (50 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">122</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-140 (60 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">140</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-158 (70 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">158</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-176 (80 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">176</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-194 (90 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">194</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-212 (100 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">212</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-230 (110 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">230</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-248 (120 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">248</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-266 (130 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">266</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-284 (140 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">284</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-302 (150 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">302</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-320 (160 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">320</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-338 (170 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">338</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-356 (180 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">356</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-374 (190 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">374</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-392 (200 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">392</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-410 (210 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">410</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-428 (220 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">428</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-446 (230 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">446</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-464 (240 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">464</temperature_cable>
-      </weather_load_case>
-      <weather_load_case version="1">
-        <description>0-0-482 (250 C)</description>
-        <thickness_ice units="in">0.000</thickness_ice>
-        <density_ice units="lb/ft^3">0.0</density_ice>
-        <pressure_wind units="lb/ft^2">0.0</pressure_wind>
-        <temperature_cable units="deg F">482</temperature_cable>
-      </weather_load_case>
-    </weather_load_case_group>
-  </analysis_weather_load_cases>
+  <weather_load_cases>
+    <weather_load_case version="1">
+      <description>0-0-0</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">0</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-30</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">30</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-60</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">60</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-90</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">90</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-120</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">120</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-122 (50 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">122</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-140 (60 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">140</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-158 (70 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">158</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-176 (80 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">176</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-194 (90 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">194</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-212 (100 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">212</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-230 (110 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">230</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-248 (120 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">248</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-266 (130 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">266</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-284 (140 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">284</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-302 (150 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">302</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-320 (160 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">320</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-338 (170 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">338</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-356 (180 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">356</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-374 (190 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">374</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-392 (200 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">392</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-410 (210 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">410</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-428 (220 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">428</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-446 (230 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">446</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-464 (240 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">464</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-0-482 (250 C)</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">482</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-2-60</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">2.0</pressure_wind>
+      <temperature_cable units="deg F">60</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0-6-60</description>
+      <thickness_ice units="in">0.000</thickness_ice>
+      <density_ice units="lb/ft^3">0.0</density_ice>
+      <pressure_wind units="lb/ft^2">6.0</pressure_wind>
+      <temperature_cable units="deg F">60</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0.25-0-15</description>
+      <thickness_ice units="in">0.250</thickness_ice>
+      <density_ice units="lb/ft^3">57.3</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">15</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0.25-8-15</description>
+      <thickness_ice units="in">0.250</thickness_ice>
+      <density_ice units="lb/ft^3">57.3</density_ice>
+      <pressure_wind units="lb/ft^2">8.0</pressure_wind>
+      <temperature_cable units="deg F">15</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0.50-0-0</description>
+      <thickness_ice units="in">0.500</thickness_ice>
+      <density_ice units="lb/ft^3">57.3</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">0</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0.50-8-0</description>
+      <thickness_ice units="in">0.500</thickness_ice>
+      <density_ice units="lb/ft^3">57.3</density_ice>
+      <pressure_wind units="lb/ft^2">8.0</pressure_wind>
+      <temperature_cable units="deg F">0</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0.75-0-0</description>
+      <thickness_ice units="in">0.750</thickness_ice>
+      <density_ice units="lb/ft^3">57.3</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">0</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>0.75-8-0</description>
+      <thickness_ice units="in">0.750</thickness_ice>
+      <density_ice units="lb/ft^3">57.3</density_ice>
+      <pressure_wind units="lb/ft^2">8.0</pressure_wind>
+      <temperature_cable units="deg F">0</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>1.00-0-0</description>
+      <thickness_ice units="in">1.000</thickness_ice>
+      <density_ice units="lb/ft^3">57.3</density_ice>
+      <pressure_wind units="lb/ft^2">0.0</pressure_wind>
+      <temperature_cable units="deg F">0</temperature_cable>
+    </weather_load_case>
+    <weather_load_case version="1">
+      <description>1.00-8-0</description>
+      <thickness_ice units="in">1.000</thickness_ice>
+      <density_ice units="lb/ft^3">57.3</density_ice>
+      <pressure_wind units="lb/ft^2">8.0</pressure_wind>
+      <temperature_cable units="deg F">0</temperature_cable>
+    </weather_load_case>
+  </weather_load_cases>
+  <analysis_filter_groups>
+    <analysis_filter_group name="Structural">
+      <analysis_filter version="1">
+        <condition>Initial</condition>
+        <weather_load_case>0.25-8-15</weather_load_case>
+      </analysis_filter>
+      <analysis_filter version="1">
+        <condition>Initial</condition>
+        <weather_load_case>0.50-8-0</weather_load_case>
+      </analysis_filter>
+      <analysis_filter version="1">
+        <condition>Initial</condition>
+        <weather_load_case>0.75-8-0</weather_load_case>
+      </analysis_filter>
+      <analysis_filter version="1">
+        <condition>Initial</condition>
+        <weather_load_case>1.00-8-0</weather_load_case>
+      </analysis_filter>
+    </analysis_filter_group>
+    <analysis_filter_group name="Max Sag">
+      <analysis_filter version="1">
+        <condition>Load</condition>
+        <weather_load_case>0-0-212 (100 C)</weather_load_case>
+      </analysis_filter>
+      <analysis_filter version="1">
+        <condition>Creep</condition>
+        <weather_load_case>0-0-212 (100 C)</weather_load_case>
+      </analysis_filter>
+      <analysis_filter version="1">
+        <condition>Initial</condition>
+        <weather_load_case>0.50-0-0</weather_load_case>
+      </analysis_filter>
+    </analysis_filter_group>
+    <analysis_filter_group name="Stringing">
+      <analysis_filter version="1">
+        <condition>Initial</condition>
+        <weather_load_case>0-0-0</weather_load_case>
+      </analysis_filter>
+      <analysis_filter version="1">
+        <condition>Initial</condition>
+        <weather_load_case>0-0-30</weather_load_case>
+      </analysis_filter>
+      <analysis_filter version="1">
+        <condition>Initial</condition>
+        <weather_load_case>0-0-60</weather_load_case>
+      </analysis_filter>
+      <analysis_filter version="1">
+        <condition>Initial</condition>
+        <weather_load_case>0-0-90</weather_load_case>
+      </analysis_filter>
+      <analysis_filter version="1">
+        <condition>Initial</condition>
+        <weather_load_case>0-0-120</weather_load_case>
+      </analysis_filter>
+    </analysis_filter_group>
+  </analysis_filter_groups>
 </span_analyzer_data>

@@ -64,7 +64,7 @@ int SpanXmlHandler::ParseNode(
     const wxXmlNode* root,
     const std::string& filepath,
     const std::list<CableFile*>* cablefiles,
-    const std::list<WeatherLoadCase>* weathercases,
+    const std::list<WeatherLoadCase*>* weathercases,
     Span& span) {
   // checks for valid root node
   if (root->GetName() != "span") {
@@ -89,7 +89,7 @@ int SpanXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
     const std::string& filepath,
     const std::list<CableFile*>* cablefiles,
-    const std::list<WeatherLoadCase>* weathercases,
+    const std::list<WeatherLoadCase*>* weathercases,
     Span& span) {
   // variables used to parse XML node
   wxString title;

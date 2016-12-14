@@ -53,6 +53,11 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   /// \brief Destructor.
   ~SpanAnalyzerFrame();
 
+  /// \brief Handles the edit->analysis filters menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuEditAnalysisFilters(wxCommandEvent& event);
+
   /// \brief Handles the edit->cables menu click event.
   /// \param[in] event
   ///   The event.

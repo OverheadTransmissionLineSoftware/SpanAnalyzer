@@ -7,7 +7,7 @@
         <cable>ACSR Drake</cable>
         <cable_constraint version="1">
           <limit type="SupportTension" units="lbs">12000.0</limit>
-          <weather_load_case>0.5-8-0</weather_load_case>
+          <weather_load_case>0.50-8-0</weather_load_case>
           <condition>Initial</condition>
         </cable_constraint>
         <vector_3d version="1" name="spacing_attachments_ruling_span">
@@ -16,7 +16,7 @@
           <z units="ft">0.0</z>
         </vector_3d>
         <weather_load_case name="stretch_creep">0-0-60</weather_load_case>
-        <weather_load_case name="stretch_load">0.5-8-0</weather_load_case>
+        <weather_load_case name="stretch_load">0.50-8-0</weather_load_case>
       </line_cable>
       <vector_3d version="1" name="spacing_catenary">
         <x units="ft">1200.0</x>
@@ -30,7 +30,7 @@
         <cable>ACSR Drake</cable>
         <cable_constraint version="1">
           <limit type="SupportTension" units="lbs">14000.0</limit>
-          <weather_load_case>0.5-8-0</weather_load_case>
+          <weather_load_case>0.50-8-0</weather_load_case>
           <condition>Initial</condition>
         </cable_constraint>
         <vector_3d version="1" name="spacing_attachments_ruling_span">
@@ -39,7 +39,7 @@
           <z units="ft">0.0</z>
         </vector_3d>
         <weather_load_case name="stretch_creep">0-0-60</weather_load_case>
-        <weather_load_case name="stretch_load">0.5-8-0</weather_load_case>
+        <weather_load_case name="stretch_load">0.50-8-0</weather_load_case>
       </line_cable>
       <vector_3d version="1" name="spacing_catenary">
         <x units="ft">1500.0</x>

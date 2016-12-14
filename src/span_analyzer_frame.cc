@@ -6,6 +6,7 @@
 #include "wx/aboutdlg.h"
 #include "wx/xrc/xmlres.h"
 
+#include "analysis_filter_manager_dialog.h"
 #include "cable_file_manager_dialog.h"
 #include "cable_unit_converter.h"
 #include "file_handler.h"
@@ -53,6 +54,7 @@ bool DocumentFileDropTarget::OnDropFiles(wxCoord x, wxCoord y,
 }
 
 BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxFrame)
+  EVT_MENU(XRCID("menuitem_edit_analysisfilters"), SpanAnalyzerFrame::OnMenuEditAnalysisFilters)
   EVT_MENU(XRCID("menuitem_edit_cables"), SpanAnalyzerFrame::OnMenuEditCables)
   EVT_MENU(XRCID("menuitem_edit_weathercases"), SpanAnalyzerFrame::OnMenuEditWeathercases)
   EVT_MENU(XRCID("menuitem_file_preferences"), SpanAnalyzerFrame::OnMenuFilePreferences)
@@ -99,6 +101,30 @@ SpanAnalyzerFrame::~SpanAnalyzerFrame() {
   manager_.UnInit();
 }
 
+void SpanAnalyzerFrame::OnMenuEditAnalysisFilters(wxCommandEvent& event) {
+  // gets application config and data
+  const SpanAnalyzerConfig* config = wxGetApp().config();
+  SpanAnalyzerData* data = wxGetApp().data();
+
+  // creates and shows the analysis filter manager dialog
+  AnalysisFilterManagerDialog dialog(this, &data->weathercases,
+                                     &data->groups_filters);
+  if (dialog.ShowModal() == wxID_OK) {
+    wxBusyCursor cursor;
+
+    // saves application data
+    FileHandler::SaveAppData(config->filepath_data, *data, config->units);
+
+    // updates document/views
+    SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
+                               GetCurrentDocument();
+    if (doc != nullptr) {
+      UpdateHint hint(HintType::kAnalysisFilterGroupEdit);
+      doc->UpdateAllViews(nullptr, &hint);
+    }
+  }
+}
+
 void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
   // gets application config and data
   const SpanAnalyzerConfig* config = wxGetApp().config();
@@ -135,23 +161,23 @@ void SpanAnalyzerFrame::OnMenuEditWeathercases(
   WeatherLoadCaseManagerDialog dialog(
       this,
       wxGetApp().config()->units,
-      &data->groups_weathercase);
+      &data->weathercases);
   if (dialog.ShowModal() == wxID_OK) {
     wxBusyCursor cursor;
 
     // saves application data
     FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
                              wxGetApp().config()->units);
+  }
 
-    // updates document/views
-    SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
-                               GetCurrentDocument();
-    if (doc != nullptr) {
-      doc->RunAnalysis();
+  // updates document/views
+  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
+                              GetCurrentDocument();
+  if (doc != nullptr) {
+    doc->RunAnalysis();
 
-      UpdateHint hint(HintType::kWeathercasesEdit);
-      doc->UpdateAllViews(nullptr, &hint);
-    }
+    UpdateHint hint(HintType::kWeathercasesEdit);
+    doc->UpdateAllViews(nullptr, &hint);
   }
 }
 
@@ -177,17 +203,13 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
   SpanAnalyzerData* data = wxGetApp().data();
   if (units_before != config->units) {
     // converts app data
-    for (auto iter = data->groups_weathercase.begin();
-         iter != data->groups_weathercase.end(); iter++) {
-      WeatherLoadCaseGroup& group = *iter;
-      for (auto it = group.weathercases.begin();
-           it != group.weathercases.end(); it++) {
-        WeatherLoadCase& weathercase = *it;
-        WeatherLoadCaseUnitConverter::ConvertUnitSystem(
-            units_before,
-            config->units,
-            weathercase);
-      }
+    for (auto iter = data->weathercases.begin();
+         iter != data->weathercases.end(); iter++) {
+      WeatherLoadCase* weathercase = *iter;
+      WeatherLoadCaseUnitConverter::ConvertUnitSystem(
+          units_before,
+          config->units,
+          *weathercase);
     }
 
     for (auto iter = data->cablefiles.begin(); iter != data->cablefiles.end();

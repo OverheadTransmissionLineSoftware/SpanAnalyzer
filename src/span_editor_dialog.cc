@@ -20,7 +20,7 @@ END_EVENT_TABLE()
 SpanEditorDialog::SpanEditorDialog(
     wxWindow* parent,
     const std::list<CableFile*>* cablefiles,
-    const std::list<WeatherLoadCase>* weathercases,
+    const std::list<WeatherLoadCase*>* weathercases,
     const units::UnitSystem& units,
     Span* span) {
   // loads dialog from virtual xrc file system
@@ -79,8 +79,8 @@ void SpanEditorDialog::InitChoiceControls() {
   choice = XRCCTRL(*this, "choice_constraint_weathercase", wxChoice);
   for (auto iter = weathercases_->cbegin(); iter != weathercases_->cend();
        iter++) {
-    const WeatherLoadCase& weathercase = *iter;
-    choice->Append(weathercase.description);
+    const WeatherLoadCase* weathercase = *iter;
+    choice->Append(weathercase->description);
   }
 
   // populates constraint condition choice control
@@ -93,16 +93,16 @@ void SpanEditorDialog::InitChoiceControls() {
   choice = XRCCTRL(*this, "choice_stretch_load_weathercase", wxChoice);
   for (auto iter = weathercases_->cbegin(); iter != weathercases_->cend();
        iter++) {
-    const WeatherLoadCase& weathercase = *iter;
-    choice->Append(weathercase.description);
+    const WeatherLoadCase* weathercase = *iter;
+    choice->Append(weathercase->description);
   }
 
   // populates stretch-creep weathercase choice control
   choice = XRCCTRL(*this, "choice_stretch_creep_weathercase", wxChoice);
   for (auto iter = weathercases_->cbegin(); iter != weathercases_->cend();
        iter++) {
-    const WeatherLoadCase& weathercase = *iter;
-    choice->Append(weathercase.description);
+    const WeatherLoadCase* weathercase = *iter;
+    choice->Append(weathercase->description);
   }
 }
 
@@ -387,7 +387,7 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
     span_modified_.linecable.constraint.case_weather = nullptr;
   } else {
     auto iter = std::next(weathercases_->cbegin(), index);
-    const WeatherLoadCase* weathercase = &(*iter);
+    const WeatherLoadCase* weathercase = *iter;
     span_modified_.linecable.constraint.case_weather = weathercase;
   }
 
@@ -439,7 +439,7 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
     span_modified_.linecable.weathercase_stretch_load = nullptr;
   } else {
     auto iter = std::next(weathercases_->cbegin(), index);
-    const WeatherLoadCase* weathercase = &(*iter);
+    const WeatherLoadCase* weathercase = *iter;
     span_modified_.linecable.weathercase_stretch_load = weathercase;
   }
 
@@ -450,7 +450,7 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
     span_modified_.linecable.weathercase_stretch_creep = nullptr;
   } else {
     auto iter = std::next(weathercases_->cbegin(), index);
-    const WeatherLoadCase* weathercase = &(*iter);
+    const WeatherLoadCase* weathercase = *iter;
     span_modified_.linecable.weathercase_stretch_creep = weathercase;
   }
 

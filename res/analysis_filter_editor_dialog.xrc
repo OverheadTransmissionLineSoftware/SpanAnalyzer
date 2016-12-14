@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<resource version="2.5.3.0">
+	<object class="wxDialog" name="analysis_filter_editor_dialog">
+		<style>wxDEFAULT_DIALOG_STYLE</style>
+		<title>Analysis Filter Editor</title>
+    <object class="wxPanel" name="analysis_filter_editor_panel">
+      <style>wxTAB_TRAVERSAL</style>
+      <object class="wxBoxSizer">
+        <orient>wxVERTICAL</orient>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxEXPAND|wxALL</flag>
+          <border>5</border>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxEXPAND|wxALL</flag>
+              <border>5</border>
+              <object class="wxChoice" name="choice_weathercase">
+                <selection>0</selection>
+                <size>200,-1</size>
+                <content />
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxEXPAND|wxALL</flag>
+              <border>5</border>
+              <object class="wxChoice" name="choice_condition">
+                <selection>0</selection>
+                <size>100,-1</size>
+                <content />
+              </object>
+            </object>
+          </object>
+        </object>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxALIGN_RIGHT</flag>
+          <border>0</border>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="wxID_CANCEL">
+                <label>Cancel</label>
+                <default>0</default>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="wxID_OK">
+                <label>OK</label>
+                <default>1</default>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+	</object>
+</resource>
+

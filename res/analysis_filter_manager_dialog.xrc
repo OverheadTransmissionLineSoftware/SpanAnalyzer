@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<resource version="2.5.3.0">
+	<object class="wxDialog" name="analysis_filter_manager_dialog">
+		<style>wxDEFAULT_DIALOG_STYLE</style>
+		<exstyle>wxWS_EX_VALIDATE_RECURSIVELY</exstyle>
+		<title>Analysis Filter Manager</title>
+    <object class="wxPanel" name="analysis_filter_manager_panel">
+      <style>wxTAB_TRAVERSAL</style>
+      <object class="wxBoxSizer">
+        <orient>wxVERTICAL</orient>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxALL</flag>
+          <border>5</border>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
+            <object class ="sizeritem">
+              <option>0</option>
+              <flag></flag>
+              <border>0</border>
+              <object class="wxStaticBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <label>Groups</label>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag></flag>
+                  <border>0</border>
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxLEFT</flag>
+                      <border>5</border>
+                      <object class="wxListBox" name="listbox_groups">
+                        <style>wxLB_SINGLE</style>
+                        <size>250,400</size>
+                        <value></value>
+                        <maxlength>0</maxlength>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALIGN_CENTER</flag>
+                      <border>0</border>
+                      <object class="wxSpinButton" name="spinbutton_groups">
+                        <style>wxSP_VERTICAL</style>
+                      </object>
+                    </object>
+                  </object>
+                </object>
+                <object class ="sizeritem">
+                  <option>0</option>
+                  <flag>wxALIGN_CENTER</flag>
+                  <border>0</border>
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxButton" name="button_groups_add">
+                        <label>Add</label>
+                        <default>0</default>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxButton" name="button_groups_delete">
+                        <label>Delete</label>
+                        <default>0</default>
+                      </object>
+                    </object>
+                  </object>
+                </object>
+              </object>
+            </object>
+            <object class ="sizeritem">
+              <option>0</option>
+              <flag></flag>
+              <border>0</border>
+              <object class="wxStaticBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <label>Filters</label>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag></flag>
+                  <border>0</border>
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxLEFT</flag>
+                      <border>5</border>
+                      <object class="wxListCtrl" name="listctrl_filters">
+                        <style>wxLC_SINGLE_SEL|wxLC_REPORT|wxLC_HRULES|wxLC_VRULES</style>
+                        <size>300,400</size>
+                        <object class="listcol">
+                          <align>wxLIST_FORMAT_LEFT</align>
+                          <text>Weathercase</text>
+                          <width>200</width>
+                        </object>
+                        <object class="listcol">
+                          <align>wxLIST_FORMAT_LEFT</align>
+                          <text>Condition</text>
+                          <width>100</width>
+                        </object>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALIGN_CENTER</flag>
+                      <border>0</border>
+                      <object class="wxSpinButton" name="spinbutton_filters">
+                        <style>wxSP_VERTICAL</style>
+                      </object>
+                    </object>
+                  </object>
+                </object>
+                <object class ="sizeritem">
+                  <option>0</option>
+                  <flag>wxALIGN_CENTER</flag>
+                  <border>0</border>
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxButton" name="button_filters_add">
+                        <label>Add</label>
+                        <default>0</default>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxButton" name="button_filters_delete">
+                        <label>Delete</label>
+                        <default>0</default>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxButton" name="button_filters_edit">
+                        <label>Edit</label>
+                        <default>0</default>
+                      </object>
+                    </object>
+                  </object>
+                </object>
+              </object>
+            </object>
+          </object>
+        </object>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxALIGN_RIGHT</flag>
+          <border>0</border>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="wxID_CANCEL">
+                <label>Cancel</label>
+                <default>0</default>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="wxID_OK">
+                <label>OK</label>
+                <default>1</default>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+	</object>
+</resource>

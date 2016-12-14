@@ -97,11 +97,11 @@ void EditPane::AddSpan() {
     return;
   }
 
-  const std::list<WeatherLoadCase>& weathercases =
-      wxGetApp().data()->groups_weathercase.cbegin()->weathercases;
+  const std::list<WeatherLoadCase*>& weathercases =
+      wxGetApp().data()->weathercases;
   if (weathercases.empty() == true) {
-    wxMessageBox("No weathercases exist in the default weathercase group. "
-                 "Add at least one before editing span.");
+    wxMessageBox("No weathercases are defined. Add at least one before adding "
+                 "span.");
     return;
   }
 
@@ -196,11 +196,11 @@ void EditPane::EditSpan(const wxTreeItemId& id) {
     return;
   }
 
-  const std::list<WeatherLoadCase>& weathercases =
-      wxGetApp().data()->groups_weathercase.cbegin()->weathercases;
+  const std::list<WeatherLoadCase*>& weathercases =
+      wxGetApp().data()->weathercases;
   if (weathercases.empty() == true) {
-    wxMessageBox("No weathercases exist in the default weathercase group. "
-                 "Add at least one before editing span.");
+    wxMessageBox("No weathercases are defined. Add at least one before editing "
+                 "span.");
     return;
   }
 

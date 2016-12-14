@@ -43,6 +43,9 @@
       <object class="wxMenuItem" name="menuitem_edit_weathercases">
         <label>Weathercases</label>
       </object>
+      <object class="wxMenuItem" name="menuitem_edit_analysisfilters">
+        <label>Analysis Filters</label>
+      </object>
     </object>
     <object class="wxMenu" name="menu_view">
       <label>View</label>

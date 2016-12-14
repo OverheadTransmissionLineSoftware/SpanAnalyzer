@@ -135,6 +135,15 @@
     <ClInclude Include="..\..\include\xml_handler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\analysis_filter_editor_dialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\analysis_filter_manager_dialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\analysis_filter_xml_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\analysis_controller.cc">
@@ -245,6 +254,15 @@
     <ClCompile Include="..\..\src\xml_handler.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\analysis_filter_editor_dialog.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\analysis_filter_manager_dialog.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\analysis_filter_xml_handler.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\test\test.spananalyzer">
@@ -296,6 +314,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\..\res\sort_arrow_up.xpm">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\res\analysis_filter_editor_dialog.xrc">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\res\analysis_filter_manager_dialog.xrc">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

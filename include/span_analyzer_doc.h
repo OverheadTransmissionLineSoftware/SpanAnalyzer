@@ -14,12 +14,13 @@
 
 /// This enum class contains types of update hints.
 enum class HintType {
+  kAnalysisFilterGroupEdit,
+  kAnalysisFilterGroupSelect,
+  kAnalysisFilterSelect,
   kCablesEdit,
   kPreferencesEdit,
   kSpansEdit,
   kWeathercasesEdit,
-  kWeathercaseSelect,  /// \todo this is a view-only update - find a better way
-  kWeathercasesSelect  /// \todo this is a view-only update - find a better way
 };
 
 /// \par OVERVIEW
@@ -182,20 +183,23 @@ class SpanAnalyzerDoc : public wxDocument {
   void ReplaceSpan(const std::list<Span>::const_iterator& element,
                    const Span& span);
 
-  /// \brief Gets the sag-tension results.
-  /// \return The sag-tension results. If no results are available, a nullptr
-  ///   is returned.
-  const std::list<SagTensionAnalysisResultGroup>* Results() const;
-
   /// \brief Gets a set of filtered results.
-  /// \param[in] group_weathercases
-  ///   The weathercase group.
+  /// \param[in] index_weathercase
+  ///   The weathercase index.
   /// \param[in] condition
   ///   The cable condition.
-  /// \return A list of filtered results. If no results are available, a
+  /// \return A single sag-tension result. If no results are available, a
   ///   nullptr is returned.
-  const std::list<SagTensionAnalysisResult>* ResultsFiltered(
-      const WeatherLoadCaseGroup& group_weathercases,
+  const SagTensionAnalysisResult* Result(
+      const int& index_weathercase,
+      const CableConditionType& condition) const;
+
+  /// \brief Gets the sag-tension results for a specific condition.
+  /// \param[in] condition
+  ///   The cable condition.
+  /// \return The sag-tension results. If no results are available, a nullptr
+  ///   is returned.
+  const std::vector<SagTensionAnalysisResult>* Results(
       const CableConditionType& condition) const;
 
   /// \brief Runs the analysis.

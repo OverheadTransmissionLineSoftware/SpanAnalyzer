@@ -69,7 +69,7 @@ class LineCableXmlHandler : public XmlHandler {
   static int ParseNode(const wxXmlNode* root,
                        const std::string& filepath,
                        const std::list<const Cable*>* cables,
-                       const std::list<WeatherLoadCase>* weathercases,
+                       const std::list<WeatherLoadCase*>* weathercases,
                        LineCable& linecable);
 
  private:
@@ -96,7 +96,7 @@ class LineCableXmlHandler : public XmlHandler {
   static int ParseNodeV1(const wxXmlNode* root,
                          const std::string& filepath,
                          const std::list<const Cable*>* cables,
-                         const std::list<WeatherLoadCase>* weathercases,
+                         const std::list<WeatherLoadCase*>* weathercases,
                          LineCable& linecable);
 };
 

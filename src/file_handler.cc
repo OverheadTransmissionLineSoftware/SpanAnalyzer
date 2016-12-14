@@ -87,34 +87,26 @@ int FileHandler::LoadAppData(const std::string& filepath,
     return line_number;
   }
 
-  // converts analysis weathercases to consistent unit style
-  for (auto iter = data.groups_weathercase.begin();
-       iter != data.groups_weathercase.end(); iter++) {
-    WeatherLoadCaseGroup& group = *iter;
-    for (auto it = group.weathercases.begin();
-         it != group.weathercases.end(); it++) {
-      WeatherLoadCase& weathercase = *it;
-      WeatherLoadCaseUnitConverter::ConvertUnitStyle(
-          units_file,
-          units::UnitStyle::kDifferent,
-          units::UnitStyle::kConsistent,
-          weathercase);
-    }
+  // converts weathercases to consistent unit style
+  for (auto iter = data.weathercases.begin();
+       iter != data.weathercases.end(); iter++) {
+    WeatherLoadCase* weathercase = *iter;
+    WeatherLoadCaseUnitConverter::ConvertUnitStyle(
+        units_file,
+        units::UnitStyle::kDifferent,
+        units::UnitStyle::kConsistent,
+        *weathercase);
   }
 
   // converts unit systems if the file doesn't match applicaton config
   if (units_file != wxGetApp().config()->units) {
-    for (auto iter = data.groups_weathercase.begin();
-         iter != data.groups_weathercase.end(); iter++) {
-      WeatherLoadCaseGroup& group = *iter;
-      for (auto it = group.weathercases.begin();
-           it != group.weathercases.end(); it++) {
-        WeatherLoadCase& weathercase = *it;
-        WeatherLoadCaseUnitConverter::ConvertUnitSystem(
-            units_file,
-            units,
-            weathercase);
-      }
+    for (auto iter = data.weathercases.begin();
+          iter != data.weathercases.end(); iter++) {
+      WeatherLoadCase* weathercase = *iter;
+      WeatherLoadCaseUnitConverter::ConvertUnitSystem(
+          units_file,
+          units,
+          *weathercase);
     }
   }
 
@@ -252,6 +244,9 @@ int FileHandler::LoadConfigFile(const std::string& filepath,
   return 0;
 }
 
+/// To avoid re-allocating all of the app data for a different unit style,
+/// this function will convert the data to the different unit style and
+/// then back to the consistent unit style.
 void FileHandler::SaveAppData(const std::string& filepath,
                               const SpanAnalyzerData& data,
                               const units::UnitSystem& units) {
@@ -259,30 +254,22 @@ void FileHandler::SaveAppData(const std::string& filepath,
   std::string message = "Saving application data file: " + filepath;
   wxLogMessage(message.c_str());
 
-  // creates a copy of the data
-  SpanAnalyzerData data_converted = data;
-
   // cables are stored in individual files, and are not included in the app
   // data file
 
-  // converts analysis weathercases to different unit style
-  for (auto iter = data_converted.groups_weathercase.begin();
-       iter != data_converted.groups_weathercase.end(); iter++) {
-    WeatherLoadCaseGroup& group = *iter;
-    for (auto it = group.weathercases.begin();
-         it != group.weathercases.end(); it++) {
-      WeatherLoadCase& weathercase = *it;
-      WeatherLoadCaseUnitConverter::ConvertUnitStyle(
-          units,
-          units::UnitStyle::kConsistent,
-          units::UnitStyle::kDifferent,
-          weathercase);
-    }
+  // converts weathercases to different unit style
+  for (auto iter = data.weathercases.begin();
+        iter != data.weathercases.end(); iter++) {
+    WeatherLoadCase* weathercase = *iter;
+    WeatherLoadCaseUnitConverter::ConvertUnitStyle(
+        units,
+        units::UnitStyle::kConsistent,
+        units::UnitStyle::kDifferent,
+        *weathercase);
   }
 
   // generates an xml node
-  wxXmlNode* root = SpanAnalyzerDataXmlHandler::CreateNode(data_converted,
-                                                           units);
+  wxXmlNode* root = SpanAnalyzerDataXmlHandler::CreateNode(data, units);
 
   // gets the units
   if (units == units::UnitSystem::kImperial) {
@@ -295,6 +282,17 @@ void FileHandler::SaveAppData(const std::string& filepath,
   wxXmlDocument doc;
   doc.SetRoot(root);
   doc.Save(filepath, 2);
+
+  // converts weathercases to different unit style
+  for (auto iter = data.weathercases.begin();
+        iter != data.weathercases.end(); iter++) {
+    WeatherLoadCase* weathercase = *iter;
+    WeatherLoadCaseUnitConverter::ConvertUnitStyle(
+        units,
+        units::UnitStyle::kDifferent,
+        units::UnitStyle::kConsistent,
+        *weathercase);
+  }
 }
 
 void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
