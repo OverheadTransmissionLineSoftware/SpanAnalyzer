@@ -137,8 +137,8 @@ bool CableFileManagerDialog::IsUniqueName(const std::string& name,
 
 void CableFileManagerDialog::OnButtonAdd(wxCommandEvent& event) {
   // opens file dialog to select files to add
-  wxFileDialog dialog_file(this, "Open Cable File", "", ".cable",
-                           "Cable Files (*.cable) | *.cable",
+  wxFileDialog dialog_file(this, "Open Cable File", "", "",
+                           "Cable Files (*.cable)|*.cable",
                            wxFD_OPEN|wxFD_MULTIPLE);
   if (dialog_file.ShowModal() != wxID_OK) {
     return;
@@ -184,13 +184,6 @@ void CableFileManagerDialog::OnButtonAdd(wxCommandEvent& event) {
         wxLogError(message.c_str());
         continue;
       }
-
-      // converts cable units to consistent unit style
-      CableUnitConverter::ConvertUnitStyle(
-        units_,
-        units::UnitStyle::kDifferent,
-        units::UnitStyle::kConsistent,
-        cablefile.cable);
 
       // adds to app data
       CableFile* cablefile_new = new CableFile(cablefile);
