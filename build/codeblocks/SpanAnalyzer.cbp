@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="debug">
-				<Option output="debug/bin/SpanAnalyzer" prefix_auto="1" extension_auto="1" />
+				<Option output="debug/SpanAnalyzer" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../.." />
 				<Option object_output="debug/obj/" />
 				<Option type="0" />
@@ -15,19 +15,18 @@
 				<Option parameters="--debug test/test.spananalyzer" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="`../../external/wxWidgets/build-debug/wx-config --cxxflags`" />
 				</Compiler>
 				<Linker>
-					<Add library="libotlsmodels_sagtension.a" />
-					<Add library="libotlsmodels_transmissionline.a" />
-					<Add library="libotlsmodels_base.a" />
-					<Add directory="$(MODELS)/build/codeblocks/debug/bin" />
+					<Add option="`../../external/wxWidgets/build-debug/wx-config --libs all`" />
+					<Add library="libotlsmodels_sagtensiond.a" />
+					<Add library="libotlsmodels_transmissionlined.a" />
+					<Add library="libotlsmodels_based.a" />
+					<Add directory="../../external/Models/build/codeblocks/debug" />
 				</Linker>
-				<Environment>
-					<Variable name="WXWIDGETS_CONFIG" value="" />
-				</Environment>
 			</Target>
 			<Target title="release">
-				<Option output="release/bin/SpanAnalyzer" prefix_auto="1" extension_auto="1" />
+				<Option output="release/SpanAnalyzer" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../.." />
 				<Option object_output="release/obj/" />
 				<Option type="0" />
@@ -35,32 +34,30 @@
 				<Option parameters="--debug test/test.spananalyzer" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="`../../external/wxWidgets/build-release/wx-config --cxxflags`" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="`../../external/wxWidgets/build-release/wx-config --libs all`" />
 					<Add library="libotlsmodels_sagtension.a" />
 					<Add library="libotlsmodels_transmissionline.a" />
 					<Add library="libotlsmodels_base.a" />
-					<Add directory="$(MODELS)/build/codeblocks/release/bin" />
+					<Add directory="../../external/Models/build/codeblocks/release" />
 				</Linker>
-				<Environment>
-					<Variable name="WXWIDGETS_SETUP" value="" />
-				</Environment>
 			</Target>
-			<Environment>
-				<Variable name="MODELS" value="../../external/Models" />
-				<Variable name="WXWIDGETS" value="../../external/wxWidgets" />
-			</Environment>
 		</Build>
 		<Compiler>
-			<Add option="-std=c++11" />
 			<Add option="-Wall" />
+			<Add option="-std=c++11" />
 			<Add directory="../../include" />
-			<Add directory="$(MODELS)/include" />
-			<Add directory="$(WXWIDGETS)/include" />
+			<Add directory="../../external/Models/include" />
+			<Add directory="../../external/wxWidgets/include" />
 		</Compiler>
 		<Unit filename="../../appdata.xml" />
 		<Unit filename="../../include/analysis_controller.h" />
+		<Unit filename="../../include/analysis_filter_editor_dialog.h" />
+		<Unit filename="../../include/analysis_filter_manager_dialog.h" />
+		<Unit filename="../../include/analysis_filter_xml_handler.h" />
 		<Unit filename="../../include/cable_constraint_xml_handler.h" />
 		<Unit filename="../../include/cable_editor_dialog.h" />
 		<Unit filename="../../include/cable_file_manager_dialog.h" />
@@ -99,6 +96,8 @@
 		<Unit filename="../../include/weather_load_case_unit_converter.h" />
 		<Unit filename="../../include/weather_load_case_xml_handler.h" />
 		<Unit filename="../../include/xml_handler.h" />
+		<Unit filename="../../res/analysis_filter_editor_dialog.xrc" />
+		<Unit filename="../../res/analysis_filter_manager_dialog.xrc" />
 		<Unit filename="../../res/cable_editor_dialog.xrc" />
 		<Unit filename="../../res/cable_file_manager_dialog.xrc" />
 		<Unit filename="../../res/edit_pane.xrc" />
@@ -119,6 +118,9 @@
 		<Unit filename="../../res/weather_load_case_manager_dialog.xrc" />
 		<Unit filename="../../spananalyzer.conf" />
 		<Unit filename="../../src/analysis_controller.cc" />
+		<Unit filename="../../src/analysis_filter_editor_dialog.cc" />
+		<Unit filename="../../src/analysis_filter_manager_dialog.cc" />
+		<Unit filename="../../src/analysis_filter_xml_handler.cc" />
 		<Unit filename="../../src/cable_constraint_xml_handler.cc" />
 		<Unit filename="../../src/cable_editor_dialog.cc" />
 		<Unit filename="../../src/cable_file_manager_dialog.cc" />

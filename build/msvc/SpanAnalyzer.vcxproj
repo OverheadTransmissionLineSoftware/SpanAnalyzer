@@ -62,6 +62,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\analysis_controller.h" />
+    <ClInclude Include="..\..\include\analysis_filter_editor_dialog.h" />
+    <ClInclude Include="..\..\include\analysis_filter_manager_dialog.h" />
+    <ClInclude Include="..\..\include\analysis_filter_xml_handler.h" />
     <ClInclude Include="..\..\include\cable_constraint_xml_handler.h" />
     <ClInclude Include="..\..\include\cable_editor_dialog.h" />
     <ClInclude Include="..\..\include\cable_file_manager_dialog.h" />
@@ -103,6 +106,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\analysis_controller.cc" />
+    <ClCompile Include="..\..\src\analysis_filter_editor_dialog.cc" />
+    <ClCompile Include="..\..\src\analysis_filter_manager_dialog.cc" />
+    <ClCompile Include="..\..\src\analysis_filter_xml_handler.cc" />
     <ClCompile Include="..\..\src\cable_constraint_xml_handler.cc" />
     <ClCompile Include="..\..\src\cable_editor_dialog.cc" />
     <ClCompile Include="..\..\src\cable_file_manager_dialog.cc" />
@@ -140,6 +146,8 @@
     <ClCompile Include="..\..\src\xml_handler.cc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\res\analysis_filter_editor_dialog.xrc" />
+    <None Include="..\..\res\analysis_filter_manager_dialog.xrc" />
     <None Include="..\..\res\cable_editor_dialog.xrc">
       <FileType>Document</FileType>
     </None>
@@ -178,7 +186,9 @@
     <None Include="..\..\test\test.spananalyzer" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\appdata.xml" />
+    <None Include="..\..\appdata.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\res\icon.ico" />
