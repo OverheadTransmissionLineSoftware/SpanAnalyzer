@@ -9,7 +9,6 @@ AnalysisController::AnalysisController() {
   span_ = nullptr;
   weathercases_ = nullptr;
 
-  reloader_.set_length_unloaded_unstretched_adjustment(-999999);
   reloader_.set_line_cable(nullptr);
   reloader_.set_weathercase_reloaded(nullptr);
 }
@@ -88,7 +87,6 @@ void AnalysisController::RunAnalysis() const {
 
   // sets up reloader
   reloader_.set_line_cable(&span_->linecable);
-  reloader_.set_length_unloaded_unstretched_adjustment(0);
 
   // runs analysis for each weathercase
   for (auto iter = weathercases_->cbegin(); iter != weathercases_->cend();
@@ -112,7 +110,6 @@ void AnalysisController::RunAnalysis() const {
 
   // un-inits reloader
   reloader_.set_line_cable(&span_->linecable);
-  reloader_.set_length_unloaded_unstretched_adjustment(0);
 }
 
 void AnalysisController::set_span(const Span* span) {
