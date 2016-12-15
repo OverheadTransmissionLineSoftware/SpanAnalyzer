@@ -580,7 +580,6 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
       span_modified_.linecable.spacing_attachments_ruling_span;
   const Vector3d& spacing_catenary = span_modified_.spacing_catenary;
 
-  /// \todo add equals operator to Models library to simplify this
   const bool is_match =
       ((spacing_constraint.x() == spacing_catenary.x())
         && (spacing_constraint.y() == spacing_catenary.y())
