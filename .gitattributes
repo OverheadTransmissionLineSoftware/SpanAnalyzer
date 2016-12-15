@@ -1,0 +1,19 @@
+# File default. This setting converts to LF line endings for the repository but
+# allows user overrides when checking out into a working directory.
+* text
+
+# Linux specific files. This setting converts to LF line endings for the
+# repository but forces to LF when checking out into a working directory.
+*.cbp text eol=lf
+*.workspace text eol=lf
+
+# Windows specific files. This setting converts to LF line endings for the
+# repository but forces to CRLF when checking out into a working directory.
+*.sln text eol=crlf
+*.vcxproj text eol=crlf
+*.vcxproj.filters text eol=crlf
+*.vcxproj.user text eol=crlf
+
+# Binary files that should be ignored.
+*.jpg binary
+*.png binary 
