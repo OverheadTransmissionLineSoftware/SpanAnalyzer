@@ -194,41 +194,51 @@ int CableComponentXmlHandler::ParseNodeV1(const wxXmlNode* root,
     } else if (title == "coefficients") {
       wxString name_coefficients;
       node->GetAttribute("name", &name_coefficients);
-      if ((name_coefficients != "stress-strain")
-          && (name_coefficients != "creep")) {
-        message = FileAndLineNumber(filepath, node)
-                  + "XML node isn't recognized.";
-        wxLogError(message);
-        break;
-        /// \todo need to test this break to see if handled properly
+
+      // gets coefficient vector
+      std::vector<double>* coefficients = nullptr;
+      if (name_coefficients == "stress-strain") {
+        coefficients = &component.coefficients_polynomial_loadstrain;
+      } else if (name_coefficients == "creep") {
+        coefficients = &component.coefficients_polynomial_creep;
       }
 
-      // gets coefficient sub-nodes
-      wxXmlNode* sub_node = node->GetChildren();
+      // checks for valid coefficients name
+      if (coefficients != nullptr) {
+        // gets coefficient sub-nodes
+        wxXmlNode* sub_node = node->GetChildren();
 
-      if (sub_node == nullptr) {
-        message = FileAndLineNumber(filepath, node)
-                  + "Coefficients are undefined.";
-        wxLogError(message);
-      }
-
-      while (sub_node != nullptr) {
-        // creates a new coefficient
-        double coefficient = -999999;
-        const wxString sub_content = ParseElementNodeWithContent(sub_node);
-        if (sub_content.ToDouble(&coefficient) == false) {
-          message = FileAndLineNumber(filepath, sub_node)
-                    + "Invalid coefficient.";
+        if (sub_node == nullptr) {
+          message = FileAndLineNumber(filepath, node)
+                    + "Coefficients are undefined.";
           wxLogError(message);
         }
 
-        // adds coefficient to container
-        if (name_coefficients == "stress-strain") {
-          component.coefficients_polynomial_loadstrain.push_back(coefficient);
-        } else if (name_coefficients == "creep") {
-          component.coefficients_polynomial_creep.push_back(coefficient);
+        unsigned int order = 0;
+        while (sub_node != nullptr) {
+          // creates a new coefficient
+          double coefficient = -999999;
+          const wxString sub_content = ParseElementNodeWithContent(sub_node);
+          if (sub_content.ToDouble(&coefficient) == false) {
+            message = FileAndLineNumber(filepath, sub_node)
+                      + "Invalid coefficient.";
+            wxLogError(message);
+          }
+
+          // adds or assigns coefficient to vector
+          if (order < coefficients->size()) {
+            coefficients->at(order) = coefficient;
+          } else {
+            coefficients->push_back(coefficient);
+          }
+
+          order++;
+          sub_node = sub_node->GetNext();
         }
-        sub_node = sub_node->GetNext();
+      } else {
+        message = FileAndLineNumber(filepath, node)
+                  + "XML node isn't recognized.";
+        wxLogError(message);
       }
     } else if (title == "limit_polynomial_creep") {
       if (content.ToDouble(&value) == true) {

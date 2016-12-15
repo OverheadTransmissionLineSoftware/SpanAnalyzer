@@ -166,13 +166,6 @@ int FileHandler::LoadCable(const std::string& filepath,
   }
 
   // parses the xml node to populate cable object
-  /// \todo fix CableComponent constructor to have no default
-  ///   coefficients
-  cable.component_core.coefficients_polynomial_creep.clear();
-  cable.component_core.coefficients_polynomial_loadstrain.clear();
-  cable.component_shell.coefficients_polynomial_creep.clear();
-  cable.component_shell.coefficients_polynomial_loadstrain.clear();
-
   int line_number = CableXmlHandler::ParseNode(root, filepath, cable);
   if (line_number != 0) {
     message = filepath + ":" + std::to_string(line_number) + "  --  "
@@ -192,6 +185,40 @@ int FileHandler::LoadCable(const std::string& filepath,
   units::UnitSystem units_config = wxGetApp().config()->units;
   if (units_file != units_config) {
     CableUnitConverter::ConvertUnitSystem(units_file, units_config, cable);
+  }
+
+  // adds any missing polynomial coefficients
+  // at least 5 coefficients per polynomial
+  std::vector<double>* coefficients = nullptr;
+  const unsigned int kSizeRequired = 5;
+  int num_needed = 0;
+
+  coefficients = &cable.component_core.coefficients_polynomial_creep;
+  num_needed = kSizeRequired - coefficients->size();
+  for (unsigned int i = 0; i < num_needed; i++) {
+    double coefficient = 0;
+    coefficients->push_back(0);
+  }
+
+  coefficients = &cable.component_core.coefficients_polynomial_loadstrain;
+  num_needed = kSizeRequired - coefficients->size();
+  for (unsigned int i = 0; i < num_needed; i++) {
+    double coefficient = 0;
+    coefficients->push_back(0);
+  }
+
+  coefficients = &cable.component_shell.coefficients_polynomial_creep;
+  num_needed = kSizeRequired - coefficients->size();
+  for (unsigned int i = 0; i < num_needed; i++) {
+    double coefficient = 0;
+    coefficients->push_back(0);
+  }
+
+  coefficients = &cable.component_shell.coefficients_polynomial_loadstrain;
+  num_needed = kSizeRequired - coefficients->size();
+  for (unsigned int i = 0; i < num_needed; i++) {
+    double coefficient = 0;
+    coefficients->push_back(0);
   }
 
   return line_number;
