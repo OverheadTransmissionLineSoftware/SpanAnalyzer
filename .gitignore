@@ -41,5 +41,5 @@
 # generated executables #
 ######################################
 *.exe
-build/codeblocks/debug/bin/SpanAnalyzer
-build/codeblocks/release/bin/SpanAnalyzer
+build/codeblocks/debug/SpanAnalyzer
+build/codeblocks/release/SpanAnalyzer
