@@ -3,7 +3,10 @@
 
 #include "analysis_controller.h"
 
+#include "models/base/helper.h"
 #include "wx/wx.h"
+
+#include "timer.h"
 
 AnalysisController::AnalysisController() {
   span_ = nullptr;
@@ -55,7 +58,6 @@ const std::vector<SagTensionAnalysisResult>* AnalysisController::Results(
   }
 }
 
-/// \todo add a log message in here for the analysis time
 void AnalysisController::RunAnalysis() const {
   // clears cached results
   results_creep_.clear();
@@ -85,6 +87,10 @@ void AnalysisController::RunAnalysis() const {
 
   wxLogMessage("Running sag-tension analysis.");
 
+  // creates a timer and records start time
+  Timer timer;
+  timer.Start();
+
   // sets up reloader
   reloader_.set_line_cable(&span_->linecable);
 
@@ -110,6 +116,13 @@ void AnalysisController::RunAnalysis() const {
 
   // un-inits reloader
   reloader_.set_line_cable(&span_->linecable);
+
+  // stops timer and logs
+  timer.Stop();
+  std::string message = "Analysis time = "
+                        + helper::DoubleToFormattedString(timer.Duration(), 3)
+                        + "s.";
+  wxLogMessage(message.c_str());
 }
 
 void AnalysisController::set_span(const Span* span) {
