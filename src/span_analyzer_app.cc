@@ -186,6 +186,9 @@ bool SpanAnalyzerApp::OnInit() {
 
   // sets log level specified in app config
   wxLog::SetLogLevel(config_.level_log);
+  if (config_.level_log == wxLOG_Info) {
+    wxLog::SetVerbose(true);
+  }
 
   // checks if data file exists, creates one if not
   path = config_.filepath_data;

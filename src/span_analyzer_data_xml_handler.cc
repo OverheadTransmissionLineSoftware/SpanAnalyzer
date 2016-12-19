@@ -202,7 +202,7 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
     } else {
       message = FileAndLineNumber(filepath, node)
                 + "XML node isn't recognized.";
-      wxLogMessage(message);
+      wxLogError(message);
     }
 
     node = node->GetNext();

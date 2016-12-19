@@ -66,7 +66,7 @@ void AnalysisController::RunAnalysis() const {
 
   // checks if span has been selected
   if (span_ == nullptr) {
-    wxLogMessage("No span is selected. Aborting analysis.");
+    wxLogVerbose("No span is selected. Aborting analysis.");
     return;
   }
 
@@ -81,11 +81,11 @@ void AnalysisController::RunAnalysis() const {
       wxLogError(message.c_str());
     }
 
-    wxLogMessage("Span validation errors are present. Aborting analysis.");
+    wxLogVerbose("Span validation errors are present. Aborting analysis.");
     return;
   }
 
-  wxLogMessage("Running sag-tension analysis.");
+  wxLogVerbose("Running sag-tension analysis.");
 
   // creates a timer and records start time
   Timer timer;
@@ -122,7 +122,7 @@ void AnalysisController::RunAnalysis() const {
   std::string message = "Analysis time = "
                         + helper::DoubleToFormattedString(timer.Duration(), 3)
                         + "s.";
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
 }
 
 void AnalysisController::set_span(const Span* span) {

@@ -25,7 +25,7 @@ int FileHandler::LoadAppData(const std::string& filepath,
                              const units::UnitSystem& units,
                              SpanAnalyzerData& data) {
   std::string message = "Loading application data file: " + filepath;
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
 
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
@@ -117,7 +117,7 @@ int FileHandler::LoadCable(const std::string& filepath,
                            const units::UnitSystem& units,
                            Cable& cable) {
   std::string message = "Loading cable file: " + filepath;
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
 
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
@@ -227,7 +227,7 @@ int FileHandler::LoadCable(const std::string& filepath,
 int FileHandler::LoadConfigFile(const std::string& filepath,
                                 SpanAnalyzerConfig& config) {
   std::string message = "Loading config file: " + filepath;
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
 
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
@@ -279,7 +279,7 @@ void FileHandler::SaveAppData(const std::string& filepath,
                               const units::UnitSystem& units) {
   // logs
   std::string message = "Saving application data file: " + filepath;
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
 
   // cables are stored in individual files, and are not included in the app
   // data file
@@ -326,7 +326,7 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
                             const units::UnitSystem& units) {
   // logs
   std::string message = "Saving cable file: " + filepath;
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
 
   // creates a copy of the cable and converts to different unit style
   Cable cable_converted = cable;
@@ -355,7 +355,7 @@ void FileHandler::SaveConfigFile(const std::string& filepath,
                                  const SpanAnalyzerConfig& config) {
   // logs
   std::string message = "Saving config file: " + filepath;
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
 
   // generates an xml node
   wxXmlNode* root = SpanAnalyzerConfigXmlHandler::CreateNode(config);

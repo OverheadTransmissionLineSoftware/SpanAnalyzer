@@ -29,10 +29,10 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
 
   // creates log level node
   title = "level_log";
-  if (config.level_log == wxLOG_Error) {
-    content = "Error";
-  } else if (config.level_log == wxLOG_Message) {
-    content = "Message";
+  if (config.level_log == wxLOG_Message) {
+    content = "Normal";
+  } else if (config.level_log == wxLOG_Info) {
+    content = "Verbose";
   } else {
     content = "";
   }
@@ -116,17 +116,17 @@ int SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
         message = FileAndLineNumber(filepath, node)
                   + "Application data file isn't defined. Keeping default "
                   "setting.";
-        wxLogError(message.c_str());
+        wxLogWarning(message.c_str());
       }
     } else if (title == "level_log") {
-      if (content == "Error") {
-        config.level_log = wxLOG_Error;
-      } else if (content == "Message") {
+      if (content == "Normal") {
         config.level_log = wxLOG_Message;
+      } else if (content == "Verbose") {
+        config.level_log = wxLOG_Info;
       } else {
         message = FileAndLineNumber(filepath, node)
                   + "Logging level isn't recognized. Keeping default setting.";
-        wxLogError(message.c_str());
+        wxLogWarning(message.c_str());
       }
     } else if (title == "size_frame") {
       std::string str;
@@ -144,7 +144,7 @@ int SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
       } else {
         message = FileAndLineNumber(filepath, node)
                   + "Unit system isn't recognized. Keeping default setting.";
-        wxLogError(message.c_str());
+        wxLogWarning(message.c_str());
       }
     } else {
       message = FileAndLineNumber(filepath, node)

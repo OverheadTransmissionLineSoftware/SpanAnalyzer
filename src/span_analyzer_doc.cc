@@ -104,7 +104,7 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   std::string message;
 
   message = "Loading document file: " + this->GetFilename();
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
 
   // attempts to load an xml document from the input stream
   wxXmlDocument doc_xml;
@@ -287,7 +287,7 @@ void SpanAnalyzerDoc::RunAnalysis() const {
 wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
   // logs
   std::string message = "Saving document file: " + GetFilename();
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
 
   // gets the unit system from app config
   units::UnitSystem units = wxGetApp().config()->units;

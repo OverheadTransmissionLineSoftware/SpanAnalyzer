@@ -133,7 +133,7 @@ const long ReportTable::IndexReportRow(const long& index_listctrl) {
   const bool status = listctrl_->GetItem(item_selected);
 
   if (status == false) {
-    wxLogMessage("Couldn't retrieve selected item from listctrl.");
+    wxLogVerbose("No item is selected in listctrl.");
   }
 
   ReportRow* row_selected = (ReportRow*)item_selected.GetData();

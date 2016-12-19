@@ -39,9 +39,9 @@ PreferencesDialog::PreferencesDialog(
 
   // sets the logging level in the radio control
   radiobox = XRCCTRL(*this, "radiobox_logging", wxRadioBox);
-  if (config_->level_log == wxLOG_Error) {
+  if (config_->level_log == wxLOG_Message) {
     radiobox->SetSelection(0);
-  } else if (config_->level_log == wxLOG_Message) {
+  } else if (config_->level_log == wxLOG_Info) {
     radiobox->SetSelection(1);
   }
 
@@ -78,9 +78,9 @@ void PreferencesDialog::OnButtonOk(wxCommandEvent& event) {
   // transfers logging level
   radiobox = XRCCTRL(*this, "radiobox_logging", wxRadioBox);
   if (radiobox->GetSelection() == 0) {
-    config_->level_log = wxLOG_Error;
-  } else if (radiobox->GetSelection() == 1) {
     config_->level_log = wxLOG_Message;
+  } else if (radiobox->GetSelection() == 1) {
+    config_->level_log = wxLOG_Info;
   }
 
   // transfers application data path

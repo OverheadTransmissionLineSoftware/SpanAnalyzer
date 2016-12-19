@@ -119,7 +119,7 @@ int AnalysisFilterXmlHandler::ParseNodeV1(
     } else {
       message = FileAndLineNumber(filepath, node)
                 + "XML node isn't recognized.";
-      wxLogMessage(message);
+      wxLogError(message);
     }
 
     node = node->GetNext();
