@@ -112,6 +112,8 @@ void SpanAnalyzerFrame::OnMenuEditAnalysisFilters(wxCommandEvent& event) {
   if (dialog.ShowModal() == wxID_OK) {
     wxBusyCursor cursor;
 
+    wxLogVerbose("Updating analysis filters.");
+
     // saves application data
     FileHandler::SaveAppData(config->filepath_data, *data, config->units);
 
@@ -134,6 +136,8 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
   CableFileManagerDialog dialog(this, config->units, &data->cablefiles);
   if (dialog.ShowModal() == wxID_OK) {
     wxBusyCursor cursor;
+
+    wxLogVerbose("Updating cables.");
 
     // saves application data
     FileHandler::SaveAppData(config->filepath_data, *data, config->units);
@@ -164,6 +168,8 @@ void SpanAnalyzerFrame::OnMenuEditWeathercases(
       &data->weathercases);
   if (dialog.ShowModal() == wxID_OK) {
     wxBusyCursor cursor;
+
+    wxLogVerbose("Updating weathercases.");
 
     // saves application data
     FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
@@ -202,6 +208,8 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
   // converts unit system if it changed
   SpanAnalyzerData* data = wxGetApp().data();
   if (units_before != config->units) {
+    wxLogVerbose("Converting unit system.");
+
     // converts app data
     for (auto iter = data->weathercases.begin();
          iter != data->weathercases.end(); iter++) {

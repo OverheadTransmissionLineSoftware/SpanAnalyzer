@@ -126,6 +126,8 @@ void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
 void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
   // not creating busy cursor to avoid cursor flicker
 
+  wxLogVerbose("Updating displayed analysis filter index.");
+
   // gets selected index
   const long index_selected = event.GetItem().GetId();
 
@@ -170,6 +172,8 @@ void ResultsPane::UpdateFilterGroupChoice() {
 }
 
 void ResultsPane::UpdateFilterGroupSelected() {
+  wxLogVerbose("Updating displayed analysis filters.");
+
   // initializes filters cached in view
   SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
   view->set_group_filters(nullptr);
@@ -205,6 +209,8 @@ void ResultsPane::UpdateFilterGroupSelected() {
 }
 
 void ResultsPane::UpdateReportData() {
+  wxLogVerbose("Updating report table data.");
+
   // gets view display information
   SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
   const AnalysisFilterGroup* group_filters = view->group_filters();

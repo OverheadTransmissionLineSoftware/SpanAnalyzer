@@ -67,6 +67,8 @@ void EditPane::ActivateSpan(const wxTreeItemId& id) {
     return;
   }
 
+  wxLogVerbose("Activating span.");
+
   // unbolds previous item
   if (item_activated_.IsOk()) {
     treectrl_->SetItemBold(item_activated_, false);
@@ -114,6 +116,8 @@ void EditPane::AddSpan() {
     return;
   }
 
+  wxLogVerbose("Adding span.");
+
   // adds to document
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
   auto iter = doc->AppendSpan(span);
@@ -131,6 +135,8 @@ void EditPane::CopySpan(const wxTreeItemId& id) {
 
   // copies span
   Span span = *(item->iter());
+
+  wxLogVerbose("Copying span.");
 
   // gets position and inserts to document
   auto position = std::next(item->iter());
@@ -150,6 +156,8 @@ void EditPane::DeleteSpan(const wxTreeItemId& id) {
   // gets tree item data
   SpanTreeItemData* item = (SpanTreeItemData*)treectrl_->GetItemData(id);
 
+  wxLogVerbose("Deleting span.");
+
   // erases from document and treectrl
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
   doc->DeleteSpan(item->iter());
@@ -165,6 +173,8 @@ void EditPane::DeleteSpans() {
   // gets list and size
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
   const std::list<Span>& spans = doc->spans();
+
+  wxLogVerbose("Deleting all spans.");
 
   // deletes spans from doc
   std::list<Span>::const_iterator iter = spans.cbegin();
@@ -211,6 +221,8 @@ void EditPane::EditSpan(const wxTreeItemId& id) {
                           wxGetApp().config()->units,
                           &span);
   if (dialog.ShowModal() == wxID_OK) {
+    wxLogVerbose("Editing span.");
+
     // converts span to consistent unit style
     SpanUnitConverter::ConvertUnitStyle(wxGetApp().config()->units,
                                         units::UnitStyle::kDifferent,
@@ -375,6 +387,8 @@ void EditPane::OnDragEnd(wxTreeEvent& event) {
       (SpanTreeItemData*)treectrl_->GetItemData(item_destination);
   std::list<Span>::const_iterator iter_destination = data_destination->iter();
   std::advance(iter_destination, 1);
+
+  wxLogVerbose("Moving spans.");
 
   // modifies document
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
