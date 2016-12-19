@@ -244,6 +244,11 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
 
   // updates logging level
   wxLog::SetLogLevel(config->level_log);
+  if (config->level_log == wxLOG_Message) {
+    wxLog::SetVerbose(false);
+  } else if (config->level_log == wxLOG_Info) {
+    wxLog::SetVerbose(true);
+  }
 }
 
 void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
