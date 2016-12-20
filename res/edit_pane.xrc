@@ -15,8 +15,8 @@
             <flag>wxEXPAND|wxALL</flag>
             <border>0</border>
             <object class="wxButton" name="button_add">
-              <label>A</label>
-              <size>50,35</size>
+              <size>32,32</size>
+              <tooltip>Add</tooltip>
             </object>
           </object>
           <object class="sizeritem">
@@ -24,8 +24,8 @@
             <flag>wxEXPAND|wxALL</flag>
             <border>0</border>
             <object class="wxButton" name="button_delete">
-              <label>D</label>
-              <size>50,35</size>
+              <size>32,32</size>
+              <tooltip>Delete</tooltip>
             </object>
           </object>
           <object class="sizeritem">
@@ -33,8 +33,8 @@
             <flag>wxEXPAND|wxALL</flag>
             <border>0</border>
             <object class="wxButton" name="button_copy">
-              <label>C</label>
-              <size>50,35</size>
+              <size>32,32</size>
+              <tooltip>Copy</tooltip>
             </object>
           </object>
           <object class="sizeritem">
@@ -42,8 +42,8 @@
             <flag>wxEXPAND|wxALL</flag>
             <border>0</border>
             <object class="wxButton" name="button_edit">
-              <label>E</label>
-              <size>50,35</size>
+              <size>32,32</size>
+              <tooltip>Edit</tooltip>
             </object>
           </object>
         </object>

@@ -10,6 +10,11 @@
 #include "span_editor_dialog.h"
 #include "span_unit_converter.h"
 
+#include "../res/copy.xpm"
+#include "../res/minus.xpm"
+#include "../res/plus.xpm"
+#include "../res/wrench.xpm"
+
 /// context menu enum
 enum {
   kTreeItemActivate = 0,
@@ -43,6 +48,28 @@ EditPane::EditPane(wxWindow* parent, wxView* view) {
   treectrl_ = XRCCTRL(*this, "treectrl", wxTreeCtrl);
   treectrl_->AddRoot("Spans");
   treectrl_->SetIndent(2);
+
+  // creates an imagelist for the button bitmaps
+  wxImageList images(32, 32, true);
+  images.Add(wxBitmap(plus_xpm), wxColour(255, 255, 255));
+  images.Add(wxBitmap(minus_xpm), wxColour(255, 255, 255));
+  images.Add(wxBitmap(copy_xpm), wxColour(255, 255, 255));
+  images.Add(wxBitmap(wrench_xpm), wxColour(255, 255, 255));
+
+
+  // assigns bitmaps to the buttons
+  wxButton* button = nullptr;
+  button = XRCCTRL(*this, "button_add", wxButton);
+  button->SetBitmap(images.GetBitmap(0));
+
+  button = XRCCTRL(*this, "button_delete", wxButton);
+  button->SetBitmap(images.GetBitmap(1));
+
+  button = XRCCTRL(*this, "button_copy", wxButton);
+  button->SetBitmap(images.GetBitmap(2));
+
+  button = XRCCTRL(*this, "button_edit", wxButton);
+  button->SetBitmap(images.GetBitmap(3));
 }
 
 EditPane::~EditPane() {
@@ -262,13 +289,13 @@ void EditPane::InitializeTreeCtrl() {
 
 void EditPane::OnButtonAdd(wxCommandEvent& event) {
   // can't create busy cursor, a dialog is used further along
-  
+
   AddSpan();
 }
 
 void EditPane::OnButtonCopy(wxCommandEvent& event) {
   wxBusyCursor cursor;
-  
+
   // gets selected tree item
   wxTreeItemId id_item = treectrl_->GetSelection();
   if (id_item.IsOk() == false) {
@@ -286,7 +313,7 @@ void EditPane::OnButtonCopy(wxCommandEvent& event) {
 
 void EditPane::OnButtonDelete(wxCommandEvent& event) {
   wxBusyCursor cursor;
-  
+
   // gets selected tree item
   wxTreeItemId id_item = treectrl_->GetSelection();
   if (id_item.IsOk() == false) {
@@ -363,7 +390,7 @@ void EditPane::OnDragBegin(wxTreeEvent& event) {
 
 void EditPane::OnDragEnd(wxTreeEvent& event) {
   wxBusyCursor cursor;
-  
+
   // verifies that the end drag is valid
   if ((event.GetItem().IsOk() == false)
       ||(event.GetItem() == treectrl_->GetRootItem())
