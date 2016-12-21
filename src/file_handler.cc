@@ -195,29 +195,25 @@ int FileHandler::LoadCable(const std::string& filepath,
 
   coefficients = &cable.component_core.coefficients_polynomial_creep;
   num_needed = kSizeRequired - coefficients->size();
-  for (unsigned int i = 0; i < num_needed; i++) {
-    double coefficient = 0;
+  for (int i = 0; i < num_needed; i++) {
     coefficients->push_back(0);
   }
 
   coefficients = &cable.component_core.coefficients_polynomial_loadstrain;
   num_needed = kSizeRequired - coefficients->size();
-  for (unsigned int i = 0; i < num_needed; i++) {
-    double coefficient = 0;
+  for (int i = 0; i < num_needed; i++) {
     coefficients->push_back(0);
   }
 
   coefficients = &cable.component_shell.coefficients_polynomial_creep;
   num_needed = kSizeRequired - coefficients->size();
-  for (unsigned int i = 0; i < num_needed; i++) {
-    double coefficient = 0;
+  for (int i = 0; i < num_needed; i++) {
     coefficients->push_back(0);
   }
 
   coefficients = &cable.component_shell.coefficients_polynomial_loadstrain;
   num_needed = kSizeRequired - coefficients->size();
-  for (unsigned int i = 0; i < num_needed; i++) {
-    double coefficient = 0;
+  for (int i = 0; i < num_needed; i++) {
     coefficients->push_back(0);
   }
 

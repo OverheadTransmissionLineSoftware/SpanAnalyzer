@@ -111,7 +111,6 @@ void AnalysisFilterManagerDialog::OnButtonFilterDelete(wxCommandEvent& event) {
 
   // gets the filter from the group
   auto iter = std::next(group.filters.begin(), index_filter_selected_);
-  AnalysisFilter& filter = *iter;
 
   wxBusyCursor cursor;
 
@@ -200,7 +199,8 @@ void AnalysisFilterManagerDialog::OnButtonGroupDelete(
 
   // updates the group listbox
   listbox_groups_->Delete(index_group_selected_);
-  if (index_group_selected_ < listbox_groups_->GetCount()) {
+  const int kSize = listbox_groups_->GetCount();
+  if (index_group_selected_ < kSize) {
     listbox_groups_->SetSelection(index_group_selected_);
   } else {
     index_group_selected_ = wxNOT_FOUND;
@@ -261,7 +261,6 @@ void AnalysisFilterManagerDialog::OnListBoxGroupSelect(
   listctrl_filters_->DeleteAllItems();
   for (auto iter = group.filters.cbegin(); iter != group.filters.cend();
        iter++) {
-    long index_row = std::distance(group.filters.cbegin(), iter);
     const AnalysisFilter& filter = *iter;
 
     // adds list item (row) to listctrl
@@ -313,7 +312,7 @@ void AnalysisFilterManagerDialog::OnSpinButtonFilterDown(wxSpinEvent& event) {
 
   // updates listctrl
   const AnalysisFilter& filter = *iter_selection;
-  
+
   listctrl_filters_->DeleteItem(index_filter_selected_);
 
   index_filter_selected_ += 1;
@@ -348,7 +347,7 @@ void AnalysisFilterManagerDialog::OnSpinButtonFilterUp(wxSpinEvent& event) {
   group.filters.splice(iter_position, group.filters, iter_selection);
 
   const AnalysisFilter& filter = *iter_selection;
-  
+
   listctrl_filters_->DeleteItem(index_filter_selected_);
 
   index_filter_selected_ -= 1;
@@ -429,7 +428,7 @@ void AnalysisFilterManagerDialog::UpdateListCtrlRow(const long& index,
     return;
   }
 
-  // gets a condition string    
+  // gets a condition string
   std::string str_condition;
   if (filter.condition == CableConditionType::kCreep) {
     str_condition = "Creep";

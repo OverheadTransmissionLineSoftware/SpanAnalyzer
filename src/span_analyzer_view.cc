@@ -20,7 +20,8 @@ const AnalysisFilter* SpanAnalyzerView::AnalysisFilterActive() const {
   }
 
   // checks for valid index
-  if ((index_filter_ < 0) || (group_filters_->filters.size() < index_filter_)) {
+  const int kSize = group_filters_->filters.size();
+  if ((index_filter_ < 0) || (kSize < index_filter_)) {
     return nullptr;
   } else {
     auto iter = group_filters_->filters.cbegin();
