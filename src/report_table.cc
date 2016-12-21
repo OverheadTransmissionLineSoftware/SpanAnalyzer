@@ -199,6 +199,9 @@ void ReportTable::Refresh() {
   Sort();
 
   // selects item
+  if (listctrl_->GetItemCount() <= index_selected_) {
+    index_selected_ = listctrl_->GetItemCount() - 1;
+  }
   listctrl_->SetItemState(index_selected_, wxLIST_STATE_SELECTED,
                           wxLIST_STATE_SELECTED);
 
