@@ -6,6 +6,7 @@
 #include "models/base/helper.h"
 #include "wx/wx.h"
 
+#include "status_bar_log.h"
 #include "timer.h"
 
 AnalysisController::AnalysisController() {
@@ -23,6 +24,8 @@ void AnalysisController::ClearResults() {
   results_creep_.clear();
   results_initial_.clear();
   results_load_.clear();
+
+  status_bar_log::SetText("Ready");
 }
 
 const SagTensionAnalysisResult* AnalysisController::Result(
@@ -82,10 +85,13 @@ void AnalysisController::RunAnalysis() const {
     }
 
     wxLogVerbose("Span validation errors are present. Aborting analysis.");
+    status_bar_log::SetText("Span validation error(s) present, see logs");
+
     return;
   }
 
   wxLogVerbose("Running sag-tension analysis.");
+  status_bar_log::PushText("Running sag-tension analysis...");
 
   // creates a timer and records start time
   Timer timer;
@@ -123,6 +129,10 @@ void AnalysisController::RunAnalysis() const {
                         + helper::DoubleToFormattedString(timer.Duration(), 3)
                         + "s.";
   wxLogVerbose(message.c_str());
+
+  // clears status bar
+  status_bar_log::PopText();
+  status_bar_log::SetText("Ready");
 }
 
 void AnalysisController::set_span(const Span* span) {

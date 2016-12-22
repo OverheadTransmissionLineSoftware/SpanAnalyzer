@@ -76,6 +76,9 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
   // tells aui manager to manage this frame
   manager_.SetManagedWindow(this);
 
+  // creates status bar
+  CreateStatusBar();
+
   // creates log AUI window and adds to manager
   wxAuiPaneInfo info;
   info.Name("Log");

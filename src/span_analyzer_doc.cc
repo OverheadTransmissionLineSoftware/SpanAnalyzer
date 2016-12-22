@@ -8,6 +8,7 @@
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc_xml_handler.h"
 #include "span_unit_converter.h"
+#include "status_bar_log.h"
 
 IMPLEMENT_DYNAMIC_CLASS(SpanAnalyzerDoc, wxDocument)
 
@@ -105,6 +106,7 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
 
   message = "Loading document file: " + this->GetFilename();
   wxLogVerbose(message.c_str());
+  status_bar_log::PushText(message);
 
   // attempts to load an xml document from the input stream
   wxXmlDocument doc_xml;
@@ -115,6 +117,8 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
               "will close.";
     wxLogError(message.c_str());
     wxMessageBox(message);
+
+    status_bar_log::PopText();
 
     // sets stream to invalid state and returns
     stream.Reset(wxSTREAM_READ_ERROR);
@@ -130,6 +134,8 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
               "will close.";
     wxLogError(message.c_str());
     wxMessageBox(message);
+
+    status_bar_log::PopText();
 
     // sets stream to invalide state and returns
     stream.Reset(wxSTREAM_READ_ERROR);
@@ -152,6 +158,8 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
       wxLogError(message.c_str());
       wxMessageBox(message);
 
+      status_bar_log::PopText();
+
       // sets stream to invalide state and returns
       stream.Reset(wxSTREAM_READ_ERROR);
       return stream;
@@ -163,6 +171,8 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
               "close.";
     wxLogError(message.c_str());
     wxMessageBox(message);
+
+    status_bar_log::PopText();
 
     // sets stream to invalide state and returns
     stream.Reset(wxSTREAM_READ_ERROR);
@@ -201,6 +211,8 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   // resets modified status to false because the xml parser uses functions
   // that mark it as modified
   Modify(false);
+
+  status_bar_log::PopText();
 
   return stream;
 }
@@ -279,6 +291,7 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
   // logs
   std::string message = "Saving document file: " + GetFilename();
   wxLogVerbose(message.c_str());
+  status_bar_log::PushText(message);
 
   // gets the unit system from app config
   units::UnitSystem units = wxGetApp().config()->units;
@@ -308,6 +321,8 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
   // converts back to a consistent unit style
   ConvertUnitStyle(units, units::UnitStyle::kDifferent,
                    units::UnitStyle::kConsistent);
+
+  status_bar_log::PopText();
 
   return stream;
 }

@@ -10,6 +10,7 @@
 #include "file_handler.h"
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
+#include "status_bar_log.h"
 
 IMPLEMENT_APP(SpanAnalyzerApp)
 
@@ -232,6 +233,9 @@ bool SpanAnalyzerApp::OnInit() {
   }
   frame_->Centre(wxBOTH);
   frame_->Show(true);
+
+  // updates status bar
+  status_bar_log::SetText("Ready");
 
   return true;
 }
