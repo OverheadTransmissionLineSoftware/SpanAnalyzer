@@ -91,31 +91,43 @@ wxXmlNode* WeatherLoadCaseXmlHandler::CreateNode(
   return node_root;
 }
 
-int WeatherLoadCaseXmlHandler::ParseNode(const wxXmlNode* root,
-                                         const std::string& filepath,
-                                         WeatherLoadCase& weathercase) {
+bool WeatherLoadCaseXmlHandler::ParseNode(const wxXmlNode* root,
+                                          const std::string& filepath,
+                                          WeatherLoadCase& weathercase) {
+  wxString message;
+
   // checks for valid root node
   if (root->GetName() != "weather_load_case") {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid root node. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // gets version attribute
   wxString version;
   if (root->GetAttribute("version", &version) == false) {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Version attribute is missing. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // sends to proper parsing function
   if (version == "1") {
     return ParseNodeV1(root, filepath, weathercase);
   } else {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid version number. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 }
 
-int WeatherLoadCaseXmlHandler::ParseNodeV1(const wxXmlNode* root,
-                                           const std::string& filepath,
-                                           WeatherLoadCase& weathercase) {
+bool WeatherLoadCaseXmlHandler::ParseNodeV1(const wxXmlNode* root,
+                                            const std::string& filepath,
+                                            WeatherLoadCase& weathercase) {
+  bool status = true;
   wxString message;
 
   // evaluates each child node
@@ -135,6 +147,7 @@ int WeatherLoadCaseXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid ice thickness.";
         wxLogError(message);
         weathercase.thickness_ice = -999999;
+        status = false;
       }
     } else if (title == "density_ice") {
       if (content.ToDouble(&value) == true) {
@@ -144,6 +157,7 @@ int WeatherLoadCaseXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid ice density.";
         wxLogError(message);
         weathercase.density_ice = -999999;
+        status = false;
       }
     } else if (title == "pressure_wind") {
       if (content.ToDouble(&value) == true) {
@@ -153,6 +167,7 @@ int WeatherLoadCaseXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid wind pressure.";
         wxLogError(message);
         weathercase.pressure_wind = -999999;
+        status = false;
       }
     } else if (title == "temperature_cable") {
       if (content.ToDouble(&value) == true) {
@@ -162,16 +177,17 @@ int WeatherLoadCaseXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid cable temperature.";
         wxLogError(message);
         weathercase.temperature_cable = -999999;
+        status = false;
       }
     } else {
       message = FileAndLineNumber(filepath, node)
                 + "XML node isn't recognized.";
       wxLogError(message);
+      status = false;
     }
 
     node = node->GetNext();
   }
 
-  // if it gets to this point, no errors were encountered
-  return 0;
+  return status;
 }

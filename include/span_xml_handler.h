@@ -64,16 +64,16 @@ class SpanXmlHandler : public XmlHandler {
   ///   weathercase.
   /// \param[out] span
   ///   The span that is populated.
-  /// \return The file line number of a critical error. Returns 0 if no critical
-  ///   errors were encountered.
-  /// Critical errors cause the parsing to abort, but are not logged.
-  /// Non-critical errors are directed to the active application log target. If
-  /// the property is recognized, it is set to an invalid state.
-  static int ParseNode(const wxXmlNode* root,
-                       const std::string& filepath,
-                       const std::list<CableFile*>* cablefiles,
-                       const std::list<WeatherLoadCase*>* weathercases,
-                       Span& span);
+  /// \return The status of the xml node parse. If any errors are encountered
+  ///   false is returned.
+  /// All errors are logged to the active application log target. Critical
+  /// errors cause the parsing to abort. Non-critical errors set the object
+  /// property to an invalid state (if applicable).
+  static bool ParseNode(const wxXmlNode* root,
+                        const std::string& filepath,
+                        const std::list<CableFile*>* cablefiles,
+                        const std::list<WeatherLoadCase*>* weathercases,
+                        Span& span);
 
  private:
   /// \brief Parses a version 1 XML node and populates a span.
@@ -91,16 +91,16 @@ class SpanXmlHandler : public XmlHandler {
   ///   weathercase.
   /// \param[out] span
   ///   The span that is populated.
-  /// \return The file line number of a critical error. Returns 0 if no critical
-  ///   errors were encountered.
-  /// Critical errors cause the parsing to abort, but are not logged.
-  /// Non-critical errors are directed to the active application log target. If
-  /// the property is recognized, it is set to an invalid state.
-  static int ParseNodeV1(const wxXmlNode* root,
-                         const std::string& filepath,
-                         const std::list<CableFile*>* cablefiles,
-                         const std::list<WeatherLoadCase*>* weathercases,
-                         Span& span);
+  /// \return The status of the xml node parse. If any errors are encountered
+  ///   false is returned.
+  /// All errors are logged to the active application log target. Critical
+  /// errors cause the parsing to abort. Non-critical errors set the object
+  /// property to an invalid state (if applicable).
+  static bool ParseNodeV1(const wxXmlNode* root,
+                          const std::string& filepath,
+                          const std::list<CableFile*>* cablefiles,
+                          const std::list<WeatherLoadCase*>* weathercases,
+                          Span& span);
 };
 
 #endif  // OTLS_SPANANALYZER_SPANXMLHANDLER_H_

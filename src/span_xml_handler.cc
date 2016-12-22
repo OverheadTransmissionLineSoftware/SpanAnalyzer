@@ -60,41 +60,52 @@ wxXmlNode* SpanXmlHandler::CreateNode(
   return node_root;
 }
 
-int SpanXmlHandler::ParseNode(
+bool SpanXmlHandler::ParseNode(
     const wxXmlNode* root,
     const std::string& filepath,
     const std::list<CableFile*>* cablefiles,
     const std::list<WeatherLoadCase*>* weathercases,
     Span& span) {
+  wxString message;
+
   // checks for valid root node
   if (root->GetName() != "span") {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid root node. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // gets version attribute
   wxString version;
   if (root->GetAttribute("version", &version) == false) {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Version attribute is missing. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // sends to proper parsing function
   if (version == "1") {
     return ParseNodeV1(root, filepath, cablefiles, weathercases, span);
   } else {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid version number. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 }
 
-int SpanXmlHandler::ParseNodeV1(
+bool SpanXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
     const std::string& filepath,
     const std::list<CableFile*>* cablefiles,
     const std::list<WeatherLoadCase*>* weathercases,
     Span& span) {
   // variables used to parse XML node
+  bool status = true;
   wxString title;
   wxString content;
-
   wxString message;
 
   // gets name attribute
@@ -117,6 +128,7 @@ int SpanXmlHandler::ParseNodeV1(
         message = FileAndLineNumber(filepath, node)
                   + "Invalid span type.";
         wxLogError(message);
+        status = false;
       }
     } else if (title == "line_cable") {
       // line cable is not intended to be application-specific
@@ -129,32 +141,26 @@ int SpanXmlHandler::ParseNodeV1(
         cables.push_back(cable);
       }
 
-      int line_number = LineCableXmlHandler::ParseNode(
+      const bool status_node = LineCableXmlHandler::ParseNode(
           node, filepath, &cables, weathercases, span.linecable);
-      if(line_number != 0) {
-        message = FileAndLineNumber(filepath, node)
-                  + "Invalid line cable.";
-        wxLogError(message);
-        span.linecable = LineCable();
+      if (status_node == false) {
+        status = false;
       }
     } else if (title == "vector_3d") {
-      const int line_number = Vector3dXmlHandler::ParseNode(
+      const bool status_node = Vector3dXmlHandler::ParseNode(
           node, filepath, span.spacing_catenary);
-      if(line_number != 0) {
-        message = FileAndLineNumber(filepath, node)
-                  + "Invalid catenary spacing.";
-        wxLogError(message);
-        span.spacing_catenary = Vector3d();
+      if (status_node == false) {
+        status = false;
       }
     } else {
       message = FileAndLineNumber(filepath, node)
                 + "XML node isn't recognized.";
       wxLogError(message);
+      status = false;
     }
 
     node = node->GetNext();
   }
 
-  // if it gets to this point, no critical errors were encountered
-  return 0;
+  return status;
 }

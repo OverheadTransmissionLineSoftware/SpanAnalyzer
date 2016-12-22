@@ -40,14 +40,14 @@ class SpanAnalyzerConfigXmlHandler : public XmlHandler {
   ///   purposes only and can be left blank.
   /// \param[out] config
   ///   The config settings that are populated.
-  /// \return The file line number of a critical error. Returns 0 if no critical
-  ///   errors were encountered.
-  /// Critical errors cause the parsing to abort, but are not logged.
-  /// Non-critical errors are directed to the active application log target. If
-  /// the property is not recognized, it is kept at the default setting.
-  static int ParseNode(const wxXmlNode* root,
-                       const std::string& filepath,
-                       SpanAnalyzerConfig& config);
+  /// \return The status of the xml node parse. If any errors are encountered
+  ///   false is returned.
+  /// All errors are logged to the active application log target. Critical
+  /// errors cause the parsing to abort. Non-critical errors set the object
+  /// property to an invalid state (if applicable).
+  static bool ParseNode(const wxXmlNode* root,
+                        const std::string& filepath,
+                        SpanAnalyzerConfig& config);
 
  private:
   /// \brief Parses a version 1 XML node and populates the config settings.
@@ -58,14 +58,14 @@ class SpanAnalyzerConfigXmlHandler : public XmlHandler {
   ///   purposes only and can be left blank.
   /// \param[out] config
   ///   The config settings that are populated.
-  /// \return The file line number of a critical error. Returns 0 if no critical
-  ///   errors were encountered.
-  /// Critical errors cause the parsing to abort, but are not logged.
-  /// Non-critical errors are directed to the active application log target. If
-  /// the property is not recognized, it is kept at the default setting.
-  static int ParseNodeV1(const wxXmlNode* root,
-                         const std::string& filepath,
-                         SpanAnalyzerConfig& config);
+  /// \return The status of the xml node parse. If any errors are encountered
+  ///   false is returned.
+  /// All errors are logged to the active application log target. Critical
+  /// errors cause the parsing to abort. Non-critical errors set the object
+  /// property to an invalid state (if applicable).
+  static bool ParseNodeV1(const wxXmlNode* root,
+                          const std::string& filepath,
+                          SpanAnalyzerConfig& config);
 };
 
 #endif  // OTLS_SPANANALYZER_SPANANALYZERCONFIGXMLHANDLER_H_

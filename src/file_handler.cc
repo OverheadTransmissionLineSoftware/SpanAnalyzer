@@ -29,8 +29,8 @@ int FileHandler::LoadAppData(const std::string& filepath,
 
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
-    message = "Application data file (" + filepath + ") does not exist. "
-              "Aborting.";
+    message = filepath + "  --  "
+              "File does not exist. Aborting.";
     wxLogError(message.c_str());
     return -1;
   }
@@ -51,7 +51,7 @@ int FileHandler::LoadAppData(const std::string& filepath,
     message = filepath + "  --  "
               "Application data file contains an invalid xml root. Aborting.";
     wxLogError(message.c_str());
-    return root->GetLineNumber();
+    return 1;
   }
 
   // gets unit system attribute from file
@@ -77,15 +77,8 @@ int FileHandler::LoadAppData(const std::string& filepath,
   }
 
   // parses the xml node to populate data object
-  int line_number = SpanAnalyzerDataXmlHandler::ParseNode(root, filepath,
-                                                          units_file, data);
-  if (line_number != 0) {
-    message = filepath + std::to_string(line_number) + "  --  "
-              "Applicaton data file contains a critical parsing error. "
-              "Aborting.";
-    wxLogError(message.c_str());
-    return line_number;
-  }
+  const bool status_node = SpanAnalyzerDataXmlHandler::ParseNode(
+      root, filepath, units_file, data);
 
   // converts weathercases to consistent unit style
   for (auto iter = data.weathercases.begin();
@@ -110,7 +103,12 @@ int FileHandler::LoadAppData(const std::string& filepath,
     }
   }
 
-  return 0;
+  // selects return based on parsing status
+  if (status_node == true) {
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
 int FileHandler::LoadCable(const std::string& filepath,
@@ -141,7 +139,7 @@ int FileHandler::LoadCable(const std::string& filepath,
     message = filepath + "  --  "
               "Cable file contains an invalid xml root. Aborting.";
     wxLogError(message.c_str());
-    return root->GetLineNumber();
+    return 1;
   }
 
   // gets unit system attribute from file
@@ -156,23 +154,17 @@ int FileHandler::LoadCable(const std::string& filepath,
       message = filepath + "  --  "
                 "Cable file contains an invalid units attribute. Aborting.";
       wxLogError(message.c_str());
-      return root->GetLineNumber();
+      return 1;
     }
   } else {
     message = filepath + "  --  "
               "Cable file is missing units attribute. Aborting.";
     wxLogError(message.c_str());
-    return root->GetLineNumber();
+    return 1;
   }
 
   // parses the xml node to populate cable object
-  int line_number = CableXmlHandler::ParseNode(root, filepath, cable);
-  if (line_number != 0) {
-    message = filepath + ":" + std::to_string(line_number) + "  --  "
-              "Cable file contains a critical parsing error. Aborting.";
-    wxLogError(message.c_str());
-    return line_number;
-  }
+  const bool status_node = CableXmlHandler::ParseNode(root, filepath, cable);
 
   // converts units to consistent style
   CableUnitConverter::ConvertUnitStyle(
@@ -217,7 +209,12 @@ int FileHandler::LoadCable(const std::string& filepath,
     coefficients->push_back(0);
   }
 
-  return line_number;
+  // selects return based on parsing status
+  if (status_node == true) {
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
 int FileHandler::LoadConfigFile(const std::string& filepath,
@@ -250,21 +247,19 @@ int FileHandler::LoadConfigFile(const std::string& filepath,
               "Config file contains an invalid xml root. Keeping "
               "application defaults.";
     wxLogError(message.c_str());
-    return root->GetLineNumber();
+    return 1;
   }
 
   // parses the XML node and loads into the config struct
-  int line_number = SpanAnalyzerConfigXmlHandler::ParseNode(root, filepath,
-                                                            config);
-  if (line_number != 0) {
-    message = filepath + ":" + std::to_string(line_number) + "  --  "
-              "Config file contains a critical parsing error. Keeping "
-              "application defaults.";
-    wxLogError(message.c_str());
-    return line_number;
-  }
+  const bool status_node = SpanAnalyzerConfigXmlHandler::ParseNode(
+      root, filepath, config);
 
-  return 0;
+  // selects return based on parsing status
+  if (status_node == true) {
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
 /// To avoid re-allocating all of the app data for a different unit style,

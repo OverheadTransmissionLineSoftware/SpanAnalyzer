@@ -209,7 +209,14 @@ bool SpanAnalyzerApp::OnInit() {
 
   // loads application data file
   // filehandler handles all logging
-  FileHandler::LoadAppData(config_.filepath_data, config_.units, data_);
+  const int status_data = FileHandler::LoadAppData(config_.filepath_data,
+                                                    config_.units, data_);
+  if ((status_data == -1) || (status_data == 1)) {
+    // notifies user of error
+    wxString message = config_.filepath_data + "  --  "
+              "Application data file contains error(s). Check logs.";
+    wxMessageBox(message);
+  }
 
   // loads a document if defined in command line
   if (filepath_start_ != wxEmptyString) {

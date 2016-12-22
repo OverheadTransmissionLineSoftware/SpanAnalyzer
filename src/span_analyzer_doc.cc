@@ -178,22 +178,13 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   const std::list<CableFile*>& cablefiles =
       wxGetApp().data()->cablefiles;
 
-  int line_number = SpanAnalyzerDocXmlHandler::ParseNode(
+  const bool status_node = SpanAnalyzerDocXmlHandler::ParseNode(
       root, filename, &cablefiles, &weathercases, *this);
-  if (line_number != 0) {
+  if (status_node == false) {
     // notifies user of error
-    message = GetFilename() + ":" + std::to_string(line_number) + "  --  "
-              "Document file contains a critical parsing error. The document "
-              "will close.";
-    wxLogError(message.c_str());
+    message = GetFilename() + "  --  "
+              "Document file contains parsing error(s). Check logs.";
     wxMessageBox(message);
-
-    // marks document as unmodified to avoid additional popup
-    Modify(false);
-
-    // sets stream to invalide state and returns
-    stream.Reset(wxSTREAM_READ_ERROR);
-    return stream;
   }
 
   // converts units to consistent style

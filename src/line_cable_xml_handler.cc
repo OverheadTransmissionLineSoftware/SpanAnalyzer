@@ -85,38 +85,49 @@ wxXmlNode* LineCableXmlHandler::CreateNode(
   return node_root;
 }
 
-int LineCableXmlHandler::ParseNode(
+bool LineCableXmlHandler::ParseNode(
     const wxXmlNode* root,
     const std::string& filepath,
     const std::list<const Cable*>* cables,
     const std::list<WeatherLoadCase*>* weathercases,
     LineCable& linecable) {
+  wxString message;
+
   // checks for valid root node
   if (root->GetName() != "line_cable") {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid root node. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // gets version attribute
   wxString version;
   if (root->GetAttribute("version", &version) == false) {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Version attribute is missing. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // sends to proper parsing function
   if (version == "1") {
     return ParseNodeV1(root, filepath, cables, weathercases, linecable);
   } else {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid version number. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 }
 
-int LineCableXmlHandler::ParseNodeV1(
+bool LineCableXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
     const std::string& filepath,
     const std::list<const Cable*>* cables,
     const std::list<WeatherLoadCase*>* weathercases,
     LineCable& linecable) {
-
+  bool status = true;
   wxString message;
 
   // evaluates each child node
@@ -142,24 +153,19 @@ int LineCableXmlHandler::ParseNodeV1(
         message = FileAndLineNumber(filepath, node)
                   + "Invalid cable. Couldn't find " + content;
         wxLogError(message);
+        status = false;
       }
     } else if (title == "cable_constraint") {
-      const int line_number = CableConstraintXmlHandler::ParseNode(
+      const bool status_node = CableConstraintXmlHandler::ParseNode(
           node, filepath, weathercases, linecable.constraint);
-      if (line_number != 0) {
-        message = FileAndLineNumber(filepath, node)
-                  + "Invalid cable constraint.";
-        wxLogError(message);
-        linecable.constraint = CableConstraint();
+      if (status_node == false) {
+        status = false;
       }
     } else if (title == "vector_3d") {
-      const int line_number = Vector3dXmlHandler::ParseNode(
+      const bool status_node = Vector3dXmlHandler::ParseNode(
           node, filepath, linecable.spacing_attachments_ruling_span);
-      if(line_number != 0) {
-        message = FileAndLineNumber(filepath, node)
-                  + "Invalid attachment spacing vector.";
-        wxLogError(message);
-        linecable.spacing_attachments_ruling_span = Vector3d();
+      if (status_node == false) {
+        status = false;
       }
     } else if (title == "weather_load_case") {
       const wxString name = node->GetAttribute("name");
@@ -181,6 +187,7 @@ int LineCableXmlHandler::ParseNodeV1(
                     + "Invalid creep stretch weathercase. Couldn't find "
                     + content;
           wxLogError(message);
+          status = false;
         }
       } else if (name == "stretch_load") {
         // initializes the weathercase and attempts to find a match
@@ -200,17 +207,18 @@ int LineCableXmlHandler::ParseNodeV1(
                     + "Invalid load stretch weathercase. Couldn't find "
                     + content;
           wxLogError(message);
+          status = false;
         }
       }
     } else {
       message = FileAndLineNumber(filepath, node)
                 + "XML node isn't recognized.";
       wxLogError(message);
+      status = false;
     }
 
     node = node->GetNext();
   }
 
-  // if it gets to this point, no critical errors were encountered
-  return 0;
+  return status;
 }

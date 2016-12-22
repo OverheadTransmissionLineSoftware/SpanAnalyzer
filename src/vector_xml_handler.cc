@@ -50,31 +50,43 @@ wxXmlNode* Vector2dXmlHandler::CreateNode(
   return node_root;
 }
 
-int Vector2dXmlHandler::ParseNode(const wxXmlNode* root,
-                                  const std::string& filepath,
-                                  Vector2d& vector) {
+bool Vector2dXmlHandler::ParseNode(const wxXmlNode* root,
+                                   const std::string& filepath,
+                                   Vector2d& vector) {
+  wxString message;
+
   // checks for valid root node
   if (root->GetName() != "vector_2d") {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid root node. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // gets version attribute
   wxString version;
   if (root->GetAttribute("version", &version) == false) {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Version attribute is missing. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // sends to proper parsing function
   if (version == "1") {
     return ParseNodeV1(root, filepath, vector);
   } else {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid version number. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 }
 
-int Vector2dXmlHandler::ParseNodeV1(const wxXmlNode* root,
-                                    const std::string& filepath,
-                                    Vector2d& vector) {
+bool Vector2dXmlHandler::ParseNodeV1(const wxXmlNode* root,
+                                     const std::string& filepath,
+                                     Vector2d& vector) {
+  bool status = true;
   wxString message;
 
   // evaluates each child node
@@ -92,6 +104,7 @@ int Vector2dXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid x component.";
         wxLogError(message);
         vector.set_x(-999999);
+        status = false;
       }
     } else if (title == "y") {
       if (content.ToDouble(&value) == true) {
@@ -101,18 +114,19 @@ int Vector2dXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid y component.";
         wxLogError(message);
         vector.set_y(-999999);
+        status = false;
       }
     } else {
       message = FileAndLineNumber(filepath, node)
                 + "XML node isn't recognized.";
       wxLogError(message);
+      status = false;
     }
 
     node = node->GetNext();
   }
 
-  // if it gets to this point, no critical errors were encountered
-  return 0;
+  return status;
 }
 
 Vector3dXmlHandler::Vector3dXmlHandler() {
@@ -168,31 +182,43 @@ wxXmlNode* Vector3dXmlHandler::CreateNode(
   return node_root;
 }
 
-int Vector3dXmlHandler::ParseNode(const wxXmlNode* root,
-                                  const std::string& filepath,
-                                  Vector3d& vector) {
+bool Vector3dXmlHandler::ParseNode(const wxXmlNode* root,
+                                   const std::string& filepath,
+                                   Vector3d& vector) {
+  wxString message;
+
   // checks for valid root node
   if (root->GetName() != "vector_3d") {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid root node. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // gets version attribute
   wxString version;
   if (root->GetAttribute("version", &version) == false) {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Version attribute is missing. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // sends to proper parsing function
   if (version == "1") {
     return ParseNodeV1(root, filepath, vector);
   } else {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid version number. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 }
 
-int Vector3dXmlHandler::ParseNodeV1(const wxXmlNode* root,
-                                    const std::string& filepath,
-                                    Vector3d& vector) {
+bool Vector3dXmlHandler::ParseNodeV1(const wxXmlNode* root,
+                                     const std::string& filepath,
+                                     Vector3d& vector) {
+  bool status = true;
   wxString message;
 
   // evaluates each child node
@@ -210,6 +236,7 @@ int Vector3dXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid x component.";
         wxLogError(message);
         vector.set_x(-999999);
+        status = false;
       }
     } else if (title == "y") {
       if (content.ToDouble(&value) == true) {
@@ -219,6 +246,7 @@ int Vector3dXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid y component.";
         wxLogError(message);
         vector.set_y(-999999);
+        status = false;
       }
     } else if (title == "z") {
       if (content.ToDouble(&value) == true) {
@@ -228,16 +256,17 @@ int Vector3dXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid z component.";
         wxLogError(message);
         vector.set_z(-999999);
+        status = false;
       }
     } else {
       message = FileAndLineNumber(filepath, node)
                 + "XML node isn't recognized.";
       wxLogError(message);
+      status = false;
     }
 
     node = node->GetNext();
   }
 
-  // if it gets to this point, no critical errors were encountered
-  return 0;
+  return status;
 }

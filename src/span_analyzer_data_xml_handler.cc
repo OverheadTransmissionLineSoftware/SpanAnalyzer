@@ -82,33 +82,45 @@ wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
   return node_root;
 }
 
-int SpanAnalyzerDataXmlHandler::ParseNode(const wxXmlNode* root,
-                                          const std::string& filepath,
-                                          const units::UnitSystem& units,
-                                          SpanAnalyzerData& data) {
+bool SpanAnalyzerDataXmlHandler::ParseNode(const wxXmlNode* root,
+                                           const std::string& filepath,
+                                           const units::UnitSystem& units,
+                                           SpanAnalyzerData& data) {
+  wxString message;
+
   // checks for valid root node
   if (root->GetName() != "span_analyzer_data") {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid root node. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // gets version attribute
   wxString version;
   if (root->GetAttribute("version", &version) == false) {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Version attribute is missing. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // sends to proper parsing function
   if (version == "1") {
     return ParseNodeV1(root, filepath, units, data);
   } else {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid version number. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 }
 
-int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
-                                            const std::string& filepath,
-                                            const units::UnitSystem& units,
-                                            SpanAnalyzerData& data) {
+bool SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
+                                             const std::string& filepath,
+                                             const units::UnitSystem& units,
+                                             SpanAnalyzerData& data) {
+  bool status = true;
   wxString message;
 
   // evaluates each child node
@@ -128,13 +140,19 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
 
         // loads cable file
         // filehandler function handles all logging
-        int status =  FileHandler::LoadCable(cablefile->filepath, units,
-                                             cablefile->cable);
+        const int status_node =  FileHandler::LoadCable(cablefile->filepath,
+                                                         units,
+                                                         cablefile->cable);
 
-        if (status == 0) {
-          // adds to data lists
+        // adds to container if no file errors were encountered
+        if ((status_node == 0) || (status_node == 1)) {
           data.cablefiles.push_back(cablefile);
         } else {
+          message = FileAndLineNumber(filepath, sub_node)
+                    + "Invalid cable file. Skipping.";
+          wxLogError(message);
+          status = false;
+
           delete cablefile;
         }
 
@@ -146,21 +164,16 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
       while (sub_node != nullptr) {
         // creates a weathercase and parses
         WeatherLoadCase* weathercase = new WeatherLoadCase();
-        int status = WeatherLoadCaseXmlHandler::ParseNode(
+        const bool status_node = WeatherLoadCaseXmlHandler::ParseNode(
             sub_node,
             filepath,
             *weathercase);
-
-        // adds to container if parsing was successful
-        if (status == 0) {
-          data.weathercases.push_back(weathercase);
-        } else {
-          message = FileAndLineNumber(filepath, sub_node)
-                    + "Invalid weathercase. Skipping.";
-          wxLogError(message);
-
-          delete weathercase;
+        if (status_node == false) {
+          status = false;
         }
+
+        // adds to container
+        data.weathercases.push_back(weathercase);
 
         sub_node = sub_node->GetNext();
       }
@@ -177,20 +190,18 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
         while (node_filter != nullptr) {
           // creates an analysis filter and parses
           AnalysisFilter filter;
-          int status = AnalysisFilterXmlHandler::ParseNode(
+          const bool status_node = AnalysisFilterXmlHandler::ParseNode(
               node_filter,
               filepath,
               &data.weathercases,
               filter);
-
-          // adds to container if parsing was successful
-          if (status == 0) {
-            group.filters.push_back(filter);
-          } else {
-            message = FileAndLineNumber(filepath, node_filter)
-                      + "Invalid filter. Skipping.";
-            wxLogError(message);
+          if (status_node == false) {
+            status = false;
           }
+
+          // adds to container
+          group.filters.push_back(filter);
+
           node_filter = node_filter->GetNext();
         }
 
@@ -203,11 +214,11 @@ int SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
       message = FileAndLineNumber(filepath, node)
                 + "XML node isn't recognized.";
       wxLogError(message);
+      status = false;
     }
 
     node = node->GetNext();
   }
 
-  // if it gets to this point, no errors were encountered
-  return 0;
+  return status;
 }

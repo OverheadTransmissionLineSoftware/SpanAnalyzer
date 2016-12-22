@@ -32,7 +32,7 @@ class AnalysisFilterXmlHandler : public XmlHandler {
   /// \param[in] name
   ///   The name of the XML node. This will be an attribute for the created
   ///   node. If empty, no attribute will be created.
-  /// \return An XML node for the document.
+  /// \return An XML node for the analysis filter.
   static wxXmlNode* CreateNode(const AnalysisFilter& filter,
                                const std::string& name);
 
@@ -48,15 +48,15 @@ class AnalysisFilterXmlHandler : public XmlHandler {
   ///   weathercase.
   /// \param[out] filter
   ///   The filter.
-  /// \return The file line number of a critical error. Returns 0 if no critical
-  ///   errors were encountered.
-  /// Critical errors cause the parsing to abort, but are not logged.
-  /// Non-critical errors are directed to the active application log target. If
-  /// the property is recognized, it is set to an invalid state.
-  static int ParseNode(const wxXmlNode* root,
-                       const std::string& filepath,
-                       const std::list<WeatherLoadCase*>* weathercases,
-                       AnalysisFilter& filter);
+  /// \return The status of the xml node parse. If any errors are encountered
+  ///   false is returned.
+  /// All errors are logged to the active application log target. Critical
+  /// errors cause the parsing to abort. Non-critical errors set the object
+  /// property to an invalid state (if applicable).
+  static bool ParseNode(const wxXmlNode* root,
+                        const std::string& filepath,
+                        const std::list<WeatherLoadCase*>* weathercases,
+                        AnalysisFilter& filter);
 
  private:
   /// \brief Parses a version 1 XML node and populates an analysis filter
@@ -72,15 +72,15 @@ class AnalysisFilterXmlHandler : public XmlHandler {
   ///   weathercase.
   /// \param[out] filter
   ///   The filter.
-  /// \return The file line number of a critical error. Returns 0 if no critical
-  ///   errors were encountered.
-  /// Critical errors cause the parsing to abort, but are not logged.
-  /// Non-critical errors are directed to the active application log target. If
-  /// the property is recognized, it is set to an invalid state.
-  static int ParseNodeV1(const wxXmlNode* root,
-                         const std::string& filepath,
-                         const std::list<WeatherLoadCase*>* weathercases,
-                         AnalysisFilter& filter);
+  /// \return The status of the xml node parse. If any errors are encountered
+  ///   false is returned.
+  /// All errors are logged to the active application log target. Critical
+  /// errors cause the parsing to abort. Non-critical errors set the object
+  /// property to an invalid state (if applicable).
+  static bool ParseNodeV1(const wxXmlNode* root,
+                          const std::string& filepath,
+                          const std::list<WeatherLoadCase*>* weathercases,
+                          AnalysisFilter& filter);
 };
 
 #endif  // OTLS_SPANANALYZER_ANALYSISFILTERXMLHANDLER_H_

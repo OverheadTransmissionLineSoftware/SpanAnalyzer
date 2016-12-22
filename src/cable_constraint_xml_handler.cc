@@ -108,36 +108,47 @@ wxXmlNode* CableConstraintXmlHandler::CreateNode(
   return node_root;
 }
 
-int CableConstraintXmlHandler::ParseNode(
+bool CableConstraintXmlHandler::ParseNode(
     const wxXmlNode* root,
     const std::string& filepath,
     const std::list<WeatherLoadCase*>* weathercases,
     CableConstraint& constraint) {
+  wxString message;
+
   // checks for valid root node
   if (root->GetName() != "cable_constraint") {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid root node. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // gets version attribute
   wxString version;
   if (root->GetAttribute("version", &version) == false) {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Version attribute is missing. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // sends to proper parsing function
   if (version == "1") {
     return ParseNodeV1(root, filepath, weathercases, constraint);
   } else {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid version number. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 }
 
-int CableConstraintXmlHandler::ParseNodeV1(
+bool CableConstraintXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
     const std::string& filepath,
     const std::list<WeatherLoadCase*>* weathercases,
     CableConstraint& constraint) {
-
+  bool status = true;
   wxString message;
 
   // evaluates each child node
@@ -155,6 +166,7 @@ int CableConstraintXmlHandler::ParseNodeV1(
                   + "Invalid limit.";
         wxLogError(message);
         constraint.limit = -999999;
+        status = false;
       }
 
       const wxString content_attribute = node->GetAttribute("type");
@@ -168,6 +180,7 @@ int CableConstraintXmlHandler::ParseNodeV1(
         message = FileAndLineNumber(filepath, node)
                   + "Invalid limit type.";
         wxLogError(message);
+        status = false;
       }
     } else if (title == "weather_load_case") {
       // initializes the weathercase and attempts to find a match
@@ -186,6 +199,7 @@ int CableConstraintXmlHandler::ParseNodeV1(
         message = FileAndLineNumber(filepath, node)
                   + "Invalid weathercase. Couldn't find " + content;
         wxLogError(message);
+        status = false;
       }
     } else if (title == "condition") {
       if (content == "Creep") {
@@ -198,16 +212,17 @@ int CableConstraintXmlHandler::ParseNodeV1(
         message = FileAndLineNumber(filepath, node)
                   + "Invalid condition.";
         wxLogError(message);
+        status = false;
       }
     } else {
       message = FileAndLineNumber(filepath, node)
                 + "XML node isn't recognized.";
       wxLogError(message);
+      status = false;
     }
 
     node = node->GetNext();
   }
 
-  // if it gets to this point, no critical errors were encountered
-  return 0;
+  return status;
 }
