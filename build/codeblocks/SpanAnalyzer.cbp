@@ -90,6 +90,7 @@
 		<Unit filename="../../include/span_editor_dialog.h" />
 		<Unit filename="../../include/span_unit_converter.h" />
 		<Unit filename="../../include/span_xml_handler.h" />
+		<Unit filename="../../include/status_bar_log.h" />
 		<Unit filename="../../include/timer.h" />
 		<Unit filename="../../include/vector_xml_handler.h" />
 		<Unit filename="../../include/weather_load_case_editor_dialog.h" />
@@ -151,6 +152,7 @@
 		<Unit filename="../../src/span_editor_dialog.cc" />
 		<Unit filename="../../src/span_unit_converter.cc" />
 		<Unit filename="../../src/span_xml_handler.cc" />
+		<Unit filename="../../src/status_bar_log.cc" />
 		<Unit filename="../../src/timer.cc" />
 		<Unit filename="../../src/vector_xml_handler.cc" />
 		<Unit filename="../../src/weather_load_case_editor_dialog.cc" />

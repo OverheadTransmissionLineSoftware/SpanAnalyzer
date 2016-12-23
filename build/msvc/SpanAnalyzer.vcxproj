@@ -97,6 +97,7 @@
     <ClInclude Include="..\..\include\span_editor_dialog.h" />
     <ClInclude Include="..\..\include\span_unit_converter.h" />
     <ClInclude Include="..\..\include\span_xml_handler.h" />
+    <ClInclude Include="..\..\include\status_bar_log.h" />
     <ClInclude Include="..\..\include\timer.h" />
     <ClInclude Include="..\..\include\vector_xml_handler.h" />
     <ClInclude Include="..\..\include\weather_load_case_editor_dialog.h" />
@@ -139,6 +140,7 @@
     <ClCompile Include="..\..\src\span_editor_dialog.cc" />
     <ClCompile Include="..\..\src\span_unit_converter.cc" />
     <ClCompile Include="..\..\src\span_xml_handler.cc" />
+    <ClCompile Include="..\..\src\status_bar_log.cc" />
     <ClCompile Include="..\..\src\timer.cc" />
     <ClCompile Include="..\..\src\vector_xml_handler.cc" />
     <ClCompile Include="..\..\src\weather_load_case_editor_dialog.cc" />
