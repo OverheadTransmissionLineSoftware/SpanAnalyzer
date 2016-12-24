@@ -259,7 +259,7 @@ void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
   wxAboutDialogInfo info;
   info.SetIcon(wxICON(icon));
   info.SetName(wxGetApp().GetAppDisplayName());
-  info.SetVersion("0.1");
+  info.SetVersion("0.1.0");
   info.SetCopyright("License:   http://unlicense.org/");
   info.SetDescription(
     "This application provides a GUI for calculating the sag-tension response\n"
