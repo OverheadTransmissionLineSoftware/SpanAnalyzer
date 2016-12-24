@@ -37,8 +37,9 @@ class FileHandler {
   ///   The unit system to convert to.
   /// \param[out] data
   ///   The application data that is populated.
-  /// \return 0 if no errors were encountered, -1 if the file did not exist, or
-  ///   the line number if an error was encountered in the file.
+  /// \return 0 if no errors, -1 if file related errors, or 1 if parsing
+  ///   errors are encountered.
+  /// All errors are logged to the active application log target.
   static int LoadAppData(const std::string& filepath,
                          const units::UnitSystem& units,
                          SpanAnalyzerData& data);
@@ -50,10 +51,9 @@ class FileHandler {
   ///   The unit system to convert to.
   /// \param[out] cable
   ///   The cable that is populated.
-  /// \return The file line number of a critical error. Returns 0 if no critical
-  ///   errors were encountered.
-  /// Critical errors cause the loading to abort, but are not logged.
-  /// Non-critical errors are directed to the active application log target.
+  /// \return 0 if no errors, -1 if file related errors, or 1 if parsing
+  ///   errors are encountered.
+  /// All errors are logged to the active application log target.
   static int LoadCable(const std::string& filepath,
                        const units::UnitSystem& units,
                        Cable& cable);
@@ -63,8 +63,9 @@ class FileHandler {
   ///   The filepath.
   /// \param[out] config
   ///   The application configuration settings.
-  /// \return 0 if no errors were encountered, -1 if the file did not exist, or
-  ///   the line number if an error was encountered in the file.
+  /// \return 0 if no errors, -1 if file related errors, or 1 if parsing
+  ///   errors are encountered.
+  /// All errors are logged to the active application log target.
   static int LoadConfigFile(const std::string& filepath,
                             SpanAnalyzerConfig& config);
 

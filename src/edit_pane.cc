@@ -10,6 +10,11 @@
 #include "span_editor_dialog.h"
 #include "span_unit_converter.h"
 
+#include "../res/copy.xpm"
+#include "../res/minus.xpm"
+#include "../res/plus.xpm"
+#include "../res/wrench.xpm"
+
 /// context menu enum
 enum {
   kTreeItemActivate = 0,
@@ -43,6 +48,28 @@ EditPane::EditPane(wxWindow* parent, wxView* view) {
   treectrl_ = XRCCTRL(*this, "treectrl", wxTreeCtrl);
   treectrl_->AddRoot("Spans");
   treectrl_->SetIndent(2);
+
+  // creates an imagelist for the button bitmaps
+  wxImageList images(32, 32, true);
+  images.Add(wxBitmap(plus_xpm), wxColour(255, 255, 255));
+  images.Add(wxBitmap(minus_xpm), wxColour(255, 255, 255));
+  images.Add(wxBitmap(copy_xpm), wxColour(255, 255, 255));
+  images.Add(wxBitmap(wrench_xpm), wxColour(255, 255, 255));
+
+
+  // assigns bitmaps to the buttons
+  wxButton* button = nullptr;
+  button = XRCCTRL(*this, "button_add", wxButton);
+  button->SetBitmap(images.GetBitmap(0));
+
+  button = XRCCTRL(*this, "button_delete", wxButton);
+  button->SetBitmap(images.GetBitmap(1));
+
+  button = XRCCTRL(*this, "button_copy", wxButton);
+  button->SetBitmap(images.GetBitmap(2));
+
+  button = XRCCTRL(*this, "button_edit", wxButton);
+  button->SetBitmap(images.GetBitmap(3));
 }
 
 EditPane::~EditPane() {
@@ -66,6 +93,8 @@ void EditPane::ActivateSpan(const wxTreeItemId& id) {
   if (id == item_activated_) {
     return;
   }
+
+  wxLogVerbose("Activating span.");
 
   // unbolds previous item
   if (item_activated_.IsOk()) {
@@ -114,6 +143,8 @@ void EditPane::AddSpan() {
     return;
   }
 
+  wxLogVerbose("Adding span.");
+
   // adds to document
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
   auto iter = doc->AppendSpan(span);
@@ -131,6 +162,8 @@ void EditPane::CopySpan(const wxTreeItemId& id) {
 
   // copies span
   Span span = *(item->iter());
+
+  wxLogVerbose("Copying span.");
 
   // gets position and inserts to document
   auto position = std::next(item->iter());
@@ -150,6 +183,8 @@ void EditPane::DeleteSpan(const wxTreeItemId& id) {
   // gets tree item data
   SpanTreeItemData* item = (SpanTreeItemData*)treectrl_->GetItemData(id);
 
+  wxLogVerbose("Deleting span.");
+
   // erases from document and treectrl
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
   doc->DeleteSpan(item->iter());
@@ -165,6 +200,8 @@ void EditPane::DeleteSpans() {
   // gets list and size
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
   const std::list<Span>& spans = doc->spans();
+
+  wxLogVerbose("Deleting all spans.");
 
   // deletes spans from doc
   std::list<Span>::const_iterator iter = spans.cbegin();
@@ -211,6 +248,8 @@ void EditPane::EditSpan(const wxTreeItemId& id) {
                           wxGetApp().config()->units,
                           &span);
   if (dialog.ShowModal() == wxID_OK) {
+    wxLogVerbose("Editing span.");
+
     // converts span to consistent unit style
     SpanUnitConverter::ConvertUnitStyle(wxGetApp().config()->units,
                                         units::UnitStyle::kDifferent,
@@ -250,13 +289,13 @@ void EditPane::InitializeTreeCtrl() {
 
 void EditPane::OnButtonAdd(wxCommandEvent& event) {
   // can't create busy cursor, a dialog is used further along
-  
+
   AddSpan();
 }
 
 void EditPane::OnButtonCopy(wxCommandEvent& event) {
   wxBusyCursor cursor;
-  
+
   // gets selected tree item
   wxTreeItemId id_item = treectrl_->GetSelection();
   if (id_item.IsOk() == false) {
@@ -274,7 +313,7 @@ void EditPane::OnButtonCopy(wxCommandEvent& event) {
 
 void EditPane::OnButtonDelete(wxCommandEvent& event) {
   wxBusyCursor cursor;
-  
+
   // gets selected tree item
   wxTreeItemId id_item = treectrl_->GetSelection();
   if (id_item.IsOk() == false) {
@@ -351,7 +390,7 @@ void EditPane::OnDragBegin(wxTreeEvent& event) {
 
 void EditPane::OnDragEnd(wxTreeEvent& event) {
   wxBusyCursor cursor;
-  
+
   // verifies that the end drag is valid
   if ((event.GetItem().IsOk() == false)
       ||(event.GetItem() == treectrl_->GetRootItem())
@@ -375,6 +414,8 @@ void EditPane::OnDragEnd(wxTreeEvent& event) {
       (SpanTreeItemData*)treectrl_->GetItemData(item_destination);
   std::list<Span>::const_iterator iter_destination = data_destination->iter();
   std::advance(iter_destination, 1);
+
+  wxLogVerbose("Moving spans.");
 
   // modifies document
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();

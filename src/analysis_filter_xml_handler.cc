@@ -49,35 +49,47 @@ wxXmlNode* AnalysisFilterXmlHandler::CreateNode(const AnalysisFilter& filter,
   return node_root;
 }
 
-int AnalysisFilterXmlHandler::ParseNode(
+bool AnalysisFilterXmlHandler::ParseNode(
     const wxXmlNode* root,
     const std::string& filepath,
     const std::list<WeatherLoadCase*>* weathercases,
     AnalysisFilter& filter) {
+  wxString message;
+
   // checks for valid root node
   if (root->GetName() != "analysis_filter") {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid root node. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // gets version attribute
   wxString version;
   if (root->GetAttribute("version", &version) == false) {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Version attribute is missing. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // sends to proper parsing function
   if (version == "1") {
     return ParseNodeV1(root, filepath, weathercases, filter);
   } else {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid version number. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 }
 
-int AnalysisFilterXmlHandler::ParseNodeV1(
+bool AnalysisFilterXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
     const std::string& filepath,
     const std::list<WeatherLoadCase*>* weathercases,
     AnalysisFilter& filter) {
+  bool status = true;
   wxString message;
 
   // evaluates each child node
@@ -97,6 +109,7 @@ int AnalysisFilterXmlHandler::ParseNodeV1(
         message = FileAndLineNumber(filepath, node)
                   + "Invalid condition.";
         wxLogError(message);
+        status = false;
       }
     } else if (title == "weather_load_case") {
       // initializes the weathercase and attempts to find a match
@@ -115,16 +128,17 @@ int AnalysisFilterXmlHandler::ParseNodeV1(
         message = FileAndLineNumber(filepath, node)
                   + "Invalid weathercase. Couldn't find " + content;
         wxLogError(message);
+        status = false;
       }
     } else {
       message = FileAndLineNumber(filepath, node)
                 + "XML node isn't recognized.";
-      wxLogMessage(message);
+      wxLogError(message);
+      status = false;
     }
 
     node = node->GetNext();
   }
 
-  // if it gets to this point, no errors were encountered
-  return 0;
+  return status;
 }

@@ -3,13 +3,16 @@
 
 #include "analysis_controller.h"
 
+#include "models/base/helper.h"
 #include "wx/wx.h"
+
+#include "status_bar_log.h"
+#include "timer.h"
 
 AnalysisController::AnalysisController() {
   span_ = nullptr;
   weathercases_ = nullptr;
 
-  reloader_.set_length_unloaded_unstretched_adjustment(-999999);
   reloader_.set_line_cable(nullptr);
   reloader_.set_weathercase_reloaded(nullptr);
 }
@@ -21,13 +24,15 @@ void AnalysisController::ClearResults() {
   results_creep_.clear();
   results_initial_.clear();
   results_load_.clear();
+
+  status_bar_log::SetText("Ready");
 }
 
 const SagTensionAnalysisResult* AnalysisController::Result(
     const int& index_weathercase,
     const CableConditionType& condition) const {
   // checks index
-  const unsigned int kSizeResults = results_creep_.size();
+  const int kSizeResults = results_creep_.size();
   if ((index_weathercase < 0) || (kSizeResults < index_weathercase)) {
     return nullptr;
   }
@@ -56,7 +61,6 @@ const std::vector<SagTensionAnalysisResult>* AnalysisController::Results(
   }
 }
 
-/// \todo add a log message in here for the analysis time
 void AnalysisController::RunAnalysis() const {
   // clears cached results
   results_creep_.clear();
@@ -65,7 +69,7 @@ void AnalysisController::RunAnalysis() const {
 
   // checks if span has been selected
   if (span_ == nullptr) {
-    wxLogMessage("No span is selected. Aborting analysis.");
+    wxLogVerbose("No span is selected. Aborting analysis.");
     return;
   }
 
@@ -80,15 +84,21 @@ void AnalysisController::RunAnalysis() const {
       wxLogError(message.c_str());
     }
 
-    wxLogMessage("Span validation errors are present. Aborting analysis.");
+    wxLogVerbose("Span validation errors are present. Aborting analysis.");
+    status_bar_log::SetText("Span validation error(s) present, see logs");
+
     return;
   }
 
-  wxLogMessage("Running sag-tension analysis.");
+  wxLogVerbose("Running sag-tension analysis.");
+  status_bar_log::PushText("Running sag-tension analysis...");
+
+  // creates a timer and records start time
+  Timer timer;
+  timer.Start();
 
   // sets up reloader
   reloader_.set_line_cable(&span_->linecable);
-  reloader_.set_length_unloaded_unstretched_adjustment(0);
 
   // runs analysis for each weathercase
   for (auto iter = weathercases_->cbegin(); iter != weathercases_->cend();
@@ -112,7 +122,17 @@ void AnalysisController::RunAnalysis() const {
 
   // un-inits reloader
   reloader_.set_line_cable(&span_->linecable);
-  reloader_.set_length_unloaded_unstretched_adjustment(0);
+
+  // stops timer and logs
+  timer.Stop();
+  std::string message = "Analysis time = "
+                        + helper::DoubleToFormattedString(timer.Duration(), 3)
+                        + "s.";
+  wxLogVerbose(message.c_str());
+
+  // clears status bar
+  status_bar_log::PopText();
+  status_bar_log::SetText("Ready");
 }
 
 void AnalysisController::set_span(const Span* span) {

@@ -10,6 +10,7 @@
 #include "file_handler.h"
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
+#include "status_bar_log.h"
 
 IMPLEMENT_APP(SpanAnalyzerApp)
 
@@ -186,6 +187,9 @@ bool SpanAnalyzerApp::OnInit() {
 
   // sets log level specified in app config
   wxLog::SetLogLevel(config_.level_log);
+  if (config_.level_log == wxLOG_Info) {
+    wxLog::SetVerbose(true);
+  }
 
   // checks if data file exists, creates one if not
   path = config_.filepath_data;
@@ -206,7 +210,14 @@ bool SpanAnalyzerApp::OnInit() {
 
   // loads application data file
   // filehandler handles all logging
-  FileHandler::LoadAppData(config_.filepath_data, config_.units, data_);
+  const int status_data = FileHandler::LoadAppData(config_.filepath_data,
+                                                    config_.units, data_);
+  if ((status_data == -1) || (status_data == 1)) {
+    // notifies user of error
+    wxString message = config_.filepath_data + "  --  "
+              "Application data file contains error(s). Check logs.";
+    wxMessageBox(message);
+  }
 
   // loads a document if defined in command line
   if (filepath_start_ != wxEmptyString) {
@@ -222,6 +233,9 @@ bool SpanAnalyzerApp::OnInit() {
   }
   frame_->Centre(wxBOTH);
   frame_->Show(true);
+
+  // updates status bar
+  status_bar_log::SetText("Ready");
 
   return true;
 }

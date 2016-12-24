@@ -4,6 +4,7 @@
 #include "span_analyzer_view.h"
 
 #include "span_analyzer_app.h"
+#include "status_bar_log.h"
 
 IMPLEMENT_DYNAMIC_CLASS(SpanAnalyzerView, wxView)
 
@@ -20,7 +21,8 @@ const AnalysisFilter* SpanAnalyzerView::AnalysisFilterActive() const {
   }
 
   // checks for valid index
-  if ((index_filter_ < 0) || (group_filters_->filters.size() < index_filter_)) {
+  const int kSize = group_filters_->filters.size();
+  if ((index_filter_ < 0) || (kSize < index_filter_)) {
     return nullptr;
   } else {
     auto iter = group_filters_->filters.cbegin();
@@ -102,6 +104,9 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
     manager->LoadPerspective(wxGetApp().config()->perspective);
   }
 
+  // resets statusbar
+  status_bar_log::SetText("Ready");
+
   return true;
 }
 
@@ -132,6 +137,9 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
   frame->Refresh();
   frame->SetTitle(wxGetApp().GetAppDisplayName());
 
+  // resets statusbar
+  status_bar_log::SetText("Ready");
+
   return true;
 }
 
@@ -142,10 +150,16 @@ void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
   // passes to base class first
   wxView::OnUpdate(sender, hint);
 
+  // updates statusbar
+  status_bar_log::PushText("Updating view");
+
   // don't need to distinguish sender - all frames are grouped under one view
   pane_edit_->Update(hint);
   pane_plot_->Update(hint);
   pane_results_->Update(hint);
+
+  // resets status bar
+  status_bar_log::PopText();
 }
 
 const AnalysisFilterGroup* SpanAnalyzerView::group_filters() const {

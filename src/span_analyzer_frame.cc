@@ -76,6 +76,9 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
   // tells aui manager to manage this frame
   manager_.SetManagedWindow(this);
 
+  // creates status bar
+  CreateStatusBar();
+
   // creates log AUI window and adds to manager
   wxAuiPaneInfo info;
   info.Name("Log");
@@ -112,6 +115,8 @@ void SpanAnalyzerFrame::OnMenuEditAnalysisFilters(wxCommandEvent& event) {
   if (dialog.ShowModal() == wxID_OK) {
     wxBusyCursor cursor;
 
+    wxLogVerbose("Updating analysis filters.");
+
     // saves application data
     FileHandler::SaveAppData(config->filepath_data, *data, config->units);
 
@@ -134,6 +139,8 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
   CableFileManagerDialog dialog(this, config->units, &data->cablefiles);
   if (dialog.ShowModal() == wxID_OK) {
     wxBusyCursor cursor;
+
+    wxLogVerbose("Updating cables.");
 
     // saves application data
     FileHandler::SaveAppData(config->filepath_data, *data, config->units);
@@ -164,6 +171,8 @@ void SpanAnalyzerFrame::OnMenuEditWeathercases(
       &data->weathercases);
   if (dialog.ShowModal() == wxID_OK) {
     wxBusyCursor cursor;
+
+    wxLogVerbose("Updating weathercases.");
 
     // saves application data
     FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
@@ -202,6 +211,8 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
   // converts unit system if it changed
   SpanAnalyzerData* data = wxGetApp().data();
   if (units_before != config->units) {
+    wxLogVerbose("Converting unit system.");
+
     // converts app data
     for (auto iter = data->weathercases.begin();
          iter != data->weathercases.end(); iter++) {
@@ -236,6 +247,11 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
 
   // updates logging level
   wxLog::SetLogLevel(config->level_log);
+  if (config->level_log == wxLOG_Message) {
+    wxLog::SetVerbose(false);
+  } else if (config->level_log == wxLOG_Info) {
+    wxLog::SetVerbose(true);
+  }
 }
 
 void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
@@ -243,7 +259,7 @@ void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
   wxAboutDialogInfo info;
   info.SetIcon(wxICON(icon));
   info.SetName(wxGetApp().GetAppDisplayName());
-  info.SetVersion("0.1");
+  info.SetVersion("0.1.0");
   info.SetCopyright("License:   http://unlicense.org/");
   info.SetDescription(
     "This application provides a GUI for calculating the sag-tension response\n"

@@ -73,8 +73,8 @@
                 <dimension>1</dimension>
                 <selection>0</selection>
                 <content>
-                  <item>Errors</item>
-                  <item>Messages</item>
+                  <item>Normal</item>
+                  <item>Verbose</item>
                 </content>
               </object>
             </object>

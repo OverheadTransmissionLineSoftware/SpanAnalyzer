@@ -148,31 +148,43 @@ wxXmlNode* CableComponentXmlHandler::CreateNode(
   return node_root;
 }
 
-int CableComponentXmlHandler::ParseNode(const wxXmlNode* root,
-                                        const std::string& filepath,
-                                        CableComponent& component) {
+bool CableComponentXmlHandler::ParseNode(const wxXmlNode* root,
+                                         const std::string& filepath,
+                                         CableComponent& component) {
+  wxString message;
+
   // checks for valid root node
   if (root->GetName() != "cable_component") {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid root node. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // gets version attribute
   wxString version;
   if (root->GetAttribute("version", &version) == false) {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Version attribute is missing. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // sends to proper parsing function
   if (version == "1") {
     return ParseNodeV1(root, filepath, component);
   } else {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid version number. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 }
 
-int CableComponentXmlHandler::ParseNodeV1(const wxXmlNode* root,
-                                          const std::string& filepath,
-                                          CableComponent& component) {
+bool CableComponentXmlHandler::ParseNodeV1(const wxXmlNode* root,
+                                           const std::string& filepath,
+                                           CableComponent& component) {
+  bool status = true;
   wxString message;
 
   // evaluates each child node
@@ -190,45 +202,59 @@ int CableComponentXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid coefficient of thermal expansion.";
         wxLogError(message);
         component.coefficient_expansion_linear_thermal = -999999;
+        status = false;
       }
     } else if (title == "coefficients") {
       wxString name_coefficients;
       node->GetAttribute("name", &name_coefficients);
-      if ((name_coefficients != "stress-strain")
-          && (name_coefficients != "creep")) {
+
+      // gets coefficient vector
+      std::vector<double>* coefficients = nullptr;
+      if (name_coefficients == "stress-strain") {
+        coefficients = &component.coefficients_polynomial_loadstrain;
+      } else if (name_coefficients == "creep") {
+        coefficients = &component.coefficients_polynomial_creep;
+      }
+
+      // checks for valid coefficients name
+      if (coefficients != nullptr) {
+        // gets coefficient sub-nodes
+        wxXmlNode* sub_node = node->GetChildren();
+
+        if (sub_node == nullptr) {
+          message = FileAndLineNumber(filepath, node)
+                    + "Coefficients are undefined.";
+          wxLogError(message);
+          status = false;
+        }
+
+        unsigned int order = 0;
+        while (sub_node != nullptr) {
+          // creates a new coefficient
+          double coefficient = -999999;
+          const wxString sub_content = ParseElementNodeWithContent(sub_node);
+          if (sub_content.ToDouble(&coefficient) == false) {
+            message = FileAndLineNumber(filepath, sub_node)
+                      + "Invalid coefficient.";
+            wxLogError(message);
+            status = false;
+          }
+
+          // adds or assigns coefficient to vector
+          if (order < coefficients->size()) {
+            coefficients->at(order) = coefficient;
+          } else {
+            coefficients->push_back(coefficient);
+          }
+
+          order++;
+          sub_node = sub_node->GetNext();
+        }
+      } else {
         message = FileAndLineNumber(filepath, node)
                   + "XML node isn't recognized.";
         wxLogError(message);
-        break;
-        /// \todo need to test this break to see if handled properly
-      }
-
-      // gets coefficient sub-nodes
-      wxXmlNode* sub_node = node->GetChildren();
-
-      if (sub_node == nullptr) {
-        message = FileAndLineNumber(filepath, node)
-                  + "Coefficients are undefined.";
-        wxLogError(message);
-      }
-
-      while (sub_node != nullptr) {
-        // creates a new coefficient
-        double coefficient = -999999;
-        const wxString sub_content = ParseElementNodeWithContent(sub_node);
-        if (sub_content.ToDouble(&coefficient) == false) {
-          message = FileAndLineNumber(filepath, sub_node)
-                    + "Invalid coefficient.";
-          wxLogError(message);
-        }
-
-        // adds coefficient to container
-        if (name_coefficients == "stress-strain") {
-          component.coefficients_polynomial_loadstrain.push_back(coefficient);
-        } else if (name_coefficients == "creep") {
-          component.coefficients_polynomial_creep.push_back(coefficient);
-        }
-        sub_node = sub_node->GetNext();
+        status = false;
       }
     } else if (title == "limit_polynomial_creep") {
       if (content.ToDouble(&value) == true) {
@@ -238,6 +264,7 @@ int CableComponentXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid creep polynomial limit.";
         wxLogError(message);
         component.load_limit_polynomial_creep = -999999;
+        status = false;
       }
     } else if (title == "limit_polynomial_stress-strain") {
       if (content.ToDouble(&value) == true) {
@@ -247,6 +274,7 @@ int CableComponentXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid stress-strain polynomial limit.";
         wxLogError(message);
         component.load_limit_polynomial_loadstrain = -999999;
+        status = false;
       }
     } else if (title == "modulus_compression_elastic") {
       if (content.ToDouble(&value) == true) {
@@ -256,6 +284,7 @@ int CableComponentXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid compression elastic modulus.";
         wxLogError(message);
         component.modulus_compression_elastic_area = -999999;
+        status = false;
       }
     } else if (title == "modulus_tension_elastic") {
       if (content.ToDouble(&value) == true) {
@@ -265,18 +294,19 @@ int CableComponentXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid tension elastic modulus.";
         wxLogError(message);
         component.modulus_tension_elastic_area = -999999;
+        status = false;
       }
     } else {
       message = FileAndLineNumber(filepath, node)
                 + "XML node isn't recognized.";
       wxLogError(message);
+      status = false;
     }
 
     node = node->GetNext();
   }
 
-  // if it gets to this point, no critical errors were encountered
-  return 0;
+  return status;
 }
 
 CableXmlHandler::CableXmlHandler() {
@@ -379,32 +409,44 @@ wxXmlNode* CableXmlHandler::CreateNode(const Cable& cable,
   return node_root;
 }
 
-int CableXmlHandler::ParseNode(const wxXmlNode* root,
-                               const std::string& filepath,
-                               Cable& cable) {
+bool CableXmlHandler::ParseNode(const wxXmlNode* root,
+                                const std::string& filepath,
+                                Cable& cable) {
+  wxString message;
+
   // checks for valid node
   if (root->GetName() != "cable") {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid root node. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // gets version attribute
   wxString version;
   if (root->GetAttribute("version", &version) == false) {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Version attribute is missing. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 
   // sends to proper parsing function
   if (version == "1") {
     return CableXmlHandler::ParseNodeV1(root, filepath, cable);
   } else {
-    return root->GetLineNumber();
+    message = FileAndLineNumber(filepath, root) +
+              " Invalid version number. Aborting node parse.";
+    wxLogError(message);
+    return false;
   }
 }
 
-int CableXmlHandler::ParseNodeV1(const wxXmlNode* root,
-                                 const std::string& filepath,
-                                 Cable& cable) {
+bool CableXmlHandler::ParseNodeV1(const wxXmlNode* root,
+                                  const std::string& filepath,
+                                  Cable& cable) {
   // variables used to parse XML node
+  bool status = true;
   wxString title;
   wxString content;
   double value = -999999;
@@ -431,6 +473,7 @@ int CableXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid physical area.";
         wxLogError(message);
         cable.area_physical = -999999;
+        status = false;
       }
     } else if (title == "diameter") {
       if (content.ToDouble(&value) == true) {
@@ -440,6 +483,7 @@ int CableXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid diameter.";
         wxLogError(message);
         cable.diameter = -999999;
+        status = false;
       }
     } else if (title == "strength_rated") {
       if (content.ToDouble(&value) == true) {
@@ -449,6 +493,7 @@ int CableXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid rated strength.";
         wxLogError(message);
         cable.strength_rated = -999999;
+        status = false;
       }
     } else if (title == "temperature_properties_components") {
       if (content.ToDouble(&value) == true) {
@@ -458,6 +503,7 @@ int CableXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid component properties temperature.";
         wxLogError(message);
         cable.temperature_properties_components = -999999;
+        status = false;
       }
     } else if (title == "weight_unit") {
       if (content.ToDouble(&value) == true) {
@@ -467,42 +513,38 @@ int CableXmlHandler::ParseNodeV1(const wxXmlNode* root,
                   + "Invalid unit weight.";
         wxLogError(message);
         cable.weight_unit = -999999;
+        status = false;
       }
     } else if (title == "cable_component") {
       // selects cable component type and passes off to cable component parser
       wxString name_component = node->GetAttribute("name");
       if (name_component == "shell" ) {
-        int line_number = CableComponentXmlHandler::ParseNode(
+        const bool status_node = CableComponentXmlHandler::ParseNode(
             node, filepath, cable.component_shell);
-        if(line_number != 0) {
-          message = FileAndLineNumber(filepath, node)
-                    + "Invalid shell component.";
-          wxLogError(message);
-          cable.component_shell = CableComponent();
+        if (status_node == false) {
+          status = false;
         }
       } else if (name_component == "core" ) {
-        int line_number = CableComponentXmlHandler::ParseNode(
+        const bool status_node = CableComponentXmlHandler::ParseNode(
             node, filepath, cable.component_core);
-        if(line_number != 0) {
-          message = FileAndLineNumber(filepath, node)
-                    + "Invalid core component.";
-          wxLogError(message);
-          cable.component_core = CableComponent();
+        if (status_node == false) {
+          status = false;
         }
       } else {
         message = FileAndLineNumber(filepath, node)
                   + "Invalid component.";
         wxLogError(message);
+        status = false;
       }
     } else {
       message = FileAndLineNumber(filepath, node)
                 + "XML node isn't recognized.";
       wxLogError(message);
+      status = false;
     }
 
     node = node->GetNext();
   }
 
-  // if it gets to this point, no critical errors were encountered
-  return 0;
+  return status;
 }

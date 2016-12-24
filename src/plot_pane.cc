@@ -194,6 +194,8 @@ void PlotPane::RenderPlot(wxDC& dc) {
 }
 
 void PlotPane::UpdatePlotRenderers() {
+  wxLogVerbose("Updating plot renderers.");
+
   // gets view settings
   SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
 

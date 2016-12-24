@@ -9,7 +9,37 @@
 
 /// \par OVERVIEW
 ///
-/// This class is a wxAUI pane that holds all of the results display/controls.
+/// This class is a custom wxTextCtrl used for logging.
+class LogPaneTextCtrl : public wxTextCtrl {
+ public:
+  /// \brief Constructor.
+  /// \param[in] parent
+  ///   The parent window.
+  LogPaneTextCtrl(wxWindow* parent);
+
+  /// \brief Destructor.
+  ~LogPaneTextCtrl();
+
+ private:
+  /// \brief Copies the log to the clipboard.
+  void CopyLogToClipboard();
+
+  /// \brief Handles the context menu select event.
+  /// \param[in] event
+  ///   The event.
+  void OnContextMenuSelect(wxCommandEvent& event);
+
+  /// \brief Handles the mouse events.
+  /// \param[in] event
+  ///   The event.
+  void OnMouse(wxMouseEvent& event);
+
+  DECLARE_EVENT_TABLE();
+};
+
+/// \par OVERVIEW
+///
+/// This class is a wxAUI pane that displays the log information.
 class LogPane : public wxPanel {
  public:
   /// \brief Constructor.
@@ -26,9 +56,7 @@ class LogPane : public wxPanel {
  private:
   /// \var textctrl_
   ///   The textctrl.
-  wxTextCtrl* textctrl_;
-
-  DECLARE_EVENT_TABLE()
+  LogPaneTextCtrl* textctrl_;
 };
 
 # endif //  OTLS_SPANANALYZER_LOGPANE_H_

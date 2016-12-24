@@ -13,6 +13,7 @@
 #include "span_analyzer_app.h"
 #include "span_analyzer_config_xml_handler.h"
 #include "span_analyzer_data_xml_handler.h"
+#include "status_bar_log.h"
 #include "weather_load_case_unit_converter.h"
 
 FileHandler::FileHandler() {
@@ -25,12 +26,13 @@ int FileHandler::LoadAppData(const std::string& filepath,
                              const units::UnitSystem& units,
                              SpanAnalyzerData& data) {
   std::string message = "Loading application data file: " + filepath;
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
+  status_bar_log::PushText(message);
 
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
-    message = "Application data file (" + filepath + ") does not exist. "
-              "Aborting.";
+    message = filepath + "  --  "
+              "File does not exist. Aborting.";
     wxLogError(message.c_str());
     return -1;
   }
@@ -51,7 +53,7 @@ int FileHandler::LoadAppData(const std::string& filepath,
     message = filepath + "  --  "
               "Application data file contains an invalid xml root. Aborting.";
     wxLogError(message.c_str());
-    return root->GetLineNumber();
+    return 1;
   }
 
   // gets unit system attribute from file
@@ -77,15 +79,8 @@ int FileHandler::LoadAppData(const std::string& filepath,
   }
 
   // parses the xml node to populate data object
-  int line_number = SpanAnalyzerDataXmlHandler::ParseNode(root, filepath,
-                                                          units_file, data);
-  if (line_number != 0) {
-    message = filepath + std::to_string(line_number) + "  --  "
-              "Applicaton data file contains a critical parsing error. "
-              "Aborting.";
-    wxLogError(message.c_str());
-    return line_number;
-  }
+  const bool status_node = SpanAnalyzerDataXmlHandler::ParseNode(
+      root, filepath, units_file, data);
 
   // converts weathercases to consistent unit style
   for (auto iter = data.weathercases.begin();
@@ -110,14 +105,23 @@ int FileHandler::LoadAppData(const std::string& filepath,
     }
   }
 
-  return 0;
+  // resets statusbar
+  status_bar_log::PopText();
+
+  // selects return based on parsing status
+  if (status_node == true) {
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
 int FileHandler::LoadCable(const std::string& filepath,
                            const units::UnitSystem& units,
                            Cable& cable) {
   std::string message = "Loading cable file: " + filepath;
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
+  status_bar_log::PushText(message);
 
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
@@ -141,7 +145,7 @@ int FileHandler::LoadCable(const std::string& filepath,
     message = filepath + "  --  "
               "Cable file contains an invalid xml root. Aborting.";
     wxLogError(message.c_str());
-    return root->GetLineNumber();
+    return 1;
   }
 
   // gets unit system attribute from file
@@ -156,30 +160,17 @@ int FileHandler::LoadCable(const std::string& filepath,
       message = filepath + "  --  "
                 "Cable file contains an invalid units attribute. Aborting.";
       wxLogError(message.c_str());
-      return root->GetLineNumber();
+      return 1;
     }
   } else {
     message = filepath + "  --  "
               "Cable file is missing units attribute. Aborting.";
     wxLogError(message.c_str());
-    return root->GetLineNumber();
+    return 1;
   }
 
   // parses the xml node to populate cable object
-  /// \todo fix CableComponent constructor to have no default
-  ///   coefficients
-  cable.component_core.coefficients_polynomial_creep.clear();
-  cable.component_core.coefficients_polynomial_loadstrain.clear();
-  cable.component_shell.coefficients_polynomial_creep.clear();
-  cable.component_shell.coefficients_polynomial_loadstrain.clear();
-
-  int line_number = CableXmlHandler::ParseNode(root, filepath, cable);
-  if (line_number != 0) {
-    message = filepath + ":" + std::to_string(line_number) + "  --  "
-              "Cable file contains a critical parsing error. Aborting.";
-    wxLogError(message.c_str());
-    return line_number;
-  }
+  const bool status_node = CableXmlHandler::ParseNode(root, filepath, cable);
 
   // converts units to consistent style
   CableUnitConverter::ConvertUnitStyle(
@@ -194,13 +185,52 @@ int FileHandler::LoadCable(const std::string& filepath,
     CableUnitConverter::ConvertUnitSystem(units_file, units_config, cable);
   }
 
-  return line_number;
+  // adds any missing polynomial coefficients
+  // at least 5 coefficients per polynomial
+  std::vector<double>* coefficients = nullptr;
+  const unsigned int kSizeRequired = 5;
+  int num_needed = 0;
+
+  coefficients = &cable.component_core.coefficients_polynomial_creep;
+  num_needed = kSizeRequired - coefficients->size();
+  for (int i = 0; i < num_needed; i++) {
+    coefficients->push_back(0);
+  }
+
+  coefficients = &cable.component_core.coefficients_polynomial_loadstrain;
+  num_needed = kSizeRequired - coefficients->size();
+  for (int i = 0; i < num_needed; i++) {
+    coefficients->push_back(0);
+  }
+
+  coefficients = &cable.component_shell.coefficients_polynomial_creep;
+  num_needed = kSizeRequired - coefficients->size();
+  for (int i = 0; i < num_needed; i++) {
+    coefficients->push_back(0);
+  }
+
+  coefficients = &cable.component_shell.coefficients_polynomial_loadstrain;
+  num_needed = kSizeRequired - coefficients->size();
+  for (int i = 0; i < num_needed; i++) {
+    coefficients->push_back(0);
+  }
+
+  // resets statusbar
+  status_bar_log::PopText();
+
+  // selects return based on parsing status
+  if (status_node == true) {
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
 int FileHandler::LoadConfigFile(const std::string& filepath,
                                 SpanAnalyzerConfig& config) {
   std::string message = "Loading config file: " + filepath;
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
+  status_bar_log::PushText(message);
 
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
@@ -227,21 +257,22 @@ int FileHandler::LoadConfigFile(const std::string& filepath,
               "Config file contains an invalid xml root. Keeping "
               "application defaults.";
     wxLogError(message.c_str());
-    return root->GetLineNumber();
+    return 1;
   }
 
   // parses the XML node and loads into the config struct
-  int line_number = SpanAnalyzerConfigXmlHandler::ParseNode(root, filepath,
-                                                            config);
-  if (line_number != 0) {
-    message = filepath + ":" + std::to_string(line_number) + "  --  "
-              "Config file contains a critical parsing error. Keeping "
-              "application defaults.";
-    wxLogError(message.c_str());
-    return line_number;
-  }
+  const bool status_node = SpanAnalyzerConfigXmlHandler::ParseNode(
+      root, filepath, config);
 
-  return 0;
+  // resets statusbar
+  status_bar_log::PopText();
+
+  // selects return based on parsing status
+  if (status_node == true) {
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
 /// To avoid re-allocating all of the app data for a different unit style,
@@ -252,7 +283,8 @@ void FileHandler::SaveAppData(const std::string& filepath,
                               const units::UnitSystem& units) {
   // logs
   std::string message = "Saving application data file: " + filepath;
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
+  status_bar_log::PushText(message);
 
   // cables are stored in individual files, and are not included in the app
   // data file
@@ -293,13 +325,17 @@ void FileHandler::SaveAppData(const std::string& filepath,
         units::UnitStyle::kConsistent,
         *weathercase);
   }
+
+  // resets statusbar
+  status_bar_log::PopText();
 }
 
 void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
                             const units::UnitSystem& units) {
   // logs
   std::string message = "Saving cable file: " + filepath;
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
+  status_bar_log::PushText(message);
 
   // creates a copy of the cable and converts to different unit style
   Cable cable_converted = cable;
@@ -322,13 +358,17 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
   wxXmlDocument doc;
   doc.SetRoot(root);
   doc.Save(filepath, 2);
+
+  // resets statusbar
+  status_bar_log::PopText();
 }
 
 void FileHandler::SaveConfigFile(const std::string& filepath,
                                  const SpanAnalyzerConfig& config) {
   // logs
   std::string message = "Saving config file: " + filepath;
-  wxLogMessage(message.c_str());
+  wxLogVerbose(message.c_str());
+  status_bar_log::PushText(message);
 
   // generates an xml node
   wxXmlNode* root = SpanAnalyzerConfigXmlHandler::CreateNode(config);
@@ -337,4 +377,7 @@ void FileHandler::SaveConfigFile(const std::string& filepath,
   wxXmlDocument doc;
   doc.SetRoot(root);
   doc.Save(filepath, 2);
+
+  // resets statusbar
+  status_bar_log::PopText();
 }
