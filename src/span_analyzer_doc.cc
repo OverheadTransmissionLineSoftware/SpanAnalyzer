@@ -3,6 +3,7 @@
 
 #include "span_analyzer_doc.h"
 
+#include "wx/cmdproc.h"
 #include "wx/xml/xml.h"
 
 #include "span_analyzer_app.h"
@@ -53,6 +54,11 @@ void SpanAnalyzerDoc::ConvertUnitSystem(const units::UnitSystem& system_from,
     Span& span = *it;
     SpanUnitConverter::ConvertUnitSystem(system_from, system_to, span);
   }
+
+  /// \todo this should eventually convert the span data stored in the commands
+  // clears commands in the processor
+  wxCommandProcessor* processor = GetCommandProcessor();
+  processor->ClearCommands();
 }
 
 

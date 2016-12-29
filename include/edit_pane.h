@@ -83,13 +83,17 @@ class EditPane : public wxPanel {
   ///   The item ID of the selected span.
   void DeleteSpan(const wxTreeItemId& id);
 
-  /// \brief Deletes all of the spans.
-  void DeleteSpans();
-
   /// \brief Edits the selected span.
   /// \param[in] id
   ///   The item ID of the selected span.
   void EditSpan(const wxTreeItemId& id);
+
+  /// \brief Sets the application focus on a treectrl span item.
+  /// \param[in] index
+  ///   The index of the treectrl span item.
+  /// This function will set the treectrl focus to the index and move the
+  /// application focus to the treectrl.
+  void FocusTreeCtrlSpanItem(const int& index);
 
   /// \brief Initializes the treectrl.
   /// This function deletes all tree items and re-populates with spans
