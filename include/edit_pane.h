@@ -103,7 +103,7 @@ class EditPane : public wxPanel {
   /// \brief Moves the selected span down.
   /// \param[in] id
   ///   The item ID of the selected span.
-  void MoveSpanDown(const wxTreeItemId& id_from);
+  void MoveSpanDown(const wxTreeItemId& id);
 
   /// \brief Moves the selected span down.
   /// \param[in] id

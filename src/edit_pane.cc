@@ -528,8 +528,8 @@ void EditPane::OnItemMenu(wxTreeEvent& event) {
   event.Skip();
 }
 
-/// This method attempts to update treectrl items in place if possible. The
-/// treectrl item focus is not handled in this method.
+/// This method deletes the treectrl items and re-inserts them. The treectrl
+/// item focus is not set.
 void EditPane::UpdateTreeCtrlSpanItems() {
   // gets information from document and treectrl
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();

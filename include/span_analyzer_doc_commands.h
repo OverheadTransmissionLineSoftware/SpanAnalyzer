@@ -16,11 +16,24 @@
 /// command must be initialized with one of the following declared strings.
 class SpanCommand : public wxCommand {
  public:
-  /// These are the following command names that can be used upon creation:
+  /// \var kNameDelete
+  ///   The command string to use for deleting a span.
   static const std::string kNameDelete;
+
+  /// \var kNameInsert
+  ///   The command name to use for inserting a span.
   static const std::string kNameInsert;
+
+  /// \var kNameModify
+  ///   The command string to use for modifying a span.
   static const std::string kNameModify;
+
+  /// \var kNameMoveDown
+  ///   The command string to use for moving a span down.
   static const std::string kNameMoveDown;
+
+  /// \var kNameMoveUp
+  ///   The command string to use for moving a span up.
   static const std::string kNameMoveUp;
 
   /// \brief Constructor.
