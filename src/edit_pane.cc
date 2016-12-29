@@ -76,8 +76,24 @@ EditPane::~EditPane() {
 }
 
 void EditPane::Update(wxObject* hint) {
-  if (hint == nullptr) {
+  // interprets hint
+  UpdateHint* hint_update = (UpdateHint*)hint;
+  if (hint_update == nullptr) {
     InitializeTreeCtrl();
+  } else if (hint_update->type() == HintType::kAnalysisFilterGroupEdit) {
+    // do nothing
+  } else if (hint_update->type() == HintType::kAnalysisFilterGroupSelect) {
+    // do nothing
+  } else if (hint_update->type() == HintType::kAnalysisFilterSelect) {
+    // do nothing
+  } else if (hint_update->type() == HintType::kCablesEdit) {
+    // do nothing
+  } else if (hint_update->type() == HintType::kPreferencesEdit) {
+    // do nothing
+  } else if (hint_update->type() == HintType::kSpansEdit) {
+    UpdateTreeCtrlSpanItems();
+  } else if (hint_update->type() == HintType::kWeathercasesEdit) {
+    // do nothing
   }
 }
 
@@ -90,27 +106,17 @@ void EditPane::ActivateSpan(const wxTreeItemId& id) {
     return;
   }
 
-  if (id == item_activated_) {
-    return;
-  }
-
   wxLogVerbose("Activating span.");
-
-  // unbolds previous item
-  if (item_activated_.IsOk()) {
-    treectrl_->SetItemBold(item_activated_, false);
-  }
-
-  // bolds new item and caches
-  treectrl_->SetItemBold(id, true);
-  item_activated_ = id;
 
   // updates document
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
   SpanTreeItemData* data =
-      (SpanTreeItemData*)treectrl_->GetItemData(item_activated_);
+      (SpanTreeItemData*)treectrl_->GetItemData(id);
   auto iter = data->iter();
   doc->SetSpanAnalysis(&(*iter));
+
+  // updates treectrl
+  UpdateTreeCtrlSpanItems();
 }
 
 void EditPane::AddSpan() {
@@ -149,11 +155,8 @@ void EditPane::AddSpan() {
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
   auto iter = doc->AppendSpan(span);
 
-  // adds to treectrl
-  wxTreeItemId id = treectrl_->AppendItem(treectrl_->GetRootItem(), span.name);
-  SpanTreeItemData* data = new SpanTreeItemData();
-  data->set_iter(iter);
-  treectrl_->SetItemData(id, data);
+  // updates treectrl
+  UpdateTreeCtrlSpanItems();
 }
 
 void EditPane::CopySpan(const wxTreeItemId& id) {
@@ -171,12 +174,8 @@ void EditPane::CopySpan(const wxTreeItemId& id) {
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
   auto iter = doc->InsertSpan(position, span);
 
-  // adds to treectrl
-  wxTreeItemId id_item = treectrl_->InsertItem(
-      treectrl_->GetRootItem(), id, span.name);
-  SpanTreeItemData* data = new SpanTreeItemData();
-  data->set_iter(iter);
-  treectrl_->SetItemData(id_item, data);
+  // updates treectrl
+  UpdateTreeCtrlSpanItems();
 }
 
 void EditPane::DeleteSpan(const wxTreeItemId& id) {
@@ -189,11 +188,8 @@ void EditPane::DeleteSpan(const wxTreeItemId& id) {
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
   doc->DeleteSpan(item->iter());
 
-  if (item_activated_ == id) {
-    item_activated_ = (wxTreeItemId)0l;
-  }
-
-  treectrl_->Delete(id);
+  // updates treectrl
+  UpdateTreeCtrlSpanItems();
 }
 
 void EditPane::DeleteSpans() {
@@ -209,9 +205,8 @@ void EditPane::DeleteSpans() {
     iter = doc->DeleteSpan(iter);
   }
 
-  // deletes spans from treectrl
-  wxTreeItemId root = treectrl_->GetRootItem();
-  treectrl_->DeleteChildren(root);
+  // updates treectrl
+  UpdateTreeCtrlSpanItems();
 }
 
 void EditPane::EditSpan(const wxTreeItemId& id) {
@@ -260,8 +255,8 @@ void EditPane::EditSpan(const wxTreeItemId& id) {
     SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
     doc->ReplaceSpan(item->iter(), span);
 
-    // updates treectrl name
-    treectrl_->SetItemText(id, span.name);
+    // updates treectrl
+    UpdateTreeCtrlSpanItems();
   }
 }
 
@@ -269,19 +264,8 @@ void EditPane::InitializeTreeCtrl() {
   // gets root
   wxTreeItemId root = treectrl_->GetRootItem();
 
-  // deletes all children items
-  treectrl_->DeleteChildren(root);
-
   // adds items for all spans in document
-  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
-  const std::list<Span>& spans = doc->spans();
-  for (auto iter = spans.cbegin(); iter != spans.cend(); iter++) {
-    const Span& span = *iter;
-    wxTreeItemId item = treectrl_->AppendItem(root, span.name);
-    SpanTreeItemData* data = new SpanTreeItemData();
-    data->set_iter(iter);
-    treectrl_->SetItemData(item, data);
-  }
+  UpdateTreeCtrlSpanItems();
 
   // expands to show all spans
   treectrl_->Expand(root);
@@ -421,26 +405,8 @@ void EditPane::OnDragEnd(wxTreeEvent& event) {
   SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
   doc->MoveSpan(iter_source, iter_destination);
 
-  // modifies treectrl
-  wxString desc = treectrl_->GetItemText(item_source);
-  std::list<Span>::const_iterator iter = data_source->iter();
-
-  bool is_activated_item = false;
-  if (item_activated_ == item_source) {
-    is_activated_item = true;
-  }
-
-  treectrl_->Delete(item_source);
-  item_source = treectrl_->InsertItem(
-      treectrl_->GetRootItem(), item_destination, desc);
-  SpanTreeItemData* data = new SpanTreeItemData();
-  data->set_iter(iter);
-  treectrl_->SetItemData(item_source, data);
-
-  if (is_activated_item == true) {
-    item_activated_ = item_source;
-    treectrl_->SetItemBold(item_source);
-  }
+  // updates treectrl
+  UpdateTreeCtrlSpanItems();
 }
 
 void EditPane::OnItemActivate(wxTreeEvent& event) {
@@ -475,4 +441,34 @@ void EditPane::OnItemMenu(wxTreeEvent& event) {
 
   // stops processing event (needed to allow pop-up menu to catch its event)
   event.Skip();
+}
+
+void EditPane::UpdateTreeCtrlSpanItems() {
+  // gets information from document and treectrl
+  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  const std::list<Span>& spans = doc->spans();
+  const Span* span_activated = doc->SpanAnalysis();
+
+  wxTreeItemId root = treectrl_->GetRootItem();
+  treectrl_->DeleteChildren(root);
+
+  // iterates over all spans in the document
+  for (auto iter = spans.cbegin(); iter != spans.cend(); iter++) {
+    const Span* span = &(*iter);
+
+    // creates treectrl item
+    wxTreeItemId item = treectrl_->AppendItem(root, span->name);
+
+    SpanTreeItemData* data = new SpanTreeItemData();
+    data->set_iter(iter);
+    treectrl_->SetItemData(item, data);
+
+    // adjusts bold for activated and non-activated span
+    if (span == span_activated) {
+      treectrl_->SetItemBold(item, true);
+    }
+    else {
+      treectrl_->SetItemBold(item, false);
+    }
+  }
 }
