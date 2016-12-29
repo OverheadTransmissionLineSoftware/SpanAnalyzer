@@ -328,6 +328,10 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
   ConvertUnitStyle(units, units::UnitStyle::kDifferent,
                    units::UnitStyle::kConsistent);
 
+  // clears commands in the processor
+  wxCommandProcessor* processor = GetCommandProcessor();
+  processor->ClearCommands();
+
   status_bar_log::PopText();
 
   return stream;
