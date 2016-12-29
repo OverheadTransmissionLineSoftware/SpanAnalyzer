@@ -12,6 +12,8 @@
 
 #include "../res/copy.xpm"
 #include "../res/minus.xpm"
+#include "../res/move_arrow_down.xpm"
+#include "../res/move_arrow_up.xpm"
 #include "../res/plus.xpm"
 #include "../res/wrench.xpm"
 
@@ -21,8 +23,10 @@ enum {
   kTreeItemCopy = 1,
   kTreeItemDelete = 2,
   kTreeItemEdit = 3,
-  kTreeRootAdd = 4,
-  kTreeRootDeleteAll = 5
+  kTreeItemMoveDown = 4,
+  kTreeItemMoveUp = 5,
+  kTreeRootAdd = 6,
+  kTreeRootDeleteAll = 7
 };
 
 BEGIN_EVENT_TABLE(EditPane, wxPanel)
@@ -30,9 +34,9 @@ BEGIN_EVENT_TABLE(EditPane, wxPanel)
   EVT_BUTTON(XRCID("button_copy"), EditPane::OnButtonCopy)
   EVT_BUTTON(XRCID("button_delete"), EditPane::OnButtonDelete)
   EVT_BUTTON(XRCID("button_edit"), EditPane::OnButtonEdit)
+  EVT_BUTTON(XRCID("button_move_down"), EditPane::OnButtonMoveDown)
+  EVT_BUTTON(XRCID("button_move_up"), EditPane::OnButtonMoveUp)
   EVT_MENU(wxID_ANY, EditPane::OnContextMenuSelect)
-  EVT_TREE_BEGIN_DRAG(wxID_ANY, EditPane::OnDragBegin)
-  EVT_TREE_END_DRAG(wxID_ANY, EditPane::OnDragEnd)
   EVT_TREE_ITEM_ACTIVATED(wxID_ANY, EditPane::OnItemActivate)
   EVT_TREE_ITEM_MENU(wxID_ANY, EditPane::OnItemMenu)
 END_EVENT_TABLE()
@@ -55,7 +59,8 @@ EditPane::EditPane(wxWindow* parent, wxView* view) {
   images.Add(wxBitmap(minus_xpm), wxColour(255, 255, 255));
   images.Add(wxBitmap(copy_xpm), wxColour(255, 255, 255));
   images.Add(wxBitmap(wrench_xpm), wxColour(255, 255, 255));
-
+  images.Add(wxBitmap(move_arrow_up_xpm), wxColour(255, 255, 255));
+  images.Add(wxBitmap(move_arrow_down_xpm), wxColour(255, 255, 255));
 
   // assigns bitmaps to the buttons
   wxButton* button = nullptr;
@@ -70,6 +75,12 @@ EditPane::EditPane(wxWindow* parent, wxView* view) {
 
   button = XRCCTRL(*this, "button_edit", wxButton);
   button->SetBitmap(images.GetBitmap(3));
+
+  button = XRCCTRL(*this, "button_move_up", wxButton);
+  button->SetBitmap(images.GetBitmap(4));
+
+  button = XRCCTRL(*this, "button_move_down", wxButton);
+  button->SetBitmap(images.GetBitmap(5));
 }
 
 EditPane::~EditPane() {
@@ -271,6 +282,63 @@ void EditPane::InitializeTreeCtrl() {
   treectrl_->Expand(root);
 }
 
+void EditPane::MoveSpanDown(const wxTreeItemId& id) {
+  // checks to make sure item isn't the last one
+  wxTreeItemId id_next = treectrl_->GetNextSibling(id);
+  if (id_next.IsOk() == false) {
+    return;
+  }
+
+  // gets data for source and destination items
+  SpanTreeItemData* data_source =
+      (SpanTreeItemData*)treectrl_->GetItemData(id);
+  std::list<Span>::const_iterator iter_source = data_source->iter();
+
+  SpanTreeItemData* data_destination =
+      (SpanTreeItemData*)treectrl_->GetItemData(id_next);
+  std::list<Span>::const_iterator iter_destination = data_destination->iter();
+  std::advance(iter_destination, 1);
+
+  wxLogVerbose("Moving spans.");
+
+  // modifies document
+  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  doc->MoveSpan(iter_source, iter_destination);
+
+  // updates treectrl
+  UpdateTreeCtrlSpanItems();
+  treectrl_->SetFocusedItem(id_next);
+  treectrl_->ToggleItemSelection(id_next);
+}
+
+void EditPane::MoveSpanUp(const wxTreeItemId& id) {
+  // checks to make sure item isn't the first one
+  wxTreeItemId id_prev = treectrl_->GetPrevSibling(id);
+  if (id_prev.IsOk() == false) {
+    return;
+  }
+
+  // gets data for source and destination items
+  SpanTreeItemData* data_source =
+      (SpanTreeItemData*)treectrl_->GetItemData(id);
+  std::list<Span>::const_iterator iter_source = data_source->iter();
+
+  SpanTreeItemData* data_destination =
+      (SpanTreeItemData*)treectrl_->GetItemData(id_prev);
+  std::list<Span>::const_iterator iter_destination = data_destination->iter();
+
+  wxLogVerbose("Moving spans.");
+
+  // modifies document
+  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  doc->MoveSpan(iter_source, iter_destination);
+
+  // updates treectrl
+  UpdateTreeCtrlSpanItems();
+  treectrl_->ClearFocusedItem();
+  treectrl_->SetFocusedItem(id_prev);
+}
+
 void EditPane::OnButtonAdd(wxCommandEvent& event) {
   // can't create busy cursor, a dialog is used further along
 
@@ -331,6 +399,42 @@ void EditPane::OnButtonEdit(wxCommandEvent& event) {
   EditSpan(id_item);
 }
 
+void EditPane::OnButtonMoveDown(wxCommandEvent& event) {
+  wxBusyCursor cursor;
+
+  // gets selected tree item
+  wxTreeItemId id_item = treectrl_->GetSelection();
+  if (id_item.IsOk() == false) {
+    return;
+  }
+
+  // checks to make sure item isn't root
+  if (id_item == treectrl_->GetRootItem()) {
+    return;
+  }
+
+  // moves span
+  MoveSpanDown(id_item);
+}
+
+void EditPane::OnButtonMoveUp(wxCommandEvent& event) {
+  wxBusyCursor cursor;
+
+  // gets selected tree item
+  wxTreeItemId id_item = treectrl_->GetSelection();
+  if (id_item.IsOk() == false) {
+    return;
+  }
+
+  // checks to make sure item isn't root
+  if (id_item == treectrl_->GetRootItem()) {
+    return;
+  }
+
+  // moves span
+  MoveSpanUp(id_item);
+}
+
 void EditPane::OnContextMenuSelect(wxCommandEvent& event) {
   // gets selected tree item data
   wxTreeItemId id_item = treectrl_->GetSelection();
@@ -352,6 +456,12 @@ void EditPane::OnContextMenuSelect(wxCommandEvent& event) {
   } else if (id_event == kTreeItemEdit) {
     // can't create busy cursor, a dialog is used further along
     EditSpan(id_item);
+  } else if (id_event == kTreeItemMoveDown) {
+    wxBusyCursor cursor;
+    MoveSpanDown(id_item);
+  } else if (id_event == kTreeItemMoveUp) {
+    wxBusyCursor cursor;
+    MoveSpanUp(id_item);
   } else if (id_event == kTreeRootAdd) {
     // can't create busy cursor, a dialog is used further along
     AddSpan();
@@ -359,54 +469,6 @@ void EditPane::OnContextMenuSelect(wxCommandEvent& event) {
     wxBusyCursor cursor;
     DeleteSpans();
   }
-}
-
-void EditPane::OnDragBegin(wxTreeEvent& event) {
-  // checks if span is dragged, not the root
-  if (event.GetItem() == treectrl_->GetRootItem()) {
-    return;
-  }
-
-  // stores reference to dragged item and allows event
-  item_dragged_ = event.GetItem();
-  event.Allow();
-}
-
-void EditPane::OnDragEnd(wxTreeEvent& event) {
-  wxBusyCursor cursor;
-
-  // verifies that the end drag is valid
-  if ((event.GetItem().IsOk() == false)
-      ||(event.GetItem() == treectrl_->GetRootItem())
-      || (event.GetItem() == item_dragged_)) {
-    item_dragged_ = (wxTreeItemId)0l;
-    return;
-  }
-
-  // identifies source and destination
-  wxTreeItemId item_source = item_dragged_;
-  wxTreeItemId item_destination = event.GetItem();
-
-  item_dragged_ = (wxTreeItemId)0l;
-
-  // gets data for source and destination items
-  SpanTreeItemData* data_source =
-      (SpanTreeItemData*)treectrl_->GetItemData(item_source);
-  std::list<Span>::const_iterator iter_source = data_source->iter();
-
-  SpanTreeItemData* data_destination =
-      (SpanTreeItemData*)treectrl_->GetItemData(item_destination);
-  std::list<Span>::const_iterator iter_destination = data_destination->iter();
-  std::advance(iter_destination, 1);
-
-  wxLogVerbose("Moving spans.");
-
-  // modifies document
-  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
-  doc->MoveSpan(iter_source, iter_destination);
-
-  // updates treectrl
-  UpdateTreeCtrlSpanItems();
 }
 
 void EditPane::OnItemActivate(wxTreeEvent& event) {
@@ -433,6 +495,9 @@ void EditPane::OnItemMenu(wxTreeEvent& event) {
     menu.Append(kTreeItemEdit, "Edit");
     menu.Append(kTreeItemCopy, "Copy");
     menu.Append(kTreeItemDelete, "Delete");
+    menu.AppendSeparator();
+    menu.Append(kTreeItemMoveUp, "Move Up");
+    menu.Append(kTreeItemMoveDown, "Move Down");
   }
 
   // shows context menu

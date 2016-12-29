@@ -46,6 +46,24 @@
               <tooltip>Edit</tooltip>
             </object>
           </object>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxEXPAND|wxALL</flag>
+            <border>0</border>
+            <object class="wxButton" name="button_move_up">
+              <size>32,32</size>
+              <tooltip>Move Up</tooltip>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxEXPAND|wxALL</flag>
+            <border>0</border>
+            <object class="wxButton" name="button_move_down">
+              <size>32,32</size>
+              <tooltip>Move Down</tooltip>
+            </object>
+          </object>
         </object>
       </object>
       <object class="sizeritem">
