@@ -128,6 +128,10 @@ void EditPane::ActivateSpan(const wxTreeItemId& id) {
 
   // updates treectrl
   UpdateTreeCtrlSpanItems();
+
+  // updates treectrl focus
+  const int index = std::distance(doc->spans().cbegin(), iter);
+  FocusTreeCtrlSpanItem(index);
 }
 
 void EditPane::AddSpan() {
