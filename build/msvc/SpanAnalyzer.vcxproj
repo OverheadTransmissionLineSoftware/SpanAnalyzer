@@ -91,6 +91,7 @@
     <ClInclude Include="..\..\include\span_analyzer_data.h" />
     <ClInclude Include="..\..\include\span_analyzer_data_xml_handler.h" />
     <ClInclude Include="..\..\include\span_analyzer_doc.h" />
+    <ClInclude Include="..\..\include\span_analyzer_doc_commands.h" />
     <ClInclude Include="..\..\include\span_analyzer_doc_xml_handler.h" />
     <ClInclude Include="..\..\include\span_analyzer_frame.h" />
     <ClInclude Include="..\..\include\span_analyzer_view.h" />
@@ -134,6 +135,7 @@
     <ClCompile Include="..\..\src\span_analyzer_config_xml_handler.cc" />
     <ClCompile Include="..\..\src\span_analyzer_data_xml_handler.cc" />
     <ClCompile Include="..\..\src\span_analyzer_doc.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_doc_commands.cc" />
     <ClCompile Include="..\..\src\span_analyzer_doc_xml_handler.cc" />
     <ClCompile Include="..\..\src\span_analyzer_frame.cc" />
     <ClCompile Include="..\..\src\span_analyzer_view.cc" />
@@ -160,11 +162,14 @@
     </None>
     <None Include="..\..\res\edit_pane.xrc">
       <FileType>Document</FileType>
+      <SubType>Designer</SubType>
     </None>
     <None Include="..\..\res\error_message_dialog.xrc">
       <FileType>Document</FileType>
     </None>
     <None Include="..\..\res\icon.xpm" />
+    <None Include="..\..\res\move_arrow_down.xpm" />
+    <None Include="..\..\res\move_arrow_up.xpm" />
     <None Include="..\..\res\preferences_dialog.xrc">
       <FileType>Document</FileType>
     </None>

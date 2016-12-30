@@ -150,6 +150,9 @@
     <ClInclude Include="..\..\include\status_bar_log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\span_analyzer_doc_commands.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\analysis_controller.cc">
@@ -275,6 +278,9 @@
     <ClCompile Include="..\..\src\status_bar_log.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\span_analyzer_doc_commands.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\test\test.spananalyzer">
@@ -332,6 +338,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\..\res\analysis_filter_manager_dialog.xrc">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\res\move_arrow_down.xpm">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\res\move_arrow_up.xpm">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

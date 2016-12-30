@@ -84,6 +84,7 @@
 		<Unit filename="../../include/span_analyzer_data.h" />
 		<Unit filename="../../include/span_analyzer_data_xml_handler.h" />
 		<Unit filename="../../include/span_analyzer_doc.h" />
+		<Unit filename="../../include/span_analyzer_doc_commands.h" />
 		<Unit filename="../../include/span_analyzer_doc_xml_handler.h" />
 		<Unit filename="../../include/span_analyzer_frame.h" />
 		<Unit filename="../../include/span_analyzer_view.h" />
@@ -106,6 +107,8 @@
 		<Unit filename="../../res/error_message_dialog.xrc" />
 		<Unit filename="../../res/icon.ico" />
 		<Unit filename="../../res/icon.xpm" />
+		<Unit filename="../../res/move_arrow_down.xpm" />
+		<Unit filename="../../res/move_arrow_up.xpm" />
 		<Unit filename="../../res/preferences_dialog.xrc" />
 		<Unit filename="../../res/results_pane.xrc" />
 		<Unit filename="../../res/sort_arrow_down.xpm" />
@@ -146,6 +149,7 @@
 		<Unit filename="../../src/span_analyzer_config_xml_handler.cc" />
 		<Unit filename="../../src/span_analyzer_data_xml_handler.cc" />
 		<Unit filename="../../src/span_analyzer_doc.cc" />
+		<Unit filename="../../src/span_analyzer_doc_commands.cc" />
 		<Unit filename="../../src/span_analyzer_doc_xml_handler.cc" />
 		<Unit filename="../../src/span_analyzer_frame.cc" />
 		<Unit filename="../../src/span_analyzer_view.cc" />
