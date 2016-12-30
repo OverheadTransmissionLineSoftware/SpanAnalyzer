@@ -41,6 +41,10 @@ void SpanAnalyzerDoc::ConvertUnitStyle(const units::UnitSystem& system,
     SpanUnitConverter::ConvertUnitStyle(system, style_from,
                                         style_to, span);
   }
+
+  // clears commands in the processor
+  wxCommandProcessor* processor = GetCommandProcessor();
+  processor->ClearCommands();
 }
 
 void SpanAnalyzerDoc::ConvertUnitSystem(const units::UnitSystem& system_from,
@@ -55,7 +59,6 @@ void SpanAnalyzerDoc::ConvertUnitSystem(const units::UnitSystem& system_from,
     SpanUnitConverter::ConvertUnitSystem(system_from, system_to, span);
   }
 
-  /// \todo this should eventually convert the span data stored in the commands
   // clears commands in the processor
   wxCommandProcessor* processor = GetCommandProcessor();
   processor->ClearCommands();
@@ -108,6 +111,8 @@ std::list<Span>::const_iterator SpanAnalyzerDoc::InsertSpan(
 }
 
 wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
+  wxBusyCursor cursor;
+
   std::string message;
 
   message = "Loading document file: " + this->GetFilename();
@@ -294,6 +299,8 @@ void SpanAnalyzerDoc::RunAnalysis() const {
 }
 
 wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
+  wxBusyCursor cursor;
+
   // logs
   std::string message = "Saving document file: " + GetFilename();
   wxLogVerbose(message.c_str());
