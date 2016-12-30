@@ -37,6 +37,13 @@
     </object>
     <object class="wxMenu" name="menu_edit">
       <label>Edit</label>
+      <object class="wxMenuItem" name="wxID_UNDO">
+        <label>Undo</label>
+      </object>
+      <object class="wxMenuItem" name="wxID_REDO">
+        <label>Redo</label>
+      </object>
+      <object class="separator" />
       <object class="wxMenuItem" name="menuitem_edit_cables">
         <label>Cables</label>
       </object>

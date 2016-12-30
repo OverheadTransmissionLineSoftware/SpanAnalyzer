@@ -3,6 +3,8 @@
 
 #include "span_analyzer_view.h"
 
+#include "wx/cmdproc.h"
+
 #include "span_analyzer_app.h"
 #include "status_bar_log.h"
 
@@ -107,6 +109,13 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   // resets statusbar
   status_bar_log::SetText("Ready");
 
+  // links command processor to edit menu
+  const int index_menu = frame->GetMenuBar()->FindMenu("Edit");
+  wxMenu* menu = frame->GetMenuBar()->GetMenu(index_menu);
+
+  wxCommandProcessor* processor = GetDocument()->GetCommandProcessor();
+  processor->SetEditMenu(menu);
+
   return true;
 }
 
@@ -139,6 +148,12 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
 
   // resets statusbar
   status_bar_log::SetText("Ready");
+
+  // resets menubar
+  const int index_menu = frame->GetMenuBar()->FindMenu("Edit");
+  wxMenu* menu = frame->GetMenuBar()->GetMenu(index_menu);
+  menu->SetLabel(wxID_UNDO, "Undo \tCtrl+Z");
+  menu->SetLabel(wxID_REDO, "Redo \tCtrl+Y");
 
   return true;
 }
