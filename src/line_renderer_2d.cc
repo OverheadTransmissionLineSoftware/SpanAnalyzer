@@ -3,20 +3,8 @@
 
 #include "line_renderer_2d.h"
 
-const LineDataSet2d* LineRenderer2d::dataset() const {
-  return dataset_;
-}
-
-const wxPen* LineRenderer2d::pen() const {
-  return pen_;
-}
-
-void LineRenderer2d::set_dataset(const LineDataSet2d* dataset) {
-  dataset_ = dataset;
-}
-
-void LineRenderer2d::set_pen(const wxPen* pen) {
-  pen_ = pen;
+LineRenderer2d::LineRenderer2d() {
+  pen_ = nullptr;
 }
 
 void LineRenderer2d::Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
@@ -24,8 +12,11 @@ void LineRenderer2d::Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
   // sets drawing pen
   dc.SetPen(*pen_);
 
+  // casts to line dataset
+  LineDataSet2d* dataset = (LineDataSet2d*)dataset_;
+
   // draws each line in dataset
-  const std::list<Line2d>& data = dataset_->data();
+  const std::list<Line2d>& data = dataset->data();
   for (auto iter = data.cbegin(); iter != data.cend(); iter++) {
     // gets line
     const Line2d& line = *iter;
@@ -82,54 +73,10 @@ void LineRenderer2d::Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
   }
 }
 
-void LineRenderer2d::ClipHorizontal(const PlotAxis& axis,
-                                    const double& x_vis, const double& y_vis,
-                                    double& x, double& y) {
-  // determines axis boundary
-  double b;
-  if (x < axis.Min()) {
-    b = axis.Min();
-  } else {
-    b = axis.Max();
-  }
-
-  // solves for coordinates along line that intersect the boundary
-  y = (b - x_vis) * (y - y_vis) / (x - x_vis) + y_vis;
-  x = b;
+const wxPen* LineRenderer2d::pen() const {
+  return pen_;
 }
 
-void LineRenderer2d::ClipVertical(const PlotAxis& axis,
-                                  const double& x_vis, const double& y_vis,
-                                  double& x, double& y) {
-  // determines axis boundary
-  double b;
-  if (y < axis.Min()) {
-    b = axis.Min();
-  } else {
-    b = axis.Max();
-  }
-
-  // solves for coordinates along line that intersect the boundary
-  x = (b - y_vis) * (x - x_vis) / (y - y_vis) + x_vis;
-  y = b;
-}
-
-wxCoord LineRenderer2d::DataToGraphics(const double& value,
-                                       const double& value_min,
-                                       const double& value_max,
-                                       const int& range_graphics,
-                                       const bool& is_vertical) {
-  // calcs the value range
-  const double range_values = value_max - value_min;
-
-  // calculates ratio of point along axis
-  double k = 0;
-  if (is_vertical == true) {
-    k = (value_max - value) / range_values;
-  } else {
-    k = (value - value_min) / range_values;
-  }
-
-  // scales to graphics range
-  return k * range_graphics;
+void LineRenderer2d::set_pen(const wxPen* pen) {
+  pen_ = pen;
 }

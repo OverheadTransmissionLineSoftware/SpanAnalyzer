@@ -4,10 +4,12 @@
 #ifndef OTLS_SPANANALYZER_PLOT2D_H_
 #define OTLS_SPANANALYZER_PLOT2D_H_
 
+#include <list>
+
 #include "models/base/point.h"
 #include "wx/wx.h"
 
-#include "line_renderer_2d.h"
+#include "renderer_2d.h"
 #include "plot_axis.h"
 
 /// \par OVERVIEW
@@ -71,10 +73,6 @@ struct Plot2dDataLimits {
 ///
 /// This plot supports zooming in/out.
 ///
-/// \par FUTURE IMPROVEMENTS
-///
-/// This plot should eventually be capable of the following:
-/// \todo Make this plot accept multiple renderer types via inheritance.
 class Plot2d {
  public:
   /// \brief Constructor.
@@ -85,8 +83,8 @@ class Plot2d {
 
   /// \brief Adds a renderer.
   /// \param[in] renderer
-  ///   The renderer.
-  void AddRenderer(const LineRenderer2d& renderer);
+  ///   The renderer. The plot will take ownership of the pointer.
+  void AddRenderer(const Renderer2d* renderer);
 
   /// \brief Clears the renderers.
   void ClearRenderers();
@@ -228,7 +226,7 @@ class Plot2d {
 
   /// \var renderers_
   ///   The list of renderers.
-  std::list<LineRenderer2d> renderers_;
+  std::list<const Renderer2d*> renderers_;
 };
 
 #endif //  OTLS_SPANANALYZER_PLOT2D_H_

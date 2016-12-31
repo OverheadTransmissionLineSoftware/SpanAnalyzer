@@ -310,9 +310,9 @@ void PlotPane::UpdatePlotRenderers() {
   dataset_catenary_.set_data(lines);
 
   // creates renderer
-  LineRenderer2d renderer;
-  renderer.set_dataset(&dataset_catenary_);
-  renderer.set_pen(wxCYAN_PEN);
+  LineRenderer2d* renderer = new LineRenderer2d();
+  renderer->set_dataset(&dataset_catenary_);
+  renderer->set_pen(wxCYAN_PEN);
 
   // adds renderer 2D plot
   plot_.AddRenderer(renderer);

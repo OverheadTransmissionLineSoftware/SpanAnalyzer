@@ -8,6 +8,8 @@
 
 #include "models/base/point.h"
 
+#include "data_set_2d.h"
+
 /// \par OVERVIEW
 ///
 /// This struct represents a 2D line.
@@ -24,13 +26,10 @@ struct Line2d {
 /// \par OVERVIEW
 ///
 /// This class represents a set of 2D lines.
-class LineDataSet2d {
+class LineDataSet2d : public DataSet2d {
  public:
   /// \brief Constructor.
   LineDataSet2d();
-
-  /// \brief Destructor.
-  ~LineDataSet2d();
 
   /// \brief Gets the maximum x value.
   /// \return The maximum x value.
@@ -68,22 +67,6 @@ class LineDataSet2d {
   /// \var is_updated_
   ///   An indicator that tells if the cached values have been updated.
   mutable bool is_updated_;
-
-  /// \var x_max_
-  ///   The maximum x value.
-  mutable double x_max_;
-
-  /// \var x_min_
-  ///   The minimum x value.
-  mutable double x_min_;
-
-  /// \var y_max_
-  ///   The maximum y value.
-  mutable double y_max_;
-
-  /// \var y_min_
-  ///   The minimum value.
-  mutable double y_min_;
 };
 
 #endif //  OTLS_SPANANALYZER_LINEDATASET2D_H_

@@ -63,6 +63,7 @@
 		<Unit filename="../../include/cable_file_manager_dialog.h" />
 		<Unit filename="../../include/cable_unit_converter.h" />
 		<Unit filename="../../include/cable_xml_handler.h" />
+		<Unit filename="../../include/data_set_2d.h" />
 		<Unit filename="../../include/edit_pane.h" />
 		<Unit filename="../../include/error_message_dialog.h" />
 		<Unit filename="../../include/file_handler.h" />
@@ -74,6 +75,7 @@
 		<Unit filename="../../include/plot_axis.h" />
 		<Unit filename="../../include/plot_pane.h" />
 		<Unit filename="../../include/preferences_dialog.h" />
+		<Unit filename="../../include/renderer_2d.h" />
 		<Unit filename="../../include/report_table.h" />
 		<Unit filename="../../include/results_pane.h" />
 		<Unit filename="../../include/sag_tension_analysis_results.h" />
@@ -131,6 +133,7 @@
 		<Unit filename="../../src/cable_file_manager_dialog.cc" />
 		<Unit filename="../../src/cable_unit_converter.cc" />
 		<Unit filename="../../src/cable_xml_handler.cc" />
+		<Unit filename="../../src/data_set_2d.cc" />
 		<Unit filename="../../src/edit_pane.cc" />
 		<Unit filename="../../src/error_message_dialog.cc" />
 		<Unit filename="../../src/file_handler.cc" />
@@ -142,6 +145,7 @@
 		<Unit filename="../../src/plot_axis.cc" />
 		<Unit filename="../../src/plot_pane.cc" />
 		<Unit filename="../../src/preferences_dialog.cc" />
+		<Unit filename="../../src/renderer_2d.cc" />
 		<Unit filename="../../src/report_table.cc" />
 		<Unit filename="../../src/results_pane.cc" />
 		<Unit filename="../../src/span.cc" />

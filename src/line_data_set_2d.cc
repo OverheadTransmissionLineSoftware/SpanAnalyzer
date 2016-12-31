@@ -7,15 +7,6 @@
 
 LineDataSet2d::LineDataSet2d() {
   is_updated_ = false;
-
-  x_max_ = -999999;
-  x_min_ = 999999;
-
-  y_max_ = -999999;
-  y_min_ = 999999;
-}
-
-LineDataSet2d::~LineDataSet2d() {
 }
 
 double LineDataSet2d::MaxX() const {
