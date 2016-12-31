@@ -3,12 +3,14 @@
 
 #include "plot_pane.h"
 
+#include "models/base/helper.h"
 #include "models/transmissionline/catenary.h"
 #include "wx/dcbuffer.h"
 
 #include "line_renderer_2d.h"
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
+#include "status_bar_log.h"
 
 /// \par OVERVIEW
 ///
@@ -108,6 +110,11 @@ void PlotPane::OnEraseBackground(wxEraseEvent& event) {
 }
 
 void PlotPane::OnMouse(wxMouseEvent& event) {
+  // skips if no plot renderers are active
+  if (plot_.HasRenderers() == false) {
+    return;
+  }
+
   if (event.Dragging() == true) {
     // checks if left button is pressed
     if (event.LeftIsDown() == false) {
@@ -159,9 +166,43 @@ void PlotPane::OnMouse(wxMouseEvent& event) {
     // stops processing event (needed to allow pop-up menu to catch its event)
     event.Skip();
   }
+
+  // updates status bar
+  if (plot_.HasRenderers() == true) {
+    // converts graphics point to data point
+    wxPoint point_graphics;
+    point_graphics.x = event.GetX();
+    point_graphics.y = event.GetY();
+    const Point2d point_data = plot_.PointGraphicsToData(point_graphics);
+
+    // logs to status bar
+    std::string str = "X="
+                      + helper::DoubleToFormattedString(point_data.x, 2)
+                      + "   Y="
+                      + helper::DoubleToFormattedString(point_data.y, 2);
+
+    status_bar_log::SetText(str, 1);
+  } else {
+    status_bar_log::SetText("", 1);
+  }
 }
 
 void PlotPane::OnMouseWheel(wxMouseEvent& event) {
+  // skips if no plot renderers are active
+  if (plot_.HasRenderers() == false) {
+    return;
+  }
+
+  // skips if point is outside of graphics rect
+  wxRect rect = GetClientRect();
+  if ((event.GetX() < 0) || (rect.GetWidth() < event.GetX())) {
+    return;
+  }
+
+  if ((event.GetY() < 0) || (rect.GetHeight() < event.GetY())) {
+    return;
+  }
+
   // zoom factor
   const double kZoomFactor = 1.2;
 

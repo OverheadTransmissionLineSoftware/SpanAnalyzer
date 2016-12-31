@@ -91,6 +91,10 @@ class Plot2d {
   /// \brief Clears the renderers.
   void ClearRenderers();
 
+  /// \brief Gets if the plot has any renderers.
+  /// \return If the plot has any renderers.
+  bool HasRenderers() const;
+
   /// \brief Translates a graphics coordinate to a data coordinate.
   /// \param[in] point_graphics
   ///   The graphics coordinate.

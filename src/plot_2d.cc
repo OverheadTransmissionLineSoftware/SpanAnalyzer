@@ -35,6 +35,14 @@ void Plot2d::ClearRenderers() {
   is_updated_limits_data_ = false;
 }
 
+bool Plot2d::HasRenderers() const {
+  if (renderers_.empty() == true) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 Point2d Plot2d::PointGraphicsToData(const wxPoint& point_graphics) const {
   // scales and applies offset
   Point2d point;

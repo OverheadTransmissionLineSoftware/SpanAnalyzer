@@ -77,7 +77,11 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
   manager_.SetManagedWindow(this);
 
   // creates status bar
-  CreateStatusBar();
+  wxStatusBar* status_bar = CreateStatusBar();
+  const int kFieldsCount = 2;
+  const int widths_field[2] = {-1, 170};
+  status_bar->SetFieldsCount(kFieldsCount);
+  status_bar->SetStatusWidths(kFieldsCount, widths_field);
 
   // creates log AUI window and adds to manager
   wxAuiPaneInfo info;
