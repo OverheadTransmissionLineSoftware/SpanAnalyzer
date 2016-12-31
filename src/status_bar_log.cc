@@ -29,7 +29,7 @@ wxStatusBar* GetStatusBar() {
   return frame->GetStatusBar();
 }
 
-void PushText(const std::string& status) {
+void PushText(const std::string& text, const int& index) {
   // gets status bar
   wxStatusBar* status_bar = status_bar_log::GetStatusBar();
   if (status_bar == nullptr) {
@@ -37,10 +37,10 @@ void PushText(const std::string& status) {
   }
 
   // logs
-  status_bar->PushStatusText(status);
+  status_bar->PushStatusText(text, index);
 }
 
-void PopText() {
+void PopText(const int& index) {
   // gets status bar
   wxStatusBar* status_bar = status_bar_log::GetStatusBar();
   if (status_bar == nullptr) {
@@ -48,10 +48,10 @@ void PopText() {
   }
 
   // logs
-  status_bar->PopStatusText();
+  status_bar->PopStatusText(index);
 }
 
-void SetText(const std::string& status) {
+void SetText(const std::string& text, const int& index) {
   // gets status bar
   wxStatusBar* status_bar = status_bar_log::GetStatusBar();
   if (status_bar == nullptr) {
@@ -59,7 +59,7 @@ void SetText(const std::string& status) {
   }
 
   // logs
-  status_bar->SetStatusText(status);
+  status_bar->SetStatusText(text, index);
 }
 
 }

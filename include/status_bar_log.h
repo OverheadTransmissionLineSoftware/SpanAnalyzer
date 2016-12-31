@@ -19,19 +19,25 @@ namespace status_bar_log {
 
 /// \brief Pushes the string to the statusbar stack to update the status
 ///   message.
-/// \param[in] status
-///   The status.
-void PushText(const std::string& status);
+/// \param[in] text
+///   The status text.
+/// \param[in] index
+///   The status field index.
+void PushText(const std::string& text, const int& index);
 
 /// \brief Pops the current status from the statusbar and returns to the
 ///   previous status message.
-void PopText();
+/// \param[in] index
+///   The status field index.
+void PopText(const int& index);
 
 /// \brief Sets the current status message.
-/// \param[in] status
-///   The status.
+/// \param[in] text
+///   The status text.
+/// \param[in] index
+///   The status field index.
 /// This will overwrite the current status message in the stack.
-void SetText(const std::string& status);
+void SetText(const std::string& text, const int& index);
 
 }
 

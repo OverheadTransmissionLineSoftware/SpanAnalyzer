@@ -25,7 +25,7 @@ void AnalysisController::ClearResults() {
   results_initial_.clear();
   results_load_.clear();
 
-  status_bar_log::SetText("Ready");
+  status_bar_log::SetText("Ready", 0);
 }
 
 const SagTensionAnalysisResult* AnalysisController::Result(
@@ -85,13 +85,13 @@ void AnalysisController::RunAnalysis() const {
     }
 
     wxLogVerbose("Span validation errors are present. Aborting analysis.");
-    status_bar_log::SetText("Span validation error(s) present, see logs");
+    status_bar_log::SetText("Span validation error(s) present, see logs", 0);
 
     return;
   }
 
   wxLogVerbose("Running sag-tension analysis.");
-  status_bar_log::PushText("Running sag-tension analysis...");
+  status_bar_log::PushText("Running sag-tension analysis...", 0);
 
   // creates a timer and records start time
   Timer timer;
@@ -131,8 +131,8 @@ void AnalysisController::RunAnalysis() const {
   wxLogVerbose(message.c_str());
 
   // clears status bar
-  status_bar_log::PopText();
-  status_bar_log::SetText("Ready");
+  status_bar_log::PopText(0);
+  status_bar_log::SetText("Ready", 0);
 }
 
 void AnalysisController::set_span(const Span* span) {

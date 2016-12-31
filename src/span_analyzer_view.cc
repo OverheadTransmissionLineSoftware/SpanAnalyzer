@@ -107,7 +107,7 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   }
 
   // resets statusbar
-  status_bar_log::SetText("Ready");
+  status_bar_log::SetText("Ready", 0);
 
   // links command processor to edit menu
   const int index_menu = frame->GetMenuBar()->FindMenu("Edit");
@@ -147,7 +147,7 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
   frame->SetTitle(wxGetApp().GetAppDisplayName());
 
   // resets statusbar
-  status_bar_log::SetText("Ready");
+  status_bar_log::SetText("Ready", 0);
 
   // resets menubar
   const int index_menu = frame->GetMenuBar()->FindMenu("Edit");
@@ -166,7 +166,7 @@ void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
   wxView::OnUpdate(sender, hint);
 
   // updates statusbar
-  status_bar_log::PushText("Updating view");
+  status_bar_log::PushText("Updating view", 0);
 
   // don't need to distinguish sender - all frames are grouped under one view
   pane_edit_->Update(hint);
@@ -174,7 +174,7 @@ void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
   pane_results_->Update(hint);
 
   // resets status bar
-  status_bar_log::PopText();
+  status_bar_log::PopText(0);
 }
 
 const AnalysisFilterGroup* SpanAnalyzerView::group_filters() const {
