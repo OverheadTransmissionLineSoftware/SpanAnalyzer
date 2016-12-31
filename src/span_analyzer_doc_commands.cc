@@ -38,7 +38,8 @@ bool SpanCommand::Do() {
   SpanAnalyzerDoc* doc = GetDocument();
 
   // checks index to see if a valid iterator is possible
-  if ((index_ < 0) || (doc->spans().size() < index_)) {
+  const int kSize = doc->spans().size();
+  if ((index_ < 0) || (kSize < index_)) {
     wxLogError("Invalid span index. Aborting command.");
     return false;
   }
@@ -46,11 +47,11 @@ bool SpanCommand::Do() {
   // gets iterator
   std::list<Span>::const_iterator iter;
   iter = std::next(doc->spans().cbegin(), index_);
-  
+
   // selects based on command name
   if (name == kNameDelete) {
     // checks that index isn't end of list
-    if (index_ == doc->spans().size()) {
+    if (index_ == kSize) {
       wxLogError("Invalid span index. Aborting delete command.");
       return false;
     }
@@ -60,19 +61,19 @@ bool SpanCommand::Do() {
     DoInsert(iter);
   } else if (name == kNameModify) {
     // checks that index isn't end of list
-    if (index_ == doc->spans().size()) {
+    if (index_ == kSize) {
       wxLogError("Invalid span index. Aborting modify command.");
       return false;
     }
-    
+
     DoModify(iter);
   } else if (name == kNameMoveDown) {
     // checks that index isn't the last span
-    if (index_ == doc->spans().size() - 1) {
+    if (index_ == kSize - 1) {
       wxLogError("Invalid span index. Aborting move down command.");
       return false;
     }
-    
+
     DoMoveDown(iter);
   } else if (name == kNameMoveUp) {
     // checks that index isn't the first span
@@ -101,7 +102,8 @@ bool SpanCommand::Undo() {
   SpanAnalyzerDoc* doc = GetDocument();
 
   // checks index to see if a valid iterator is possible
-  if ((index_ < 0) || (doc->spans().size() < index_)) {
+  const int kSize = doc->spans().size();
+  if ((index_ < 0) || (kSize < index_)) {
     wxLogError("Invalid span index. Aborting command.");
     return false;
   }
@@ -119,7 +121,7 @@ bool SpanCommand::Undo() {
     DoModify(iter);
   } else if (name == kNameMoveDown) {
     DoMoveUp(iter);
-  } else if (name == kNameMoveUp) { 
+  } else if (name == kNameMoveUp) {
     DoMoveDown(iter);
   } else {
     wxLogError("Invalid command. Aborting.");
