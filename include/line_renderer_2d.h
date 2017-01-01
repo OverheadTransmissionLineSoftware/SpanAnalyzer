@@ -26,8 +26,8 @@ class LineRenderer2d : public Renderer2d {
   ///   The horizontal plot axis.
   /// \param[in] axis_vertical
   ///   The vertical plot axis.
-  void Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
-            const PlotAxis& axis_vertical) const;
+  virtual void Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
+                    const PlotAxis& axis_vertical) const override;
 
   /// \brief Gets the pen.
   /// \return The pen.

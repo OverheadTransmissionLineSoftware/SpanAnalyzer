@@ -33,19 +33,19 @@ class LineDataSet2d : public DataSet2d {
 
   /// \brief Gets the maximum x value.
   /// \return The maximum x value.
-  double MaxX() const;
+  virtual double MaxX() const override;
 
   /// \brief Gets the maximum y value.
   /// \return The maximum y value.
-  double MaxY() const;
+  virtual double MaxY() const override;
 
   /// \brief Gets the minimum x value.
   /// \return The minimum x value.
-  double MinX() const;
+  virtual double MinX() const override;
 
   /// \brief Gets the minimum y value.
   /// \return The minimum y value.
-  double MinY() const;
+  virtual double MinY() const override;
 
   /// \brief Gets the data.
   /// \return The data.
