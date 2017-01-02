@@ -278,8 +278,6 @@ void PlotPane::UpdatePlotRenderers() {
   catenary.set_tension_horizontal(result->tension_horizontal);
   catenary.set_weight_unit(result->weight_unit);
 
-  /// \todo remove/minimize copying for faster redraws
-
   // calculates points
   std::list<Point3d> points;
   const int i_max = 100;
@@ -289,25 +287,23 @@ void PlotPane::UpdatePlotRenderers() {
     points.push_back(p);
   }
 
-  // converts points to lines
-  std::list<Line2d> lines;
+  // converts points to lines and adds to dataset
+  dataset_catenary_.Clear();
   for (auto iter = points.cbegin(); iter != std::prev(points.cend(), 1);
        iter++) {
     // gets current and next point in the list
-    const Point3d p0 = *iter;
-    const Point3d p1 = *(std::next(iter, 1));
+    const Point3d& p0 = *iter;
+    const Point3d& p1 = *(std::next(iter, 1));
 
     // creates a line and maps 3d catenary points to 2d points for drawing
-    Line2d line;
-    line.p0.x = p0.x;
-    line.p0.y = p0.z;
-    line.p1.x = p1.x;
-    line.p1.y = p1.z;
+    Line2d* line = new Line2d();
+    line->p0.x = p0.x;
+    line->p0.y = p0.z;
+    line->p1.x = p1.x;
+    line->p1.y = p1.z;
 
-    lines.push_back(line);
+    dataset_catenary_.Add(line);
   }
-
-  dataset_catenary_.set_data(lines);
 
   // creates renderer
   LineRenderer2d* renderer = new LineRenderer2d();

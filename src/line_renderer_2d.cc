@@ -13,19 +13,19 @@ void LineRenderer2d::Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
   dc.SetPen(*pen_);
 
   // casts to line dataset
-  LineDataSet2d* dataset = (LineDataSet2d*)dataset_;
+  const LineDataSet2d* dataset = (LineDataSet2d*)dataset_;
 
   // draws each line in dataset
-  const std::list<Line2d>& data = dataset->data();
-  for (auto iter = data.cbegin(); iter != data.cend(); iter++) {
+  const std::list<const Line2d*>* data = dataset->data();
+  for (auto iter = data->cbegin(); iter != data->cend(); iter++) {
     // gets line
-    const Line2d& line = *iter;
+    const Line2d* line = *iter;
 
     // gets points to draw
-    double x0 = line.p0.x;
-    double y0 = line.p0.y;
-    double x1 = line.p1.x;
-    double y1 = line.p1.y;
+    double x0 = line->p0.x;
+    double y0 = line->p0.y;
+    double x1 = line->p1.x;
+    double y1 = line->p1.y;
 
     // skips lines that are out of range
     if ((x0 < axis_horizontal.Min()) && (x1 < axis_horizontal.Min())) {

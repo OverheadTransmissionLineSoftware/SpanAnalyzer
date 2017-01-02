@@ -31,6 +31,18 @@ class LineDataSet2d : public DataSet2d {
   /// \brief Constructor.
   LineDataSet2d();
 
+  /// \brief Destructor.
+  virtual ~LineDataSet2d();
+
+  /// \brief Adds a line to the dataset.
+  /// \param[in] line
+  ///   The line.
+  /// This class will take ownership of the pointer.
+  void Add(const Line2d* line);
+
+  /// \brief Clears all of the stored lines.
+  void Clear();
+
   /// \brief Gets the maximum x value.
   /// \return The maximum x value.
   virtual double MaxX() const override;
@@ -49,12 +61,7 @@ class LineDataSet2d : public DataSet2d {
 
   /// \brief Gets the data.
   /// \return The data.
-  const std::list<Line2d>& data() const;
-
-  /// \brief Sets the data.
-  /// \param[in] data
-  ///   The data.
-  void set_data(const std::list<Line2d>& data);
+  const std::list<const Line2d*>* data() const;
 
  private:
   /// \brief Updates the cached values.
@@ -62,7 +69,7 @@ class LineDataSet2d : public DataSet2d {
 
   /// \var data_
   ///   The line data.
-  std::list<Line2d> data_;
+  std::list<const Line2d*> data_;
 
   /// \var is_updated_
   ///   An indicator that tells if the cached values have been updated.
