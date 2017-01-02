@@ -70,6 +70,7 @@
     <ClInclude Include="..\..\include\cable_file_manager_dialog.h" />
     <ClInclude Include="..\..\include\cable_unit_converter.h" />
     <ClInclude Include="..\..\include\cable_xml_handler.h" />
+    <ClInclude Include="..\..\include\data_set_2d.h" />
     <ClInclude Include="..\..\include\edit_pane.h" />
     <ClInclude Include="..\..\include\error_message_dialog.h" />
     <ClInclude Include="..\..\include\file_handler.h" />
@@ -81,6 +82,7 @@
     <ClInclude Include="..\..\include\plot_axis.h" />
     <ClInclude Include="..\..\include\plot_pane.h" />
     <ClInclude Include="..\..\include\preferences_dialog.h" />
+    <ClInclude Include="..\..\include\renderer_2d.h" />
     <ClInclude Include="..\..\include\report_table.h" />
     <ClInclude Include="..\..\include\results_pane.h" />
     <ClInclude Include="..\..\include\sag_tension_analysis_results.h" />
@@ -117,6 +119,7 @@
     <ClCompile Include="..\..\src\cable_file_manager_dialog.cc" />
     <ClCompile Include="..\..\src\cable_unit_converter.cc" />
     <ClCompile Include="..\..\src\cable_xml_handler.cc" />
+    <ClCompile Include="..\..\src\data_set_2d.cc" />
     <ClCompile Include="..\..\src\edit_pane.cc" />
     <ClCompile Include="..\..\src\error_message_dialog.cc" />
     <ClCompile Include="..\..\src\file_handler.cc" />
@@ -128,6 +131,7 @@
     <ClCompile Include="..\..\src\plot_axis.cc" />
     <ClCompile Include="..\..\src\plot_pane.cc" />
     <ClCompile Include="..\..\src\preferences_dialog.cc" />
+    <ClCompile Include="..\..\src\renderer_2d.cc" />
     <ClCompile Include="..\..\src\report_table.cc" />
     <ClCompile Include="..\..\src\results_pane.cc" />
     <ClCompile Include="..\..\src\span.cc" />

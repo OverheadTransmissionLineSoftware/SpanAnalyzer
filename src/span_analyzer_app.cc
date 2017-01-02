@@ -235,7 +235,7 @@ bool SpanAnalyzerApp::OnInit() {
   frame_->Show(true);
 
   // updates status bar
-  status_bar_log::SetText("Ready");
+  status_bar_log::SetText("Ready", 0);
 
   return true;
 }

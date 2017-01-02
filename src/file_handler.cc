@@ -27,7 +27,7 @@ int FileHandler::LoadAppData(const std::string& filepath,
                              SpanAnalyzerData& data) {
   std::string message = "Loading application data file: " + filepath;
   wxLogVerbose(message.c_str());
-  status_bar_log::PushText(message);
+  status_bar_log::PushText(message, 0);
 
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
@@ -106,7 +106,7 @@ int FileHandler::LoadAppData(const std::string& filepath,
   }
 
   // resets statusbar
-  status_bar_log::PopText();
+  status_bar_log::PopText(0);
 
   // selects return based on parsing status
   if (status_node == true) {
@@ -121,7 +121,7 @@ int FileHandler::LoadCable(const std::string& filepath,
                            Cable& cable) {
   std::string message = "Loading cable file: " + filepath;
   wxLogVerbose(message.c_str());
-  status_bar_log::PushText(message);
+  status_bar_log::PushText(message, 0);
 
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
@@ -216,7 +216,7 @@ int FileHandler::LoadCable(const std::string& filepath,
   }
 
   // resets statusbar
-  status_bar_log::PopText();
+  status_bar_log::PopText(0);
 
   // selects return based on parsing status
   if (status_node == true) {
@@ -230,7 +230,7 @@ int FileHandler::LoadConfigFile(const std::string& filepath,
                                 SpanAnalyzerConfig& config) {
   std::string message = "Loading config file: " + filepath;
   wxLogVerbose(message.c_str());
-  status_bar_log::PushText(message);
+  status_bar_log::PushText(message, 0);
 
   // checks if the file exists
   if (wxFileName::Exists(filepath) == false) {
@@ -265,7 +265,7 @@ int FileHandler::LoadConfigFile(const std::string& filepath,
       root, filepath, config);
 
   // resets statusbar
-  status_bar_log::PopText();
+  status_bar_log::PopText(0);
 
   // selects return based on parsing status
   if (status_node == true) {
@@ -284,7 +284,7 @@ void FileHandler::SaveAppData(const std::string& filepath,
   // logs
   std::string message = "Saving application data file: " + filepath;
   wxLogVerbose(message.c_str());
-  status_bar_log::PushText(message);
+  status_bar_log::PushText(message, 0);
 
   // cables are stored in individual files, and are not included in the app
   // data file
@@ -327,7 +327,7 @@ void FileHandler::SaveAppData(const std::string& filepath,
   }
 
   // resets statusbar
-  status_bar_log::PopText();
+  status_bar_log::PopText(0);
 }
 
 void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
@@ -335,7 +335,7 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
   // logs
   std::string message = "Saving cable file: " + filepath;
   wxLogVerbose(message.c_str());
-  status_bar_log::PushText(message);
+  status_bar_log::PushText(message, 0);
 
   // creates a copy of the cable and converts to different unit style
   Cable cable_converted = cable;
@@ -360,7 +360,7 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
   doc.Save(filepath, 2);
 
   // resets statusbar
-  status_bar_log::PopText();
+  status_bar_log::PopText(0);
 }
 
 void FileHandler::SaveConfigFile(const std::string& filepath,
@@ -368,7 +368,7 @@ void FileHandler::SaveConfigFile(const std::string& filepath,
   // logs
   std::string message = "Saving config file: " + filepath;
   wxLogVerbose(message.c_str());
-  status_bar_log::PushText(message);
+  status_bar_log::PushText(message, 0);
 
   // generates an xml node
   wxXmlNode* root = SpanAnalyzerConfigXmlHandler::CreateNode(config);
@@ -379,5 +379,5 @@ void FileHandler::SaveConfigFile(const std::string& filepath,
   doc.Save(filepath, 2);
 
   // resets statusbar
-  status_bar_log::PopText();
+  status_bar_log::PopText(0);
 }

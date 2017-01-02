@@ -7,15 +7,27 @@
 
 LineDataSet2d::LineDataSet2d() {
   is_updated_ = false;
-
-  x_max_ = -999999;
-  x_min_ = 999999;
-
-  y_max_ = -999999;
-  y_min_ = 999999;
 }
 
 LineDataSet2d::~LineDataSet2d() {
+  Clear();
+}
+
+void LineDataSet2d::Add(const Line2d* line) {
+  data_.push_back(line);
+
+  is_updated_ = false;
+}
+
+void LineDataSet2d::Clear() {
+  for (auto iter = data_.begin(); iter != data_.end(); iter++) {
+    const Line2d* line = *iter;
+    delete line;
+  }
+
+  data_.clear();
+
+  is_updated_ = false;
 }
 
 double LineDataSet2d::MaxX() const {
@@ -50,13 +62,8 @@ double LineDataSet2d::MinY() const {
   return y_min_;
 }
 
-const std::list<Line2d>& LineDataSet2d::data() const {
-  return data_;
-}
-
-void LineDataSet2d::set_data(const std::list<Line2d>& data) {
-  data_ = data;
-  is_updated_ = false;
+const std::list<const Line2d*>* LineDataSet2d::data() const {
+  return &data_;
 }
 
 void LineDataSet2d::Update() const {
@@ -73,17 +80,17 @@ void LineDataSet2d::Update() const {
   }
 
   for (auto iter = data_.cbegin(); iter != data_.cend(); iter++) {
-    const Line2d& line = *iter;
+    const Line2d* line = *iter;
 
-    x_min_ = std::min(line.p0.x, x_min_);
-    x_min_ = std::min(line.p1.x, x_min_);
-    x_max_ = std::max(line.p0.x, x_max_);
-    x_max_ = std::max(line.p1.x, x_max_);
+    x_min_ = std::min(line->p0.x, x_min_);
+    x_min_ = std::min(line->p1.x, x_min_);
+    x_max_ = std::max(line->p0.x, x_max_);
+    x_max_ = std::max(line->p1.x, x_max_);
 
-    y_min_ = std::min(line.p0.y, y_min_);
-    y_min_ = std::min(line.p1.y, y_min_);
-    y_max_ = std::max(line.p0.y, y_max_);
-    y_max_ = std::max(line.p1.y, y_max_);
+    y_min_ = std::min(line->p0.y, y_min_);
+    y_min_ = std::min(line->p1.y, y_min_);
+    y_max_ = std::max(line->p0.y, y_max_);
+    y_max_ = std::max(line->p1.y, y_max_);
   }
 
   is_updated_ = true;

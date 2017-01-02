@@ -117,7 +117,7 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
 
   message = "Loading document file: " + this->GetFilename();
   wxLogVerbose(message.c_str());
-  status_bar_log::PushText(message);
+  status_bar_log::PushText(message, 0);
 
   // attempts to load an xml document from the input stream
   wxXmlDocument doc_xml;
@@ -129,7 +129,7 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
     wxLogError(message.c_str());
     wxMessageBox(message);
 
-    status_bar_log::PopText();
+    status_bar_log::PopText(0);
 
     // sets stream to invalid state and returns
     stream.Reset(wxSTREAM_READ_ERROR);
@@ -146,7 +146,7 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
     wxLogError(message.c_str());
     wxMessageBox(message);
 
-    status_bar_log::PopText();
+    status_bar_log::PopText(0);
 
     // sets stream to invalide state and returns
     stream.Reset(wxSTREAM_READ_ERROR);
@@ -169,7 +169,7 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
       wxLogError(message.c_str());
       wxMessageBox(message);
 
-      status_bar_log::PopText();
+      status_bar_log::PopText(0);
 
       // sets stream to invalide state and returns
       stream.Reset(wxSTREAM_READ_ERROR);
@@ -183,7 +183,7 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
     wxLogError(message.c_str());
     wxMessageBox(message);
 
-    status_bar_log::PopText();
+    status_bar_log::PopText(0);
 
     // sets stream to invalide state and returns
     stream.Reset(wxSTREAM_READ_ERROR);
@@ -223,7 +223,7 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   // that mark it as modified
   Modify(false);
 
-  status_bar_log::PopText();
+  status_bar_log::PopText(0);
 
   return stream;
 }
@@ -304,7 +304,7 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
   // logs
   std::string message = "Saving document file: " + GetFilename();
   wxLogVerbose(message.c_str());
-  status_bar_log::PushText(message);
+  status_bar_log::PushText(message, 0);
 
   // gets the unit system from app config
   units::UnitSystem units = wxGetApp().config()->units;
@@ -339,7 +339,7 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
   wxCommandProcessor* processor = GetCommandProcessor();
   processor->ClearCommands();
 
-  status_bar_log::PopText();
+  status_bar_log::PopText(0);
 
   return stream;
 }

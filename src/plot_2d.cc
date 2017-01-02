@@ -5,6 +5,8 @@
 
 #include <algorithm>
 
+#include "data_set_2d.h"
+
 Plot2d::Plot2d() {
   offset_.x = -999999;
   offset_.y = -999999;
@@ -21,18 +23,32 @@ Plot2d::Plot2d() {
 }
 
 Plot2d::~Plot2d() {
+  ClearRenderers();
 }
 
-void Plot2d::AddRenderer(const LineRenderer2d& renderer) {
+void Plot2d::AddRenderer(const Renderer2d* renderer) {
   renderers_.push_back(renderer);
 
   is_updated_limits_data_ = false;
 }
 
 void Plot2d::ClearRenderers() {
+  for (auto iter = renderers_.begin(); iter != renderers_.end(); iter++) {
+    const Renderer2d* renderer = *iter;
+    delete renderer;
+  }
+
   renderers_.clear();
 
   is_updated_limits_data_ = false;
+}
+
+bool Plot2d::HasRenderers() const {
+  if (renderers_.empty() == true) {
+    return false;
+  } else {
+    return true;
+  }
 }
 
 Point2d Plot2d::PointGraphicsToData(const wxPoint& point_graphics) const {
@@ -69,8 +85,8 @@ void Plot2d::Render(wxDC& dc, wxRect rc) const {
 
   // triggers all renderers
   for (auto iter = renderers_.cbegin(); iter != renderers_.cend(); iter++) {
-    const LineRenderer2d& renderer = *iter;
-    renderer.Draw(dc, rc, axis_horizontal, axis_vertical);
+    const Renderer2d* renderer = *iter;
+    renderer->Draw(dc, rc, axis_horizontal, axis_vertical);
   }
 }
 
@@ -230,7 +246,8 @@ void Plot2d::UpdateDataLimits() const {
   double y_min = 999999;
   double y_max = -999999;
   for (auto iter = renderers_.cbegin(); iter != renderers_.cend(); iter++) {
-    const LineDataSet2d* dataset = (*iter).dataset();
+    const Renderer2d* renderer = *iter;
+    const DataSet2d* dataset = renderer->dataset();
     x_min = std::min(x_min, dataset->MinX());
     x_max = std::max(x_max, dataset->MaxX());
 

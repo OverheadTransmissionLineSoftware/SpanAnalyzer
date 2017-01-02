@@ -8,6 +8,8 @@
 
 #include "models/base/point.h"
 
+#include "data_set_2d.h"
+
 /// \par OVERVIEW
 ///
 /// This struct represents a 2D line.
@@ -24,38 +26,42 @@ struct Line2d {
 /// \par OVERVIEW
 ///
 /// This class represents a set of 2D lines.
-class LineDataSet2d {
+class LineDataSet2d : public DataSet2d {
  public:
   /// \brief Constructor.
   LineDataSet2d();
 
   /// \brief Destructor.
-  ~LineDataSet2d();
+  virtual ~LineDataSet2d();
+
+  /// \brief Adds a line to the dataset.
+  /// \param[in] line
+  ///   The line.
+  /// This class will take ownership of the pointer.
+  void Add(const Line2d* line);
+
+  /// \brief Clears all of the stored lines.
+  void Clear();
 
   /// \brief Gets the maximum x value.
   /// \return The maximum x value.
-  double MaxX() const;
+  virtual double MaxX() const override;
 
   /// \brief Gets the maximum y value.
   /// \return The maximum y value.
-  double MaxY() const;
+  virtual double MaxY() const override;
 
   /// \brief Gets the minimum x value.
   /// \return The minimum x value.
-  double MinX() const;
+  virtual double MinX() const override;
 
   /// \brief Gets the minimum y value.
   /// \return The minimum y value.
-  double MinY() const;
+  virtual double MinY() const override;
 
   /// \brief Gets the data.
   /// \return The data.
-  const std::list<Line2d>& data() const;
-
-  /// \brief Sets the data.
-  /// \param[in] data
-  ///   The data.
-  void set_data(const std::list<Line2d>& data);
+  const std::list<const Line2d*>* data() const;
 
  private:
   /// \brief Updates the cached values.
@@ -63,27 +69,11 @@ class LineDataSet2d {
 
   /// \var data_
   ///   The line data.
-  std::list<Line2d> data_;
+  std::list<const Line2d*> data_;
 
   /// \var is_updated_
   ///   An indicator that tells if the cached values have been updated.
   mutable bool is_updated_;
-
-  /// \var x_max_
-  ///   The maximum x value.
-  mutable double x_max_;
-
-  /// \var x_min_
-  ///   The minimum x value.
-  mutable double x_min_;
-
-  /// \var y_max_
-  ///   The maximum y value.
-  mutable double y_max_;
-
-  /// \var y_min_
-  ///   The minimum value.
-  mutable double y_min_;
 };
 
 #endif //  OTLS_SPANANALYZER_LINEDATASET2D_H_
