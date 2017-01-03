@@ -20,7 +20,7 @@ wxStatusBar* GetStatusBar() {
   }
 
   // checks for a top level window
-  wxFrame* frame = (wxFrame*)wxGetApp().GetTopWindow();
+  wxFrame* frame = dynamic_cast<wxFrame*>(wxGetApp().GetTopWindow());
   if (frame == nullptr) {
     return nullptr;
   }

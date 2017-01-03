@@ -41,7 +41,7 @@ ResultsPane::ResultsPane(wxWindow* parent, wxView* view) {
   table_ = new ReportTable(this);
   table_->set_data(&data_);
 
-  wxBoxSizer* sizer = (wxBoxSizer*)this->GetSizer();
+  wxBoxSizer* sizer = dynamic_cast<wxBoxSizer*>(GetSizer());
   sizer->Add(table_, 1, wxEXPAND);
 
   this->Fit();
@@ -52,7 +52,7 @@ ResultsPane::~ResultsPane() {
 
 void ResultsPane::Update(wxObject* hint) {
   // interprets hint
-  UpdateHint* hint_update = (UpdateHint*)hint;
+  const UpdateHint* hint_update = dynamic_cast<UpdateHint*>(hint);
   if (hint_update == nullptr) {
     // do nothing, this is only passed when pane is created
   } else if (hint_update->type() == HintType::kAnalysisFilterGroupEdit) {
@@ -138,7 +138,7 @@ void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
   // the selected report table index may be different than the report data index
   // due to sorting, so the index needs to be converted to match the correct
   // analysis result index
-  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
+  SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);
   view->set_index_filter(table_->IndexReportRow(index_selected));
 
   // updates views
@@ -175,7 +175,7 @@ void ResultsPane::UpdateFilterGroupSelected() {
   wxLogVerbose("Updating displayed analysis filters.");
 
   // initializes filters cached in view
-  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
+  SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);
   view->set_group_filters(nullptr);
 
   // searches the choice control to see if a filter group is selected
@@ -212,7 +212,7 @@ void ResultsPane::UpdateReportData() {
   wxLogVerbose("Updating report table data.");
 
   // gets view display information
-  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
+  SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);
   const AnalysisFilterGroup* group_filters = view->group_filters();
 
   // gets filters
@@ -222,7 +222,8 @@ void ResultsPane::UpdateReportData() {
   }
 
   // creates a list of results depending on filter
-  const SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  const SpanAnalyzerDoc* doc =
+      dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
   std::list<const SagTensionAnalysisResult*> results;
 
   if (filters != nullptr) {
@@ -272,7 +273,8 @@ void ResultsPane::UpdateReportDataCatenary(
   }
 
   // gets the selected span from the document
-  const SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  const SpanAnalyzerDoc* doc =
+      dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
   const Span* span = doc->SpanAnalysis();
 
   // fills each row with data
@@ -373,7 +375,9 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
   }
 
   // gets the selected span from the document
-  const SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  const SpanAnalyzerDoc* doc =
+      dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
+
   const Span* span = doc->SpanAnalysis();
 
   // fills each row with data

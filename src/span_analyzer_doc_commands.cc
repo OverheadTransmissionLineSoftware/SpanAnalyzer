@@ -15,14 +15,6 @@ const std::string SpanCommand::kNameModify = "Modify Span";
 const std::string SpanCommand::kNameMoveDown = "Move Span Down";
 const std::string SpanCommand::kNameMoveUp = "Move Span Up";
 
-namespace {
-
-SpanAnalyzerDoc* GetDocument() {
-  return (SpanAnalyzerDoc*)wxGetApp().manager_doc()->GetCurrentDocument();
-}
-
-}
-
 SpanCommand::SpanCommand(const std::string& name)
     : wxCommand(true, name) {
   index_ = -1;
@@ -35,7 +27,7 @@ bool SpanCommand::Do() {
   const std::string name = GetName();
 
   // gets spans list from document
-  SpanAnalyzerDoc* doc = GetDocument();
+  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
 
   // checks index to see if a valid iterator is possible
   const int kSize = doc->spans().size();
@@ -99,7 +91,7 @@ bool SpanCommand::Undo() {
   const std::string name = GetName();
 
   // gets spans list from document
-  SpanAnalyzerDoc* doc = GetDocument();
+  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
 
   // checks index to see if a valid iterator is possible
   const int kSize = doc->spans().size();
@@ -152,7 +144,7 @@ Span SpanCommand::span() const {
 }
 
 bool SpanCommand::DoDelete(const std::list<Span>::const_iterator& iter) {
-  SpanAnalyzerDoc* doc = GetDocument();
+  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
 
   // copies span into command to store
   span_ = *iter;
@@ -164,7 +156,7 @@ bool SpanCommand::DoDelete(const std::list<Span>::const_iterator& iter) {
 }
 
 bool SpanCommand::DoInsert(const std::list<Span>::const_iterator& iter) {
-  SpanAnalyzerDoc* doc = GetDocument();
+  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
 
   // inserts span to document
   doc->InsertSpan(iter, span_);
@@ -176,7 +168,7 @@ bool SpanCommand::DoInsert(const std::list<Span>::const_iterator& iter) {
 }
 
 bool SpanCommand::DoModify(const std::list<Span>::const_iterator& iter) {
-  SpanAnalyzerDoc* doc = GetDocument();
+  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
 
   // swaps the span from the document and the command
   Span span_tmp = *iter;
@@ -187,7 +179,7 @@ bool SpanCommand::DoModify(const std::list<Span>::const_iterator& iter) {
 }
 
 bool SpanCommand::DoMoveDown(const std::list<Span>::const_iterator& iter) {
-  SpanAnalyzerDoc* doc = GetDocument();
+  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
 
   // swaps the spans in the document
   auto iter_to = std::next(iter, 2);
@@ -200,7 +192,7 @@ bool SpanCommand::DoMoveDown(const std::list<Span>::const_iterator& iter) {
 }
 
 bool SpanCommand::DoMoveUp(const std::list<Span>::const_iterator& iter) {
-  SpanAnalyzerDoc* doc = GetDocument();
+  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
 
   // swaps the spans in the document
   auto iter_to = std::prev(iter, 1);

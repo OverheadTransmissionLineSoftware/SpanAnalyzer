@@ -84,5 +84,5 @@ LogPane::~LogPane() {
 }
 
 wxTextCtrl* LogPane::textctrl() {
-  return (wxTextCtrl*)textctrl_;
+  return dynamic_cast<wxTextCtrl*>(textctrl_);
 }

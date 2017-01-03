@@ -22,6 +22,10 @@ SpanAnalyzerApp::SpanAnalyzerApp() {
 SpanAnalyzerApp::~SpanAnalyzerApp() {
 }
 
+SpanAnalyzerDoc* SpanAnalyzerApp::GetDocument() const {
+  return dynamic_cast<SpanAnalyzerDoc*>(manager_doc_->GetCurrentDocument());
+}
+
 bool SpanAnalyzerApp::OnCmdLineParsed(wxCmdLineParser& parser) {
   // sets directory based on debug switch
   if (parser.Found("debug")) {

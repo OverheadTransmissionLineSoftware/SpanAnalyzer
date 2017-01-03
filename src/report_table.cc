@@ -50,14 +50,14 @@ enum {
 int wxCALLBACK wxListCompareFunction(wxIntPtr item1, wxIntPtr item2,
                                      wxIntPtr data_sort) {
   // gets sort column and order
-  const SortData* data = (SortData*)data_sort;
+  const SortData* data = reinterpret_cast<SortData*>(data_sort);
 
   // gets string from row1
-  const ReportRow* row1 = (ReportRow*)item1;
+  const ReportRow* row1 = reinterpret_cast<ReportRow*>(item1);
   const std::string& str1 = *std::next(row1->values.cbegin(), data->index);
 
   // gets string from row2
-  const ReportRow* row2 = (ReportRow*)item2;
+  const ReportRow* row2 = reinterpret_cast<ReportRow*>(item2);
   const std::string& str2 = *std::next(row2->values.cbegin(), data->index);
 
   // attempts to compare strings as numbers
@@ -136,7 +136,8 @@ const long ReportTable::IndexReportRow(const long& index_listctrl) {
     wxLogVerbose("No item is selected in listctrl.");
   }
 
-  ReportRow* row_selected = (ReportRow*)item_selected.GetData();
+  ReportRow* row_selected =
+      reinterpret_cast<ReportRow*>(item_selected.GetData());
 
   // searches report rows and compares memory address until a match is found
   for (auto iter = data_->rows.cbegin(); iter != data_->rows.cend(); iter++) {
@@ -175,7 +176,7 @@ void ReportTable::Refresh() {
     // adds list item (row) to listctrl
     wxListItem item;
     item.SetId(i);
-    item.SetData((void*)&row);
+    item.SetData((void*)&row);  // C-style cast used to remove const qualifier
     item.SetImage(-1);
     listctrl_->InsertItem(item);
 

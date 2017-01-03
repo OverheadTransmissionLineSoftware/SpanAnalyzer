@@ -58,7 +58,7 @@ void PlotPane::Update(wxObject* hint) {
   wxBufferedDC dc_buf(&dc, bitmap_buffer_);
 
   // interprets hint
-  UpdateHint* hint_update = (UpdateHint*)hint;
+  const UpdateHint* hint_update = dynamic_cast<UpdateHint*>(hint);
   if (hint_update == nullptr) {
     UpdatePlotRenderers();
     RenderPlot(dc_buf);
@@ -238,7 +238,7 @@ void PlotPane::UpdatePlotRenderers() {
   wxLogVerbose("Updating plot renderers.");
 
   // gets view settings
-  SpanAnalyzerView* view = (SpanAnalyzerView*)view_;
+  SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);
 
   // gets filter group
   const AnalysisFilterGroup* group_filters = view->group_filters();
@@ -260,7 +260,7 @@ void PlotPane::UpdatePlotRenderers() {
   const int index = view->IndexWeathercase(*filter);
 
   // gets filtered result from doc
-  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)view_->GetDocument();
+  SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
   const SagTensionAnalysisResult* result = doc->Result(index,
                                                        filter->condition);
   if (result == nullptr) {

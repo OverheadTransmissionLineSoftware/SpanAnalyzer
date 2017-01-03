@@ -13,7 +13,7 @@ void LineRenderer2d::Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
   dc.SetPen(*pen_);
 
   // casts to line dataset
-  const LineDataSet2d* dataset = (LineDataSet2d*)dataset_;
+  const LineDataSet2d* dataset = dynamic_cast<const LineDataSet2d*>(dataset_);
 
   // draws each line in dataset
   const std::list<const Line2d*>* data = dataset->data();

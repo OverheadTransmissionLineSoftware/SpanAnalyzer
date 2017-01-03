@@ -98,8 +98,7 @@ void CableFileManagerDialog::DeleteExtraCableFiles(
 bool CableFileManagerDialog::IsReferencedByDocument(
     const std::string& name) const {
   // gets document
-  const SpanAnalyzerDoc* doc =
-      (SpanAnalyzerDoc*)wxGetApp().manager_doc()->GetCurrentDocument();
+  const SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
   if (doc == nullptr) {
     return false;
   }

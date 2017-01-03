@@ -12,6 +12,7 @@
 
 #include "span_analyzer_config.h"
 #include "span_analyzer_data.h"
+#include "span_analyzer_doc.h"
 #include "span_analyzer_frame.h"
 
 /// \par OVERVIEW
@@ -42,6 +43,10 @@ class SpanAnalyzerApp : public wxApp {
 
   /// \brief Destructor.
   ~SpanAnalyzerApp();
+
+  /// \brief Gets the current document.
+  /// \return The document. If no document is open, a nullptr is returned.
+  SpanAnalyzerDoc* GetDocument() const;
 
   /// \brief Parses the command line options provided to the application on
   ///   startup.

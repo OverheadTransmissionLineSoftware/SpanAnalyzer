@@ -30,7 +30,7 @@ DocumentFileDropTarget::DocumentFileDropTarget(wxWindow* parent) {
 bool DocumentFileDropTarget::OnDropFiles(wxCoord x, wxCoord y,
                                          const wxArrayString& filenames) {
   // gets data from drag-and-drop operation
-  wxFileDataObject* data = (wxFileDataObject*)GetDataObject();
+  wxFileDataObject* data = dynamic_cast<wxFileDataObject*>(GetDataObject());
 
   // tests if file exists
   // only the first file in the list is processed
@@ -125,8 +125,7 @@ void SpanAnalyzerFrame::OnMenuEditAnalysisFilters(wxCommandEvent& event) {
     FileHandler::SaveAppData(config->filepath_data, *data, config->units);
 
     // updates document/views
-    SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
-                               GetCurrentDocument();
+    SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
     if (doc != nullptr) {
       UpdateHint hint(HintType::kAnalysisFilterGroupEdit);
       doc->UpdateAllViews(nullptr, &hint);
@@ -153,8 +152,7 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
   wxBusyCursor cursor;
 
   // updates document/views
-  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
-                             GetCurrentDocument();
+  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
   if (doc != nullptr) {
     doc->RunAnalysis();
 
@@ -184,8 +182,7 @@ void SpanAnalyzerFrame::OnMenuEditWeathercases(
   }
 
   // updates document/views
-  SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
-                              GetCurrentDocument();
+  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
   if (doc != nullptr) {
     doc->RunAnalysis();
 
@@ -237,8 +234,7 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
     }
 
     // updates document/views
-    SpanAnalyzerDoc* doc = (SpanAnalyzerDoc*)wxGetApp().manager_doc()->
-                               GetCurrentDocument();
+    SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
     if (doc != nullptr) {
       doc->ConvertUnitSystem(units_before, config->units);
       doc->RunAnalysis();

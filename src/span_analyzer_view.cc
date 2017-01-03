@@ -62,7 +62,7 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   index_filter_ = -1;
 
   // gets main application frame
-  wxFrame* frame = ((wxFrame *)wxGetApp().GetTopWindow());
+  wxFrame* frame = dynamic_cast<wxFrame*>(wxGetApp().GetTopWindow());
 
   // notify application of new view
   SetFrame(frame);
