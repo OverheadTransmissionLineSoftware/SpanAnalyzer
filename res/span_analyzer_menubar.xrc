@@ -6,18 +6,22 @@
       <label>File</label>
       <object class="wxMenuItem" name="wxID_NEW">
         <label>New</label>
+        <accel>Ctrl-N</accel>
         <help></help>
       </object>
       <object class="wxMenuItem" name="wxID_OPEN">
         <label>Open</label>
+        <accel>Ctrl-O</accel>
         <help></help>
       </object>
       <object class="wxMenuItem" name="wxID_CLOSE">
         <label>Close</label>
+        <accel>Ctrl-W</accel>
         <help></help>
       </object>
       <object class="wxMenuItem" name="wxID_SAVE">
         <label>Save</label>
+        <accel>Ctrl-S</accel>
         <help></help>
       </object>
       <object class="wxMenuItem" name="wxID_SAVEAS">
@@ -32,6 +36,7 @@
       <object class="separator" />
       <object class="wxMenuItem" name="wxID_EXIT">
         <label>Exit</label>
+        <accel>Ctrl-Q</accel>
         <help></help>
       </object>
     </object>
@@ -39,9 +44,11 @@
       <label>Edit</label>
       <object class="wxMenuItem" name="wxID_UNDO">
         <label>Undo</label>
+        <accel>Ctrl-Z</accel>
       </object>
       <object class="wxMenuItem" name="wxID_REDO">
         <label>Redo</label>
+        <accel>Ctrl-Y</accel>
       </object>
       <object class="separator" />
       <object class="wxMenuItem" name="menuitem_edit_cables">
