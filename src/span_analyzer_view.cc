@@ -77,8 +77,8 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   info = wxAuiPaneInfo();
   info.Name("Plot");
   info.CenterPane();
-  pane_plot_ = new PlotPane(frame, this);
-  manager->AddPane(pane_plot_, info);
+  pane_profile_ = new ProfilePlotPane(frame, this);
+  manager->AddPane(pane_profile_, info);
 
   info = wxAuiPaneInfo();
   info.Name("Results");
@@ -132,13 +132,13 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
 
   // detaches panes and un-init manager
   manager->DetachPane(pane_edit_);
-  manager->DetachPane(pane_plot_);
+  manager->DetachPane(pane_profile_);
   manager->DetachPane(pane_results_);
   manager->Update();
 
   // destroys panes
   pane_edit_->Destroy();
-  pane_plot_->Destroy();
+  pane_profile_->Destroy();
   pane_results_->Destroy();
 
   // resets frame to document-less state
@@ -170,8 +170,8 @@ void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
 
   // don't need to distinguish sender - all frames are grouped under one view
   pane_edit_->Update(hint);
-  pane_plot_->Update(hint);
   pane_results_->Update(hint);
+  pane_profile_->Update(hint);
 
   // resets status bar
   status_bar_log::PopText(0);
@@ -187,6 +187,10 @@ const int SpanAnalyzerView::index_filter() const {
 
 EditPane* SpanAnalyzerView::pane_edit() {
   return pane_edit_;
+}
+
+ProfilePlotPane* SpanAnalyzerView::pane_profile() {
+  return pane_profile_;
 }
 
 ResultsPane* SpanAnalyzerView::pane_results() {

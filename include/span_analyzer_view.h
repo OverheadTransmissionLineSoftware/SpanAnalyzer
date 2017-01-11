@@ -9,7 +9,7 @@
 #include "wx/docview.h"
 
 #include "edit_pane.h"
-#include "plot_pane.h"
+#include "profile_plot_pane.h"
 #include "results_pane.h"
 #include "span_analyzer_data.h"
 
@@ -83,7 +83,7 @@ class SpanAnalyzerView : public wxView {
 
   /// \brief Gets the plot pane.
   /// \return The plot pane.
-  PlotPane* pane_plot();
+  ProfilePlotPane* pane_profile();
 
   /// \brief Gets the results pane.
   /// \return The results pane.
@@ -112,9 +112,9 @@ class SpanAnalyzerView : public wxView {
   ///   The edit pane.
   EditPane* pane_edit_;
 
-  /// \var pane_plot_
-  ///   The plot pane.
-  PlotPane* pane_plot_;
+  /// \var pane_profile_
+  ///   The profile plot pane.
+  ProfilePlotPane* pane_profile_;
 
   /// \var pane_results_
   ///   The results pane.
