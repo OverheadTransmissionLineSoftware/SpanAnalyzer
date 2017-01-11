@@ -356,6 +356,11 @@ const Span* SpanAnalyzerDoc::SpanAnalysis() const {
   return controller_analysis_.span();
 }
 
+const CableStretchState* SpanAnalyzerDoc::StretchState(
+    const CableConditionType& condition) {
+  return controller_analysis_.StretchState(condition);
+}
+
 const std::list<Span>& SpanAnalyzerDoc::spans() const {
   return spans_;
 }
