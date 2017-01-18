@@ -51,7 +51,7 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   SpanAnalyzerFrame(wxDocManager* manager);
 
   /// \brief Destructor.
-  ~SpanAnalyzerFrame();
+  virtual ~SpanAnalyzerFrame();
 
   /// \brief Handles the edit->analysis filters menu click event.
   /// \param[in] event
@@ -77,6 +77,11 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   /// \param[in] event
   ///   The event.
   void OnMenuHelpAbout(wxCommandEvent& event);
+
+  /// \brief Handles the view->cable model menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuViewCableModel(wxCommandEvent& event);
 
   /// \brief Handles the view->log menu click event.
   /// \param[in] event

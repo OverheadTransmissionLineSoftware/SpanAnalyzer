@@ -98,6 +98,14 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   pane_edit_ = new EditPane(frame, this);
   manager->AddPane(pane_edit_, info);
 
+  info = wxAuiPaneInfo();
+  info.Name("Cable");
+  info.Floatable(true);
+  info.Caption("Cable Elongation Model");
+  info.CloseButton(false);
+  pane_cable_ = new CableElongationModelPlotPane(frame, this);
+  manager->AddPane(pane_cable_, info);
+
   // loads perspective and updates
   std::string perspective = wxGetApp().config()->perspective;
   if (perspective == "") {
@@ -131,12 +139,14 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
   wxGetApp().config()->perspective = manager->SavePerspective();
 
   // detaches panes and un-init manager
+  manager->DetachPane(pane_cable_);
   manager->DetachPane(pane_edit_);
   manager->DetachPane(pane_profile_);
   manager->DetachPane(pane_results_);
   manager->Update();
 
   // destroys panes
+  pane_cable_->Destroy();
   pane_edit_->Destroy();
   pane_profile_->Destroy();
   pane_results_->Destroy();
@@ -172,6 +182,7 @@ void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
   pane_edit_->Update(hint);
   pane_results_->Update(hint);
   pane_profile_->Update(hint);
+  pane_cable_->Update(hint);
 
   // resets status bar
   status_bar_log::PopText(0);
@@ -183,6 +194,10 @@ const AnalysisFilterGroup* SpanAnalyzerView::group_filters() const {
 
 const int SpanAnalyzerView::index_filter() const {
   return index_filter_;
+}
+
+CableElongationModelPlotPane* SpanAnalyzerView::pane_cable() {
+  return pane_cable_;
 }
 
 EditPane* SpanAnalyzerView::pane_edit() {

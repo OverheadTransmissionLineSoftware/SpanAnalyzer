@@ -8,6 +8,7 @@
 
 #include "wx/docview.h"
 
+#include "cable_elongation_model_plot_pane.h"
 #include "edit_pane.h"
 #include "profile_plot_pane.h"
 #include "results_pane.h"
@@ -77,6 +78,10 @@ class SpanAnalyzerView : public wxView {
   /// \return The selected filter index.
   const int index_filter() const;
 
+  /// \brief Gets the cable model pane.
+  /// \return The cable model pane.
+  CableElongationModelPlotPane* pane_cable();
+
   /// \brief Gets the edit pane.
   /// \return The edit pane.
   EditPane* pane_edit();
@@ -107,6 +112,10 @@ class SpanAnalyzerView : public wxView {
   /// \var index_filter_
   ///   The filter index that is currently selected.
   int index_filter_;
+
+  /// \var pane_cable_
+  ///   The cable elongation model plot pane.
+  CableElongationModelPlotPane* pane_cable_;
 
   /// \var pane_edit_
   ///   The edit pane.

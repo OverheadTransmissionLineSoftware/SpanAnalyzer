@@ -89,9 +89,19 @@ class Plot2d {
   /// \brief Clears the renderers.
   void ClearRenderers();
 
+  /// \brief Gets the plot data limits.
+  /// \return The plot data limits.
+  Plot2dDataLimits LimitsData() const;
+
   /// \brief Gets if the plot has any renderers.
   /// \return If the plot has any renderers.
   bool HasRenderers() const;
+
+  /// \brief Translates a data coordinate to a graphics coordinate.
+  /// \param[in] point_data
+  ///   The data coordinate.
+  /// \return The graphics coordinate.
+  wxPoint PointDataToGraphics(const Point2d& point_data) const;
 
   /// \brief Translates a graphics coordinate to a data coordinate.
   /// \param[in] point_graphics

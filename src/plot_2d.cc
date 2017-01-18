@@ -51,6 +51,24 @@ bool Plot2d::HasRenderers() const {
   }
 }
 
+Plot2dDataLimits Plot2d::LimitsData() const {
+  // updates plot data limits
+  if (is_updated_limits_data_ == false) {
+    UpdateDataLimits();
+  }
+
+  return limits_data_;
+}
+
+wxPoint Plot2d::PointDataToGraphics(const Point2d& point_data) const {
+  // scales and applies offset
+  wxPoint point;
+  point.x = (point_data.x / scale_) + offset_.x;
+  point.y = (point_data.y / scale_ * ratio_aspect_) - offset_.y;
+
+  return point;
+}
+
 Point2d Plot2d::PointGraphicsToData(const wxPoint& point_graphics) const {
   // scales and applies offset
   Point2d point;
