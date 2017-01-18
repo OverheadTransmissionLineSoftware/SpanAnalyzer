@@ -34,7 +34,7 @@ class LogPaneTextCtrl : public wxTextCtrl {
   ///   The event.
   void OnMouse(wxMouseEvent& event);
 
-  DECLARE_EVENT_TABLE();
+  DECLARE_EVENT_TABLE()
 };
 
 /// \par OVERVIEW
