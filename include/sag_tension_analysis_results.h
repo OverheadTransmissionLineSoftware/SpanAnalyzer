@@ -24,6 +24,18 @@ struct SagTensionAnalysisResult {
   ///   The cable state.
   CableState state;
 
+  /// \var tension_average
+  ///   The average tension of the cable.
+  double tension_average;
+
+  /// \var tension_average_core
+  ///   The average tension of the cable core.
+  double tension_average_core;
+
+  /// \var tension_average_shell
+  ///   The average tension of the cable shell.
+  double tension_average_shell;
+
   /// \var tension_horizontal
   ///   The horizontal tension of the cable.
   double tension_horizontal;

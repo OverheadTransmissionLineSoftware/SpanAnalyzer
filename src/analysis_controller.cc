@@ -214,6 +214,12 @@ SagTensionAnalysisResult AnalysisController::Analyze(
   // gets reloaded catenary and populates sag-tension result
   Catenary3d catenary = reloader_.CatenaryReloaded();
 
+  result.tension_average = catenary.TensionAverage();
+  result.tension_average_core = reloader_.TensionAverageComponent(
+      CableElongationModel::ComponentType::kCore);
+  result.tension_average_shell = reloader_.TensionAverageComponent(
+      CableElongationModel::ComponentType::kShell);
+
   result.tension_horizontal = catenary.tension_horizontal();
   result.tension_horizontal_core = reloader_.TensionHorizontalComponent(
       CableElongationModel::ComponentType::kCore);
