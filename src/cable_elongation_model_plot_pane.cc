@@ -271,21 +271,21 @@ void CableElongationModelPlotPane::UpdateDataSetMarker(
   circle->center.y = result->tension_average_core;
   circle->center.x = model.Strain(CableElongationModel::ComponentType::kCore,
                                   circle->center.y);
-  circle->radius = 5;
+  circle->radius = 3;
   dataset_markers_.Add(circle);
 
   circle = new Circle2d();
   circle->center.y = result->tension_average_shell;
   circle->center.x = model.Strain(CableElongationModel::ComponentType::kShell,
                                   circle->center.y);
-  circle->radius = 5;
+  circle->radius = 3;
   dataset_markers_.Add(circle);
 
   circle = new Circle2d();
   circle->center.y = result->tension_average;
   circle->center.x = model.Strain(CableElongationModel::ComponentType::kCombined,
                                   circle->center.y);
-  circle->radius = 5;
+  circle->radius = 3;
   dataset_markers_.Add(circle);
 }
 
