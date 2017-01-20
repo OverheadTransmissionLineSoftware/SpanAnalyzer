@@ -3,6 +3,8 @@
 
 #include "text_renderer_2d.h"
 
+#include "models/base/vector.h"
+
 TextRenderer2d::TextRenderer2d() {
   color_ = nullptr;
 }
@@ -37,36 +39,52 @@ void TextRenderer2d::Draw(wxDC& dc, wxRect rc, const PlotAxis& axis_horizontal,
       continue;
     }
 
-    // translates to graphics coordinates
+    // translates point to graphics coordinates
     wxCoord xg, yg;
-
     xg = DataToGraphics(x, axis_horizontal.Min(), axis_horizontal.Max(),
                         rc.GetWidth(), false);
     yg = DataToGraphics(y, axis_vertical.Min(), axis_vertical.Max(),
                         rc.GetHeight(), true);
 
-    // adjusts the screen coordinates based on the text point alignment
+    // calculates the graphics offset due to boundary position and angle
+    // offset is vector from upper left position to specified boundary position
+    Vector2d offset;
     wxSize size = dc.GetTextExtent(text->message);
     if (text->position == Text2d::BoundaryPosition::kCenterLower) {
-      xg -= (size.GetX() / 2);
-      yg -= size.GetY();
+      offset.set_x(size.GetX() / 2);
+      offset.set_y(-size.GetY());
     } else if (text->position == Text2d::BoundaryPosition::kCenterUpper) {
-      xg -= (size.GetX() / 2);
+      offset.set_x(size.GetX() / 2);
+      offset.set_y(0);
     } else if (text->position == Text2d::BoundaryPosition::kLeftCenter) {
-      yg -= (size.GetY() / 2);
+      offset.set_x(0);
+      offset.set_y(-size.GetY() / 2);
     } else if (text->position == Text2d::BoundaryPosition::kLeftLower) {
-      yg -= size.GetY();
+      offset.set_x(0);
+      offset.set_y(-size.GetY());
     } else if (text->position == Text2d::BoundaryPosition::kLeftUpper) {
-      // do nothing, this is the default
+      offset.set_x(0);
+      offset.set_y(0);
     } else if (text->position == Text2d::BoundaryPosition::kRightCenter) {
-      xg -= size.GetX();
-      yg -= (size.GetY() / 2);
+      offset.set_x(size.GetX());
+      offset.set_y(-size.GetY() / 2);
     } else if (text->position == Text2d::BoundaryPosition::kRightLower) {
-      xg -= size.GetX();
-      yg -= size.GetY();
+      offset.set_x(size.GetX());
+      offset.set_y(-size.GetY());
     } else if (text->position == Text2d::BoundaryPosition::kRightUpper) {
-      xg -= size.GetX();
+      offset.set_x(size.GetX());
+      offset.set_y(0);
+    } else {
+      offset.set_x(0);
+      offset.set_y(0);
     }
+
+    offset.Rotate(text->angle);
+
+    // adjusts the graphics coordinates using the offset
+    // y-axis is inverted to match dc coordinate system
+    xg -= static_cast<int>(offset.x());
+    yg += static_cast<int>(offset.y());
 
     // draws onto DC
     dc.DrawRotatedText(text->message, xg, yg, text->angle);
