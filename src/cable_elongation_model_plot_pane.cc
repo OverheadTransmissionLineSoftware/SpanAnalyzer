@@ -196,7 +196,7 @@ void CableElongationModelPlotPane::UpdateDataSetAxes(
   text->message = helper::DoubleToFormattedString(x_max, 2);
   text->point.x = x_max;
   text->point.y = 0;
-  text->position = Text2d::BoundaryPosition::kRightUpper;
+  text->position = Text2d::BoundaryPosition::kCenterUpper;
   dataset_axis_text_.Add(text);
 
   // y-axis labels
@@ -221,7 +221,7 @@ void CableElongationModelPlotPane::UpdateDataSetAxes(
   text->message = helper::DoubleToFormattedString(y_max, 0) + " ";
   text->point.x = 0;
   text->point.y = y_max;
-  text->position = Text2d::BoundaryPosition::kRightUpper;
+  text->position = Text2d::BoundaryPosition::kRightCenter;
   dataset_axis_text_.Add(text);
 }
 
