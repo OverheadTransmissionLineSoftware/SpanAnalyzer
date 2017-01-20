@@ -53,12 +53,13 @@ bool DocumentFileDropTarget::OnDropFiles(wxCoord x, wxCoord y,
   return true;
 }
 
-BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxFrame)
+BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxDocParentFrame)
   EVT_MENU(XRCID("menuitem_edit_analysisfilters"), SpanAnalyzerFrame::OnMenuEditAnalysisFilters)
   EVT_MENU(XRCID("menuitem_edit_cables"), SpanAnalyzerFrame::OnMenuEditCables)
   EVT_MENU(XRCID("menuitem_edit_weathercases"), SpanAnalyzerFrame::OnMenuEditWeathercases)
   EVT_MENU(XRCID("menuitem_file_preferences"), SpanAnalyzerFrame::OnMenuFilePreferences)
   EVT_MENU(XRCID("menuitem_help_about"), SpanAnalyzerFrame::OnMenuHelpAbout)
+  EVT_MENU(XRCID("menuitem_view_cable_model"), SpanAnalyzerFrame::OnMenuViewCableModel)
   EVT_MENU(XRCID("menuitem_view_log"), SpanAnalyzerFrame::OnMenuViewLog)
 END_EVENT_TABLE()
 
@@ -279,6 +280,17 @@ void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
 
   // shows the dialog
   wxAboutBox(info, this);
+}
+
+void SpanAnalyzerFrame::OnMenuViewCableModel(wxCommandEvent& event) {
+  wxAuiPaneInfo& info = manager_.GetPane("Cable");
+  if (info.IsShown() == false) {
+    info.Show(true);
+  } else {
+    info.Show(false);
+  }
+
+  manager_.Update();
 }
 
 void SpanAnalyzerFrame::OnMenuViewLog(wxCommandEvent& event) {

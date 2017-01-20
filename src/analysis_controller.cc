@@ -15,6 +15,11 @@ AnalysisController::AnalysisController() {
 
   reloader_.set_line_cable(nullptr);
   reloader_.set_weathercase_reloaded(nullptr);
+
+  state_stretch_initial_.load = 0;
+  state_stretch_initial_.temperature = 0;
+  state_stretch_initial_.type_polynomial =
+      SagTensionCableComponent::PolynomialType::kLoadStrain;
 }
 
 AnalysisController::~AnalysisController() {
@@ -120,6 +125,10 @@ void AnalysisController::RunAnalysis() const {
     results_load_.push_back(result);
   }
 
+  // updates stretch states
+  state_stretch_creep_ = reloader_.StretchStateCreep();
+  state_stretch_load_ = reloader_.StretchStateLoad();
+
   // un-inits reloader
   reloader_.set_line_cable(&span_->linecable);
 
@@ -133,6 +142,24 @@ void AnalysisController::RunAnalysis() const {
   // clears status bar
   status_bar_log::PopText(0);
   status_bar_log::SetText("Ready", 0);
+}
+
+const CableStretchState* AnalysisController::StretchState(
+    const CableConditionType& condition) {
+  // checks if analysis has been ran
+  if (weathercases_->size() != results_creep_.size()) {
+    return nullptr;
+  }
+
+  if (condition == CableConditionType::kCreep) {
+    return &state_stretch_creep_;
+  } else if (condition == CableConditionType::kInitial) {
+    return &state_stretch_initial_;
+  } else if (condition == CableConditionType::kLoad) {
+    return &state_stretch_load_;
+  } else {
+    return nullptr;
+  }
 }
 
 void AnalysisController::set_span(const Span* span) {
@@ -187,6 +214,12 @@ SagTensionAnalysisResult AnalysisController::Analyze(
   // gets reloaded catenary and populates sag-tension result
   Catenary3d catenary = reloader_.CatenaryReloaded();
 
+  result.tension_average = catenary.TensionAverage();
+  result.tension_average_core = reloader_.TensionAverageComponent(
+      CableElongationModel::ComponentType::kCore);
+  result.tension_average_shell = reloader_.TensionAverageComponent(
+      CableElongationModel::ComponentType::kShell);
+
   result.tension_horizontal = catenary.tension_horizontal();
   result.tension_horizontal_core = reloader_.TensionHorizontalComponent(
       CableElongationModel::ComponentType::kCore);
@@ -195,6 +228,7 @@ SagTensionAnalysisResult AnalysisController::Analyze(
   result.weight_unit = catenary.weight_unit();
 
   result.condition = condition;
+  result.state = reloader_.StateReloaded();
   result.weathercase = &weathercase;
 
   return result;

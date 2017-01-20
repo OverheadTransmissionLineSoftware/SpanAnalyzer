@@ -5,6 +5,7 @@
 #define OTLS_SPANANALYZER_SAGTENSIONANALYSISRESULTS_H_
 
 #include "models/base/vector.h"
+#include "models/sagtension/cable_state.h"
 #include "models/transmissionline/cable_constraint.h"
 #include "models/transmissionline/weather_load_case.h"
 
@@ -18,6 +19,22 @@ struct SagTensionAnalysisResult {
   /// \var condition
   ///   The condition of the cable.
   CableConditionType condition;
+
+  /// \var state
+  ///   The cable state.
+  CableState state;
+
+  /// \var tension_average
+  ///   The average tension of the cable.
+  double tension_average;
+
+  /// \var tension_average_core
+  ///   The average tension of the cable core.
+  double tension_average_core;
+
+  /// \var tension_average_shell
+  ///   The average tension of the cable shell.
+  double tension_average_shell;
 
   /// \var tension_horizontal
   ///   The horizontal tension of the cable.

@@ -221,6 +221,13 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return The analysis span.
   const Span* SpanAnalysis() const;
 
+  /// \brief Gets the analysis stretch state for the specified condition.
+  /// \param[in] condition
+  ///   The condition.
+  /// \return The stretch state for the specified condition. If no stretch state
+  ///   is available, a nullptr is returned.
+  const CableStretchState* StretchState(const CableConditionType& condition);
+
   /// \brief Gets the spans.
   /// \return The spans.
   const std::list<Span>& spans() const;

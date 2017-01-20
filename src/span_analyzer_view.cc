@@ -77,8 +77,8 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   info = wxAuiPaneInfo();
   info.Name("Plot");
   info.CenterPane();
-  pane_plot_ = new PlotPane(frame, this);
-  manager->AddPane(pane_plot_, info);
+  pane_profile_ = new ProfilePlotPane(frame, this);
+  manager->AddPane(pane_profile_, info);
 
   info = wxAuiPaneInfo();
   info.Name("Results");
@@ -97,6 +97,14 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   info.CloseButton(false);
   pane_edit_ = new EditPane(frame, this);
   manager->AddPane(pane_edit_, info);
+
+  info = wxAuiPaneInfo();
+  info.Name("Cable");
+  info.Floatable(true);
+  info.Caption("Cable Elongation Model");
+  info.CloseButton(false);
+  pane_cable_ = new CableElongationModelPlotPane(frame, this);
+  manager->AddPane(pane_cable_, info);
 
   // loads perspective and updates
   std::string perspective = wxGetApp().config()->perspective;
@@ -131,14 +139,16 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
   wxGetApp().config()->perspective = manager->SavePerspective();
 
   // detaches panes and un-init manager
+  manager->DetachPane(pane_cable_);
   manager->DetachPane(pane_edit_);
-  manager->DetachPane(pane_plot_);
+  manager->DetachPane(pane_profile_);
   manager->DetachPane(pane_results_);
   manager->Update();
 
   // destroys panes
+  pane_cable_->Destroy();
   pane_edit_->Destroy();
-  pane_plot_->Destroy();
+  pane_profile_->Destroy();
   pane_results_->Destroy();
 
   // resets frame to document-less state
@@ -170,8 +180,9 @@ void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
 
   // don't need to distinguish sender - all frames are grouped under one view
   pane_edit_->Update(hint);
-  pane_plot_->Update(hint);
   pane_results_->Update(hint);
+  pane_profile_->Update(hint);
+  pane_cable_->Update(hint);
 
   // resets status bar
   status_bar_log::PopText(0);
@@ -185,8 +196,16 @@ const int SpanAnalyzerView::index_filter() const {
   return index_filter_;
 }
 
+CableElongationModelPlotPane* SpanAnalyzerView::pane_cable() {
+  return pane_cable_;
+}
+
 EditPane* SpanAnalyzerView::pane_edit() {
   return pane_edit_;
+}
+
+ProfilePlotPane* SpanAnalyzerView::pane_profile() {
+  return pane_profile_;
 }
 
 ResultsPane* SpanAnalyzerView::pane_results() {

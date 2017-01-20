@@ -58,6 +58,13 @@ class AnalysisController {
   /// \brief Runs the sag-tension analysis.
   void RunAnalysis() const;
 
+  /// \brief Gets the analysis stretch state for the specified condition.
+  /// \param[in] condition
+  ///   The condition.
+  /// \return The stretch state for the specified condition. If no stretch
+  ///   state is available, a nullptr is returned.
+  const CableStretchState* StretchState(const CableConditionType& condition);
+
   /// \brief Sets the activated span.
   /// \param[in] span
   ///   The span.
@@ -106,6 +113,18 @@ class AnalysisController {
   /// \var span_
   ///   The span being analyzed.
   const Span* span_;
+
+  /// \var state_stretch_creep_
+  ///   The calculated stretch state for the creep condition.
+  mutable CableStretchState state_stretch_creep_;
+
+  /// \var state_stretch_initial_
+  ///   The stretch state for the initial condition.
+  CableStretchState state_stretch_initial_;
+
+  /// \var state_stretch_load_
+  ///   The calculated stretch state for the load condition.
+  mutable CableStretchState state_stretch_load_;
 
   /// \var weathercases_
   ///   The weathercases to be analyzed.

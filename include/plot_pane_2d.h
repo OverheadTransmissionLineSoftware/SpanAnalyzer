@@ -1,10 +1,9 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_PLOTPANE_H_
-#define OTLS_SPANANALYZER_PLOTPANE_H_
+#ifndef OTLS_SPANANALYZER_PLOTPANE2D_H_
+#define OTLS_SPANANALYZER_PLOTPANE2D_H_
 
-#include "wx/docview.h"
 #include "wx/wx.h"
 
 #include "line_data_set_2d.h"
@@ -12,31 +11,18 @@
 
 /// \par OVERVIEW
 ///
-/// This class is a wxAUI pane that displays a plot of the activate span.
-class PlotPane : public wxPanel {
+/// This class is an abstract wxAUI pane used for 2d plotting.
+class PlotPane2d : public wxPanel {
  public:
   /// \brief Constructor.
   /// \param[in] parent
   ///   The parent window.
-  /// \param[in] view
-  ///   The view.
-  PlotPane(wxWindow* parent, wxView* view);
+  PlotPane2d(wxWindow* parent);
 
   /// \brief Destructor.
-  ~PlotPane();
+  ~PlotPane2d();
 
-  /// \brief Updates the pane.
-  /// \param[in] hint
-  ///   The hint describing what kind of update is needed.
-  /// This function is called as part of the view update process.
-  void Update(wxObject* hint = nullptr);
-
- private:
-  /// \brief Handles the context menu select event.
-  /// \param[in] event
-  ///   The event.
-  void OnContextMenuSelect(wxCommandEvent& event);
-
+ protected:
   /// \brief Handles the erase background event.
   /// \param[in] event
   ///   The event.
@@ -62,9 +48,11 @@ class PlotPane : public wxPanel {
   ///   The device context.
   void RenderPlot(wxDC& dc);
 
+  /// \brief Updates the plot datasets.
+  virtual void UpdatePlotDatasets() = 0;
+
   /// \brief Updates the plot renderers.
-  /// This includes re-calculating the dataset.
-  void UpdatePlotRenderers();
+  virtual void UpdatePlotRenderers() = 0;
 
   /// \var bitmap_buffer_
   ///   The bitmap that is used as a device context buffer. Keeping this cached
@@ -76,19 +64,11 @@ class PlotPane : public wxPanel {
   ///   being dragged.
   wxPoint coord_mouse_;
 
-  /// \var dataset_catenary_
-  ///   The catenary plot dataset.
-  LineDataSet2d dataset_catenary_;
-
   /// \var plot_
   ///   The plot.
   Plot2d plot_;
 
-  /// \var view_
-  ///   The view.
-  wxView* view_;
-
   DECLARE_EVENT_TABLE()
 };
 
-# endif //  OTLS_SPANANALYZER_PLOTPANE_H_
+# endif //  OTLS_SPANANALYZER_PLOTPANE2D_H_
