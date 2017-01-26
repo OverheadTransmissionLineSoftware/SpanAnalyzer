@@ -40,7 +40,7 @@
       <AdditionalIncludeDirectories>..\..\include;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CRT_SECURE_NO_DEPRECATE=1;_CRT_NON_CONFORMING_SWPRINTFS=1;_SCL_SECURE_NO_WARNINGS=1;__WXMSW__;_UNICODE;_WINDOWS;NOPCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
@@ -54,6 +54,7 @@
       <AdditionalIncludeDirectories>..\..\include;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE=1;_CRT_NON_CONFORMING_SWPRINTFS=1;_SCL_SECURE_NO_WARNINGS=1;__WXMSW__;NDEBUG;_UNICODE;_WINDOWS;NOPCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\..\external\wxWidgets\lib\vc_x64_lib;..\..\external\Models\build\msvc\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
