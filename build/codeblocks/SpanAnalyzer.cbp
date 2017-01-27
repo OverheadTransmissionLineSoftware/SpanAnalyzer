@@ -24,6 +24,9 @@
 					<Add library="libotlsmodels_based.a" />
 					<Add directory="../../external/Models/build/codeblocks/debug" />
 				</Linker>
+				<ExtraCommands>
+					<Add before="../../external/wxWidgets/build-debug/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_editor_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/error_message_dialog.xrc  ../../res/xrc/preferences_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
+				</ExtraCommands>
 			</Target>
 			<Target title="release">
 				<Option output="release/SpanAnalyzer" prefix_auto="1" extension_auto="1" />
@@ -44,6 +47,9 @@
 					<Add library="libotlsmodels_base.a" />
 					<Add directory="../../external/Models/build/codeblocks/release" />
 				</Linker>
+				<ExtraCommands>
+					<Add before="../../external/wxWidgets/build-release/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_editor_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/error_message_dialog.xrc  ../../res/xrc/preferences_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
+				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>
@@ -109,28 +115,29 @@
 		<Unit filename="../../include/weather_load_case_unit_converter.h" />
 		<Unit filename="../../include/weather_load_case_xml_handler.h" />
 		<Unit filename="../../include/xml_handler.h" />
-		<Unit filename="../../res/analysis_filter_editor_dialog.xrc" />
-		<Unit filename="../../res/analysis_filter_manager_dialog.xrc" />
-		<Unit filename="../../res/cable_editor_dialog.xrc" />
-		<Unit filename="../../res/cable_file_manager_dialog.xrc" />
-		<Unit filename="../../res/edit_pane.xrc" />
-		<Unit filename="../../res/error_message_dialog.xrc" />
 		<Unit filename="../../res/icon.ico" />
 		<Unit filename="../../res/icon.xpm" />
 		<Unit filename="../../res/move_arrow_down.xpm" />
 		<Unit filename="../../res/move_arrow_up.xpm" />
-		<Unit filename="../../res/preferences_dialog.xrc" />
-		<Unit filename="../../res/results_pane.xrc" />
+		<Unit filename="../../res/resources.cc" />
 		<Unit filename="../../res/sort_arrow_down.xpm" />
 		<Unit filename="../../res/sort_arrow_up.xpm" />
-		<Unit filename="../../res/span_analyzer_menubar.xrc" />
-		<Unit filename="../../res/span_editor_dialog.xrc" />
 		<Unit filename="../../res/spananalyzer.rc">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="../../res/weather_load_case_editor_dialog.xrc" />
-		<Unit filename="../../res/weather_load_case_manager_dialog.xrc" />
+		<Unit filename="../../res/xrc/analysis_filter_editor_dialog.xrc" />
+		<Unit filename="../../res/xrc/analysis_filter_manager_dialog.xrc" />
+		<Unit filename="../../res/xrc/cable_editor_dialog.xrc" />
+		<Unit filename="../../res/xrc/cable_file_manager_dialog.xrc" />
+		<Unit filename="../../res/xrc/edit_pane.xrc" />
+		<Unit filename="../../res/xrc/error_message_dialog.xrc" />
+		<Unit filename="../../res/xrc/preferences_dialog.xrc" />
+		<Unit filename="../../res/xrc/results_pane.xrc" />
+		<Unit filename="../../res/xrc/span_analyzer_menubar.xrc" />
+		<Unit filename="../../res/xrc/span_editor_dialog.xrc" />
+		<Unit filename="../../res/xrc/weather_load_case_editor_dialog.xrc" />
+		<Unit filename="../../res/xrc/weather_load_case_manager_dialog.xrc" />
 		<Unit filename="../../spananalyzer.conf" />
 		<Unit filename="../../src/analysis_controller.cc" />
 		<Unit filename="../../src/analysis_filter_editor_dialog.cc" />

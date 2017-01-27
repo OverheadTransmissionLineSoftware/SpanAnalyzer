@@ -12,6 +12,12 @@
 #include "span_analyzer_view.h"
 #include "status_bar_log.h"
 
+/// This function handles loading all of the xrc files that are processed by
+/// the wxWidgets resource compiler. It is declared in an external file so
+/// this file doesn't have to be recompiled every time the resources are
+/// updated.
+extern void InitXmlResource();
+
 IMPLEMENT_APP(SpanAnalyzerApp)
 
 SpanAnalyzerApp::SpanAnalyzerApp() {
@@ -104,69 +110,7 @@ bool SpanAnalyzerApp::OnInit() {
 
   // loads all xml resource files into virtual file system
   wxXmlResource::Get()->InitAllHandlers();
-  wxFileName path(directory_, "", "");
-  path.AppendDir("res");
-  path.SetExt("xrc");
-
-  path.SetName("analysis_filter_editor_dialog");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
-  path.SetName("analysis_filter_manager_dialog");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
-  path.SetName("cable_editor_dialog");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
-  path.SetName("cable_file_manager_dialog");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
-  path.SetName("edit_pane");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
-  path.SetName("error_message_dialog");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
-  path.SetName("preferences_dialog");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
-  path.SetName("results_pane");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
-  path.SetName("span_analyzer_menubar");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
-  path.SetName("span_editor_dialog");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
-  path.SetName("weather_load_case_editor_dialog");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
-
-  path.SetName("weather_load_case_manager_dialog");
-  if (!wxXmlResource::Get()->LoadFile(path)) {
-    return false;
-  };
+  InitXmlResource();
 
   // creates main application frame
   frame_ = new SpanAnalyzerFrame(manager_doc_);
@@ -186,6 +130,7 @@ bool SpanAnalyzerApp::OnInit() {
   // loads config settings from file
   // any settings defined in the file will override the app defaults
   // filehandler handles all logging
+  wxFileName path;
   path = filepath_config_;
   FileHandler::LoadConfigFile(filepath_config_, config_);
 

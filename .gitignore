@@ -38,6 +38,10 @@
 *.png
 *.tex
 
+# generated resources #
+#######################
+res/resources.cc
+
 # generated executables #
 ######################################
 *.exe

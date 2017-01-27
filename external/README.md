@@ -86,12 +86,31 @@ Build the libraries.
 ```
 build/msw/wx_vc14.sln
 ```
+
 * Convert all projects to statically link to the Windows CRT.
 ```
 Project -> Properties -> C++ -> Code Generation
   Debug = MTd
   Release = MT
 ```
+
+* Select the x64 platform.
+* Build the Debug and Release configurations using the GUI. Do not build the
+  DLL Debug or DLL Release configurations.
+
+Build the wxrc utility.
+* Open the Visual Studio project solution.
+```
+external/wxWidgets/utils/wxrc/wxrc_vc9.vcproj
+```
+
+* Convert project to statically link to the Windows CRT.
+```
+Project -> Properties -> C++ -> Code Generation
+  Debug = MTd
+  Release = MT
+```
+
 * Select the x64 platform.
 * Build the Debug and Release configurations using the GUI. Do not build the
   DLL Debug or DLL Release configurations.
