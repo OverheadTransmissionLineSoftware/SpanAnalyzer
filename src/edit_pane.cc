@@ -10,13 +10,12 @@
 #include "span_analyzer_doc_commands.h"
 #include "span_editor_dialog.h"
 #include "span_unit_converter.h"
-
-#include "../res/copy.xpm"
-#include "../res/minus.xpm"
-#include "../res/move_arrow_down.xpm"
-#include "../res/move_arrow_up.xpm"
-#include "../res/plus.xpm"
-#include "../res/wrench.xpm"
+#include "xpm/copy.xpm"
+#include "xpm/minus.xpm"
+#include "xpm/move_arrow_down.xpm"
+#include "xpm/move_arrow_up.xpm"
+#include "xpm/plus.xpm"
+#include "xpm/wrench.xpm"
 
 /// context menu enum
 enum {

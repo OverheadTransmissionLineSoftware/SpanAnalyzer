@@ -358,55 +358,64 @@
     <None Include="..\..\appdata.xml">
       <Filter>Test</Filter>
     </None>
-    <None Include="..\..\res\cable_editor_dialog.xrc">
+    <None Include="..\..\res\xpm\copy.xpm">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\cable_file_manager_dialog.xrc">
+    <None Include="..\..\res\xpm\minus.xpm">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\edit_pane.xrc">
+    <None Include="..\..\res\xpm\move_arrow_down.xpm">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\error_message_dialog.xrc">
+    <None Include="..\..\res\xpm\move_arrow_up.xpm">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\preferences_dialog.xrc">
+    <None Include="..\..\res\xpm\plus.xpm">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\results_pane.xrc">
+    <None Include="..\..\res\xpm\sort_arrow_down.xpm">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\span_analyzer_menubar.xrc">
+    <None Include="..\..\res\xpm\sort_arrow_up.xpm">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\span_editor_dialog.xrc">
+    <None Include="..\..\res\xpm\wrench.xpm">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\weather_load_case_editor_dialog.xrc">
+    <None Include="..\..\res\xrc\analysis_filter_editor_dialog.xrc">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\weather_load_case_manager_dialog.xrc">
+    <None Include="..\..\res\xrc\analysis_filter_manager_dialog.xrc">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\icon.xpm">
+    <None Include="..\..\res\xrc\cable_editor_dialog.xrc">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\sort_arrow_down.xpm">
+    <None Include="..\..\res\xrc\cable_file_manager_dialog.xrc">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\sort_arrow_up.xpm">
+    <None Include="..\..\res\xrc\edit_pane.xrc">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\analysis_filter_editor_dialog.xrc">
+    <None Include="..\..\res\xrc\error_message_dialog.xrc">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\analysis_filter_manager_dialog.xrc">
+    <None Include="..\..\res\xrc\preferences_dialog.xrc">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\move_arrow_down.xpm">
+    <None Include="..\..\res\xrc\results_pane.xrc">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\res\move_arrow_up.xpm">
+    <None Include="..\..\res\xrc\span_analyzer_menubar.xrc">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\res\xrc\span_editor_dialog.xrc">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\res\xrc\weather_load_case_editor_dialog.xrc">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\res\xrc\weather_load_case_manager_dialog.xrc">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

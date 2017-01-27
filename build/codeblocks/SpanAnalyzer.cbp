@@ -58,6 +58,7 @@
 			<Add directory="../../include" />
 			<Add directory="../../external/Models/include" />
 			<Add directory="../../external/wxWidgets/include" />
+			<Add directory="../../res" />
 		</Compiler>
 		<Unit filename="../../appdata.xml" />
 		<Unit filename="../../include/analysis_controller.h" />
@@ -117,15 +118,19 @@
 		<Unit filename="../../include/xml_handler.h" />
 		<Unit filename="../../res/icon.ico" />
 		<Unit filename="../../res/icon.xpm" />
-		<Unit filename="../../res/move_arrow_down.xpm" />
-		<Unit filename="../../res/move_arrow_up.xpm" />
 		<Unit filename="../../res/resources.cc" />
-		<Unit filename="../../res/sort_arrow_down.xpm" />
-		<Unit filename="../../res/sort_arrow_up.xpm" />
 		<Unit filename="../../res/spananalyzer.rc">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="../../res/xpm/copy.xpm" />
+		<Unit filename="../../res/xpm/minus.xpm" />
+		<Unit filename="../../res/xpm/move_arrow_down.xpm" />
+		<Unit filename="../../res/xpm/move_arrow_up.xpm" />
+		<Unit filename="../../res/xpm/plus.xpm" />
+		<Unit filename="../../res/xpm/sort_arrow_down.xpm" />
+		<Unit filename="../../res/xpm/sort_arrow_up.xpm" />
+		<Unit filename="../../res/xpm/wrench.xpm" />
 		<Unit filename="../../res/xrc/analysis_filter_editor_dialog.xrc" />
 		<Unit filename="../../res/xrc/analysis_filter_manager_dialog.xrc" />
 		<Unit filename="../../res/xrc/cable_editor_dialog.xrc" />

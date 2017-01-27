@@ -16,8 +16,7 @@
 #include "span_analyzer_view.h"
 #include "weather_load_case_manager_dialog.h"
 #include "weather_load_case_unit_converter.h"
-
-#include "../res/icon.xpm"
+#include "xpm/icon.xpm"
 
 DocumentFileDropTarget::DocumentFileDropTarget(wxWindow* parent) {
   parent_ = parent;

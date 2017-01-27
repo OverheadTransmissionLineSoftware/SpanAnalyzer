@@ -38,7 +38,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\include;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;..\..\res;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CRT_SECURE_NO_DEPRECATE=1;_CRT_NON_CONFORMING_SWPRINTFS=1;_SCL_SECURE_NO_WARNINGS=1;__WXMSW__;_UNICODE;_WINDOWS;NOPCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -55,7 +55,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\include;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;..\..\res;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE=1;_CRT_NON_CONFORMING_SWPRINTFS=1;_SCL_SECURE_NO_WARNINGS=1;__WXMSW__;NDEBUG;_UNICODE;_WINDOWS;NOPCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -181,44 +181,26 @@
     <ClCompile Include="..\..\src\xml_handler.cc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\res\analysis_filter_editor_dialog.xrc" />
-    <None Include="..\..\res\analysis_filter_manager_dialog.xrc" />
-    <None Include="..\..\res\cable_editor_dialog.xrc">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\res\cable_file_manager_dialog.xrc">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\res\edit_pane.xrc">
-      <FileType>Document</FileType>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="..\..\res\error_message_dialog.xrc">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\res\icon.xpm" />
-    <None Include="..\..\res\move_arrow_down.xpm" />
-    <None Include="..\..\res\move_arrow_up.xpm" />
-    <None Include="..\..\res\preferences_dialog.xrc">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\res\results_pane.xrc">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\res\sort_arrow_down.xpm" />
-    <None Include="..\..\res\sort_arrow_up.xpm" />
-    <None Include="..\..\res\span_analyzer_menubar.xrc">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\res\span_editor_dialog.xrc">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\res\weather_load_case_editor_dialog.xrc">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\res\weather_load_case_manager_dialog.xrc">
-      <FileType>Document</FileType>
-    </None>
+    <None Include="..\..\res\xpm\copy.xpm" />
+    <None Include="..\..\res\xpm\minus.xpm" />
+    <None Include="..\..\res\xpm\move_arrow_down.xpm" />
+    <None Include="..\..\res\xpm\move_arrow_up.xpm" />
+    <None Include="..\..\res\xpm\plus.xpm" />
+    <None Include="..\..\res\xpm\sort_arrow_down.xpm" />
+    <None Include="..\..\res\xpm\sort_arrow_up.xpm" />
+    <None Include="..\..\res\xpm\wrench.xpm" />
+    <None Include="..\..\res\xrc\analysis_filter_editor_dialog.xrc" />
+    <None Include="..\..\res\xrc\analysis_filter_manager_dialog.xrc" />
+    <None Include="..\..\res\xrc\cable_editor_dialog.xrc" />
+    <None Include="..\..\res\xrc\cable_file_manager_dialog.xrc" />
+    <None Include="..\..\res\xrc\edit_pane.xrc" />
+    <None Include="..\..\res\xrc\error_message_dialog.xrc" />
+    <None Include="..\..\res\xrc\preferences_dialog.xrc" />
+    <None Include="..\..\res\xrc\results_pane.xrc" />
+    <None Include="..\..\res\xrc\span_analyzer_menubar.xrc" />
+    <None Include="..\..\res\xrc\span_editor_dialog.xrc" />
+    <None Include="..\..\res\xrc\weather_load_case_editor_dialog.xrc" />
+    <None Include="..\..\res\xrc\weather_load_case_manager_dialog.xrc" />
     <None Include="..\..\spananalyzer.conf" />
     <None Include="..\..\test\cables\ACSR_Drake.cable" />
     <None Include="..\..\test\test.spananalyzer" />

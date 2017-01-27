@@ -7,8 +7,8 @@
 #include "wx/clipbrd.h"
 #include "wx/imaglist.h"
 
-#include "../res/sort_arrow_up.xpm"
-#include "../res/sort_arrow_down.xpm"
+#include "xpm/sort_arrow_up.xpm"
+#include "xpm/sort_arrow_down.xpm"
 
 /// \par OVERVIEW
 ///
