@@ -33,7 +33,7 @@ cd build-debug
 
 Configure the library build.
 ```
-../configure --disable-shared --enable-stl --enable-debug_gdb
+../configure --disable-shared --enable-debug_gdb --enable-std_string_conv_in_wxstring
 ```
 
 Modify the build configuration to use wxStreams, not std::streams. This is
@@ -58,7 +58,7 @@ cd build-release
 
 Configure the release library build.
 ```
-../configure --disable-shared --enable-stl --disable-debug
+../configure --disable-shared --disable-debug --enable-std_string_conv_in_wxstring
 ```
 
 Modify the build configuration to use wxStreams, not std::streams. This is
@@ -85,6 +85,12 @@ Build the libraries.
 * Open the Visual Studio project solution.
 ```
 build/msw/wx_vc14.sln
+```
+* Convert all projects to statically link to the Windows CRT.
+```
+Project -> Properties -> C++ -> Code Generation
+  Debug = MTd
+  Release = MT
 ```
 * Select the x64 platform.
 * Build the Debug and Release configurations using the GUI. Do not build the
