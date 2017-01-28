@@ -158,6 +158,7 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
 
   // resets statusbar
   status_bar_log::SetText("Ready", 0);
+  status_bar_log::SetText("", 1);
 
   // resets menubar
   const int index_menu = frame->GetMenuBar()->FindMenu("Edit");
