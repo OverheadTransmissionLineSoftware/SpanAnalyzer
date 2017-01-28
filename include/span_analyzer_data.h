@@ -16,6 +16,11 @@
 /// This struct is a filter for the analysis results.
 struct AnalysisFilter {
  public:
+  /// \brief Constructor.
+  AnalysisFilter() {
+    weathercase = nullptr;
+  }
+
   /// \var condition
   ///   The cable condition.
   CableConditionType condition;
