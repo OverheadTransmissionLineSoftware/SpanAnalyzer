@@ -74,6 +74,7 @@ void SpanEditorDialog::InitChoiceControls() {
   choice->Append("Support");
   choice->Append("Horizontal");
   choice->Append("H/w");
+  choice->Append("Sag");
 
   // populates constraint weathercase choice control
   choice = XRCCTRL(*this, "choice_constraint_weathercase", wxChoice);
@@ -378,6 +379,9 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
   } else if (str == "H/w") {
     span_modified_.linecable.constraint.type_limit =
         CableConstraint::LimitType::kCatenaryConstant;
+  } else if (str == "Sag") {
+    span_modified_.linecable.constraint.type_limit =
+        CableConstraint::LimitType::kSag;
   }
 
   // transfers constraint weathercase
@@ -516,6 +520,8 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
     choice->SetSelection(1);
   } else if (type_limit == CableConstraint::LimitType::kCatenaryConstant) {
     choice->SetSelection(2);
+  } else if (type_limit == CableConstraint::LimitType::kSag) {
+    choice->SetSelection(3);
   }
 
   // transfers constraint weathercase

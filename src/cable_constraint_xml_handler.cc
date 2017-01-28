@@ -66,6 +66,17 @@ wxXmlNode* CableConstraintXmlHandler::CreateNode(
       attribute = wxXmlAttribute("units", "lbs");
       node_element->AddAttribute(attribute.GetName(), attribute.GetValue());
     }
+  } else if (constraint.type_limit == CableConstraint::LimitType::kSag) {
+    attribute = wxXmlAttribute("type", "Sag");
+      node_element->AddAttribute(attribute.GetName(), attribute.GetValue());
+
+    if (units == units::UnitSystem::kMetric) {
+      attribute = wxXmlAttribute("units", "m");
+      node_element->AddAttribute(attribute.GetName(), attribute.GetValue());
+    } else if (units == units::UnitSystem::kImperial) {
+      attribute = wxXmlAttribute("units", "ft");
+      node_element->AddAttribute(attribute.GetName(), attribute.GetValue());
+    }
   } else if (constraint.type_limit ==
       CableConstraint::LimitType::kSupportTension) {
     attribute = wxXmlAttribute("type", "SupportTension");
@@ -174,6 +185,8 @@ bool CableConstraintXmlHandler::ParseNodeV1(
         constraint.type_limit = CableConstraint::LimitType::kCatenaryConstant;
       } else if (content_attribute == "HorizontalTension") {
         constraint.type_limit = CableConstraint::LimitType::kHorizontalTension;
+      } else if (content_attribute == "Sag") {
+        constraint.type_limit = CableConstraint::LimitType::kSag;
       } else if (content_attribute == "SupportTension") {
         constraint.type_limit = CableConstraint::LimitType::kSupportTension;
       } else {
