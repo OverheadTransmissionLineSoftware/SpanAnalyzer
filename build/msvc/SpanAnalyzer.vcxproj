@@ -38,7 +38,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\include;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;..\..\res;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\external\AppCommon\include;..\..\external\AppCommon\res;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;..\..\res;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CRT_SECURE_NO_DEPRECATE=1;_CRT_NON_CONFORMING_SWPRINTFS=1;_SCL_SECURE_NO_WARNINGS=1;__WXMSW__;_UNICODE;_WINDOWS;NOPCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -50,12 +50,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>..\..\external\wxWidgets\utils\wxrc\vc_mswud_x64\wxrc.exe -v -c -o=..\..\res\resources.cc ..\..\res\xrc\analysis_filter_editor_dialog.xrc ..\..\res\xrc\analysis_filter_manager_dialog.xrc ..\..\res\xrc\cable_editor_dialog.xrc ..\..\res\xrc\cable_file_manager_dialog.xrc ..\..\res\xrc\edit_pane.xrc ..\..\res\xrc\error_message_dialog.xrc ..\..\res\xrc\preferences_dialog.xrc ..\..\res\xrc\results_pane.xrc ..\..\res\xrc\span_analyzer_menubar.xrc ..\..\res\xrc\span_editor_dialog.xrc ..\..\res\xrc\weather_load_case_editor_dialog.xrc ..\..\res\xrc\weather_load_case_manager_dialog.xrc</Command>
+      <Command>..\..\external\wxWidgets\utils\wxrc\vc_mswud_x64\wxrc.exe -v -c -o=../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\include;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;..\..\res;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\external\AppCommon\include;..\..\external\AppCommon\res;..\..\external\Models\include;..\..\external\wxWidgets\include;..\..\external\wxWidgets\include\msvc;..\..\res;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE=1;_CRT_NON_CONFORMING_SWPRINTFS=1;_SCL_SECURE_NO_WARNINGS=1;__WXMSW__;NDEBUG;_UNICODE;_WINDOWS;NOPCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -65,39 +65,141 @@
       <AdditionalDependencies>otlsmodels_base.lib;otlsmodels_sagtension.lib;otlsmodels_transmissionline.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxexpat.lib;wxjpeg.lib;wxmsw31u_adv.lib;wxmsw31u_core.lib;wxmsw31u_xrc.lib;wxpng.lib;wxregexu.lib;wxscintilla.lib;wxtiff.lib;wxzlib.lib;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;winspool.lib;winmm.lib;shell32.lib;shlwapi.lib;comctl32.lib;ole32.lib;oleaut32.lib;uuid.lib;rpcrt4.lib;advapi32.lib;version.lib;wsock32.lib;wininet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>..\..\external\wxWidgets\utils\wxrc\vc_mswu_x64\wxrc.exe -v -c -o=..\..\res\resources.cc ..\..\res\xrc\analysis_filter_editor_dialog.xrc ..\..\res\xrc\analysis_filter_manager_dialog.xrc ..\..\res\xrc\cable_editor_dialog.xrc ..\..\res\xrc\cable_file_manager_dialog.xrc ..\..\res\xrc\edit_pane.xrc ..\..\res\xrc\error_message_dialog.xrc ..\..\res\xrc\preferences_dialog.xrc ..\..\res\xrc\results_pane.xrc ..\..\res\xrc\span_analyzer_menubar.xrc ..\..\res\xrc\span_editor_dialog.xrc ..\..\res\xrc\weather_load_case_editor_dialog.xrc ..\..\res\xrc\weather_load_case_manager_dialog.xrc</Command>
+      <Command>..\..\external\wxWidgets\utils\wxrc\vc_mswu_x64\wxrc.exe -v -c -o=../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\external\AppCommon\src\editors\cable_editor_dialog.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\editors\weather_load_case_editor_dialog.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\graphics\circle_data_set_2d.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\graphics\circle_renderer_2d.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\graphics\data_set_2d.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\graphics\line_data_set_2d.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\graphics\line_renderer_2d.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\graphics\plot_2d.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\graphics\plot_axis.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\graphics\plot_pane_2d.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\graphics\point_data_set_2d.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\graphics\point_renderer_2d.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\graphics\renderer_2d.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\graphics\text_data_set_2d.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\graphics\text_renderer_2d.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\units\cable_unit_converter.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\units\weather_load_case_unit_converter.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\widgets\error_message_dialog.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\widgets\report_table.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\widgets\status_bar_log.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\widgets\timer.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\xml\cable_constraint_xml_handler.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\xml\cable_xml_handler.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\xml\line_cable_xml_handler.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\xml\vector_xml_handler.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\xml\weather_load_case_xml_handler.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\xml\xml_handler.cc" />
+    <ClCompile Include="..\..\res\resources.cc" />
+    <ClCompile Include="..\..\src\analysis_controller.cc" />
+    <ClCompile Include="..\..\src\analysis_filter_editor_dialog.cc" />
+    <ClCompile Include="..\..\src\analysis_filter_manager_dialog.cc" />
+    <ClCompile Include="..\..\src\analysis_filter_xml_handler.cc" />
+    <ClCompile Include="..\..\src\cable_elongation_model_plot_pane.cc" />
+    <ClCompile Include="..\..\src\cable_file_manager_dialog.cc" />
+    <ClCompile Include="..\..\src\edit_pane.cc" />
+    <ClCompile Include="..\..\src\file_handler.cc" />
+    <ClCompile Include="..\..\src\log_pane.cc" />
+    <ClCompile Include="..\..\src\preferences_dialog.cc" />
+    <ClCompile Include="..\..\src\profile_plot_pane.cc" />
+    <ClCompile Include="..\..\src\results_pane.cc" />
+    <ClCompile Include="..\..\src\span.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_app.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_config_xml_handler.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_data_xml_handler.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_doc.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_doc_commands.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_doc_xml_handler.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_frame.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_view.cc" />
+    <ClCompile Include="..\..\src\span_editor_dialog.cc" />
+    <ClCompile Include="..\..\src\span_unit_converter.cc" />
+    <ClCompile Include="..\..\src\span_xml_handler.cc" />
+    <ClCompile Include="..\..\src\weather_load_case_manager_dialog.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\external\AppCommon\res\xpm\sort_arrow_down.xpm" />
+    <None Include="..\..\external\AppCommon\res\xpm\sort_arrow_up.xpm" />
+    <None Include="..\..\external\AppCommon\res\xrc\cable_editor_dialog.xrc" />
+    <None Include="..\..\external\AppCommon\res\xrc\error_message_dialog.xrc" />
+    <None Include="..\..\external\AppCommon\res\xrc\weather_load_case_editor_dialog.xrc" />
+    <None Include="..\..\res\xpm\copy.xpm" />
+    <None Include="..\..\res\xpm\minus.xpm" />
+    <None Include="..\..\res\xpm\move_arrow_down.xpm" />
+    <None Include="..\..\res\xpm\move_arrow_up.xpm" />
+    <None Include="..\..\res\xpm\plus.xpm" />
+    <None Include="..\..\res\xpm\wrench.xpm" />
+    <None Include="..\..\res\xrc\analysis_filter_editor_dialog.xrc" />
+    <None Include="..\..\res\xrc\analysis_filter_manager_dialog.xrc" />
+    <None Include="..\..\res\xrc\cable_file_manager_dialog.xrc">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="..\..\res\xrc\edit_pane.xrc" />
+    <None Include="..\..\res\xrc\preferences_dialog.xrc" />
+    <None Include="..\..\res\xrc\results_pane.xrc" />
+    <None Include="..\..\res\xrc\span_analyzer_menubar.xrc" />
+    <None Include="..\..\res\xrc\span_editor_dialog.xrc" />
+    <None Include="..\..\res\xrc\weather_load_case_manager_dialog.xrc" />
+    <None Include="..\..\spananalyzer.conf" />
+    <None Include="..\..\test\cables\ACSR_Drake.cable" />
+    <None Include="..\..\test\test.spananalyzer" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\appdata.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\res\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\res\spananalyzer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\editors\cable_editor_dialog.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\editors\weather_load_case_editor_dialog.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\circle_data_set_2d.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\circle_renderer_2d.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\data_set_2d.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\line_data_set_2d.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\line_renderer_2d.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\plot_2d.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\plot_axis.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\plot_pane_2d.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\point_data_set_2d.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\point_renderer_2d.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\renderer_2d.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\text_data_set_2d.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\text_renderer_2d.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\units\cable_unit_converter.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\units\weather_load_case_unit_converter.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\error_message_dialog.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\report_table.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\status_bar_log.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\timer.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\cable_constraint_xml_handler.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\cable_xml_handler.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\line_cable_xml_handler.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\vector_xml_handler.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\weather_load_case_xml_handler.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\xml_handler.h" />
     <ClInclude Include="..\..\include\analysis_controller.h" />
     <ClInclude Include="..\..\include\analysis_filter_editor_dialog.h" />
     <ClInclude Include="..\..\include\analysis_filter_manager_dialog.h" />
     <ClInclude Include="..\..\include\analysis_filter_xml_handler.h" />
-    <ClInclude Include="..\..\include\cable_constraint_xml_handler.h" />
-    <ClInclude Include="..\..\include\cable_editor_dialog.h" />
     <ClInclude Include="..\..\include\cable_elongation_model_plot_pane.h" />
     <ClInclude Include="..\..\include\cable_file_manager_dialog.h" />
-    <ClInclude Include="..\..\include\cable_unit_converter.h" />
-    <ClInclude Include="..\..\include\cable_xml_handler.h" />
-    <ClInclude Include="..\..\include\circle_data_set_2d.h" />
-    <ClInclude Include="..\..\include\circle_renderer_2d.h" />
-    <ClInclude Include="..\..\include\data_set_2d.h" />
     <ClInclude Include="..\..\include\edit_pane.h" />
-    <ClInclude Include="..\..\include\error_message_dialog.h" />
     <ClInclude Include="..\..\include\file_handler.h" />
-    <ClInclude Include="..\..\include\line_cable_xml_handler.h" />
-    <ClInclude Include="..\..\include\line_data_set_2d.h" />
-    <ClInclude Include="..\..\include\line_renderer_2d.h" />
     <ClInclude Include="..\..\include\log_pane.h" />
-    <ClInclude Include="..\..\include\plot_2d.h" />
-    <ClInclude Include="..\..\include\plot_axis.h" />
-    <ClInclude Include="..\..\include\plot_pane_2d.h" />
-    <ClInclude Include="..\..\include\point_data_set_2d.h" />
-    <ClInclude Include="..\..\include\point_renderer_2d.h" />
     <ClInclude Include="..\..\include\preferences_dialog.h" />
     <ClInclude Include="..\..\include\profile_plot_pane.h" />
-    <ClInclude Include="..\..\include\renderer_2d.h" />
-    <ClInclude Include="..\..\include\report_table.h" />
     <ClInclude Include="..\..\include\results_pane.h" />
     <ClInclude Include="..\..\include\sag_tension_analysis_results.h" />
     <ClInclude Include="..\..\include\span.h" />
@@ -114,107 +216,7 @@
     <ClInclude Include="..\..\include\span_editor_dialog.h" />
     <ClInclude Include="..\..\include\span_unit_converter.h" />
     <ClInclude Include="..\..\include\span_xml_handler.h" />
-    <ClInclude Include="..\..\include\status_bar_log.h" />
-    <ClInclude Include="..\..\include\text_data_set_2d.h" />
-    <ClInclude Include="..\..\include\text_renderer_2d.h" />
-    <ClInclude Include="..\..\include\timer.h" />
-    <ClInclude Include="..\..\include\vector_xml_handler.h" />
-    <ClInclude Include="..\..\include\weather_load_case_editor_dialog.h" />
     <ClInclude Include="..\..\include\weather_load_case_manager_dialog.h" />
-    <ClInclude Include="..\..\include\weather_load_case_unit_converter.h" />
-    <ClInclude Include="..\..\include\weather_load_case_xml_handler.h" />
-    <ClInclude Include="..\..\include\xml_handler.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\res\resources.cc" />
-    <ClCompile Include="..\..\src\analysis_controller.cc" />
-    <ClCompile Include="..\..\src\analysis_filter_editor_dialog.cc" />
-    <ClCompile Include="..\..\src\analysis_filter_manager_dialog.cc" />
-    <ClCompile Include="..\..\src\analysis_filter_xml_handler.cc" />
-    <ClCompile Include="..\..\src\cable_constraint_xml_handler.cc" />
-    <ClCompile Include="..\..\src\cable_editor_dialog.cc" />
-    <ClCompile Include="..\..\src\cable_elongation_model_plot_pane.cc" />
-    <ClCompile Include="..\..\src\cable_file_manager_dialog.cc" />
-    <ClCompile Include="..\..\src\cable_unit_converter.cc" />
-    <ClCompile Include="..\..\src\cable_xml_handler.cc" />
-    <ClCompile Include="..\..\src\circle_data_set_2d.cc" />
-    <ClCompile Include="..\..\src\circle_renderer_2d.cc" />
-    <ClCompile Include="..\..\src\data_set_2d.cc" />
-    <ClCompile Include="..\..\src\edit_pane.cc" />
-    <ClCompile Include="..\..\src\error_message_dialog.cc" />
-    <ClCompile Include="..\..\src\file_handler.cc" />
-    <ClCompile Include="..\..\src\line_cable_xml_handler.cc" />
-    <ClCompile Include="..\..\src\line_data_set_2d.cc" />
-    <ClCompile Include="..\..\src\line_renderer_2d.cc" />
-    <ClCompile Include="..\..\src\log_pane.cc" />
-    <ClCompile Include="..\..\src\plot_2d.cc" />
-    <ClCompile Include="..\..\src\plot_axis.cc" />
-    <ClCompile Include="..\..\src\plot_pane_2d.cc" />
-    <ClCompile Include="..\..\src\point_data_set_2d.cc" />
-    <ClCompile Include="..\..\src\point_renderer_2d.cc" />
-    <ClCompile Include="..\..\src\preferences_dialog.cc" />
-    <ClCompile Include="..\..\src\profile_plot_pane.cc" />
-    <ClCompile Include="..\..\src\renderer_2d.cc" />
-    <ClCompile Include="..\..\src\report_table.cc" />
-    <ClCompile Include="..\..\src\results_pane.cc" />
-    <ClCompile Include="..\..\src\span.cc" />
-    <ClCompile Include="..\..\src\span_analyzer_app.cc" />
-    <ClCompile Include="..\..\src\span_analyzer_config_xml_handler.cc" />
-    <ClCompile Include="..\..\src\span_analyzer_data_xml_handler.cc" />
-    <ClCompile Include="..\..\src\span_analyzer_doc.cc" />
-    <ClCompile Include="..\..\src\span_analyzer_doc_commands.cc" />
-    <ClCompile Include="..\..\src\span_analyzer_doc_xml_handler.cc" />
-    <ClCompile Include="..\..\src\span_analyzer_frame.cc" />
-    <ClCompile Include="..\..\src\span_analyzer_view.cc" />
-    <ClCompile Include="..\..\src\span_editor_dialog.cc" />
-    <ClCompile Include="..\..\src\span_unit_converter.cc" />
-    <ClCompile Include="..\..\src\span_xml_handler.cc" />
-    <ClCompile Include="..\..\src\status_bar_log.cc" />
-    <ClCompile Include="..\..\src\text_data_set_2d.cc" />
-    <ClCompile Include="..\..\src\text_renderer_2d.cc" />
-    <ClCompile Include="..\..\src\timer.cc" />
-    <ClCompile Include="..\..\src\vector_xml_handler.cc" />
-    <ClCompile Include="..\..\src\weather_load_case_editor_dialog.cc" />
-    <ClCompile Include="..\..\src\weather_load_case_manager_dialog.cc" />
-    <ClCompile Include="..\..\src\weather_load_case_unit_converter.cc" />
-    <ClCompile Include="..\..\src\weather_load_case_xml_handler.cc" />
-    <ClCompile Include="..\..\src\xml_handler.cc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\res\xpm\copy.xpm" />
-    <None Include="..\..\res\xpm\minus.xpm" />
-    <None Include="..\..\res\xpm\move_arrow_down.xpm" />
-    <None Include="..\..\res\xpm\move_arrow_up.xpm" />
-    <None Include="..\..\res\xpm\plus.xpm" />
-    <None Include="..\..\res\xpm\sort_arrow_down.xpm" />
-    <None Include="..\..\res\xpm\sort_arrow_up.xpm" />
-    <None Include="..\..\res\xpm\wrench.xpm" />
-    <None Include="..\..\res\xrc\analysis_filter_editor_dialog.xrc" />
-    <None Include="..\..\res\xrc\analysis_filter_manager_dialog.xrc" />
-    <None Include="..\..\res\xrc\cable_editor_dialog.xrc" />
-    <None Include="..\..\res\xrc\cable_file_manager_dialog.xrc" />
-    <None Include="..\..\res\xrc\edit_pane.xrc" />
-    <None Include="..\..\res\xrc\error_message_dialog.xrc" />
-    <None Include="..\..\res\xrc\preferences_dialog.xrc" />
-    <None Include="..\..\res\xrc\results_pane.xrc" />
-    <None Include="..\..\res\xrc\span_analyzer_menubar.xrc" />
-    <None Include="..\..\res\xrc\span_editor_dialog.xrc" />
-    <None Include="..\..\res\xrc\weather_load_case_editor_dialog.xrc" />
-    <None Include="..\..\res\xrc\weather_load_case_manager_dialog.xrc" />
-    <None Include="..\..\spananalyzer.conf" />
-    <None Include="..\..\test\cables\ACSR_Drake.cable" />
-    <None Include="..\..\test\test.spananalyzer" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\appdata.xml">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\res\icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\..\res\spananalyzer.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
