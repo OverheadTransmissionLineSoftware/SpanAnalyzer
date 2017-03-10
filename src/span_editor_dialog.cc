@@ -3,11 +3,10 @@
 
 #include "span_editor_dialog.h"
 
+#include "appcommon/widgets/error_message_dialog.h"
 #include "models/base/helper.h"
 #include "wx/valnum.h"
 #include "wx/xrc/xmlres.h"
-
-#include "error_message_dialog.h"
 
 BEGIN_EVENT_TABLE(SpanEditorDialog, wxDialog)
   EVT_BUTTON(wxID_CANCEL, SpanEditorDialog::OnCancel)

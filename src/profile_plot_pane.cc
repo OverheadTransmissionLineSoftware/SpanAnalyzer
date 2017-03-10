@@ -3,13 +3,13 @@
 
 #include "profile_plot_pane.h"
 
+#include "appcommon/graphics/line_renderer_2d.h"
+#include "appcommon/widgets/status_bar_log.h"
 #include "models/base/helper.h"
 #include "wx/dcbuffer.h"
 
-#include "line_renderer_2d.h"
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
-#include "status_bar_log.h"
 
 /// \par OVERVIEW
 ///

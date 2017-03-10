@@ -3,13 +3,13 @@
 
 #include "span_analyzer_doc.h"
 
+#include "appcommon/widgets/status_bar_log.h"
 #include "wx/cmdproc.h"
 #include "wx/xml/xml.h"
 
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc_xml_handler.h"
 #include "span_unit_converter.h"
-#include "status_bar_log.h"
 
 IMPLEMENT_DYNAMIC_CLASS(SpanAnalyzerDoc, wxDocument)
 

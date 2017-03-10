@@ -3,15 +3,15 @@
 
 #include "cable_elongation_model_plot_pane.h"
 
+#include "appcommon/graphics/circle_renderer_2d.h"
+#include "appcommon/graphics/line_renderer_2d.h"
+#include "appcommon/graphics/text_renderer_2d.h"
+#include "appcommon/widgets/status_bar_log.h"
 #include "models/base/helper.h"
 #include "wx/dcbuffer.h"
 
-#include "circle_renderer_2d.h"
-#include "line_renderer_2d.h"
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
-#include "status_bar_log.h"
-#include "text_renderer_2d.h"
 
 /// \par OVERVIEW
 ///

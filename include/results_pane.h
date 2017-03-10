@@ -4,10 +4,10 @@
 #ifndef OTLS_SPANANALYZER_RESULTSPANE_H_
 #define OTLS_SPANANALYZER_RESULTSPANE_H_
 
+#include "appcommon/widgets/report_table.h"
 #include "wx/docview.h"
 #include "wx/wx.h"
 
-#include "report_table.h"
 #include "sag_tension_analysis_results.h"
 #include "span_analyzer_data.h"
 

@@ -4,10 +4,9 @@
 #ifndef OTLS_SPANANALYZER_PROFILEPLOTPANE_H_
 #define OTLS_SPANANALYZER_PROFILEPLOTPANE_H_
 
+#include "appcommon/graphics/line_data_set_2d.h"
+#include "appcommon/graphics/plot_pane_2d.h"
 #include "wx/docview.h"
-
-#include "line_data_set_2d.h"
-#include "plot_pane_2d.h"
 
 /// \par OVERVIEW
 ///

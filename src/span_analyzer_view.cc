@@ -3,10 +3,10 @@
 
 #include "span_analyzer_view.h"
 
+#include "appcommon/widgets/status_bar_log.h"
 #include "wx/cmdproc.h"
 
 #include "span_analyzer_app.h"
-#include "status_bar_log.h"
 
 IMPLEMENT_DYNAMIC_CLASS(SpanAnalyzerView, wxView)
 

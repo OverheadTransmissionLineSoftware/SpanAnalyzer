@@ -4,11 +4,11 @@
 #ifndef OTLS_SPANANALYZER_SPANANALYZERDATAXMLHANDLER_H_
 #define OTLS_SPANANALYZER_SPANANALYZERDATAXMLHANDLER_H_
 
+#include "appcommon/xml/xml_handler.h"
 #include "models/base/units.h"
 #include "wx/xml/xml.h"
 
 #include "span_analyzer_data.h"
-#include "xml_handler.h"
 
 /// \par OVERVIEW
 ///

@@ -3,19 +3,19 @@
 
 #include "span_analyzer_frame.h"
 
+#include "appcommon/units/cable_unit_converter.h"
+#include "appcommon/units/weather_load_case_unit_converter.h"
 #include "wx/aboutdlg.h"
 #include "wx/xrc/xmlres.h"
 
 #include "analysis_filter_manager_dialog.h"
 #include "cable_file_manager_dialog.h"
-#include "cable_unit_converter.h"
 #include "file_handler.h"
 #include "preferences_dialog.h"
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
 #include "weather_load_case_manager_dialog.h"
-#include "weather_load_case_unit_converter.h"
 #include "xpm/icon.xpm"
 
 DocumentFileDropTarget::DocumentFileDropTarget(wxWindow* parent) {

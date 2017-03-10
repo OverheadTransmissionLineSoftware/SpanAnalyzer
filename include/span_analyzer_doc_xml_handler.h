@@ -6,11 +6,11 @@
 
 #include <list>
 
+#include "appcommon/xml/xml_handler.h"
 #include "models/base/units.h"
 
 #include "span_analyzer_data.h"
 #include "span_analyzer_doc.h"
-#include "xml_handler.h"
 
 /// \par OVERVIEW
 ///

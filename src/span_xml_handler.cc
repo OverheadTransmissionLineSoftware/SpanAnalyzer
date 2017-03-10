@@ -3,8 +3,8 @@
 
 #include "span_xml_handler.h"
 
-#include "line_cable_xml_handler.h"
-#include "vector_xml_handler.h"
+#include "appcommon/xml/line_cable_xml_handler.h"
+#include "appcommon/xml/vector_xml_handler.h"
 
 SpanXmlHandler::SpanXmlHandler() {
 }
