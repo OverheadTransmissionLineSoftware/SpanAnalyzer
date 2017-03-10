@@ -5,6 +5,7 @@
 		<Option title="SpanAnalyzer" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<Option virtualFolders="Header Files/;Resource Files/;Source Files/;Test/;" />
 		<Build>
 			<Target title="debug">
 				<Option output="debug/SpanAnalyzer" prefix_auto="1" extension_auto="1" />
@@ -60,144 +61,413 @@
 			<Add directory="../../external/wxWidgets/include" />
 			<Add directory="../../res" />
 		</Compiler>
-		<Unit filename="../../appdata.xml" />
-		<Unit filename="../../include/analysis_controller.h" />
-		<Unit filename="../../include/analysis_filter_editor_dialog.h" />
-		<Unit filename="../../include/analysis_filter_manager_dialog.h" />
-		<Unit filename="../../include/analysis_filter_xml_handler.h" />
-		<Unit filename="../../include/cable_constraint_xml_handler.h" />
-		<Unit filename="../../include/cable_editor_dialog.h" />
-		<Unit filename="../../include/cable_elongation_model_plot_pane.h" />
-		<Unit filename="../../include/cable_file_manager_dialog.h" />
-		<Unit filename="../../include/cable_unit_converter.h" />
-		<Unit filename="../../include/cable_xml_handler.h" />
-		<Unit filename="../../include/circle_data_set_2d.h" />
-		<Unit filename="../../include/circle_renderer_2d.h" />
-		<Unit filename="../../include/data_set_2d.h" />
-		<Unit filename="../../include/edit_pane.h" />
-		<Unit filename="../../include/error_message_dialog.h" />
-		<Unit filename="../../include/file_handler.h" />
-		<Unit filename="../../include/line_cable_xml_handler.h" />
-		<Unit filename="../../include/line_data_set_2d.h" />
-		<Unit filename="../../include/line_renderer_2d.h" />
-		<Unit filename="../../include/log_pane.h" />
-		<Unit filename="../../include/plot_2d.h" />
-		<Unit filename="../../include/plot_axis.h" />
-		<Unit filename="../../include/plot_pane_2d.h" />
-		<Unit filename="../../include/point_data_set_2d.h" />
-		<Unit filename="../../include/point_renderer_2d.h" />
-		<Unit filename="../../include/preferences_dialog.h" />
-		<Unit filename="../../include/profile_plot_pane.h" />
-		<Unit filename="../../include/renderer_2d.h" />
-		<Unit filename="../../include/report_table.h" />
-		<Unit filename="../../include/results_pane.h" />
-		<Unit filename="../../include/sag_tension_analysis_results.h" />
-		<Unit filename="../../include/span.h" />
-		<Unit filename="../../include/span_analyzer_app.h" />
-		<Unit filename="../../include/span_analyzer_config.h" />
-		<Unit filename="../../include/span_analyzer_config_xml_handler.h" />
-		<Unit filename="../../include/span_analyzer_data.h" />
-		<Unit filename="../../include/span_analyzer_data_xml_handler.h" />
-		<Unit filename="../../include/span_analyzer_doc.h" />
-		<Unit filename="../../include/span_analyzer_doc_commands.h" />
-		<Unit filename="../../include/span_analyzer_doc_xml_handler.h" />
-		<Unit filename="../../include/span_analyzer_frame.h" />
-		<Unit filename="../../include/span_analyzer_view.h" />
-		<Unit filename="../../include/span_editor_dialog.h" />
-		<Unit filename="../../include/span_unit_converter.h" />
-		<Unit filename="../../include/span_xml_handler.h" />
-		<Unit filename="../../include/status_bar_log.h" />
-		<Unit filename="../../include/text_data_set_2d.h" />
-		<Unit filename="../../include/text_renderer_2d.h" />
-		<Unit filename="../../include/timer.h" />
-		<Unit filename="../../include/vector_xml_handler.h" />
-		<Unit filename="../../include/weather_load_case_editor_dialog.h" />
-		<Unit filename="../../include/weather_load_case_manager_dialog.h" />
-		<Unit filename="../../include/weather_load_case_unit_converter.h" />
-		<Unit filename="../../include/weather_load_case_xml_handler.h" />
-		<Unit filename="../../include/xml_handler.h" />
-		<Unit filename="../../res/icon.ico" />
-		<Unit filename="../../res/icon.xpm" />
-		<Unit filename="../../res/resources.cc" />
+		<Unit filename="../../appdata.xml">
+			<Option virtualFolder="Test/" />
+		</Unit>
+		<Unit filename="../../include/analysis_controller.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/analysis_filter_editor_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/analysis_filter_manager_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/analysis_filter_xml_handler.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/cable_constraint_xml_handler.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/cable_editor_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/cable_elongation_model_plot_pane.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/cable_file_manager_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/cable_unit_converter.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/cable_xml_handler.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/circle_data_set_2d.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/circle_renderer_2d.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/data_set_2d.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/edit_pane.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/error_message_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/file_handler.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/line_cable_xml_handler.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/line_data_set_2d.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/line_renderer_2d.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/log_pane.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/plot_2d.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/plot_axis.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/plot_pane_2d.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/point_data_set_2d.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/point_renderer_2d.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/preferences_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/profile_plot_pane.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/renderer_2d.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/report_table.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/results_pane.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/sag_tension_analysis_results.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/span.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/span_analyzer_app.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/span_analyzer_config.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/span_analyzer_config_xml_handler.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/span_analyzer_data.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/span_analyzer_data_xml_handler.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/span_analyzer_doc.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/span_analyzer_doc_commands.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/span_analyzer_doc_xml_handler.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/span_analyzer_frame.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/span_analyzer_view.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/span_editor_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/span_unit_converter.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/span_xml_handler.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/status_bar_log.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/text_data_set_2d.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/text_renderer_2d.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/timer.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/vector_xml_handler.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/weather_load_case_editor_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/weather_load_case_manager_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/weather_load_case_unit_converter.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/weather_load_case_xml_handler.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/xml_handler.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../res/icon.ico">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/icon.xpm">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/resources.cc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
 		<Unit filename="../../res/spananalyzer.rc">
 			<Option compile="0" />
 			<Option link="0" />
+			<Option virtualFolder="Resource Files/" />
 		</Unit>
-		<Unit filename="../../res/xpm/copy.xpm" />
-		<Unit filename="../../res/xpm/minus.xpm" />
-		<Unit filename="../../res/xpm/move_arrow_down.xpm" />
-		<Unit filename="../../res/xpm/move_arrow_up.xpm" />
-		<Unit filename="../../res/xpm/plus.xpm" />
-		<Unit filename="../../res/xpm/sort_arrow_down.xpm" />
-		<Unit filename="../../res/xpm/sort_arrow_up.xpm" />
-		<Unit filename="../../res/xpm/wrench.xpm" />
-		<Unit filename="../../res/xrc/analysis_filter_editor_dialog.xrc" />
-		<Unit filename="../../res/xrc/analysis_filter_manager_dialog.xrc" />
-		<Unit filename="../../res/xrc/cable_editor_dialog.xrc" />
-		<Unit filename="../../res/xrc/cable_file_manager_dialog.xrc" />
-		<Unit filename="../../res/xrc/edit_pane.xrc" />
-		<Unit filename="../../res/xrc/error_message_dialog.xrc" />
-		<Unit filename="../../res/xrc/preferences_dialog.xrc" />
-		<Unit filename="../../res/xrc/results_pane.xrc" />
-		<Unit filename="../../res/xrc/span_analyzer_menubar.xrc" />
-		<Unit filename="../../res/xrc/span_editor_dialog.xrc" />
-		<Unit filename="../../res/xrc/weather_load_case_editor_dialog.xrc" />
-		<Unit filename="../../res/xrc/weather_load_case_manager_dialog.xrc" />
-		<Unit filename="../../spananalyzer.conf" />
-		<Unit filename="../../src/analysis_controller.cc" />
-		<Unit filename="../../src/analysis_filter_editor_dialog.cc" />
-		<Unit filename="../../src/analysis_filter_manager_dialog.cc" />
-		<Unit filename="../../src/analysis_filter_xml_handler.cc" />
-		<Unit filename="../../src/cable_constraint_xml_handler.cc" />
-		<Unit filename="../../src/cable_editor_dialog.cc" />
-		<Unit filename="../../src/cable_elongation_model_plot_pane.cc" />
-		<Unit filename="../../src/cable_file_manager_dialog.cc" />
-		<Unit filename="../../src/cable_unit_converter.cc" />
-		<Unit filename="../../src/cable_xml_handler.cc" />
-		<Unit filename="../../src/circle_data_set_2d.cc" />
-		<Unit filename="../../src/circle_renderer_2d.cc" />
-		<Unit filename="../../src/data_set_2d.cc" />
-		<Unit filename="../../src/edit_pane.cc" />
-		<Unit filename="../../src/error_message_dialog.cc" />
-		<Unit filename="../../src/file_handler.cc" />
-		<Unit filename="../../src/line_cable_xml_handler.cc" />
-		<Unit filename="../../src/line_data_set_2d.cc" />
-		<Unit filename="../../src/line_renderer_2d.cc" />
-		<Unit filename="../../src/log_pane.cc" />
-		<Unit filename="../../src/plot_2d.cc" />
-		<Unit filename="../../src/plot_axis.cc" />
-		<Unit filename="../../src/plot_pane_2d.cc" />
-		<Unit filename="../../src/point_data_set_2d.cc" />
-		<Unit filename="../../src/point_renderer_2d.cc" />
-		<Unit filename="../../src/preferences_dialog.cc" />
-		<Unit filename="../../src/profile_plot_pane.cc" />
-		<Unit filename="../../src/renderer_2d.cc" />
-		<Unit filename="../../src/report_table.cc" />
-		<Unit filename="../../src/results_pane.cc" />
-		<Unit filename="../../src/span.cc" />
-		<Unit filename="../../src/span_analyzer_app.cc" />
-		<Unit filename="../../src/span_analyzer_config_xml_handler.cc" />
-		<Unit filename="../../src/span_analyzer_data_xml_handler.cc" />
-		<Unit filename="../../src/span_analyzer_doc.cc" />
-		<Unit filename="../../src/span_analyzer_doc_commands.cc" />
-		<Unit filename="../../src/span_analyzer_doc_xml_handler.cc" />
-		<Unit filename="../../src/span_analyzer_frame.cc" />
-		<Unit filename="../../src/span_analyzer_view.cc" />
-		<Unit filename="../../src/span_editor_dialog.cc" />
-		<Unit filename="../../src/span_unit_converter.cc" />
-		<Unit filename="../../src/span_xml_handler.cc" />
-		<Unit filename="../../src/status_bar_log.cc" />
-		<Unit filename="../../src/text_data_set_2d.cc" />
-		<Unit filename="../../src/text_renderer_2d.cc" />
-		<Unit filename="../../src/timer.cc" />
-		<Unit filename="../../src/vector_xml_handler.cc" />
-		<Unit filename="../../src/weather_load_case_editor_dialog.cc" />
-		<Unit filename="../../src/weather_load_case_manager_dialog.cc" />
-		<Unit filename="../../src/weather_load_case_unit_converter.cc" />
-		<Unit filename="../../src/weather_load_case_xml_handler.cc" />
-		<Unit filename="../../src/xml_handler.cc" />
-		<Unit filename="../../test/cables/ACSR_Drake.cable" />
-		<Unit filename="../../test/test.spananalyzer" />
+		<Unit filename="../../res/xpm/copy.xpm">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xpm/minus.xpm">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xpm/move_arrow_down.xpm">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xpm/move_arrow_up.xpm">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xpm/plus.xpm">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xpm/sort_arrow_down.xpm">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xpm/sort_arrow_up.xpm">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xpm/wrench.xpm">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xrc/analysis_filter_editor_dialog.xrc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xrc/analysis_filter_manager_dialog.xrc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xrc/cable_editor_dialog.xrc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xrc/cable_file_manager_dialog.xrc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xrc/edit_pane.xrc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xrc/error_message_dialog.xrc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xrc/preferences_dialog.xrc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xrc/results_pane.xrc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xrc/span_analyzer_menubar.xrc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xrc/span_editor_dialog.xrc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xrc/weather_load_case_editor_dialog.xrc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xrc/weather_load_case_manager_dialog.xrc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../spananalyzer.conf">
+			<Option virtualFolder="Test/" />
+		</Unit>
+		<Unit filename="../../src/analysis_controller.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/analysis_filter_editor_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/analysis_filter_manager_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/analysis_filter_xml_handler.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/cable_constraint_xml_handler.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/cable_editor_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/cable_elongation_model_plot_pane.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/cable_file_manager_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/cable_unit_converter.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/cable_xml_handler.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/circle_data_set_2d.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/circle_renderer_2d.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/data_set_2d.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/edit_pane.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/error_message_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/file_handler.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/line_cable_xml_handler.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/line_data_set_2d.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/line_renderer_2d.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/log_pane.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/plot_2d.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/plot_axis.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/plot_pane_2d.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/point_data_set_2d.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/point_renderer_2d.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/preferences_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/profile_plot_pane.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/renderer_2d.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/report_table.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/results_pane.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/span.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/span_analyzer_app.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/span_analyzer_config_xml_handler.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/span_analyzer_data_xml_handler.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/span_analyzer_doc.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/span_analyzer_doc_commands.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/span_analyzer_doc_xml_handler.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/span_analyzer_frame.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/span_analyzer_view.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/span_editor_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/span_unit_converter.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/span_xml_handler.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/status_bar_log.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/text_data_set_2d.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/text_renderer_2d.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/timer.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/vector_xml_handler.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/weather_load_case_editor_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/weather_load_case_manager_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/weather_load_case_unit_converter.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/weather_load_case_xml_handler.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/xml_handler.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../test/cables/ACSR_Drake.cable">
+			<Option virtualFolder="Test/" />
+		</Unit>
+		<Unit filename="../../test/test.spananalyzer">
+			<Option virtualFolder="Test/" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<debugger />
