@@ -3,11 +3,10 @@
 
 #include "analysis_controller.h"
 
+#include "appcommon/widgets/status_bar_log.h"
+#include "appcommon/widgets/timer.h"
 #include "models/base/helper.h"
 #include "wx/wx.h"
-
-#include "status_bar_log.h"
-#include "timer.h"
 
 AnalysisController::AnalysisController() {
   span_ = nullptr;

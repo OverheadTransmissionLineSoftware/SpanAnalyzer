@@ -4,10 +4,10 @@
 #ifndef OTLS_SPANANALYZER_SPANANALYZERCONFIGXMLHANDLER_H_
 #define OTLS_SPANANALYZER_SPANANALYZERCONFIGXMLHANDLER_H_
 
+#include "appcommon/xml/xml_handler.h"
 #include "wx/xml/xml.h"
 
 #include "span_analyzer_config.h"
-#include "xml_handler.h"
 
 /// \par OVERVIEW
 ///

@@ -6,12 +6,12 @@
 
 #include "wx/docview.h"
 
+#include "appcommon/graphics/circle_data_set_2d.h"
+#include "appcommon/graphics/line_data_set_2d.h"
+#include "appcommon/graphics/plot_pane_2d.h"
+#include "appcommon/graphics/text_data_set_2d.h"
 #include "models/sagtension/cable_elongation_model.h"
 
-#include "circle_data_set_2d.h"
-#include "line_data_set_2d.h"
-#include "plot_pane_2d.h"
-#include "text_data_set_2d.h"
 #include "sag_tension_analysis_results.h"
 
 /// \par OVERVIEW

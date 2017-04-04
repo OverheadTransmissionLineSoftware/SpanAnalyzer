@@ -3,6 +3,7 @@
 
 #include "span_analyzer_app.h"
 
+#include "appcommon/widgets/status_bar_log.h"
 #include "wx/filename.h"
 #include "wx/stdpaths.h"
 #include "wx/xrc/xmlres.h"
@@ -10,7 +11,6 @@
 #include "file_handler.h"
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
-#include "status_bar_log.h"
 
 /// This function handles loading all of the xrc files that are processed by
 /// the wxWidgets resource compiler. It is declared in an external file so

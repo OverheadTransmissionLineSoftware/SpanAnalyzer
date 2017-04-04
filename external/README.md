@@ -1,8 +1,13 @@
-## Clone Submodule
+## Clone Submodules
 Clone the external repositories.
 ```
 git submodule update --init
 ```
+
+## AppCommon
+This repository contains common/shared application code, such as graphics and
+xml handlers. The files in this repository are not built independently, but
+rather included into the SpanAnalyzer build.
 
 ## Models
 This repository contains the engineering calculation libraries. See the

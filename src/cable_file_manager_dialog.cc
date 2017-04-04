@@ -3,11 +3,11 @@
 
 #include "cable_file_manager_dialog.h"
 
+#include "appcommon/editors/cable_editor_dialog.h"
+#include "appcommon/units/cable_unit_converter.h"
 #include "wx/spinbutt.h"
 #include "wx/xrc/xmlres.h"
 
-#include "cable_editor_dialog.h"
-#include "cable_unit_converter.h"
 #include "file_handler.h"
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"

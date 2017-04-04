@@ -7,12 +7,12 @@
 #include <list>
 #include <string>
 
+#include "appcommon/xml/xml_handler.h"
 #include "models/base/units.h"
 #include "wx/xml/xml.h"
 
 #include "span.h"
 #include "span_analyzer_data.h"
-#include "xml_handler.h"
 
 /// \par OVERVIEW
 ///

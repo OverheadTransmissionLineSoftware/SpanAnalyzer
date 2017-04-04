@@ -3,13 +3,13 @@
 
 #include "weather_load_case_manager_dialog.h"
 
+#include "appcommon/editors/weather_load_case_editor_dialog.h"
+#include "appcommon/units/weather_load_case_unit_converter.h"
 #include "wx/spinbutt.h"
 #include "wx/xrc/xmlres.h"
 
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
-#include "weather_load_case_editor_dialog.h"
-#include "weather_load_case_unit_converter.h"
 
 BEGIN_EVENT_TABLE(WeatherLoadCaseManagerDialog, wxDialog)
   EVT_BUTTON(XRCID("button_weathercases_add"), WeatherLoadCaseManagerDialog::OnButtonAdd)
