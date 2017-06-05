@@ -3,6 +3,8 @@
 
 #include "span_unit_converter.h"
 
+#include "appcommon/units/line_cable_unit_converter.h"
+
 SpanUnitConverter::SpanUnitConverter() {
 }
 
@@ -14,9 +16,9 @@ void SpanUnitConverter::ConvertUnitStyle(
     const units::UnitStyle& style_from,
     const units::UnitStyle& style_to,
     Span& span) {
-  // nothing to do!
-  // this function is kept for consistency with other unit converters, and
-  // to show that nothing was overlooked
+  // converts line cable
+  LineCableUnitConverter::ConvertUnitStyle(system, style_from, style_to,
+                                           span.linecable);
 }
 
 void SpanUnitConverter::ConvertUnitSystem(
@@ -24,21 +26,7 @@ void SpanUnitConverter::ConvertUnitSystem(
     const units::UnitSystem& system_to,
     Span& span) {
   if (system_to == units::UnitSystem::kMetric) {
-    span.linecable.constraint.limit = units::ConvertForce(
-        span.linecable.constraint.limit,
-        units::ForceConversionType::kPoundsToNewtons);
-
-    Vector3d& spacing_ruling_span =  span.linecable.spacing_attachments_ruling_span;
-    spacing_ruling_span.set_x(units::ConvertLength(
-        spacing_ruling_span.x(),
-        units::LengthConversionType::kFeetToMeters));
-    spacing_ruling_span.set_y(units::ConvertLength(
-        spacing_ruling_span.y(),
-        units::LengthConversionType::kFeetToMeters));
-    spacing_ruling_span.set_z(units::ConvertLength(
-        spacing_ruling_span.z(),
-        units::LengthConversionType::kFeetToMeters));
-
+    // converts catenary spacing
     Vector3d& spacing_catenary =  span.spacing_catenary;
     spacing_catenary.set_x(units::ConvertLength(
         spacing_catenary.x(),
@@ -51,21 +39,7 @@ void SpanUnitConverter::ConvertUnitSystem(
         units::LengthConversionType::kFeetToMeters));
 
   } else if (system_to == units::UnitSystem::kImperial) {
-    span.linecable.constraint.limit = units::ConvertForce(
-        span.linecable.constraint.limit,
-        units::ForceConversionType::kNewtonsToPounds);
-
-    Vector3d& spacing_ruling_span =  span.linecable.spacing_attachments_ruling_span;
-    spacing_ruling_span.set_x(units::ConvertLength(
-        spacing_ruling_span.x(),
-        units::LengthConversionType::kMetersToFeet));
-    spacing_ruling_span.set_y(units::ConvertLength(
-        spacing_ruling_span.y(),
-        units::LengthConversionType::kMetersToFeet));
-    spacing_ruling_span.set_z(units::ConvertLength(
-        spacing_ruling_span.z(),
-        units::LengthConversionType::kMetersToFeet));
-
+    // converts catenary spacing
     Vector3d& spacing_catenary =  span.spacing_catenary;
     spacing_catenary.set_x(units::ConvertLength(
         spacing_catenary.x(),
@@ -77,4 +51,8 @@ void SpanUnitConverter::ConvertUnitSystem(
         spacing_catenary.z(),
         units::LengthConversionType::kMetersToFeet));
   }
+
+  // converts line cable
+  LineCableUnitConverter::ConvertUnitSystem(system_from, system_to,
+                                            span.linecable);
 }

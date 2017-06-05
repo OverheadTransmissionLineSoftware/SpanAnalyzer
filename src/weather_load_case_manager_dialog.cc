@@ -96,15 +96,15 @@ bool WeatherLoadCaseManagerDialog::IsReferencedByDocument(
   for (auto iter = doc->spans().cbegin(); iter != doc->spans().cend(); iter++) {
     const Span& span = *iter;
 
-    if (span.linecable.constraint.case_weather->description == name) {
+    if (span.linecable.constraint().case_weather->description == name) {
       return true;
     }
 
-    if (span.linecable.weathercase_stretch_creep->description == name) {
+    if (span.linecable.weathercase_stretch_creep()->description == name) {
       return true;
     }
 
-    if (span.linecable.weathercase_stretch_load->description == name) {
+    if (span.linecable.weathercase_stretch_load()->description == name) {
       return true;
     }
   }

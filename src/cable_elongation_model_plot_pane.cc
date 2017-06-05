@@ -138,7 +138,7 @@ void CableElongationModelPlotPane::OnMouse(wxMouseEvent& event) {
     wxPoint point_graphics;
     point_graphics.x = event.GetX();
     point_graphics.y = event.GetY();
-    const Point2d point_data = plot_.PointGraphicsToData(point_graphics);
+    const Point2d<float> point_data = plot_.PointGraphicsToData(point_graphics);
 
     // logs to status bar
     std::string str = "X="
@@ -229,12 +229,13 @@ void CableElongationModelPlotPane::UpdateDataSetCable(
     const CableElongationModel& model,
     const CableElongationModel::ComponentType& type_component,
     LineDataSet2d& dataset) {
-  std::list<Point2d> points;
+  // calculates points
+  std::list<Point2d<double>> points;
   const double strain_begin = -0.001;
   const double strain_increment = 0.00002;
   const double kStrengthRated = *model.cable()->strength_rated();
   for (int i = 0; i <= 550; i++) {
-    Point2d point;
+    Point2d<double> point;
     point.x = strain_begin + (static_cast<double>(i) * strain_increment);
     point.y = model.Load(type_component, point.x);
 
@@ -248,8 +249,8 @@ void CableElongationModelPlotPane::UpdateDataSetCable(
   for (auto iter = points.cbegin(); iter != std::prev(points.cend(), 1);
        iter++) {
     // gets current and next point in the list
-    const Point2d& p0 = *iter;
-    const Point2d& p1 = *(std::next(iter, 1));
+    const Point2d<double>& p0 = *iter;
+    const Point2d<double>& p1 = *(std::next(iter, 1));
 
     // creates a line
     Line2d* line = new Line2d();
@@ -324,7 +325,7 @@ void CableElongationModelPlotPane::UpdatePlotDatasets() {
   const Span* span = doc->SpanAnalysis();
 
   SagTensionCable cable;
-  cable.set_cable_base(span->linecable.cable);
+  cable.set_cable_base(span->linecable.cable());
 
   CableElongationModel model;
   model.set_cable(&cable);
@@ -400,7 +401,7 @@ void CableElongationModelPlotPane::UpdatePlotRenderers() {
   const double ratio_plot_new =  1 / (y_range / x_range);
   plot_.set_ratio_aspect(ratio_plot_new);
 
-  Point2d point_offset = plot_.offset();
+  Point2d<float> point_offset = plot_.offset();
   point_offset.y = point_offset.y * (ratio_plot_prev / ratio_plot_new);
   plot_.set_offset(point_offset);
 }

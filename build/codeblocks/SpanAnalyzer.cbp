@@ -111,7 +111,13 @@
 		<Unit filename="../../external/AppCommon/include/appcommon/graphics/text_renderer_2d.h">
 			<Option virtualFolder="Common Header Files/" />
 		</Unit>
+		<Unit filename="../../external/AppCommon/include/appcommon/units/cable_constraint_unit_converter.h">
+			<Option virtualFolder="Common Header Files/" />
+		</Unit>
 		<Unit filename="../../external/AppCommon/include/appcommon/units/cable_unit_converter.h">
+			<Option virtualFolder="Common Header Files/" />
+		</Unit>
+		<Unit filename="../../external/AppCommon/include/appcommon/units/line_cable_unit_converter.h">
 			<Option virtualFolder="Common Header Files/" />
 		</Unit>
 		<Unit filename="../../external/AppCommon/include/appcommon/units/weather_load_case_unit_converter.h">
@@ -207,7 +213,13 @@
 		<Unit filename="../../external/AppCommon/src/graphics/text_renderer_2d.cc">
 			<Option virtualFolder="Common Source Files/" />
 		</Unit>
+		<Unit filename="../../external/AppCommon/src/units/cable_constraint_unit_converter.cc">
+			<Option virtualFolder="Common Source Files/" />
+		</Unit>
 		<Unit filename="../../external/AppCommon/src/units/cable_unit_converter.cc">
+			<Option virtualFolder="Common Source Files/" />
+		</Unit>
+		<Unit filename="../../external/AppCommon/src/units/line_cable_unit_converter.cc">
 			<Option virtualFolder="Common Source Files/" />
 		</Unit>
 		<Unit filename="../../external/AppCommon/src/units/weather_load_case_unit_converter.cc">

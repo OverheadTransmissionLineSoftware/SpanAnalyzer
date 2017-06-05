@@ -128,7 +128,7 @@ void ProfilePlotPane::OnMouse(wxMouseEvent& event) {
     wxPoint point_graphics;
     point_graphics.x = event.GetX();
     point_graphics.y = event.GetY();
-    const Point2d point_data = plot_.PointGraphicsToData(point_graphics);
+    const Point2d<float> point_data = plot_.PointGraphicsToData(point_graphics);
 
     // logs to status bar
     std::string str = "X="
@@ -187,11 +187,11 @@ void ProfilePlotPane::UpdatePlotDatasets() {
   catenary.set_weight_unit(result->weight_unit);
 
   // calculates points
-  std::list<Point3d> points;
+  std::list<Point3d<double>> points;
   const int i_max = 100;
   for (int i = 0; i <= i_max; i++) {
-    double pos = double(i) / double(i_max);
-    Point3d p = catenary.Coordinate(pos);
+    double pos = static_cast<double>(i) / static_cast<double>(i_max);
+    Point3d<double> p = catenary.Coordinate(pos);
     points.push_back(p);
   }
 
@@ -200,8 +200,8 @@ void ProfilePlotPane::UpdatePlotDatasets() {
   for (auto iter = points.cbegin(); iter != std::prev(points.cend(), 1);
        iter++) {
     // gets current and next point in the list
-    const Point3d& p0 = *iter;
-    const Point3d& p1 = *(std::next(iter, 1));
+    const Point3d<double>& p0 = *iter;
+    const Point3d<double>& p1 = *(std::next(iter, 1));
 
     // creates a line and maps 3d catenary points to 2d points for drawing
     Line2d* line = new Line2d();

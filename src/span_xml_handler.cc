@@ -41,7 +41,8 @@ wxXmlNode* SpanXmlHandler::CreateNode(
   node_root->AddChild(node_element);
 
   // creates linecable node and adds to parent node
-  node_element = LineCableXmlHandler::CreateNode(span.linecable, "", units);
+  node_element = LineCableXmlHandler::CreateNode(span.linecable, "", units,
+                                                 nullptr);
   node_root->AddChild(node_element);
 
   // creates catenary geometry node and adds to parent node
@@ -113,6 +114,14 @@ bool SpanXmlHandler::ParseNodeV1(
   root->GetAttribute("name", &name);
   span.name = name;
 
+  // creates a compatible list of weathercases
+  std::list<const WeatherLoadCase*> weathercases_const;
+  for (auto iter = weathercases->cbegin(); iter != weathercases->cend();
+       iter++) {
+    const WeatherLoadCase* weathercase = *iter;
+    weathercases_const.push_back(weathercase);
+  }
+
   // evaluates each child node
   wxXmlNode* node = root->GetChildren();
   while (node != nullptr) {
@@ -142,7 +151,8 @@ bool SpanXmlHandler::ParseNodeV1(
       }
 
       const bool status_node = LineCableXmlHandler::ParseNode(
-          node, filepath, &cables, weathercases, span.linecable);
+          node, filepath, &cables, nullptr, &weathercases_const,
+          span.linecable);
       if (status_node == false) {
         status = false;
       }

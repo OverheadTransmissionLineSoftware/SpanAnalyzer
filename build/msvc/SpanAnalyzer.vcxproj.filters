@@ -186,6 +186,12 @@
     <ClCompile Include="..\..\external\AppCommon\src\xml\xml_handler.cc">
       <Filter>Common Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\external\AppCommon\src\units\cable_constraint_unit_converter.cc">
+      <Filter>Common Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\AppCommon\src\units\line_cable_unit_converter.cc">
+      <Filter>Common Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\test\test.spananalyzer">
@@ -435,6 +441,12 @@
       <Filter>Common Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\xml_handler.h">
+      <Filter>Common Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\units\cable_constraint_unit_converter.h">
+      <Filter>Common Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\units\line_cable_unit_converter.h">
       <Filter>Common Header Files</Filter>
     </ClInclude>
   </ItemGroup>
