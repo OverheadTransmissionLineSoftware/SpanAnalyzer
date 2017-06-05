@@ -37,7 +37,7 @@ const SagTensionAnalysisResult* AnalysisController::Result(
     const CableConditionType& condition) const {
   // checks index
   const int kSizeResults = results_creep_.size();
-  if ((index_weathercase < 0) || (kSizeResults < index_weathercase)) {
+  if ((index_weathercase < 0) || (kSizeResults <= index_weathercase)) {
     return nullptr;
   }
 
