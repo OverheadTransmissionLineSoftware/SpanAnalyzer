@@ -33,25 +33,40 @@ SpanAnalyzerDoc* SpanAnalyzerApp::GetDocument() const {
 }
 
 bool SpanAnalyzerApp::OnCmdLineParsed(wxCmdLineParser& parser) {
-  // sets directory based on debug switch
-  if (parser.Found("debug")) {
-    directory_ = wxFileName::GetCwd();
-  } else {
-    // gets the application file name and solves for path
-    wxFileName path(wxStandardPaths::Get().GetExecutablePath());
-    directory_ = path.GetPath();
-  }
-
   // gets the config file path
   wxString filepath_config;
   if (parser.Found("config", &filepath_config)) {
-    filepath_config_ = filepath_config;
-  } else {
-    // default to a specific file in the application directory
-    if (filepath_config_.empty() == true) {
-      wxFileName path(directory_, "spananalyzer", "conf");
-      filepath_config_ = path.GetFullPath();
+    // converts filepath to absolute if needed
+    wxFileName path(filepath_config);
+    if (path.IsAbsolute() == false) {
+      path.MakeAbsolute(wxEmptyString, wxPATH_NATIVE);
     }
+
+    filepath_config_ = path.GetFullPath();
+  } else {
+    wxFileName path(wxEmptyString, "spananalyzer", "conf");
+
+    // detects OS and specifies default config file path for user
+    wxOperatingSystemId os = wxGetOsVersion();
+    if ((wxOS_UNKNOWN < os) && (os <= wxOS_MAC)) {
+      // mac os
+      path.SetPath(wxStandardPaths::Get().GetExecutablePath());
+    } else if ((wxOS_MAC < os) && (os <= wxOS_WINDOWS)) {
+      // windows os
+      path.SetPath(wxStandardPaths::Get().GetUserConfigDir());
+      path.AppendDir("OTLS");
+      path.AppendDir("SpanAnalyzer");
+    } else if ((wxOS_WINDOWS < os) && (os <= wxOS_UNIX)) {
+      // unix os
+      path.SetPath(wxStandardPaths::Get().GetUserConfigDir());
+      path.AppendDir(".config");
+      path.AppendDir("otls");
+      path.AppendDir("span-analyzer");
+    } else {
+      path.SetPath(wxStandardPaths::Get().GetExecutablePath());
+    }
+
+    filepath_config_ = path.GetFullPath();
   }
 
   // captures the start file which will be loaded when doc manager is created
@@ -121,7 +136,8 @@ bool SpanAnalyzerApp::OnInit() {
   wxLog::SetActiveTarget(log);
 
   // manually initailizes application config defaults
-  config_.filepath_data = directory_ + "appdata.xml";
+  wxFileName filename_config(filepath_config_);
+  config_.filepath_data = filename_config.GetPathWithSep() + "appdata.xml";
   config_.level_log = wxLOG_Message;
   config_.perspective = "";
   config_.size_frame = wxSize(0, 0);
@@ -148,7 +164,7 @@ bool SpanAnalyzerApp::OnInit() {
                "application default.");
 
     // defines default data file path and updates config
-    path = wxFileName(directory_, "appdata", "xml");
+    path = wxFileName(filename_config.GetPath(), "appdata", "xml");
     config_.filepath_data = path.GetFullPath();
 
     // saves new data file if default file doesn't already exist
@@ -160,7 +176,7 @@ bool SpanAnalyzerApp::OnInit() {
   // loads application data file
   // filehandler handles all logging
   const int status_data = FileHandler::LoadAppData(config_.filepath_data,
-                                                    config_.units, data_);
+                                                   config_.units, data_);
   if ((status_data == -1) || (status_data == 1)) {
     // notifies user of error
     wxString message = config_.filepath_data + "  --  "
@@ -202,10 +218,6 @@ SpanAnalyzerConfig* SpanAnalyzerApp::config() {
 
 SpanAnalyzerData* SpanAnalyzerApp::data() {
   return &data_;
-}
-
-wxString SpanAnalyzerApp::directory() {
-  return directory_;
 }
 
 SpanAnalyzerFrame* SpanAnalyzerApp::frame() {
