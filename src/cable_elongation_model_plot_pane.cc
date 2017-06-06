@@ -266,28 +266,41 @@ void CableElongationModelPlotPane::UpdateDataSetCable(
 void CableElongationModelPlotPane::UpdateDataSetMarker(
     const CableElongationModel& model,
     const SagTensionAnalysisResult* result) {
-  Circle2d* circle = nullptr;
+  // calculates points
+  Point2d<double> point;
+  std::list<Point2d<double>> points;
 
-  circle = new Circle2d();
-  circle->center.y = result->tension_average_core;
-  circle->center.x = model.Strain(CableElongationModel::ComponentType::kCore,
-                                  circle->center.y);
-  circle->radius = 3;
-  dataset_markers_.Add(circle);
+  point.y = result->tension_average_core;
+  point.x = model.Strain(CableElongationModel::ComponentType::kCore, point.y);
+  points.push_back(point);
 
-  circle = new Circle2d();
-  circle->center.y = result->tension_average_shell;
-  circle->center.x = model.Strain(CableElongationModel::ComponentType::kShell,
-                                  circle->center.y);
-  circle->radius = 3;
-  dataset_markers_.Add(circle);
+  point.y = result->tension_average_shell;
+  point.x = model.Strain(CableElongationModel::ComponentType::kShell, point.y);
+  points.push_back(point);
 
-  circle = new Circle2d();
-  circle->center.y = result->tension_average;
-  circle->center.x = model.Strain(CableElongationModel::ComponentType::kCombined,
-                                  circle->center.y);
-  circle->radius = 3;
-  dataset_markers_.Add(circle);
+  point.y = result->tension_average;
+  point.x = model.Strain(CableElongationModel::ComponentType::kCombined,
+                         point.y);
+  points.push_back(point);
+
+  // updates marker circle dataset
+  for (auto iter = points.cbegin(); iter != points.cend(); iter++) {
+    const Point2d<double>& point = *iter;
+
+    // skips plot point if the load is beyond the maximum strain or cable rated
+    // strength
+    if ((0.01 < point.x) || (*model.cable()->strength_rated() < point.y)) {
+      continue;
+    }
+
+    // creates a circle and adds to dataset
+    Circle2d* circle = new Circle2d();
+    circle->radius = 3;
+    circle->center.x = static_cast<float>(point.x);
+    circle->center.y = static_cast<float>(point.y);
+
+    dataset_markers_.Add(circle);
+  }
 }
 
 void CableElongationModelPlotPane::UpdatePlotDatasets() {
