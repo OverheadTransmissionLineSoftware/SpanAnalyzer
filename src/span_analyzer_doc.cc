@@ -64,7 +64,6 @@ void SpanAnalyzerDoc::ConvertUnitSystem(const units::UnitSystem& system_from,
   processor->ClearCommands();
 }
 
-
 std::list<Span>::const_iterator SpanAnalyzerDoc::DeleteSpan(
     const std::list<Span>::const_iterator& element) {
   // gets iterator with edit capability
