@@ -26,9 +26,16 @@ wxXmlNode* SpanXmlHandler::CreateNode(
   // creates a node for the span root
   node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "span");
   node_root->AddAttribute("version", "1");
-  node_root->AddAttribute("name", name);
 
-  // adds child nodes for parameters
+  if (name != "") {
+    node_root->AddAttribute("name", name);
+  }
+
+  // creates name node and adds to root node
+  title = "name";
+  content = span.name;
+  node_element = CreateElementNodeWithContent(title, content);
+  node_root->AddChild(node_element);
 
   // creates type node and adds to parent node
   title = "type";
@@ -109,11 +116,6 @@ bool SpanXmlHandler::ParseNodeV1(
   wxString content;
   wxString message;
 
-  // gets name attribute
-  wxString name;
-  root->GetAttribute("name", &name);
-  span.name = name;
-
   // creates a compatible list of weathercases
   std::list<const WeatherLoadCase*> weathercases_const;
   for (auto iter = weathercases->cbegin(); iter != weathercases->cend();
@@ -128,7 +130,9 @@ bool SpanXmlHandler::ParseNodeV1(
     title = node->GetName();
     content = ParseElementNodeWithContent(node);
 
-    if (title == "type") {
+    if (title == "name") {
+      span.name = content;
+    } else if (title == "type") {
       if (content == "Deadend") {
         span.type = Span::Type::kDeadendSpan;
       } else if (content == "RulingSpan") {
