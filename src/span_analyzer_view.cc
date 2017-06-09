@@ -82,27 +82,36 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
 
   info = wxAuiPaneInfo();
   info.Name("Results");
-  info.Floatable(true);
-  info.Bottom();
+  info.BestSize(700, 300);
   info.Caption("Results");
   info.CloseButton(false);
+  info.Floatable(true);
+  info.MinSize(350, 150);
+  info.Top();
   pane_results_ = new ResultsPane(frame, this);
   manager->AddPane(pane_results_, info);
 
   info = wxAuiPaneInfo();
   info.Name("Edit");
-  info.Floatable(true);
-  info.Left();
+  info.BestSize(300, 700);
   info.Caption("Edit");
   info.CloseButton(false);
+  info.Floatable(true);
+  info.Layer(1);
+  info.Left();
+  info.MinSize(150, 350);
   pane_edit_ = new EditPane(frame, this);
   manager->AddPane(pane_edit_, info);
 
   info = wxAuiPaneInfo();
   info.Name("Cable");
-  info.Floatable(true);
+  info.BestSize(400, 400);
   info.Caption("Cable Elongation Model");
   info.CloseButton(false);
+  info.Float();
+  info.Floatable(true);
+  info.Hide();
+  info.MinSize(150, 150);
   pane_cable_ = new CableElongationModelPlotPane(frame, this);
   manager->AddPane(pane_cable_, info);
 
