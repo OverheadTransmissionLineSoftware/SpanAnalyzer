@@ -310,10 +310,19 @@ void FileHandler::SaveAppData(const std::string& filepath,
     root->AddAttribute("units", "Metric");
   }
 
+  // creates any directories that are needed
+  wxFileName filename(filepath);
+  if (filename.DirExists() == false) {
+    filename.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+  }
+
   // creates an xml document and saves
   wxXmlDocument doc;
   doc.SetRoot(root);
-  doc.Save(filepath, 2);
+  bool status = doc.Save(filepath, 2);
+  if (status == false) {
+    wxLogError("File didn't save");
+  }
 
   // converts weathercases to different unit style
   for (auto iter = data.weathercases.begin();
@@ -354,10 +363,19 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
     root->AddAttribute("units", "Metric");
   }
 
+  // creates any directories that are needed
+  wxFileName filename(filepath);
+  if (filename.DirExists() == false) {
+    filename.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+  }
+
   // creates an xml document and saves
   wxXmlDocument doc;
   doc.SetRoot(root);
-  doc.Save(filepath, 2);
+  bool status = doc.Save(filepath, 2);
+  if (status == false) {
+    wxLogError("File didn't save");
+  }
 
   // resets statusbar
   status_bar_log::PopText(0);
@@ -373,10 +391,19 @@ void FileHandler::SaveConfigFile(const std::string& filepath,
   // generates an xml node
   wxXmlNode* root = SpanAnalyzerConfigXmlHandler::CreateNode(config);
 
+  // creates any directories that are needed
+  wxFileName filename(filepath);
+  if (filename.DirExists() == false) {
+    filename.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+  }
+
   // creates an xml document and saves
   wxXmlDocument doc;
   doc.SetRoot(root);
-  doc.Save(filepath, 2);
+  bool status = doc.Save(filepath, 2);
+  if (status == false) {
+    wxLogError("File didn't save");
+  }
 
   // resets statusbar
   status_bar_log::PopText(0);

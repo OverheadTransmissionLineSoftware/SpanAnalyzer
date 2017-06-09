@@ -136,19 +136,23 @@ bool SpanAnalyzerApp::OnInit() {
   wxLog::SetActiveTarget(log);
 
   // manually initailizes application config defaults
-  wxFileName filename_config(filepath_config_);
-  config_.filepath_data = filename_config.GetPathWithSep() + "appdata.xml";
+  wxFileName filename;
+  filename = wxFileName(filepath_config_);
+  config_.filepath_data = filename.GetPathWithSep() + "appdata.xml";
   config_.level_log = wxLOG_Message;
   config_.perspective = "";
   config_.size_frame = wxSize(0, 0);
   config_.units = units::UnitSystem::kImperial;
 
-  // loads config settings from file
-  // any settings defined in the file will override the app defaults
+  // loads config settings from file, or saves a file if it doesn't exist
+  // on loading, any settings defined in the file will override the app defaults
   // filehandler handles all logging
-  wxFileName path;
-  path = filepath_config_;
-  FileHandler::LoadConfigFile(filepath_config_, config_);
+  filename = wxFileName(filepath_config_);
+  if (filename.Exists() == true) {
+    FileHandler::LoadConfigFile(filepath_config_, config_);
+  } else {
+    FileHandler::SaveConfigFile(filepath_config_, config_);
+  }
 
   // sets log level specified in app config
   wxLog::SetLogLevel(config_.level_log);
@@ -156,32 +160,27 @@ bool SpanAnalyzerApp::OnInit() {
     wxLog::SetVerbose(true);
   }
 
-  // checks if data file exists, creates one if not
-  path = config_.filepath_data;
-  if (path.Exists() == false) {
-    // logs
-    wxLogError("Applicaton data file could not be located. Setting to "
-               "application default.");
-
-    // defines default data file path and updates config
-    path = wxFileName(filename_config.GetPath(), "appdata", "xml");
-    config_.filepath_data = path.GetFullPath();
-
-    // saves new data file if default file doesn't already exist
-    if (path.Exists() == false) {
-      FileHandler::SaveAppData(config_.filepath_data, data_, config_.units);
-    }
-  }
-
-  // loads application data file
+  // loads app data from file, or saves a file if it doesn't exist
   // filehandler handles all logging
-  const int status_data = FileHandler::LoadAppData(config_.filepath_data,
-                                                   config_.units, data_);
-  if ((status_data == -1) || (status_data == 1)) {
-    // notifies user of error
-    wxString message = config_.filepath_data + "  --  "
-              "Application data file contains error(s). Check logs.";
-    wxMessageBox(message);
+  filename = wxFileName(config_.filepath_data);
+  if (filename.Exists() == true) {
+    // loads application data file
+    const int status_data = FileHandler::LoadAppData(config_.filepath_data,
+                                                     config_.units, data_);
+    if ((status_data == -1) || (status_data == 1)) {
+      // notifies user of error
+      wxString message = config_.filepath_data + "  --  "
+                "Application data file contains error(s). Check logs.";
+      wxMessageBox(message);
+    }
+  } else {
+    // logs
+    std::string message = "Applicaton data file doesn't exist. Creating a new "
+                          "file.";
+    wxLogError(message.c_str());
+
+    // saves new data file
+    FileHandler::SaveAppData(config_.filepath_data, data_, config_.units);
   }
 
   // loads a document if defined in command line
