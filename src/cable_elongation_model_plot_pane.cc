@@ -30,6 +30,8 @@ CableElongationModelPlotPane::CableElongationModelPlotPane(
     wxWindow* parent, wxView* view)
     : PlotPane2d(parent) {
   view_ = view;
+
+  plot_.set_zoom_factor_fitted(1.2);
 }
 
 CableElongationModelPlotPane::~CableElongationModelPlotPane() {

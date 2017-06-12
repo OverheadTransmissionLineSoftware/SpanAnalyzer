@@ -29,6 +29,7 @@ ProfilePlotPane::ProfilePlotPane(wxWindow* parent, wxView* view)
   view_ = view;
 
   plot_.set_ratio_aspect(10);
+  plot_.set_zoom_factor_fitted(1.2);
 }
 
 ProfilePlotPane::~ProfilePlotPane() {
