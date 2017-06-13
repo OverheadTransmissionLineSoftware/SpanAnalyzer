@@ -104,49 +104,28 @@ class SpanCommand : public wxCommand {
 
  private:
   /// \brief Does the delete span command.
-  /// \param[in] iter
-  ///   The iterator position to the spans list.
   /// \return The success status.
-  /// This function will copy the document span to the command before it is
-  /// deleted.
-  bool DoDelete(const std::list<Span>::const_iterator& iter);
+  bool DoDelete();
 
   /// \brief Does the insert span command.
-  /// \param[in] iter
-  ///   The iterator position to the spans list.
   /// \param[in] node
   ///   The xml node of the span.
   /// \return The success status.
-  /// This function will also set the span to an invalid state after it has
-  /// been inserted into the document.
-  bool DoInsert(const std::list<Span>::const_iterator& iter,
-                const wxXmlNode* node);
+  bool DoInsert(const wxXmlNode* node);
 
   /// \brief Does the modify span command.
-  /// \param[in] iter
-  ///   The iterator position to the spans list.
   /// \param[in] node
   ///   The xml node of the span.
   /// \return The success status.
-  /// This function will switch the document span with the command span.
-  bool DoModify(const std::list<Span>::const_iterator& iter,
-                const wxXmlNode* node);
+  bool DoModify(const wxXmlNode* node);
 
   /// \brief Does the move span down command.
-  /// \param[in] iter
-  ///   The iterator position to the spans list.
   /// \return The success status.
-  bool DoMoveDown(const std::list<Span>::const_iterator& iter);
+  bool DoMoveDown();
 
   /// \brief Does the move span up command.
-  /// \param[in] iter
-  ///   The iterator position to the spans list.
   /// \return The success status.
-  bool DoMoveUp(const std::list<Span>::const_iterator& iter);
-
-  /// \var data_
-  ///   The application data.
-  const SpanAnalyzerData* data_;
+  bool DoMoveUp();
 
   /// \var doc_
   ///   The document.
