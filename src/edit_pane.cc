@@ -545,6 +545,8 @@ void EditPane::OnItemMenu(wxTreeEvent& event) {
 /// This method deletes the treectrl items and re-inserts them. The treectrl
 /// item focus is not set.
 void EditPane::UpdateTreeCtrlSpanItems() {
+  treectrl_->Freeze();
+
   // gets information from document and treectrl
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
   const std::list<Span>& spans = doc->spans();
@@ -571,4 +573,6 @@ void EditPane::UpdateTreeCtrlSpanItems() {
       treectrl_->SetItemBold(item, false);
     }
   }
+
+  treectrl_->Thaw();
 }
