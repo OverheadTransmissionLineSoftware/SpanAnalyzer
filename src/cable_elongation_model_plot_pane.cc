@@ -91,6 +91,7 @@ void CableElongationModelPlotPane::ClearDataSets() {
   dataset_markers_.Clear();
   dataset_shell_.Clear();
   dataset_total_.Clear();
+  strains_.clear();
 }
 
 void CableElongationModelPlotPane::OnContextMenuSelect(wxCommandEvent& event) {
@@ -233,12 +234,10 @@ void CableElongationModelPlotPane::UpdateDataSetCable(
     LineDataSet2d& dataset) {
   // calculates points
   std::list<Point2d<double>> points;
-  const double strain_begin = -0.001;
-  const double strain_increment = 0.00002;
   const double kStrengthRated = *model.cable()->strength_rated();
-  for (int i = 0; i <= 550; i++) {
+  for (auto iter = strains_.cbegin(); iter != strains_.cend(); iter++) {
     Point2d<double> point;
-    point.x = strain_begin + (static_cast<double>(i) * strain_increment);
+    point.x = *iter;
     point.y = model.Load(type_component, point.x);
 
     // skips plot point if the load is beyond the cable rated strength
@@ -350,6 +349,8 @@ void CableElongationModelPlotPane::UpdatePlotDatasets() {
   // updates datasets
   UpdateDataSetAxes(0, 0.01, 0, *cable.strength_rated());
 
+  UpdateStrains(model);
+
   UpdateDataSetCable(model,
                      CableElongationModel::ComponentType::kCore,
                      dataset_core_);
@@ -419,4 +420,47 @@ void CableElongationModelPlotPane::UpdatePlotRenderers() {
   Point2d<float> point_offset = plot_.offset();
   point_offset.y = point_offset.y * (ratio_plot_prev / ratio_plot_new);
   plot_.set_offset(point_offset);
+}
+
+void CableElongationModelPlotPane::UpdateStrains(
+    const CableElongationModel& model) {
+  // gets the unloaded points
+  const double strain_unloaded_core =
+      model.Strain(CableElongationModel::ComponentType::kCore, 0);
+  const double strain_unloaded_shell =
+      model.Strain(CableElongationModel::ComponentType::kShell, 0);
+
+  // adds evenly spaced points for the plot range
+  const double kStrainBegin = -0.001;
+  const double kStrainIncrement = 0.00002;
+  const double kStrainEnd = 0.01000;
+  double strain = kStrainBegin;
+  while (strain < kStrainEnd) {
+    if ((strain < strain_unloaded_core) && (strain < strain_unloaded_shell)) {
+      // do nothing - strain is less than unloaded strains
+    } else {
+      // adds strain point
+      strains_.push_back(strain);
+    }
+
+    strain += kStrainIncrement;
+  }
+
+  // inserts core unloaded point
+  for (auto iter = strains_.begin(); iter != strains_.end(); iter++) {
+    const double& strain = *iter;
+    if (strain_unloaded_core < strain) {
+      strains_.insert(iter, strain_unloaded_core);
+      break;
+    }
+  }
+
+  // inserts shell unloaded point
+  for (auto iter = strains_.begin(); iter != strains_.end(); iter++) {
+    const double& strain = *iter;
+    if (strain_unloaded_shell < strain) {
+      strains_.insert(iter, strain_unloaded_shell);
+      break;
+    }
+  }
 }
