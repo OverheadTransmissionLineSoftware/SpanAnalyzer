@@ -161,14 +161,23 @@ const SagTensionAnalysisResult* AnalysisController::Result(
     return nullptr;
   }
 
+  // gets the results container to pull from
+  const std::vector<SagTensionAnalysisResult>* results = nullptr;
   if (condition == CableConditionType::kCreep) {
-    return &results_creep_.at(index_weathercase);
+    results = &results_creep_;
   } else if (condition == CableConditionType::kInitial) {
-    return &results_initial_.at(index_weathercase);
+    results = &results_initial_;
   } else if (condition == CableConditionType::kLoad) {
-    return &results_load_.at(index_weathercase);
+    results = &results_load_;
   } else {
     return nullptr;
+  }
+
+  // checks if result is valid before returning pointer
+  if (results->at(index_weathercase).condition == CableConditionType::kNull) {
+    return nullptr;
+  } else {
+    return &results->at(index_weathercase);
   }
 }
 

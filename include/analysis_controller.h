@@ -142,7 +142,8 @@ class AnalysisController {
   /// \param[in] condition
   ///   The condition.
   /// \return The sag-tension analysis result. If the index did not match up to
-  ///   the results list, a nullptr is returned.
+  ///   the results list, or the result is not a valid sag-tension result, a
+  ///   nullptr is returned.
   const SagTensionAnalysisResult* Result(
       const int& index_weathercase,
       const CableConditionType& condition) const;
