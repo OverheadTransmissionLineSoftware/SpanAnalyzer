@@ -123,8 +123,9 @@ bool SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
     const wxString content = ParseElementNodeWithContent(node);
 
     if (title == "filepath_data") {
-      config.filepath_data = content;
-      if (config.filepath_data.empty() == true) {
+      if (content.empty() == false) {
+        config.filepath_data = content;
+      } else {
         message = FileAndLineNumber(filepath, node)
                   + "Application data file isn't defined. Keeping default "
                   "setting.";
