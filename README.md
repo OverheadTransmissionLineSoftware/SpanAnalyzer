@@ -8,6 +8,11 @@ following platforms:
 * Linux (Ubuntu)
 * Windows 10
 
+## Branches
+The master branch contains stable code most of the time, but it's best to use
+specific [releases](https://github.com/OverheadTransmissionLineSoftware/SpanAnalyzer/releases)
+ of the master branch whenever possible.
+
 ## Get Involved!
 This is an open source effort to create transmission line design software. This
 software is released in the public domain (see

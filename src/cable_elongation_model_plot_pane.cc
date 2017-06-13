@@ -30,6 +30,8 @@ CableElongationModelPlotPane::CableElongationModelPlotPane(
     wxWindow* parent, wxView* view)
     : PlotPane2d(parent) {
   view_ = view;
+
+  plot_.set_zoom_factor_fitted(1.2);
 }
 
 CableElongationModelPlotPane::~CableElongationModelPlotPane() {
@@ -89,6 +91,7 @@ void CableElongationModelPlotPane::ClearDataSets() {
   dataset_markers_.Clear();
   dataset_shell_.Clear();
   dataset_total_.Clear();
+  strains_.clear();
 }
 
 void CableElongationModelPlotPane::OnContextMenuSelect(wxCommandEvent& event) {
@@ -138,7 +141,7 @@ void CableElongationModelPlotPane::OnMouse(wxMouseEvent& event) {
     wxPoint point_graphics;
     point_graphics.x = event.GetX();
     point_graphics.y = event.GetY();
-    const Point2d point_data = plot_.PointGraphicsToData(point_graphics);
+    const Point2d<float> point_data = plot_.PointGraphicsToData(point_graphics);
 
     // logs to status bar
     std::string str = "X="
@@ -229,13 +232,12 @@ void CableElongationModelPlotPane::UpdateDataSetCable(
     const CableElongationModel& model,
     const CableElongationModel::ComponentType& type_component,
     LineDataSet2d& dataset) {
-  std::list<Point2d> points;
-  const double strain_begin = -0.001;
-  const double strain_increment = 0.00002;
+  // calculates points
+  std::list<Point2d<double>> points;
   const double kStrengthRated = *model.cable()->strength_rated();
-  for (int i = 0; i <= 550; i++) {
-    Point2d point;
-    point.x = strain_begin + (static_cast<double>(i) * strain_increment);
+  for (auto iter = strains_.cbegin(); iter != strains_.cend(); iter++) {
+    Point2d<double> point;
+    point.x = *iter;
     point.y = model.Load(type_component, point.x);
 
     // skips plot point if the load is beyond the cable rated strength
@@ -248,8 +250,8 @@ void CableElongationModelPlotPane::UpdateDataSetCable(
   for (auto iter = points.cbegin(); iter != std::prev(points.cend(), 1);
        iter++) {
     // gets current and next point in the list
-    const Point2d& p0 = *iter;
-    const Point2d& p1 = *(std::next(iter, 1));
+    const Point2d<double>& p0 = *iter;
+    const Point2d<double>& p1 = *(std::next(iter, 1));
 
     // creates a line
     Line2d* line = new Line2d();
@@ -265,28 +267,41 @@ void CableElongationModelPlotPane::UpdateDataSetCable(
 void CableElongationModelPlotPane::UpdateDataSetMarker(
     const CableElongationModel& model,
     const SagTensionAnalysisResult* result) {
-  Circle2d* circle = nullptr;
+  // calculates points
+  Point2d<double> point;
+  std::list<Point2d<double>> points;
 
-  circle = new Circle2d();
-  circle->center.y = result->tension_average_core;
-  circle->center.x = model.Strain(CableElongationModel::ComponentType::kCore,
-                                  circle->center.y);
-  circle->radius = 3;
-  dataset_markers_.Add(circle);
+  point.y = result->tension_average_core;
+  point.x = model.Strain(CableElongationModel::ComponentType::kCore, point.y);
+  points.push_back(point);
 
-  circle = new Circle2d();
-  circle->center.y = result->tension_average_shell;
-  circle->center.x = model.Strain(CableElongationModel::ComponentType::kShell,
-                                  circle->center.y);
-  circle->radius = 3;
-  dataset_markers_.Add(circle);
+  point.y = result->tension_average_shell;
+  point.x = model.Strain(CableElongationModel::ComponentType::kShell, point.y);
+  points.push_back(point);
 
-  circle = new Circle2d();
-  circle->center.y = result->tension_average;
-  circle->center.x = model.Strain(CableElongationModel::ComponentType::kCombined,
-                                  circle->center.y);
-  circle->radius = 3;
-  dataset_markers_.Add(circle);
+  point.y = result->tension_average;
+  point.x = model.Strain(CableElongationModel::ComponentType::kCombined,
+                         point.y);
+  points.push_back(point);
+
+  // updates marker circle dataset
+  for (auto iter = points.cbegin(); iter != points.cend(); iter++) {
+    const Point2d<double>& point = *iter;
+
+    // skips plot point if the load is beyond the maximum strain or cable rated
+    // strength
+    if ((0.01 < point.x) || (*model.cable()->strength_rated() < point.y)) {
+      continue;
+    }
+
+    // creates a circle and adds to dataset
+    Circle2d* circle = new Circle2d();
+    circle->radius = 3;
+    circle->center.x = static_cast<float>(point.x);
+    circle->center.y = static_cast<float>(point.y);
+
+    dataset_markers_.Add(circle);
+  }
 }
 
 void CableElongationModelPlotPane::UpdatePlotDatasets() {
@@ -324,7 +339,7 @@ void CableElongationModelPlotPane::UpdatePlotDatasets() {
   const Span* span = doc->SpanAnalysis();
 
   SagTensionCable cable;
-  cable.set_cable_base(span->linecable.cable);
+  cable.set_cable_base(span->linecable.cable());
 
   CableElongationModel model;
   model.set_cable(&cable);
@@ -333,6 +348,8 @@ void CableElongationModelPlotPane::UpdatePlotDatasets() {
 
   // updates datasets
   UpdateDataSetAxes(0, 0.01, 0, *cable.strength_rated());
+
+  UpdateStrains(model);
 
   UpdateDataSetCable(model,
                      CableElongationModel::ComponentType::kCore,
@@ -400,7 +417,50 @@ void CableElongationModelPlotPane::UpdatePlotRenderers() {
   const double ratio_plot_new =  1 / (y_range / x_range);
   plot_.set_ratio_aspect(ratio_plot_new);
 
-  Point2d point_offset = plot_.offset();
+  Point2d<float> point_offset = plot_.offset();
   point_offset.y = point_offset.y * (ratio_plot_prev / ratio_plot_new);
   plot_.set_offset(point_offset);
+}
+
+void CableElongationModelPlotPane::UpdateStrains(
+    const CableElongationModel& model) {
+  // gets the unloaded points
+  const double strain_unloaded_core =
+      model.Strain(CableElongationModel::ComponentType::kCore, 0);
+  const double strain_unloaded_shell =
+      model.Strain(CableElongationModel::ComponentType::kShell, 0);
+
+  // adds evenly spaced points for the plot range
+  const double kStrainBegin = -0.001;
+  const double kStrainIncrement = 0.00002;
+  const double kStrainEnd = 0.01000;
+  double strain = kStrainBegin;
+  while (strain < kStrainEnd) {
+    if ((strain < strain_unloaded_core) && (strain < strain_unloaded_shell)) {
+      // do nothing - strain is less than unloaded strains
+    } else {
+      // adds strain point
+      strains_.push_back(strain);
+    }
+
+    strain += kStrainIncrement;
+  }
+
+  // inserts core unloaded point
+  for (auto iter = strains_.begin(); iter != strains_.end(); iter++) {
+    const double& strain = *iter;
+    if (strain_unloaded_core < strain) {
+      strains_.insert(iter, strain_unloaded_core);
+      break;
+    }
+  }
+
+  // inserts shell unloaded point
+  for (auto iter = strains_.begin(); iter != strains_.end(); iter++) {
+    const double& strain = *iter;
+    if (strain_unloaded_shell < strain) {
+      strains_.insert(iter, strain_unloaded_shell);
+      break;
+    }
+  }
 }

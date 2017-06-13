@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -17,11 +17,11 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -84,7 +84,9 @@
     <ClCompile Include="..\..\external\AppCommon\src\graphics\renderer_2d.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\graphics\text_data_set_2d.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\graphics\text_renderer_2d.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\units\cable_constraint_unit_converter.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\units\cable_unit_converter.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\units\line_cable_unit_converter.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\units\weather_load_case_unit_converter.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\widgets\error_message_dialog.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\widgets\report_table.cc" />
@@ -177,7 +179,9 @@
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\renderer_2d.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\text_data_set_2d.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\graphics\text_renderer_2d.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\units\cable_constraint_unit_converter.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\units\cable_unit_converter.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\units\line_cable_unit_converter.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\units\weather_load_case_unit_converter.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\error_message_dialog.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\report_table.h" />

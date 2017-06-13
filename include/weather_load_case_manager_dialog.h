@@ -34,7 +34,13 @@ class WeatherLoadCaseManagerDialog : public wxDialog {
   void DeleteExtraWeathercases(const std::list<WeatherLoadCase*>* list_keep,
                                std::list<WeatherLoadCase*>* list_master);
 
-  /// \brief Determines if the weathercase is referenced.
+  /// \brief Determines if the weathercase is referemced by analysis filters.
+  /// \param[in] name
+  ///   The name to check.
+  /// \return If the weathercase is referenced by analysis filters.
+  bool IsReferencedByAnalysisFilters(const std::string& name) const;
+
+  /// \brief Determines if the weathercase is referenced by the document.
   /// \param[in] name
   ///   The name to check.
   /// \return If the weathercase is referenced by the document.

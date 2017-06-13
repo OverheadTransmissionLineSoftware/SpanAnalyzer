@@ -32,8 +32,9 @@
 ///
 /// \par DATA
 ///
-/// The application holds general data that is loaded on startup. This information is
-/// not stored in the application document, but it is referenced. This includes:
+/// The application holds general data that is loaded on startup. This
+/// information is not stored in the application document, but it can
+/// be referenced. This includes:
 ///   - cables
 ///   - weathercases
 class SpanAnalyzerApp : public wxApp {
@@ -76,12 +77,6 @@ class SpanAnalyzerApp : public wxApp {
   /// \return The application data.
   SpanAnalyzerData* data();
 
-  /// \brief Gets the application directory.
-  /// \return The application directory.
-  /// In debug mode, this will return the working directory. Otherwise, it will
-  /// return the directory that the application executable is stored.
-  wxString directory();
-
   /// \brief Gets the main application frame.
   /// \return The main application frame.
   SpanAnalyzerFrame* frame();
@@ -98,12 +93,6 @@ class SpanAnalyzerApp : public wxApp {
   /// \var data_
   ///   The application data.
   SpanAnalyzerData data_;
-
-  /// \var directory_
-  ///   The reference directory of the application. The debug switch will set
-  ///   this to the working directory, otherwise it will be the directory that
-  ///   the application is located.
-  std::string directory_;
 
   /// \var filepath_config_
   ///   The config file that is loaded on application startup. This is specified
@@ -130,9 +119,6 @@ static const wxCmdLineEntryDesc cmd_line_desc [] = {
       wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP},
   {wxCMD_LINE_OPTION, nullptr, "config", "the application configuration file",
       wxCMD_LINE_VAL_STRING},
-  {wxCMD_LINE_SWITCH, nullptr, "debug", "loads application resources from the "
-      "working directory instead of application directory",
-      wxCMD_LINE_VAL_NONE},
   {wxCMD_LINE_PARAM, nullptr, nullptr, "file",
       wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL},
 

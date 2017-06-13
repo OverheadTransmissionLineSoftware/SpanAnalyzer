@@ -170,7 +170,9 @@ void EditPane::AddSpan() {
 
   SpanCommand* command = new SpanCommand(SpanCommand::kNameInsert);
   command->set_index(doc->spans().size());
-  command->set_span(span);
+
+  wxXmlNode* node = SpanCommand::SaveSpanToXml(span);
+  command->set_node_span(node);
 
   doc->GetCommandProcessor()->Submit(command);
 
@@ -190,11 +192,13 @@ void EditPane::CopySpan(const wxTreeItemId& id) {
 
   // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
-  const int index = std::distance(doc->spans().cbegin(), data->iter()) + 1;
 
   SpanCommand* command = new SpanCommand(SpanCommand::kNameInsert);
+  const int index = std::distance(doc->spans().cbegin(), data->iter()) + 1;
   command->set_index(index);
-  command->set_span(span);
+
+  wxXmlNode* node = SpanCommand::SaveSpanToXml(span);
+  command->set_node_span(node);
 
   doc->GetCommandProcessor()->Submit(command);
 
@@ -270,11 +274,13 @@ void EditPane::EditSpan(const wxTreeItemId& id) {
 
   // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
-  const int index = std::distance(doc->spans().cbegin(), data->iter());
 
   SpanCommand* command = new SpanCommand(SpanCommand::kNameModify);
+  const int index = std::distance(doc->spans().cbegin(), data->iter());
   command->set_index(index);
-  command->set_span(span);
+
+  wxXmlNode* node = SpanCommand::SaveSpanToXml(span);
+  command->set_node_span(node);
 
   doc->GetCommandProcessor()->Submit(command);
 
@@ -539,6 +545,8 @@ void EditPane::OnItemMenu(wxTreeEvent& event) {
 /// This method deletes the treectrl items and re-inserts them. The treectrl
 /// item focus is not set.
 void EditPane::UpdateTreeCtrlSpanItems() {
+  treectrl_->Freeze();
+
   // gets information from document and treectrl
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
   const std::list<Span>& spans = doc->spans();
@@ -565,4 +573,6 @@ void EditPane::UpdateTreeCtrlSpanItems() {
       treectrl_->SetItemBold(item, false);
     }
   }
+
+  treectrl_->Thaw();
 }

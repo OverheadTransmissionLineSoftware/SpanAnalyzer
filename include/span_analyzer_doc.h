@@ -104,8 +104,8 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \brief Appends a span.
   /// \param[in] span
   ///   The span being added.
-  /// \return An iterator for the added span.
-  std::list<Span>::const_iterator AppendSpan(const Span& span);
+  /// \return Success status.
+  bool AppendSpan(const Span& span);
 
   /// \brief Converts the document between unit styles.
   /// \param[in] system
@@ -129,22 +129,28 @@ class SpanAnalyzerDoc : public wxDocument {
                          const units::UnitSystem& system_to);
 
   /// \brief Deletes a span.
-  /// \param[in] element
-  ///   The span element.
-  /// \return The next span element in the list.
+  /// \param[in] index
+  ///   The index.
+  /// \return Success status.
   /// This function may trigger an update if it matches the selected span.
-  std::list<Span>::const_iterator DeleteSpan(
-      const std::list<Span>::const_iterator& element);
+  bool DeleteSpan(const int& index);
 
   /// \brief Inserts a span before the specified position.
-  /// \param[in] position
-  ///   The position to insert the span before.
+  /// \param[in] index
+  ///   The list index to insert before.
   /// \param[in] span
   ///   The span that is inserted.
-  /// \return An iterator for the inserted span.
-  std::list<Span>::const_iterator InsertSpan(
-      const std::list<Span>::const_iterator& position,
-      const Span& span);
+  /// \return Success status.
+  bool InsertSpan(const int& index, const Span& span);
+
+  /// \brief Determines if the index is valid.
+  /// \param[in] index
+  ///   The list index.
+  /// \param[in] is_included_end
+  ///   An indicator that tells if an extra index corresponding to the end
+  ///   iterator position is valid.
+  /// \return If the index is valid.
+  bool IsValidIndex(const int& index, const bool& is_included_end) const;
 
   /// \brief Loads the document.
   /// \param[in] stream
@@ -152,14 +158,22 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return The input stream.
   wxInputStream& LoadObject(wxInputStream& stream);
 
+  /// \brief Replaces the span.
+  /// \param[in] index
+  ///   The index.
+  /// \param[in] span
+  ///   The span with modifications.
+  /// \return Success status.
+  /// This function may trigger an update if it matches the selected span.
+  bool ModifySpan(const int& index, const Span& span);
+
   /// \brief Moves the span position.
-  /// \param[in] element
-  ///   The span element.
-  /// \param[in] position
-  ///   The position the span is to be moved before.
-  void MoveSpan(
-      const std::list<Span>::const_iterator& element,
-      const std::list<Span>::const_iterator& position);
+  /// \param[in] index_from
+  ///   The index item to move.
+  /// \param[in] index_to
+  ///   The index to move before.
+  /// \return Success status.
+  bool MoveSpan(const int& index_from, const int& index_to);
 
   /// \brief Initializes the document.
   /// \param[in] path
@@ -171,17 +185,6 @@ class SpanAnalyzerDoc : public wxDocument {
   /// kept, this function is just being added to and treated as an
   /// initialization constructor.
   virtual bool OnCreate(const wxString& path, long flags);
-
-  /// \brief Replaces the span.
-  /// \param[in] element
-  ///   The span element to replace.
-  /// \param[in] span
-  ///   The span that is replacing the span element.
-  /// This function maintains the same memory address for the existing span
-  /// element.
-  /// This function may trigger an update if it matches the selected span.
-  void ReplaceSpan(const std::list<Span>::const_iterator& element,
-                   const Span& span);
 
   /// \brief Gets a set of filtered results.
   /// \param[in] index_weathercase

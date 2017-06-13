@@ -103,13 +103,13 @@ class SpanEditorDialog : public wxDialog {
   /// Controls are disabled, but the values are not cleared.
   void ToggleRulingSpanModeControls();
 
-  /// \brief Transfers data that isn't tied to a validator from the span object
-  ///   to the window.
-  void TransferCustomDataToWindow();
-
   /// \brief Transfers data that isn't tied to a validator from the window to
   ///   the span object.
   void TransferCustomDataFromWindow();
+
+  /// \brief Transfers data that isn't tied to a validator from the span object
+  ///   to the window.
+  void TransferCustomDataToWindow();
 
   /// \var cablefiles_
   ///   The cable files.

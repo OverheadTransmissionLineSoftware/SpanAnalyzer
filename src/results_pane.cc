@@ -77,8 +77,6 @@ void ResultsPane::Update(wxObject* hint) {
     UpdateReportData();
     table_->Refresh();
   }
-
-  table_->set_formatting_column(0, 200, wxLIST_FORMAT_LEFT);
 }
 
 void ResultsPane::OnChoiceFilterGroup(wxCommandEvent& event) {
@@ -120,7 +118,6 @@ void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
   // updates the report data and table
   UpdateReportData();
   table_->Refresh();
-  table_->set_formatting_column(0, 200, wxLIST_FORMAT_LEFT);
 }
 
 void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
@@ -257,15 +254,51 @@ void ResultsPane::UpdateReportDataCatenary(
   data_.rows.clear();
 
   // fills column headers
-  data_.headers.push_back("Weathercase");
-  data_.headers.push_back("Condition");
-  data_.headers.push_back("H");
-  data_.headers.push_back("w");
-  data_.headers.push_back("H/w");
-  data_.headers.push_back("Sag");
-  data_.headers.push_back("L");
-  data_.headers.push_back("Ls");
-  data_.headers.push_back("Swing");
+  ReportColumnHeader header;
+  header.title = "Weathercase";
+  header.format = wxLIST_FORMAT_LEFT;
+  header.width = 200;
+  data_.headers.push_back(header);
+
+  header.title = "Condition";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "H";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "w";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "H/w";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Sag";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "L";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Ls";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Swing";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
 
   // checks if results has any data
   if (results->empty() == true) {
@@ -359,15 +392,51 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
   data_.rows.clear();
 
   // fills column headers
-  data_.headers.push_back("Weathercase");
-  data_.headers.push_back("Condition");
-  data_.headers.push_back("Ts");
-  data_.headers.push_back("Tv");
-  data_.headers.push_back("A");
-  data_.headers.push_back("");
-  data_.headers.push_back("Ts");
-  data_.headers.push_back("Tv");
-  data_.headers.push_back("A");
+  ReportColumnHeader header;
+  header.title = "Weathercase";
+  header.format = wxLIST_FORMAT_LEFT;
+  header.width = 200;
+  data_.headers.push_back(header);
+
+  header.title = "Condition";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Ts";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Tv";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "A";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Ts";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Tv";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "A";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
 
   // checks if results has any data
   if (results->empty() == true) {
@@ -460,13 +529,41 @@ void ResultsPane::UpdateReportDataSagTension(
   data_.rows.clear();
 
   // fills column headers
-  data_.headers.push_back("Weathercase");
-  data_.headers.push_back("Condition");
-  data_.headers.push_back("Wv");
-  data_.headers.push_back("Wt");
-  data_.headers.push_back("Wr");
-  data_.headers.push_back("H");
-  data_.headers.push_back("H/w");
+  ReportColumnHeader header;
+  header.title = "Weathercase";
+  header.format = wxLIST_FORMAT_LEFT;
+  header.width = 200;
+  data_.headers.push_back(header);
+
+  header.title = "Condition";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Wv";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Wt";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Wr";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "H";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "H/w";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
 
   // checks if results has any data
   if (results->empty() == true) {
@@ -539,10 +636,26 @@ void ResultsPane::UpdateReportDataTensionDistribution(
   data_.rows.clear();
 
   // fills column headers
-  data_.headers.push_back("Weathercase");
-  data_.headers.push_back("Condition");
-  data_.headers.push_back("Hs");
-  data_.headers.push_back("Hc");
+  ReportColumnHeader header;
+  header.title = "Weathercase";
+  header.format = wxLIST_FORMAT_LEFT;
+  header.width = 200;
+  data_.headers.push_back(header);
+
+  header.title = "Condition";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Hs";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Hc";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
 
   // checks if results has any data
   if (results->empty() == true) {

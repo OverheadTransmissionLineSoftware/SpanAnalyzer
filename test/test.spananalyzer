@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <span_analyzer_doc version="1" units="Imperial">
   <spans>
-    <span version="1" name="ACSR Drake, 12000MWT, 1200RS">
+    <span version="1">
+      <name>ACSR Drake, 12000MWT, 1200RS</name>
       <type>Deadend</type>
       <line_cable version="1">
         <cable>ACSR Drake</cable>
@@ -17,6 +18,7 @@
         </vector_3d>
         <weather_load_case name="stretch_creep">0-0-60</weather_load_case>
         <weather_load_case name="stretch_load">0.50-8-0</weather_load_case>
+        <connections format="structure_index,attach_index"/>
       </line_cable>
       <vector_3d version="1" name="spacing_catenary">
         <x units="ft">1200.0</x>
@@ -24,7 +26,8 @@
         <z units="ft">0.0</z>
       </vector_3d>
     </span>
-    <span version="1" name="ACSR Drake, 14000MWT, 1200RS">
+    <span version="1">
+      <name>ACSR Drake, 14000MWT, 1200RS</name>
       <type>RulingSpan</type>
       <line_cable version="1">
         <cable>ACSR Drake</cable>
@@ -40,6 +43,7 @@
         </vector_3d>
         <weather_load_case name="stretch_creep">0-0-60</weather_load_case>
         <weather_load_case name="stretch_load">0.50-8-0</weather_load_case>
+        <connections format="structure_index,attach_index"/>
       </line_cable>
       <vector_3d version="1" name="spacing_catenary">
         <x units="ft">1500.0</x>

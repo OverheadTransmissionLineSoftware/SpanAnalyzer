@@ -84,6 +84,27 @@ void WeatherLoadCaseManagerDialog::DeleteExtraWeathercases(
   }
 }
 
+bool WeatherLoadCaseManagerDialog::IsReferencedByAnalysisFilters(
+    const std::string& name) const {
+  // gets document
+  const SpanAnalyzerData* data = wxGetApp().data();
+
+  // scans all analysis filters to see if weathercase is referenced
+  for (auto iter = data->groups_filters.cbegin();
+       iter != data->groups_filters.cend(); iter++) {
+    const AnalysisFilterGroup& group = *iter;
+
+    for (auto it = group.filters.cbegin(); it != group.filters.cend(); it++) {
+      const AnalysisFilter& filter = *it;
+      if (filter.weathercase->description == name) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 bool WeatherLoadCaseManagerDialog::IsReferencedByDocument(
     const std::string& name) const {
   // gets document
@@ -96,15 +117,15 @@ bool WeatherLoadCaseManagerDialog::IsReferencedByDocument(
   for (auto iter = doc->spans().cbegin(); iter != doc->spans().cend(); iter++) {
     const Span& span = *iter;
 
-    if (span.linecable.constraint.case_weather->description == name) {
+    if (span.linecable.constraint().case_weather->description == name) {
       return true;
     }
 
-    if (span.linecable.weathercase_stretch_creep->description == name) {
+    if (span.linecable.weathercase_stretch_creep()->description == name) {
       return true;
     }
 
-    if (span.linecable.weathercase_stretch_load->description == name) {
+    if (span.linecable.weathercase_stretch_load()->description == name) {
       return true;
     }
   }
@@ -181,8 +202,19 @@ void WeatherLoadCaseManagerDialog::OnButtonDelete(wxCommandEvent& event) {
   auto iter = std::next(weathercases_modified_.begin(), index);
   WeatherLoadCase* weathercase = *iter;
 
+  // checks if weathercase is referenced by analysis filters
+  bool is_referenced = IsReferencedByAnalysisFilters(weathercase->description);
+  if (is_referenced == true) {
+    std::string message = weathercase->description + "  --  "
+                          "Weathercase is currently referenced by analysis "
+                          "filters.";
+    wxMessageBox(message);
+
+    return;
+  }
+
   // checks if the weathercase is referenced by the document
-  bool is_referenced = IsReferencedByDocument(weathercase->description);
+  is_referenced = IsReferencedByDocument(weathercase->description);
   if (is_referenced == true) {
     std::string message = weathercase->description + "  --  "
                           "Weathercase is currently referenced by the open "

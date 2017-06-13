@@ -73,6 +73,7 @@ void SpanEditorDialog::InitChoiceControls() {
   choice->Append("Support");
   choice->Append("Horizontal");
   choice->Append("H/w");
+  choice->Append("Length");
   choice->Append("Sag");
 
   // populates constraint weathercase choice control
@@ -199,19 +200,16 @@ void SpanEditorDialog::SetUnitsStaticText(const units::UnitSystem& units) {
 
 void SpanEditorDialog::SetValidators() {
   // variables used for creating validators
-  wxString name;
   int style = 0;
-  double* value_num = nullptr;
   int precision = 0;
   wxTextCtrl* textctrl = nullptr;
 
   // constraint limit
   precision = 1;
-  value_num = &span_modified_.linecable.constraint.limit;
   style = wxNUM_VAL_NO_TRAILING_ZEROES;
   textctrl = XRCCTRL(*this, "textctrl_constraint_limit", wxTextCtrl);
   textctrl->SetValidator(
-      wxFloatingPointValidator<double>(precision, value_num, style));
+      wxFloatingPointValidator<double>(precision, nullptr, style));
 
   // constraint spacing-horizontal
   precision = 1;
@@ -357,12 +355,18 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
   choice = XRCCTRL(*this, "choice_cable", wxChoice);
   index = choice->GetSelection();
   if (index == wxNOT_FOUND) {
-    span_modified_.linecable.cable = nullptr;
+    span_modified_.linecable.set_cable(nullptr);
   } else {
     str = choice->GetString(index);
     auto iter = std::next(cablefiles_->cbegin(), index);
-    span_modified_.linecable.cable = &(*iter)->cable;
+    span_modified_.linecable.set_cable(&(*iter)->cable);
   }
+
+  // transfers constraint limit
+  CableConstraint constraint;
+  textctrl = XRCCTRL(*this, "textctrl_constraint_limit", wxTextCtrl);
+  str = textctrl->GetValue();
+  str.ToDouble(&constraint.limit);
 
   // transfers constraint type
   choice = XRCCTRL(*this, "choice_constraint_type", wxChoice);
@@ -370,28 +374,28 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
   str = choice->GetString(index);
 
   if (str == "Support") {
-    span_modified_.linecable.constraint.type_limit =
-        CableConstraint::LimitType::kSupportTension;
+    constraint.type_limit = CableConstraint::LimitType::kSupportTension;
   } else if (str == "Horizontal") {
-    span_modified_.linecable.constraint.type_limit =
-        CableConstraint::LimitType::kHorizontalTension;
+    constraint.type_limit = CableConstraint::LimitType::kHorizontalTension;
   } else if (str == "H/w") {
-    span_modified_.linecable.constraint.type_limit =
-        CableConstraint::LimitType::kCatenaryConstant;
+    constraint.type_limit = CableConstraint::LimitType::kCatenaryConstant;
+  } else if (str == "Length") {
+    constraint.type_limit = CableConstraint::LimitType::kLength;
   } else if (str == "Sag") {
-    span_modified_.linecable.constraint.type_limit =
-        CableConstraint::LimitType::kSag;
+    constraint.type_limit = CableConstraint::LimitType::kSag;
+  } else {
+    constraint.type_limit = CableConstraint::LimitType::kNull;
   }
 
   // transfers constraint weathercase
   choice = XRCCTRL(*this, "choice_constraint_weathercase", wxChoice);
   index = choice->GetSelection();
   if (index == wxNOT_FOUND) {
-    span_modified_.linecable.constraint.case_weather = nullptr;
+    constraint.case_weather = nullptr;
   } else {
     auto iter = std::next(weathercases_->cbegin(), index);
     const WeatherLoadCase* weathercase = *iter;
-    span_modified_.linecable.constraint.case_weather = weathercase;
+    constraint.case_weather = weathercase;
   }
 
   // transfers constraint condition
@@ -401,18 +405,16 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
     // can't set enum class to invalid, do nothing
   } else {
     str = choice->GetString(index);
-
     if (str == "Initial") {
-      span_modified_.linecable.constraint.condition =
-          CableConditionType::kInitial;
+      constraint.condition = CableConditionType::kInitial;
     } else if (str == "Load") {
-      span_modified_.linecable.constraint.condition =
-          CableConditionType::kLoad;
+      constraint.condition = CableConditionType::kLoad;
     } else if (str == "Creep") {
-      span_modified_.linecable.constraint.condition =
-          CableConditionType::kCreep;
+      constraint.condition = CableConditionType::kCreep;
     }
   }
+
+  span_modified_.linecable.set_constraint(constraint);
 
   // transfers constraint spacing
   Vector3d spacing(0, 0, 0);
@@ -433,38 +435,38 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
     spacing.set_z(0);
   }
 
-  span_modified_.linecable.spacing_attachments_ruling_span = spacing;
+  span_modified_.linecable.set_spacing_attachments_ruling_span(spacing);
 
   // transfers stretch-load weathercase
   choice = XRCCTRL(*this, "choice_stretch_load_weathercase", wxChoice);
   index = choice->GetSelection();
   if (index == wxNOT_FOUND) {
-    span_modified_.linecable.weathercase_stretch_load = nullptr;
+    span_modified_.linecable.set_weathercase_stretch_load(nullptr);
   } else {
     auto iter = std::next(weathercases_->cbegin(), index);
     const WeatherLoadCase* weathercase = *iter;
-    span_modified_.linecable.weathercase_stretch_load = weathercase;
+    span_modified_.linecable.set_weathercase_stretch_load(weathercase);
   }
 
   // transfers stretch-creep weathercase
   choice = XRCCTRL(*this, "choice_stretch_creep_weathercase", wxChoice);
   index = choice->GetSelection();
   if (index == wxNOT_FOUND) {
-    span_modified_.linecable.weathercase_stretch_creep = nullptr;
+    span_modified_.linecable.set_weathercase_stretch_creep(nullptr);
   } else {
     auto iter = std::next(weathercases_->cbegin(), index);
     const WeatherLoadCase* weathercase = *iter;
-    span_modified_.linecable.weathercase_stretch_creep = weathercase;
+    span_modified_.linecable.set_weathercase_stretch_creep(weathercase);
   }
 
   // transfers catenary spacing
   if (span_modified_.type == Span::Type::kDeadendSpan) {
-    spacing = span_modified_.linecable.spacing_attachments_ruling_span;
+    spacing = span_modified_.linecable.spacing_attachments_ruling_span();
   } else if (span_modified_.type == Span::Type::kRulingSpan) {
     wxCheckBox* checkbox = XRCCTRL(*this, "checkbox_match_constraint_geometry",
                                    wxCheckBox);
     if (checkbox->IsChecked() == true) {
-      spacing = span_modified_.linecable.spacing_attachments_ruling_span;
+      spacing = span_modified_.linecable.spacing_attachments_ruling_span();
     } else {
       spacing = Vector3d(0, 0, 0);
       textctrl = XRCCTRL(*this, "textctrl_catenary_spacing_horizontal",
@@ -503,31 +505,38 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
   }
 
   // transfers cable
-  if (span_modified_.linecable.cable != nullptr) {
+  if (span_modified_.linecable.cable() != nullptr) {
     choice = XRCCTRL(*this, "choice_cable", wxChoice);
-    index = choice->FindString(span_modified_.linecable.cable->name, true);
+    index = choice->FindString(span_modified_.linecable.cable()->name, true);
     choice->SetSelection(index);
   }
 
   // transfers constraint type
   choice = XRCCTRL(*this, "choice_constraint_type", wxChoice);
   CableConstraint::LimitType type_limit =
-      span_modified_.linecable.constraint.type_limit;
+      span_modified_.linecable.constraint().type_limit;
   if (type_limit == CableConstraint::LimitType::kSupportTension) {
     choice->SetSelection(0);
   } else if (type_limit == CableConstraint::LimitType::kHorizontalTension) {
     choice->SetSelection(1);
   } else if (type_limit == CableConstraint::LimitType::kCatenaryConstant) {
     choice->SetSelection(2);
-  } else if (type_limit == CableConstraint::LimitType::kSag) {
+  } else if (type_limit == CableConstraint::LimitType::kLength) {
     choice->SetSelection(3);
+  } else if (type_limit == CableConstraint::LimitType::kSag) {
+    choice->SetSelection(4);
   }
 
+  // transfers constraint limit
+  textctrl = XRCCTRL(*this, "textctrl_constraint_limit", wxTextCtrl);
+  str = wxString::FromDouble(span_modified_.linecable.constraint().limit, 1);
+  textctrl->SetValue(str);
+
   // transfers constraint weathercase
-  if (span_modified_.linecable.constraint.case_weather != nullptr) {
+  if (span_modified_.linecable.constraint().case_weather != nullptr) {
     choice = XRCCTRL(*this, "choice_constraint_weathercase", wxChoice);
     index = choice->FindString(
-        span_modified_.linecable.constraint.case_weather->description,
+        span_modified_.linecable.constraint().case_weather->description,
         true);
     choice->SetSelection(index);
   }
@@ -535,7 +544,7 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
   // transfers constraint condition
   choice = XRCCTRL(*this, "choice_constraint_condition", wxChoice);
   CableConditionType type_condition =
-      span_modified_.linecable.constraint.condition;
+      span_modified_.linecable.constraint().condition;
   if (type_condition == CableConditionType::kInitial) {
     choice->SetSelection(0);
   } else if (type_condition == CableConditionType::kLoad) {
@@ -548,7 +557,7 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
   textctrl = XRCCTRL(*this, "textctrl_constraint_spacing_horizontal",
                      wxTextCtrl);
   str = wxString::FromDouble(
-      span_modified_.linecable.spacing_attachments_ruling_span.x(),
+      span_modified_.linecable.spacing_attachments_ruling_span().x(),
       1);
   textctrl->SetValue(str);
 
@@ -557,32 +566,32 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
                       wxTextCtrl);
   if (span_modified_.type == Span::Type::kDeadendSpan) {
     str = wxString::FromDouble(
-        span_modified_.linecable.spacing_attachments_ruling_span.z(),
+        span_modified_.linecable.spacing_attachments_ruling_span().z(),
         1);
     textctrl->SetValue(str);
   }
 
   // transfers stretch-load weathercase
-  if (span_modified_.linecable.weathercase_stretch_load != nullptr) {
+  if (span_modified_.linecable.weathercase_stretch_load() != nullptr) {
     choice = XRCCTRL(*this, "choice_stretch_load_weathercase", wxChoice);
     index = choice->FindString(
-        span_modified_.linecable.weathercase_stretch_load->description,
+        span_modified_.linecable.weathercase_stretch_load()->description,
         true);
     choice->SetSelection(index);
   }
 
   // transfers stretch-creep weathercase
-  if (span_modified_.linecable.weathercase_stretch_creep != nullptr) {
+  if (span_modified_.linecable.weathercase_stretch_creep() != nullptr) {
     choice = XRCCTRL(*this, "choice_stretch_creep_weathercase", wxChoice);
     index = choice->FindString(
-        span_modified_.linecable.weathercase_stretch_creep->description,
+        span_modified_.linecable.weathercase_stretch_creep()->description,
         true);
     choice->SetSelection(index);
   }
 
   // transfers catenary geometry
   const Vector3d& spacing_constraint =
-      span_modified_.linecable.spacing_attachments_ruling_span;
+      span_modified_.linecable.spacing_attachments_ruling_span();
   const Vector3d& spacing_catenary = span_modified_.spacing_catenary;
 
   const bool is_match =

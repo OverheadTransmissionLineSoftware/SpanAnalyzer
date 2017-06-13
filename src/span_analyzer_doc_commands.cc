@@ -7,6 +7,7 @@
 
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
+#include "span_xml_handler.h"
 
 // These are the string definitions for the various command types.
 const std::string SpanCommand::kNameDelete = "Delete Span";
@@ -17,189 +18,223 @@ const std::string SpanCommand::kNameMoveUp = "Move Span Up";
 
 SpanCommand::SpanCommand(const std::string& name)
     : wxCommand(true, name) {
+  doc_ = wxGetApp().GetDocument();
   index_ = -1;
+  node_do_ = nullptr;
+  node_undo_ = nullptr;
 }
 
 SpanCommand::~SpanCommand() {
+  delete node_do_;
+  delete node_undo_;
+}
+
+bool SpanCommand::CreateSpanFromXml(const wxXmlNode* node, Span& span) {
+  // clears span
+  span = Span();
+
+  // gets application data
+  const SpanAnalyzerData* data = wxGetApp().data();
+
+  // parses node into span
+  const bool status_node = SpanXmlHandler::ParseNode(node, "",
+                                                     &data->cablefiles,
+                                                     &data->weathercases,
+                                                     span);
+  if (status_node == false) {
+    wxString message =
+        SpanXmlHandler::FileAndLineNumber("", node)
+        + "Invalid span. Skipping.";
+    wxLogError(message);
+  }
+
+  return status_node;
 }
 
 bool SpanCommand::Do() {
-  const std::string name = GetName();
-
-  // gets spans list from document
-  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
-
-  // checks index to see if a valid iterator is possible
-  const int kSize = doc->spans().size();
-  if ((index_ < 0) || (kSize < index_)) {
-    wxLogError("Invalid span index. Aborting command.");
-    return false;
-  }
-
-  // gets iterator
-  std::list<Span>::const_iterator iter;
-  iter = std::next(doc->spans().cbegin(), index_);
+  bool status = false;
 
   // selects based on command name
+  const std::string name = GetName();
   if (name == kNameDelete) {
-    // checks that index isn't end of list
-    if (index_ == kSize) {
-      wxLogError("Invalid span index. Aborting delete command.");
+    // caches span to xml and then does command
+    if (doc_->IsValidIndex(index_, false) == false) {
+      wxLogError("Invalid span index. Aborting command.");
       return false;
     }
-
-    DoDelete(iter);
+    const Span& span = *std::next(doc_->spans().cbegin(), index_);
+    node_undo_ = SaveSpanToXml(span);
+    status = DoDelete();
   } else if (name == kNameInsert) {
-    DoInsert(iter);
+    // does command
+    status = DoInsert(node_do_);
   } else if (name == kNameModify) {
-    // checks that index isn't end of list
-    if (index_ == kSize) {
-      wxLogError("Invalid span index. Aborting modify command.");
+    // caches span to xml and then does command
+    if (doc_->IsValidIndex(index_, false) == false) {
+      wxLogError("Invalid span index. Aborting command.");
       return false;
     }
-
-    DoModify(iter);
+    const Span& span = *std::next(doc_->spans().cbegin(), index_);
+    node_undo_ = SaveSpanToXml(span);
+    status = DoModify(node_do_);
   } else if (name == kNameMoveDown) {
-    // checks that index isn't the last span
-    if (index_ == kSize - 1) {
-      wxLogError("Invalid span index. Aborting move down command.");
-      return false;
-    }
-
-    DoMoveDown(iter);
+    // does command
+    status = DoMoveDown();
   } else if (name == kNameMoveUp) {
-    // checks that index isn't the first span
-    if (index_ == 0) {
-      wxLogError("Invalid span index. Aborting move up command.");
-      return false;
-    }
-
-    DoMoveUp(iter);
+    // does command
+    status = DoMoveUp();
   } else {
+    status = false;
+
     wxLogError("Invalid command. Aborting.");
     return false;
   }
 
-  // posts a view update
-  UpdateHint hint(HintType::kSpansEdit);
-  doc->UpdateAllViews(nullptr, &hint);
+  // checks if command succeeded
+  if (status == true) {
+    // posts a view update
+    UpdateHint hint(HintType::kSpansEdit);
+    doc_->UpdateAllViews(nullptr, &hint);
+  } else {
+    // logs error
+    wxLogError("Do command failed.");
+  }
 
-  return true;
+  return status;
+}
+
+wxXmlNode* SpanCommand::SaveSpanToXml(const Span& span) {
+  units::UnitSystem units = wxGetApp().config()->units;
+
+  return SpanXmlHandler::CreateNode(span, "", units);;
 }
 
 bool SpanCommand::Undo() {
-  const std::string name = GetName();
-
-  // gets spans list from document
-  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
-
-  // checks index to see if a valid iterator is possible
-  const int kSize = doc->spans().size();
-  if ((index_ < 0) || (kSize < index_)) {
-    wxLogError("Invalid span index. Aborting command.");
-    return false;
-  }
-
-  // gets iterator
-  std::list<Span>::const_iterator iter;
-  iter = std::next(doc->spans().cbegin(), index_);
+  bool status = false;
 
   // selects based on command name
+  const std::string name = GetName();
   if (name == kNameDelete) {
-    DoInsert(iter);
+    status = DoInsert(node_undo_);
   } else if (name == kNameInsert) {
-    DoDelete(iter);
+    status = DoDelete();
   } else if (name == kNameModify) {
-    DoModify(iter);
+    status = DoModify(node_undo_);
   } else if (name == kNameMoveDown) {
-    DoMoveUp(iter);
+    status = DoMoveUp();
   } else if (name == kNameMoveUp) {
-    DoMoveDown(iter);
+    status = DoMoveDown();
   } else {
+    status = false;
+
     wxLogError("Invalid command. Aborting.");
     return false;
   }
 
-  // posts a view update
-  UpdateHint hint(HintType::kSpansEdit);
-  doc->UpdateAllViews(nullptr, &hint);
+  // checks if command succeeded
+  if (status == true) {
+    // posts a view update
+    UpdateHint hint(HintType::kSpansEdit);
+    doc_->UpdateAllViews(nullptr, &hint);
+  } else {
+    // logs error
+    wxLogError("Undo command failed.");
+  }
 
-  return true;
+  return status;
 }
 
 int SpanCommand::index() const {
   return index_;
 }
 
+const wxXmlNode* SpanCommand::node_span() const {
+  return node_do_;
+}
+
 void SpanCommand::set_index(const int& index) {
   index_ = index;
 }
 
-void SpanCommand::set_span(const Span& span) {
-  span_ = span;
+void SpanCommand::set_node_span(const wxXmlNode* node_span) {
+  node_do_ = node_span;
 }
 
-Span SpanCommand::span() const {
-  return span_;
-}
-
-bool SpanCommand::DoDelete(const std::list<Span>::const_iterator& iter) {
-  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
-
-  // copies span into command to store
-  span_ = *iter;
+bool SpanCommand::DoDelete() {
+  // checks index
+  if (doc_->IsValidIndex(index_, false) == false) {
+    wxLogError("Invalid index. Aborting delete command.");
+    return false;
+  }
 
   // deletes from document
-  doc->DeleteSpan(iter);
-
-  return true;
+  return doc_->DeleteSpan(index_);
 }
 
-bool SpanCommand::DoInsert(const std::list<Span>::const_iterator& iter) {
-  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
+bool SpanCommand::DoInsert(const wxXmlNode* node) {
+  // checks index
+  if (doc_->IsValidIndex(index_, true) == false) {
+    wxLogError("Invalid index. Aborting insert command.");
+    return false;
+  }
+
+  // builds span from xml node
+  Span span;
+  CreateSpanFromXml(node, span);
 
   // inserts span to document
-  doc->InsertSpan(iter, span_);
-
-  // invalidates the command span
-  span_ = Span();
-
-  return true;
+  return doc_->InsertSpan(index_, span);
 }
 
-bool SpanCommand::DoModify(const std::list<Span>::const_iterator& iter) {
-  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
+bool SpanCommand::DoModify(const wxXmlNode* node) {
+  // checks index
+  if (doc_->IsValidIndex(index_, false) == false) {
+    wxLogError("Invalid index. Aborting modify command.");
+    return false;
+  }
 
-  // swaps the span from the document and the command
-  Span span_tmp = *iter;
-  doc->ReplaceSpan(iter, span_);
-  span_ = span_tmp;
+  // builds span from xml node
+  Span span;
+  bool status = CreateSpanFromXml(node, span);
+  if (status == false) {
+    return false;
+  }
 
-  return true;
+  // modifies the document
+  return doc_->ModifySpan(index_, span);
 }
 
-bool SpanCommand::DoMoveDown(const std::list<Span>::const_iterator& iter) {
-  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
+bool SpanCommand::DoMoveDown() {
+  // checks index, and checks against the last valid index
+  const int kSizeSpans = doc_->spans().size();
+  if ((doc_->IsValidIndex(index_, false) == false)
+      || (index_ == kSizeSpans - 1)) {
+    wxLogError("Invalid index. Aborting move down command.");
+    return false;
+  }
 
   // swaps the spans in the document
-  auto iter_to = std::next(iter, 2);
-  doc->MoveSpan(iter, iter_to);
+  bool status = doc_->MoveSpan(index_, index_ + 2);
 
   // increments the command index
   index_ = index_ + 1;
 
-  return true;
+  return status;
 }
 
-bool SpanCommand::DoMoveUp(const std::list<Span>::const_iterator& iter) {
-  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
+bool SpanCommand::DoMoveUp() {
+  // checks index, and checks against the first valid index
+  if ((doc_->IsValidIndex(index_, false) == false)
+      || (index_ == 0)) {
+    wxLogError("Invalid index. Aborting move up command.");
+    return false;
+  }
 
   // swaps the spans in the document
-  auto iter_to = std::prev(iter, 1);
-  doc->MoveSpan(iter, iter_to);
+  bool status = doc_->MoveSpan(index_, index_ - 1);
 
   // decrements the command index
   index_ = index_ - 1;
 
-  return true;
+  return status;
 }

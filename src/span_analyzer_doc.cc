@@ -19,13 +19,12 @@ SpanAnalyzerDoc::SpanAnalyzerDoc() {
 SpanAnalyzerDoc::~SpanAnalyzerDoc() {
 }
 
-std::list<Span>::const_iterator SpanAnalyzerDoc::AppendSpan(
-    const Span& span) {
+bool SpanAnalyzerDoc::AppendSpan(const Span& span) {
   spans_.push_back(span);
 
   Modify(true);
 
-  return std::prev(spans_.end());
+  return true;
 }
 
 void SpanAnalyzerDoc::ConvertUnitStyle(const units::UnitSystem& system,
@@ -64,11 +63,13 @@ void SpanAnalyzerDoc::ConvertUnitSystem(const units::UnitSystem& system_from,
   processor->ClearCommands();
 }
 
+bool SpanAnalyzerDoc::DeleteSpan(const int& index) {
+  // checks index
+  if (IsValidIndex(index, false) == false) {
+    return false;
+  }
 
-std::list<Span>::const_iterator SpanAnalyzerDoc::DeleteSpan(
-    const std::list<Span>::const_iterator& element) {
   // gets iterator with edit capability
-  const unsigned int index = std::distance(spans_.cbegin(), element);
   auto iter = std::next(spans_.begin(), index);
 
   // determines if span matches analysis span
@@ -78,7 +79,7 @@ std::list<Span>::const_iterator SpanAnalyzerDoc::DeleteSpan(
   }
 
   // deletes from span list
-  const auto iter_next = spans_.erase(iter);
+  spans_.erase(iter);
 
   // marks as modified
   Modify(true);
@@ -92,22 +93,36 @@ std::list<Span>::const_iterator SpanAnalyzerDoc::DeleteSpan(
     UpdateAllViews(nullptr, &hint);
   }
 
-  return iter_next;
+  return true;
 }
 
-std::list<Span>::const_iterator SpanAnalyzerDoc::InsertSpan(
-      const std::list<Span>::const_iterator& position,
-      const Span& span) {
+bool SpanAnalyzerDoc::InsertSpan(const int& index, const Span& span) {
+  // checks index
+  if (IsValidIndex(index, true) == false) {
+    return false;
+  }
+
   // gets iterator with edit capability
-  const unsigned int index = std::distance(spans_.cbegin(), position);
   auto iter = std::next(spans_.begin(), index);
 
-  // adds span to vector
+  // inserts span
   spans_.insert(iter, span);
 
   Modify(true);
 
-  return std::prev(position);
+  return true;
+}
+
+bool SpanAnalyzerDoc::IsValidIndex(const int& index,
+                                   const bool& is_included_end) const {
+  const int kSizeSpans = spans_.size();
+  if ((0 <= index) && (index < kSizeSpans)) {
+    return true;
+  } else if ((index == kSizeSpans) && (is_included_end == true)) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
@@ -228,38 +243,13 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
   return stream;
 }
 
-void SpanAnalyzerDoc::MoveSpan(
-      const std::list<Span>::const_iterator& element,
-      const std::list<Span>::const_iterator& position) {
-  // gets iterators with edit capability
-  const unsigned int index_element =
-      std::distance(spans_.cbegin(), element);
-  auto iter_element = std::next(spans_.begin(), index_element);
+bool SpanAnalyzerDoc::ModifySpan(const int& index, const Span& span) {
+  // checks index
+  if (IsValidIndex(index, false) == false) {
+    return false;
+  }
 
-  const unsigned int index_position =
-      std::distance(spans_.cbegin(), position);
-  auto iter_position = std::next(spans_.begin(), index_position);
-
-  spans_.splice(iter_position, spans_, iter_element);
-
-  Modify(true);
-
-  return;
-}
-
-bool SpanAnalyzerDoc::OnCreate(const wxString& path, long flags) {
-  // initializes analysis controller
-  controller_analysis_.set_weathercases(&wxGetApp().data()->weathercases);
-
-  // calls base class function
-  return wxDocument::OnCreate(path, flags);
-}
-
-void SpanAnalyzerDoc::ReplaceSpan(
-    const std::list<Span>::const_iterator& element,
-    const Span& span) {
   // gets iterator with edit capability
-  const unsigned int index = std::distance(spans_.cbegin(), element);
   auto iter = std::next(spans_.begin(), index);
 
   // determines if span matches analysis span
@@ -268,7 +258,7 @@ void SpanAnalyzerDoc::ReplaceSpan(
     is_selected = true;
   }
 
-  // replaces span in list
+  // modifies span in list
   *iter = Span(span);
 
   // sets document flag as modified
@@ -281,6 +271,37 @@ void SpanAnalyzerDoc::ReplaceSpan(
     UpdateHint hint(HintType::kSpansEdit);
     UpdateAllViews(nullptr, &hint);
   }
+
+  return true;
+}
+
+bool SpanAnalyzerDoc::MoveSpan(const int& index_from, const int& index_to) {
+  // checks indexes
+  if (IsValidIndex(index_from, false) == false) {
+    return false;
+  }
+
+  if (IsValidIndex(index_to, true) == false) {
+    return false;
+  }
+
+  // gets iterators with edit capability
+  auto iter_from = std::next(spans_.begin(), index_from);
+  auto iter_to = std::next(spans_.begin(), index_to);
+
+  spans_.splice(iter_to, spans_, iter_from);
+
+  Modify(true);
+
+  return true;
+}
+
+bool SpanAnalyzerDoc::OnCreate(const wxString& path, long flags) {
+  // initializes analysis controller
+  controller_analysis_.set_weathercases(&wxGetApp().data()->weathercases);
+
+  // calls base class function
+  return wxDocument::OnCreate(path, flags);
 }
 
 const SagTensionAnalysisResult* SpanAnalyzerDoc::Result(

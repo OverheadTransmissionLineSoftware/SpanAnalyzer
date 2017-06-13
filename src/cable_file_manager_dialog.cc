@@ -106,7 +106,7 @@ bool CableFileManagerDialog::IsReferencedByDocument(
   // scans all spans to see if cable name is referenced
   for (auto iter = doc->spans().cbegin(); iter != doc->spans().cend(); iter++) {
     const Span& span = *iter;
-    if (span.linecable.cable->name == name) {
+    if (span.linecable.cable()->name == name) {
       return true;
     }
   }

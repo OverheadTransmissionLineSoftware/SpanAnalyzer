@@ -89,6 +89,11 @@ class CableElongationModelPlotPane : public PlotPane2d {
   /// This includes re-calculating the dataset.
   void UpdatePlotRenderers() override;
 
+  /// \brief Updates the strain values.
+  /// \param[in] model
+  ///   The cable elongation model.
+  void UpdateStrains(const CableElongationModel& model);
+
   /// \var dataset_axis_lines_
   ///   The dataset for the axis lines.
   LineDataSet2d dataset_axis_lines_;
@@ -112,6 +117,10 @@ class CableElongationModelPlotPane : public PlotPane2d {
   /// \var dataset_total_
   ///   The dataset for the entire cable.
   LineDataSet2d dataset_total_;
+
+  /// \var strains_
+  ///   The strain values to calculate points for.
+  std::list<double> strains_;
 
   /// \var view_
   ///   The view.
