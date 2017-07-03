@@ -20,7 +20,8 @@ enum class HintType {
   kCablesEdit,
   kPreferencesEdit,
   kSpansEdit,
-  kWeathercasesEdit,
+  kViewSelect,
+  kWeathercasesEdit
 };
 
 /// \par OVERVIEW

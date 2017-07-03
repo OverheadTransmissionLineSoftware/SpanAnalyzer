@@ -7,6 +7,7 @@
 #include <list>
 
 #include "wx/docview.h"
+#include "wx/notebook.h"
 
 #include "cable_elongation_model_plot_pane.h"
 #include "edit_pane.h"
@@ -58,6 +59,11 @@ class SpanAnalyzerView : public wxView {
   ///   The device context.
   /// This function is called by wxWidgets.
   virtual void OnDraw(wxDC *dc);
+
+  /// \brief Handles the notebook page change event.
+  /// \param[in] event
+  ///   The event.
+  void OnNotebookPageChange(wxBookCtrlEvent& event);
 
   /// \brief Handles updating of the view.
   /// \param[in] sender
@@ -113,6 +119,10 @@ class SpanAnalyzerView : public wxView {
   ///   The filter index that is currently selected.
   int index_filter_;
 
+  /// \var notebook_plot_
+  ///   The notebook that contains the plots.
+  wxNotebook* notebook_plot_;
+
   /// \var pane_cable_
   ///   The cable elongation model plot pane.
   CableElongationModelPlotPane* pane_cable_;
@@ -132,6 +142,8 @@ class SpanAnalyzerView : public wxView {
   /// \brief This allows wxWidgets to create this class dynamically as part of
   ///   the docview framework.
   wxDECLARE_DYNAMIC_CLASS(SpanAnalyzerView);
+
+  DECLARE_EVENT_TABLE()
 };
 
 #endif //  OTLS_SPANANALYZER_SPANANALYZERVIEW_H_

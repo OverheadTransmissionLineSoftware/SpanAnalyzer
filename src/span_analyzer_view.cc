@@ -10,6 +10,10 @@
 
 IMPLEMENT_DYNAMIC_CLASS(SpanAnalyzerView, wxView)
 
+BEGIN_EVENT_TABLE(SpanAnalyzerView, wxView)
+  EVT_NOTEBOOK_PAGE_CHANGED(wxID_ANY, SpanAnalyzerView::OnNotebookPageChange)
+END_EVENT_TABLE()
+
 SpanAnalyzerView::SpanAnalyzerView() {
 }
 
@@ -77,8 +81,16 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   info = wxAuiPaneInfo();
   info.Name("Plot");
   info.CenterPane();
-  pane_profile_ = new ProfilePlotPane(frame, this);
-  manager->AddPane(pane_profile_, info);
+  notebook_plot_ = new wxNotebook(frame, wxID_ANY, wxDefaultPosition,
+                                  wxDefaultSize, wxNB_TOP);
+
+  pane_profile_ = new ProfilePlotPane(notebook_plot_, this);
+  notebook_plot_->AddPage(pane_profile_, "Profile");
+
+  pane_cable_ = new CableElongationModelPlotPane(notebook_plot_, this);
+  notebook_plot_->AddPage(pane_cable_, "Cable Model");
+
+  manager->AddPane(notebook_plot_, info);
 
   info = wxAuiPaneInfo();
   info.Name("Results");
@@ -102,18 +114,6 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   info.MinSize(150, 350);
   pane_edit_ = new EditPane(frame, this);
   manager->AddPane(pane_edit_, info);
-
-  info = wxAuiPaneInfo();
-  info.Name("Cable");
-  info.BestSize(400, 400);
-  info.Caption("Cable Elongation Model");
-  info.CloseButton(false);
-  info.Float();
-  info.Floatable(true);
-  info.Hide();
-  info.MinSize(150, 150);
-  pane_cable_ = new CableElongationModelPlotPane(frame, this);
-  manager->AddPane(pane_cable_, info);
 
   // loads perspective and updates
   std::string perspective = wxGetApp().config()->perspective;
@@ -148,16 +148,14 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
   wxGetApp().config()->perspective = manager->SavePerspective();
 
   // detaches panes and un-init manager
-  manager->DetachPane(pane_cable_);
+  manager->DetachPane(notebook_plot_);
   manager->DetachPane(pane_edit_);
-  manager->DetachPane(pane_profile_);
   manager->DetachPane(pane_results_);
   manager->Update();
 
   // destroys panes
-  pane_cable_->Destroy();
+  notebook_plot_->Destroy();
   pane_edit_->Destroy();
-  pane_profile_->Destroy();
   pane_results_->Destroy();
 
   // resets frame to document-less state
@@ -181,6 +179,27 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
 void SpanAnalyzerView::OnDraw(wxDC *dc) {
 }
 
+void SpanAnalyzerView::OnNotebookPageChange(wxBookCtrlEvent& event) {
+  // skips if old page is invalid
+  // this is usually only true on initialization
+  if (event.GetOldSelection() == wxNOT_FOUND) {
+    return;
+  }
+
+  // creates an update hint for the plot pane
+  UpdateHint hint(HintType::kViewSelect);
+
+  // gets page index and sends update to corresponding pane
+  const int index_page = event.GetSelection();
+  if (index_page == 0) {
+    pane_profile_->Update(&hint);
+  } else if (index_page == 1) {
+    pane_cable_->Update(&hint);
+  } else {
+    wxLogError("Invalid page selection");
+  }
+}
+
 void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
   // passes to base class first
   wxView::OnUpdate(sender, hint);
@@ -191,8 +210,14 @@ void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
   // don't need to distinguish sender - all frames are grouped under one view
   pane_edit_->Update(hint);
   pane_results_->Update(hint);
-  pane_profile_->Update(hint);
-  pane_cable_->Update(hint);
+
+  // determines which pane is displayed in the notebook
+  const int index_page = notebook_plot_->GetSelection();
+  if (index_page == 0) {
+    pane_profile_->Update(hint);
+  } else if (index_page == 1) {
+    pane_cable_->Update(hint);
+  }
 
   // resets status bar
   status_bar_log::PopText(0);

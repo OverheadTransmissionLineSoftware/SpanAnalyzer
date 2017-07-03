@@ -75,6 +75,10 @@ void ProfilePlotPane::Update(wxObject* hint) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
     RenderPlot(dc_buf);
+  } else if (hint_update->type() == HintType::kViewSelect) {
+    UpdatePlotDatasets();
+    UpdatePlotRenderers();
+    RenderPlot(dc_buf);
   } else if (hint_update->type() == HintType::kWeathercasesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();

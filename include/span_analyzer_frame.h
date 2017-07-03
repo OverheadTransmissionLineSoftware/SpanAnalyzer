@@ -78,11 +78,6 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   ///   The event.
   void OnMenuHelpAbout(wxCommandEvent& event);
 
-  /// \brief Handles the view->cable model menu click event.
-  /// \param[in] event
-  ///   The event.
-  void OnMenuViewCableModel(wxCommandEvent& event);
-
   /// \brief Handles the view->log menu click event.
   /// \param[in] event
   ///   The event.

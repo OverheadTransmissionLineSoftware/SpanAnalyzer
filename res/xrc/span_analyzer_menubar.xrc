@@ -63,10 +63,6 @@
     </object>
     <object class="wxMenu" name="menu_view">
       <label>View</label>
-      <object class="wxMenuItem" name="menuitem_view_cable_model">
-        <label>Cable Model</label>
-        <help></help>
-      </object>
       <object class="wxMenuItem" name="menuitem_view_log">
         <label>Log</label>
         <help></help>
