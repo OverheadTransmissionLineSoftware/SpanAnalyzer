@@ -68,6 +68,11 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   ///   The event.
   void OnMenuEditWeathercases(wxCommandEvent& event);
 
+  /// \brief Handles the file->page setup menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuFilePageSetup(wxCommandEvent& event);
+
   /// \brief Handles the file->preferences menu click event.
   /// \param[in] event
   ///   The event.

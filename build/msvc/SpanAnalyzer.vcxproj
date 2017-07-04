@@ -119,6 +119,7 @@
     <ClCompile Include="..\..\src\span_analyzer_doc_commands.cc" />
     <ClCompile Include="..\..\src\span_analyzer_doc_xml_handler.cc" />
     <ClCompile Include="..\..\src\span_analyzer_frame.cc" />
+    <ClCompile Include="..\..\src\span_analyzer_printout.cc" />
     <ClCompile Include="..\..\src\span_analyzer_view.cc" />
     <ClCompile Include="..\..\src\span_editor_dialog.cc" />
     <ClCompile Include="..\..\src\span_unit_converter.cc" />
@@ -216,6 +217,7 @@
     <ClInclude Include="..\..\include\span_analyzer_doc_commands.h" />
     <ClInclude Include="..\..\include\span_analyzer_doc_xml_handler.h" />
     <ClInclude Include="..\..\include\span_analyzer_frame.h" />
+    <ClInclude Include="..\..\include\span_analyzer_printout.h" />
     <ClInclude Include="..\..\include\span_analyzer_view.h" />
     <ClInclude Include="..\..\include\span_editor_dialog.h" />
     <ClInclude Include="..\..\include\span_unit_converter.h" />

@@ -32,6 +32,10 @@ class SpanAnalyzerView : public wxView {
   ///   a nullptr is returned.
   const AnalysisFilter* AnalysisFilterActive() const;
 
+  /// \brief Gets the graphics plot rect.
+  /// \return The graphics plot rect.
+  wxRect GraphicsPlotRect() const;
+
   /// \brief Gets the weathercase index for the filter.
   /// \param[in] filter
   ///   The analysis filter.
@@ -54,6 +58,10 @@ class SpanAnalyzerView : public wxView {
   /// This function is called by wxWidgets.
   virtual bool OnCreate(wxDocument *doc, long flags);
 
+  /// \brief Creates a printout.
+  /// \return A printout.
+  virtual wxPrintout* OnCreatePrintout();
+
   /// \brief Handles drawing/rendering the view.
   /// \param[in] dc
   ///   The device context.
@@ -64,6 +72,16 @@ class SpanAnalyzerView : public wxView {
   /// \param[in] event
   ///   The event.
   void OnNotebookPageChange(wxBookCtrlEvent& event);
+
+  /// \brief Handles the print event.
+  /// \param[in] event
+  ///   The event.
+  void OnPrint(wxCommandEvent& event);
+
+  /// \brief Handles the print preview event.
+  /// \param[in] event
+  ///   The event.
+  void OnPrintPreview(wxCommandEvent& event);
 
   /// \brief Handles updating of the view.
   /// \param[in] sender

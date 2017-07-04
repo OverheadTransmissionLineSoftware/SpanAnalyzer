@@ -29,6 +29,20 @@
         <help></help>
       </object>
       <object class="separator" />
+      <object class="wxMenuItem" name="menuitem_file_pagesetup">
+        <label>Page Setup</label>
+        <help></help>
+      </object>
+      <object class="wxMenuItem" name="wxID_PREVIEW">
+        <label>Preview</label>
+        <help></help>
+      </object>
+      <object class="wxMenuItem" name="wxID_PRINT">
+        <label>Print</label>
+        <accel>Ctrl-P</accel>
+        <help></help>
+      </object>
+      <object class="separator" />
       <object class="wxMenuItem" name="menuitem_file_preferences">
         <label>Preferences</label>
         <help></help>

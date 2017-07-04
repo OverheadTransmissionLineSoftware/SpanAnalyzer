@@ -192,6 +192,9 @@
     <ClCompile Include="..\..\external\AppCommon\src\units\line_cable_unit_converter.cc">
       <Filter>Common Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\span_analyzer_printout.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\test\test.spananalyzer">
@@ -448,6 +451,9 @@
     </ClInclude>
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\units\line_cable_unit_converter.h">
       <Filter>Common Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\span_analyzer_printout.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

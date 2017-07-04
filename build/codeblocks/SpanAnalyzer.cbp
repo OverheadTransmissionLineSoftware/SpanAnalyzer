@@ -324,6 +324,9 @@
 		<Unit filename="../../include/span_analyzer_frame.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
+		<Unit filename="../../include/span_analyzer_printout.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
 		<Unit filename="../../include/span_analyzer_view.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
@@ -456,6 +459,9 @@
 			<Option virtualFolder="Source Files/" />
 		</Unit>
 		<Unit filename="../../src/span_analyzer_frame.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/span_analyzer_printout.cc">
 			<Option virtualFolder="Source Files/" />
 		</Unit>
 		<Unit filename="../../src/span_analyzer_view.cc">

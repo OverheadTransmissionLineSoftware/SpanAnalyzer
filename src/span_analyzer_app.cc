@@ -85,6 +85,8 @@ int SpanAnalyzerApp::OnExit() {
   FileHandler::SaveConfigFile(filepath_config_, config_);
 
   // cleans up allocated resources
+  delete config_.data_page;
+
   for (auto iter = data_.cablefiles.begin(); iter != data_.cablefiles.end();
        iter++) {
     const CableFile* cablefile = *iter;
@@ -138,6 +140,12 @@ bool SpanAnalyzerApp::OnInit() {
   // manually initailizes application config defaults
   wxFileName filename;
   filename = wxFileName(filepath_config_);
+  wxPrintData data_print;
+  data_print.SetOrientation(wxLANDSCAPE);
+  config_.data_page = new wxPageSetupDialogData();
+  config_.data_page->SetPrintData(data_print);
+  config_.data_page->SetMarginBottomRight(wxPoint(15, 15));
+  config_.data_page->SetMarginTopLeft(wxPoint(15, 15));
   config_.filepath_data = filename.GetPathWithSep() + "appdata.xml";
   config_.level_log = wxLOG_Message;
   config_.perspective = "";

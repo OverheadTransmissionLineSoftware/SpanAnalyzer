@@ -7,6 +7,7 @@
 #include <string>
 
 #include "models/base/units.h"
+#include "wx/cmndata.h"
 #include "wx/wx.h"
 
 /// \par OVERVIEW
@@ -14,6 +15,10 @@
 /// This struct stores the application configuration settings.
 struct SpanAnalyzerConfig {
  public:
+  /// \var data_page
+  ///   The page setup data for printing.
+  wxPageSetupDialogData* data_page;
+
   /// \var filepath_data
   ///   The file path for the application data.
   std::string filepath_data;
@@ -37,4 +42,4 @@ struct SpanAnalyzerConfig {
   units::UnitSystem units;
 };
 
-#endif //  OTLS_SPANANALYZER_SPANANALYZERCONFIG_H_
+#endif  // OTLS_SPANANALYZER_SPANANALYZERCONFIG_H_

@@ -6,6 +6,7 @@
 #include "appcommon/units/cable_unit_converter.h"
 #include "appcommon/units/weather_load_case_unit_converter.h"
 #include "wx/aboutdlg.h"
+#include "wx/printdlg.h"
 #include "wx/xrc/xmlres.h"
 
 #include "analysis_filter_manager_dialog.h"
@@ -14,6 +15,7 @@
 #include "preferences_dialog.h"
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
+#include "span_analyzer_printout.h"
 #include "span_analyzer_view.h"
 #include "weather_load_case_manager_dialog.h"
 #include "xpm/icon.xpm"
@@ -56,6 +58,7 @@ BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxDocParentFrame)
   EVT_MENU(XRCID("menuitem_edit_analysisfilters"), SpanAnalyzerFrame::OnMenuEditAnalysisFilters)
   EVT_MENU(XRCID("menuitem_edit_cables"), SpanAnalyzerFrame::OnMenuEditCables)
   EVT_MENU(XRCID("menuitem_edit_weathercases"), SpanAnalyzerFrame::OnMenuEditWeathercases)
+  EVT_MENU(XRCID("menuitem_file_pagesetup"), SpanAnalyzerFrame::OnMenuFilePageSetup)
   EVT_MENU(XRCID("menuitem_file_preferences"), SpanAnalyzerFrame::OnMenuFilePreferences)
   EVT_MENU(XRCID("menuitem_help_about"), SpanAnalyzerFrame::OnMenuHelpAbout)
   EVT_MENU(XRCID("menuitem_view_log"), SpanAnalyzerFrame::OnMenuViewLog)
@@ -188,6 +191,21 @@ void SpanAnalyzerFrame::OnMenuEditWeathercases(
     UpdateHint hint(HintType::kWeathercasesEdit);
     doc->UpdateAllViews(nullptr, &hint);
   }
+}
+
+void SpanAnalyzerFrame::OnMenuFilePageSetup(wxCommandEvent& event) {
+  // gets application page setup data
+  wxPageSetupDialogData* data_page = wxGetApp().config()->data_page;
+
+  // creates and shows dialog
+  //wxPageSetupDialogData data_page(data_print);
+  wxPageSetupDialog dialog(this, data_page);
+  if (dialog.ShowModal() != wxID_OK) {
+    return;
+  }
+
+  // updates print data
+  *data_page = dialog.GetPageSetupDialogData();
 }
 
 void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {

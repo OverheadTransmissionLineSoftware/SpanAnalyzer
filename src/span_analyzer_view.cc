@@ -7,10 +7,13 @@
 #include "wx/cmdproc.h"
 
 #include "span_analyzer_app.h"
+#include "span_analyzer_printout.h"
 
 IMPLEMENT_DYNAMIC_CLASS(SpanAnalyzerView, wxView)
 
 BEGIN_EVENT_TABLE(SpanAnalyzerView, wxView)
+  EVT_MENU(wxID_PREVIEW, SpanAnalyzerView::OnPrintPreview)
+  EVT_MENU(wxID_PRINT, SpanAnalyzerView::OnPrint)
   EVT_NOTEBOOK_PAGE_CHANGED(wxID_ANY, SpanAnalyzerView::OnNotebookPageChange)
 END_EVENT_TABLE()
 
@@ -34,6 +37,17 @@ const AnalysisFilter* SpanAnalyzerView::AnalysisFilterActive() const {
     auto iter = group_filters_->filters.cbegin();
     std::advance(iter, index_filter_);
     return &(*iter);
+  }
+}
+
+wxRect SpanAnalyzerView::GraphicsPlotRect() const {
+  // gets active plot pane rect
+  if (notebook_plot_->GetSelection() == 0) {
+    return pane_profile_->GetClientRect();
+  } else if (notebook_plot_->GetSelection() == 1) {
+    return pane_cable_->GetClientRect();
+  } else {
+    return wxRect();
   }
 }
 
@@ -176,7 +190,17 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
   return true;
 }
 
+wxPrintout* SpanAnalyzerView::OnCreatePrintout() {
+  return new SpanAnalyzerPrintout(this);
+}
+
 void SpanAnalyzerView::OnDraw(wxDC *dc) {
+  // draws the active plot pane
+  if (notebook_plot_->GetSelection() == 0) {
+    pane_profile_->RenderPlot(*dc);
+  } else if (notebook_plot_->GetSelection() == 1) {
+    pane_cable_->RenderPlot(*dc);;
+  }
 }
 
 void SpanAnalyzerView::OnNotebookPageChange(wxBookCtrlEvent& event) {
@@ -198,6 +222,50 @@ void SpanAnalyzerView::OnNotebookPageChange(wxBookCtrlEvent& event) {
   } else {
     wxLogError("Invalid page selection");
   }
+}
+
+void SpanAnalyzerView::OnPrint(wxCommandEvent& event) {
+  // gets printout
+  wxPrintout* printout = OnCreatePrintout();
+
+  // sets up printer and prints
+  wxPrintDialogData data_print(wxGetApp().config()->data_page->GetPrintData());
+  wxPrinter printer(&data_print);
+  if (printer.Print(wxGetApp().frame(), printout) == false) {
+    if (wxPrinter::GetLastError() == wxPRINTER_ERROR) {
+      wxLogError("There was a problem printing.");
+    }
+  }
+
+  delete printout;
+}
+
+void SpanAnalyzerView::OnPrintPreview(wxCommandEvent& event) {
+  // gets printouts
+  // one is for previewing, the other is for printing
+  wxPrintout* printout_view = OnCreatePrintout();
+  wxPrintout* printout_print = OnCreatePrintout();
+
+  // creates a print dialog data using app data
+  wxPrintDialogData data(wxGetApp().config()->data_page->GetPrintData());
+
+  // generates a print preview
+  wxPrintPreview* preview = new wxPrintPreview(printout_view, printout_print,
+                                               &data);
+  if (preview->IsOk() == false) {
+    delete preview;
+    wxLogError("There was a problem previewing.");
+    return;
+  }
+
+  // creates and shows a preview frame
+  wxPreviewFrame* frame = new wxPreviewFrame(preview, wxGetApp().frame(),
+                                             "Print Preview",
+                                             wxPoint(100, 100),
+                                             wxSize(850, 750));
+  frame->Centre(wxBOTH);
+  frame->Initialize();
+  frame->Show();
 }
 
 void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
