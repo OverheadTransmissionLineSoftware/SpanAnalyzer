@@ -30,7 +30,7 @@ ResultsPane::ResultsPane(wxWindow* parent, wxView* view) {
   wxChoice* choice = XRCCTRL(*this, "choice_report", wxChoice);
   choice->Append("Sag-Tension");
   choice->Append("Tension Distribution");
-  choice->Append("Catenary");
+  choice->Append("Catenary - Curve");
   choice->Append("Catenary - Endpoints");
   choice->Append("Length");
   choice->SetSelection(0);
@@ -107,7 +107,7 @@ void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
     type_report_ = ReportType::kSagTension;
   } else if (str == "Tension Distribution") {
     type_report_ = ReportType::kTensionDistribution;
-  } else if (str == "Catenary") {
+  } else if (str == "Catenary - Curve") {
     type_report_ = ReportType::kCatenary;
   } else if (str == "Catenary - Endpoints") {
     type_report_ = ReportType::kCatenaryEndpoints;
@@ -240,7 +240,7 @@ void ResultsPane::UpdateReportData() {
 
   // selects based on report type
   if (type_report_ == ReportType::kCatenary) {
-    UpdateReportDataCatenary(&results);
+    UpdateReportDataCatenaryCurve(&results);
   } else if (type_report_ == ReportType::kCatenaryEndpoints) {
     UpdateReportDataCatenaryEndpoints(&results);
   } else if (type_report_ == ReportType::kLength) {
@@ -252,7 +252,7 @@ void ResultsPane::UpdateReportData() {
   }
 }
 
-void ResultsPane::UpdateReportDataCatenary(
+void ResultsPane::UpdateReportDataCatenaryCurve(
     const std::list<const SagTensionAnalysisResult*>* results) {
   // initializes data
   data_.headers.clear();
@@ -372,12 +372,12 @@ void ResultsPane::UpdateReportDataCatenary(
 
     // adds L
     value = catenary.Length();
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToFormattedString(value, 2);
     row.values.push_back(str);
 
     // adds Ls
     value = catenary.LengthSlack();
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToFormattedString(value, 2);
     row.values.push_back(str);
 
     // adds swing
@@ -603,12 +603,12 @@ void ResultsPane::UpdateReportDataLength(
 
     // adds Lu
     value = result->length_unloaded;
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToFormattedString(value, 2);
     row.values.push_back(str);
 
     // adds Ll
     value = catenary.Length();
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToFormattedString(value, 2);
     row.values.push_back(str);
 
     // appends row to list

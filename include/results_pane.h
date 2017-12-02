@@ -69,7 +69,7 @@ class ResultsPane : public wxPanel {
   /// \brief Updates the report data with catenary results.
   /// \param[in] results
   ///   The filtered results from the document.
-  void UpdateReportDataCatenary(
+  void UpdateReportDataCatenaryCurve(
       const std::list<const SagTensionAnalysisResult*>* results);
 
   /// \brief Updates the report data with catenary endpoint results.
