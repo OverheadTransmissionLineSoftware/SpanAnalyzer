@@ -78,6 +78,7 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   // initializes cached references
   group_filters_ = nullptr;
   index_filter_ = -1;
+  target_render_ = RenderTarget::kScreen;
 
   // gets main application frame
   wxFrame* frame = dynamic_cast<wxFrame*>(wxGetApp().GetTopWindow());
@@ -195,12 +196,26 @@ wxPrintout* SpanAnalyzerView::OnCreatePrintout() {
 }
 
 void SpanAnalyzerView::OnDraw(wxDC *dc) {
-  // draws the active plot pane
+  // gets active plot pane
+  PlotPane2d* pane = nullptr;
   if (notebook_plot_->GetSelection() == 0) {
-    pane_profile_->RenderPlot(*dc);
+    pane = pane_profile_;
   } else if (notebook_plot_->GetSelection() == 1) {
-    pane_cable_->RenderPlot(*dc);;
+    pane = pane_cable_;
   }
+
+  // caches the current background
+  // alters the background to white if view is rendering to print
+  const wxBrush brush = pane->background();
+  if (target_render_ == RenderTarget::kPrint) {
+    pane->set_background(*wxWHITE_BRUSH);
+  }
+
+  // draws the active plot pane
+  pane->RenderPlot(*dc);
+
+  // resets to the original background
+  pane->set_background(brush);
 }
 
 void SpanAnalyzerView::OnNotebookPageChange(wxBookCtrlEvent& event) {
@@ -321,4 +336,13 @@ void SpanAnalyzerView::set_group_filters(const AnalysisFilterGroup* group) {
 
 void SpanAnalyzerView::set_index_filter(const int& index_filter) {
   index_filter_ = index_filter;
+}
+
+void SpanAnalyzerView::set_target_render(
+    const SpanAnalyzerView::RenderTarget& target_render) {
+  target_render_ = target_render;
+}
+
+SpanAnalyzerView::RenderTarget SpanAnalyzerView::target_render() const {
+  return target_render_;
 }

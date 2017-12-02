@@ -50,39 +50,39 @@ void ProfilePlotPane::Update(wxObject* hint) {
   if (hint_update == nullptr) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kAnalysisFilterGroupEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kAnalysisFilterGroupSelect) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kAnalysisFilterSelect) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kCablesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kPreferencesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kSpansEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kViewSelect) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kWeathercasesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    view_->OnDraw(&dc_buf);
   }
 }
 

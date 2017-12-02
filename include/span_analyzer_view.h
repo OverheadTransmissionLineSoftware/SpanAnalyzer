@@ -21,6 +21,15 @@
 /// displaying information and results from the SpanAnalyzerDoc.
 class SpanAnalyzerView : public wxView {
  public:
+  /// \par OVERVIEW
+  ///
+  /// This enum contains types of render targets.
+  enum class RenderTarget {
+    kNull,
+    kPrint,
+    kScreen
+  };
+
   /// \brief Constructor.
   SpanAnalyzerView();
 
@@ -128,6 +137,15 @@ class SpanAnalyzerView : public wxView {
   ///   The selected filter index.
   void set_index_filter(const int& index_filter);
 
+  /// \brief Sets the render target.
+  /// \param[in] target_render
+  ///   The render target.
+  void set_target_render(const RenderTarget& target_render);
+
+  /// \brief Gets the render target.
+  /// \return The render target.
+  RenderTarget target_render() const;
+
  private:
   /// \var group_filters_
   ///   The group of filters that is currently activated.
@@ -156,6 +174,10 @@ class SpanAnalyzerView : public wxView {
   /// \var pane_results_
   ///   The results pane.
   ResultsPane* pane_results_;
+
+  /// \var target_
+  ///   The render target.
+  RenderTarget target_render_;
 
   /// \brief This allows wxWidgets to create this class dynamically as part of
   ///   the docview framework.

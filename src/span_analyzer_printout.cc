@@ -51,11 +51,17 @@ bool SpanAnalyzerPrintout::OnPrintPage(int number) {
   wxCoord y_offset = (rect_page.height - rect_graphics.height) / 2;
   OffsetLogicalOrigin(x_offset, y_offset);
 
+  // changes the view render target to print
+  view_->set_target_render(SpanAnalyzerView::RenderTarget::kPrint);
+
   // renders the plot
   // at this point the plot can be rendered according to graphics parameters
   // (rect size, ppi, etc) on the printout dc and everything will appear right
   wxDC* dc = GetDC();
   view_->OnDraw(dc);
+
+  // changes the view render target back to the screen
+  view_->set_target_render(SpanAnalyzerView::RenderTarget::kScreen);
 
   return true;
 }
