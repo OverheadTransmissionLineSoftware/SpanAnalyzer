@@ -20,6 +20,7 @@ class ResultsPane : public wxPanel {
   enum class ReportType {
     kCatenary,
     kCatenaryEndpoints,
+    kLength,
     kSagTension,
     kTensionDistribution,
   };
@@ -75,6 +76,12 @@ class ResultsPane : public wxPanel {
   /// \param[in] results
   ///   The filtered results from the document.
   void UpdateReportDataCatenaryEndpoints(
+      const std::list<const SagTensionAnalysisResult*>* results);
+
+  /// \brief Updates the report data with length results.
+  /// \param[in] results
+  ///   The filtered results from the document.
+  void UpdateReportDataLength(
       const std::list<const SagTensionAnalysisResult*>* results);
 
   /// \brief Updates the report data with sag-tension results.

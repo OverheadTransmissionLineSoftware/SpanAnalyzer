@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "models/sagtension/line_cable_reloader.h"
+#include "models/sagtension/line_cable_unloader.h"
 #include "wx/wx.h"
 
 #include "sag_tension_analysis_results.h"
@@ -59,7 +60,7 @@ class AnalysisThread : public wxThread {
   /// This must be done before the Run() method.
   void AddAnalysisJob(AnalysisJob* job);
 
-  /// \brief Gets the line cable
+  /// \brief Gets the line cable.
   /// \return The line cable.
   const LineCable* line_cable() const;
 
@@ -75,6 +76,15 @@ class AnalysisThread : public wxThread {
   /// \param[in] line_cable
   ///   The line cable.
   void set_line_cable(const LineCable* line_cable);
+
+  /// \brief Sets the catenary spacing.
+  /// \param[in] spacing_catenary
+  ///   The catenary spacing.
+  void set_spacing_catenary(const Vector3d* spacing_catenary);
+
+  /// \brief Gets the catenary spacing.
+  /// \return The catenary spacing.
+  const Vector3d* spacing_catenary() const;
 
  protected:
   /// \brief Does an analysis job.
@@ -103,6 +113,15 @@ class AnalysisThread : public wxThread {
   ///   The line cable reloader that is used in the analysis. This is used solve
   ///   for the sag-tension results.
   LineCableReloader reloader_;
+
+  /// \var spacing_catenary_
+  ///   The catenary end point spacing.
+  const Vector3d* spacing_catenary_;
+
+  /// \var unloader_
+  ///   The line cable unloader that is used in the analysis. This is used solve
+  ///   for the unloaded length result.
+  LineCableUnloader unloader_;
 };
 
 /// \par OVERVIEW

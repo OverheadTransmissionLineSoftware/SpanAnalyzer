@@ -32,6 +32,7 @@ ResultsPane::ResultsPane(wxWindow* parent, wxView* view) {
   choice->Append("Tension Distribution");
   choice->Append("Catenary");
   choice->Append("Catenary - Endpoints");
+  choice->Append("Length");
   choice->SetSelection(0);
 
   // initializes filter group choice
@@ -110,6 +111,8 @@ void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
     type_report_ = ReportType::kCatenary;
   } else if (str == "Catenary - Endpoints") {
     type_report_ = ReportType::kCatenaryEndpoints;
+  } else if (str == "Length") {
+    type_report_ = ReportType::kLength;
   } else {
     return;
   }
@@ -240,6 +243,8 @@ void ResultsPane::UpdateReportData() {
     UpdateReportDataCatenary(&results);
   } else if (type_report_ == ReportType::kCatenaryEndpoints) {
     UpdateReportDataCatenaryEndpoints(&results);
+  } else if (type_report_ == ReportType::kLength) {
+    UpdateReportDataLength(&results);
   } else if (type_report_ == ReportType::kSagTension) {
     UpdateReportDataSagTension(&results);
   } else if (type_report_ == ReportType::kTensionDistribution) {
@@ -514,6 +519,95 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
 
     // adds A
     value = catenary.TangentAngleVertical(1, AxisDirectionType::kNegative);
+    str = helper::DoubleToFormattedString(value, 1);
+    row.values.push_back(str);
+
+    // appends row to list
+    data_.rows.push_back(row);
+  }
+}
+
+void ResultsPane::UpdateReportDataLength(
+    const std::list<const SagTensionAnalysisResult*>* results) {
+  // initializes data
+  data_.headers.clear();
+  data_.rows.clear();
+
+  // fills column headers
+  ReportColumnHeader header;
+  header.title = "Weathercase";
+  header.format = wxLIST_FORMAT_LEFT;
+  header.width = 200;
+  data_.headers.push_back(header);
+
+  header.title = "Condition";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Lu";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Ll";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  // checks if results has any data
+  if (results->empty() == true) {
+    return;
+  }
+
+  // gets the selected span from the document
+  const SpanAnalyzerDoc* doc =
+      dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
+
+  const Span* span = doc->SpanAnalysis();
+
+  // fills each row with data
+  for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
+    const SagTensionAnalysisResult* result = *iter;
+
+    // creates a report row, which will be filled out by each result
+    ReportRow row;
+
+    // gets the weathercase string
+    const std::string& str_weathercase = result->weathercase->description;
+
+    // gets condition string
+    std::string str_condition;
+    if (result->condition == CableConditionType::kCreep) {
+      str_condition = "Creep";
+    } else if (result->condition == CableConditionType::kInitial) {
+      str_condition = "Initial";
+    } else if (result->condition == CableConditionType::kLoad) {
+      str_condition = "Load";
+    }
+
+    // creates a catenary to calculate results
+    Catenary3d catenary;
+    catenary.set_spacing_endpoints(span->spacing_catenary);
+    catenary.set_tension_horizontal(result->tension_horizontal);
+    catenary.set_weight_unit(result->weight_unit);
+
+    double value;
+    std::string str;
+
+    // adds weathercase
+    row.values.push_back(str_weathercase);
+
+    // adds condition
+    row.values.push_back(str_condition);
+
+    // adds Lu
+    value = result->length_unloaded;
+    str = helper::DoubleToFormattedString(value, 1);
+    row.values.push_back(str);
+
+    // adds Ll
+    value = catenary.Length();
     str = helper::DoubleToFormattedString(value, 1);
     row.values.push_back(str);
 
