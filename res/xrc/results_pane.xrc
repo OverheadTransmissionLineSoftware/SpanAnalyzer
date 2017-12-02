@@ -14,24 +14,6 @@
             <option>0</option>
             <flag>wxALL|wxALIGN_CENTER</flag>
             <border>5</border>
-            <object class="wxStaticText" name="statictext_filter_group">
-              <label>Filter:</label>
-            </object>
-          </object>
-          <object class="sizeritem">
-            <option>0</option>
-            <flag>wxALL</flag>
-            <border>5</border>
-            <object class="wxChoice" name="choice_filter_group">
-              <selection>0</selection>
-              <size>200,-1</size>
-              <content />
-            </object>
-          </object>
-          <object class="sizeritem">
-            <option>0</option>
-            <flag>wxALL|wxALIGN_CENTER</flag>
-            <border>5</border>
             <object class="wxStaticText" name="statictext_report">
               <label>Report:</label>
             </object>
@@ -41,6 +23,24 @@
             <flag>wxALL</flag>
             <border>5</border>
             <object class="wxChoice" name="choice_report">
+              <selection>0</selection>
+              <size>200,-1</size>
+              <content />
+            </object>
+          </object>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxALL|wxALIGN_CENTER</flag>
+            <border>5</border>
+            <object class="wxStaticText" name="statictext_filter_group">
+              <label>Filter:</label>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <option>0</option>
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxChoice" name="choice_filter_group">
               <selection>0</selection>
               <size>200,-1</size>
               <content />
