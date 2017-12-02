@@ -21,11 +21,12 @@
 enum {
   kTreeItemActivate = 0,
   kTreeItemCopy = 1,
-  kTreeItemDelete = 2,
-  kTreeItemEdit = 3,
-  kTreeItemMoveDown = 4,
-  kTreeItemMoveUp = 5,
-  kTreeRootAdd = 6,
+  kTreeItemDeactivate = 2,
+  kTreeItemDelete = 3,
+  kTreeItemEdit = 4,
+  kTreeItemMoveDown = 5,
+  kTreeItemMoveUp = 6,
+  kTreeRootAdd = 7,
 };
 
 BEGIN_EVENT_TABLE(EditPane, wxPanel)
@@ -118,15 +119,12 @@ void EditPane::ActivateSpan(const wxTreeItemId& id) {
 
   wxLogVerbose("Activating span.");
 
-  // updates document
+  // updates document and view
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
   SpanTreeItemData* data =
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
   auto iter = data->iter();
   doc->SetSpanAnalysis(&(*iter));
-
-  // updates treectrl
-  UpdateTreeCtrlSpanItems();
 
   // updates treectrl focus
   const int index = std::distance(doc->spans().cbegin(), iter);
@@ -204,6 +202,23 @@ void EditPane::CopySpan(const wxTreeItemId& id) {
 
   // adjusts treectrl focus
   FocusTreeCtrlSpanItem(command->index());
+}
+
+void EditPane::DeactivateSpan(const wxTreeItemId& id) {
+  wxLogVerbose("Deactivating span.");
+
+  // gets iterator to span
+  SpanTreeItemData* data =
+      dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
+  auto iter = data->iter();
+
+  // updates document and view
+  SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
+  doc->SetSpanAnalysis(nullptr);
+
+  // updates treectrl focus
+  const int index = std::distance(doc->spans().cbegin(), iter);
+  FocusTreeCtrlSpanItem(index);
 }
 
 void EditPane::DeleteSpan(const wxTreeItemId& id) {
@@ -488,6 +503,9 @@ void EditPane::OnContextMenuSelect(wxCommandEvent& event) {
   } else if (id_event == kTreeItemCopy) {
     wxBusyCursor cursor;
     CopySpan(id_item);
+  } else if (id_event == kTreeItemDeactivate) {
+    wxBusyCursor cursor;
+    DeactivateSpan(id_item);
   } else if (id_event == kTreeItemDelete) {
     wxBusyCursor cursor;
     DeleteSpan(id_item);
@@ -519,12 +537,30 @@ void EditPane::OnItemMenu(wxTreeEvent& event) {
   wxTreeItemId id = event.GetItem();
   treectrl_->SetFocusedItem(id);
 
+  // gets selected span item and the activated span (document)
+  // determines if the selected item is currently activated
+  SpanTreeItemData* data =
+      dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
+  const Span* span_selected = &(*data->iter());
+
+  SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
+  const Span* span_activated = doc->SpanAnalysis();
+
+  bool is_activated = false;
+  if (span_selected == span_activated) {
+    is_activated = true;
+  }
+
   // displays a context menu based on the item that was right clicked
   wxMenu menu;
   if (id == treectrl_->GetRootItem()) {
     menu.Append(kTreeRootAdd, "Add Span");
   } else { // a span is selected
-    menu.Append(kTreeItemActivate, "Activate");
+    if (is_activated == false) {
+      menu.Append(kTreeItemActivate, "Activate");
+    } else {
+      menu.Append(kTreeItemDeactivate, "Deactivate");
+    }
     menu.AppendSeparator();
     menu.Append(kTreeItemEdit, "Edit");
     menu.Append(kTreeItemCopy, "Copy");

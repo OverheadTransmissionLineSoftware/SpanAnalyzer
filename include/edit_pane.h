@@ -78,6 +78,11 @@ class EditPane : public wxPanel {
   /// The copied span is inserted below the selected span.
   void CopySpan(const wxTreeItemId& id);
 
+  /// \brief Deactivates the span in the treectrl.
+  /// \param[in] id
+  ///   The item ID of the selected span.
+  void DeactivateSpan(const wxTreeItemId& id);
+
   /// \brief Deletes the selected span.
   /// \param[in] id
   ///   The item ID of the selected span.
