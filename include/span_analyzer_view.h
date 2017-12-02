@@ -175,7 +175,7 @@ class SpanAnalyzerView : public wxView {
   ///   The results pane.
   ResultsPane* pane_results_;
 
-  /// \var target_
+  /// \var target_render_
   ///   The render target.
   RenderTarget target_render_;
 
