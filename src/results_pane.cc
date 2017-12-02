@@ -250,6 +250,11 @@ void ResultsPane::UpdateReportData() {
   } else if (type_report_ == ReportType::kTensionDistribution) {
     UpdateReportDataTensionDistribution(&results);
   }
+
+  // resets view filter index if no data is present
+  if (results.empty() == true) {
+    view->set_index_filter(-1);
+  }
 }
 
 void ResultsPane::UpdateReportDataCatenaryCurve(
