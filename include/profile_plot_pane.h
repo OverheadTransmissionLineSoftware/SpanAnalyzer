@@ -64,4 +64,4 @@ class ProfilePlotPane : public PlotPane2d {
   DECLARE_EVENT_TABLE()
 };
 
-# endif //  OTLS_SPANANALYZER_PROFILEPLOTPANE_H_
+# endif  // OTLS_SPANANALYZER_PROFILEPLOTPANE_H_

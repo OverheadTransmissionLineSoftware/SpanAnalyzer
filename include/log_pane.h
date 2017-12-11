@@ -59,4 +59,4 @@ class LogPane : public wxPanel {
   LogPaneTextCtrl* textctrl_;
 };
 
-# endif //  OTLS_SPANANALYZER_LOGPANE_H_
+# endif  // OTLS_SPANANALYZER_LOGPANE_H_

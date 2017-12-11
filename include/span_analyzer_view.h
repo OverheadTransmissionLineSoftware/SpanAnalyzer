@@ -186,4 +186,4 @@ class SpanAnalyzerView : public wxView {
   DECLARE_EVENT_TABLE()
 };
 
-#endif //  OTLS_SPANANALYZER_SPANANALYZERVIEW_H_
+#endif  // OTLS_SPANANALYZER_SPANANALYZERVIEW_H_

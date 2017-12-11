@@ -115,4 +115,4 @@ class ResultsPane : public wxPanel {
   DECLARE_EVENT_TABLE()
 };
 
-# endif //  OTLS_SPANANALYZER_RESULTSPANE_H_
+# endif  // OTLS_SPANANALYZER_RESULTSPANE_H_

@@ -22,7 +22,6 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
   wxXmlNode* sub_node = nullptr;
   std::string title;
   std::string content;
-  const wxColour* color = nullptr;
 
   // creates a node for the root
   node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "span_analyzer_config");

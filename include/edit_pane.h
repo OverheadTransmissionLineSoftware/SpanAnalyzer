@@ -177,4 +177,4 @@ class EditPane : public wxPanel {
   DECLARE_EVENT_TABLE()
 };
 
-# endif //  OTLS_SPANANALYZER_EDITPANE_H_
+# endif  // OTLS_SPANANALYZER_EDITPANE_H_
