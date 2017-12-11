@@ -70,6 +70,46 @@ int SpanAnalyzerView::IndexWeathercase(const AnalysisFilter& filter) const {
   return -1;
 }
 
+bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
+  if (!GetDocument()->Close()) {
+    return false;
+  }
+
+  // gets aui manager from main frame
+  wxAuiManager* manager = wxAuiManager::GetManager(GetFrame());
+
+  // saves AUI perspective
+  wxGetApp().config()->perspective = manager->SavePerspective();
+
+  // detaches panes and un-init manager
+  manager->DetachPane(notebook_plot_);
+  manager->DetachPane(pane_edit_);
+  manager->DetachPane(pane_results_);
+  manager->Update();
+
+  // destroys panes
+  notebook_plot_->Destroy();
+  pane_edit_->Destroy();
+  pane_results_->Destroy();
+
+  // resets frame to document-less state
+  SpanAnalyzerFrame* frame = wxGetApp().frame();
+  frame->Refresh();
+  frame->SetTitle(wxGetApp().GetAppDisplayName());
+
+  // resets statusbar
+  status_bar_log::SetText("Ready", 0);
+  status_bar_log::SetText("", 1);
+
+  // resets menubar
+  const int index_menu = frame->GetMenuBar()->FindMenu("Edit");
+  wxMenu* menu = frame->GetMenuBar()->GetMenu(index_menu);
+  menu->SetLabel(wxID_UNDO, "Undo \tCtrl+Z");
+  menu->SetLabel(wxID_REDO, "Redo \tCtrl+Y");
+
+  return true;
+}
+
 bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   if (!wxView::OnCreate(doc, flags)) {
     return false;
@@ -147,46 +187,6 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
 
   wxCommandProcessor* processor = GetDocument()->GetCommandProcessor();
   processor->SetEditMenu(menu);
-
-  return true;
-}
-
-bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
-  if (!GetDocument()->Close()) {
-    return false;
-  }
-
-  // gets aui manager from main frame
-  wxAuiManager* manager = wxAuiManager::GetManager(GetFrame());
-
-  // saves AUI perspective
-  wxGetApp().config()->perspective = manager->SavePerspective();
-
-  // detaches panes and un-init manager
-  manager->DetachPane(notebook_plot_);
-  manager->DetachPane(pane_edit_);
-  manager->DetachPane(pane_results_);
-  manager->Update();
-
-  // destroys panes
-  notebook_plot_->Destroy();
-  pane_edit_->Destroy();
-  pane_results_->Destroy();
-
-  // resets frame to document-less state
-  SpanAnalyzerFrame* frame = wxGetApp().frame();
-  frame->Refresh();
-  frame->SetTitle(wxGetApp().GetAppDisplayName());
-
-  // resets statusbar
-  status_bar_log::SetText("Ready", 0);
-  status_bar_log::SetText("", 1);
-
-  // resets menubar
-  const int index_menu = frame->GetMenuBar()->FindMenu("Edit");
-  wxMenu* menu = frame->GetMenuBar()->GetMenu(index_menu);
-  menu->SetLabel(wxID_UNDO, "Undo \tCtrl+Z");
-  menu->SetLabel(wxID_REDO, "Redo \tCtrl+Y");
 
   return true;
 }
