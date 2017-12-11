@@ -31,7 +31,13 @@ CablePlotPane::CablePlotPane(
     : PlotPane2d(parent) {
   view_ = view;
 
-  plot_.set_zoom_factor_fitted(1.2);
+  // sets plot defaults
+  plot_.set_background(*wxBLACK_BRUSH);
+  plot_.set_is_fitted(true);
+  plot_.set_scale(100000);
+  plot_.set_scale_x(1);
+  plot_.set_scale_y(0.0000001);
+  plot_.set_zoom_factor_fitted(1.0 / 1.2);
 }
 
 CablePlotPane::~CablePlotPane() {
@@ -52,38 +58,47 @@ void CablePlotPane::Update(wxObject* hint) {
   if (hint_update == nullptr) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
+    UpdatePlotScaling();
     view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kAnalysisFilterGroupEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
+    UpdatePlotScaling();
     view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kAnalysisFilterGroupSelect) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
+    UpdatePlotScaling();
     view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kAnalysisFilterSelect) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
+    UpdatePlotScaling();
     view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kCablesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
+    UpdatePlotScaling();
     view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kPreferencesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
+    UpdatePlotScaling();
     view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kSpansEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
+    UpdatePlotScaling();
     view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kViewSelect) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
+    UpdatePlotScaling();
     view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kWeathercasesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
+    UpdatePlotScaling();
     view_->OnDraw(&dc_buf);
   }
 }
@@ -115,11 +130,6 @@ void CablePlotPane::OnContextMenuSelect(wxCommandEvent& event) {
 }
 
 void CablePlotPane::OnMouse(wxMouseEvent& event) {
-  // skips if no plot renderers are active
-  if (plot_.HasRenderers() == false) {
-    return;
-  }
-
   // overrides for right mouse click
   if (event.RightDown() == true) {
     // builds a context menu
@@ -139,24 +149,19 @@ void CablePlotPane::OnMouse(wxMouseEvent& event) {
     PlotPane2d::OnMouse(event);
   }
 
-  // updates status bar
-  if (plot_.HasRenderers() == true) {
-    // converts graphics point to data point
-    wxPoint point_graphics;
-    point_graphics.x = event.GetX();
-    point_graphics.y = event.GetY();
-    const Point2d<float> point_data = plot_.PointGraphicsToData(point_graphics);
+  // converts graphics point to data point
+  wxPoint point_graphics;
+  point_graphics.x = event.GetX();
+  point_graphics.y = event.GetY();
+  const Point2d<float> point_data = plot_.PointGraphicsToData(point_graphics);
 
-    // logs to status bar
-    std::string str = "X="
-                      + helper::DoubleToFormattedString(point_data.x, 5)
-                      + "   Y="
-                      + helper::DoubleToFormattedString(point_data.y, 2);
+  // logs to status bar
+  std::string str = "X="
+                    + helper::DoubleToFormattedString(point_data.x, 5)
+                    + "   Y="
+                    + helper::DoubleToFormattedString(point_data.y, 2);
 
-    status_bar_log::SetText(str, 1);
-  } else {
-    status_bar_log::SetText("", 1);
-  }
+  status_bar_log::SetText(str, 1);
 }
 
 void CablePlotPane::UpdateDataSetAxes(
@@ -319,12 +324,14 @@ void CablePlotPane::UpdatePlotDatasets() {
   // gets filter group
   const AnalysisFilterGroup* group_filters = view->group_filters();
   if (group_filters == nullptr) {
+    plot_.ClearRenderers();
     return;
   }
 
   // gets analysis result filter
   const AnalysisFilter* filter = view->AnalysisFilterActive();
   if (filter == nullptr) {
+    plot_.ClearRenderers();
     return;
   }
 
@@ -336,6 +343,7 @@ void CablePlotPane::UpdatePlotDatasets() {
   const SagTensionAnalysisResult* result = doc->Result(index,
                                                        filter->condition);
   if (result == nullptr) {
+    plot_.ClearRenderers();
     return;
   }
 
@@ -371,6 +379,11 @@ void CablePlotPane::UpdatePlotDatasets() {
 }
 
 void CablePlotPane::UpdatePlotRenderers() {
+  // checks if dataset has any data
+  if (dataset_total_.data()->empty() == true) {
+    return;
+  }
+
   wxLogVerbose("Updating cable elongation model plot renderers.");
 
   // clears plot datasets and renderers
@@ -411,18 +424,25 @@ void CablePlotPane::UpdatePlotRenderers() {
   renderer_circle->set_brush(wxGREEN_BRUSH);
   renderer_circle->set_pen(wxGREEN_PEN);
   plot_.AddRenderer(renderer_circle);
+}
 
-  // updates so the plot remains in place and square
+/// This function is necessary so that the plot stays square. The x-axis should
+/// remain fixed, but the y-axis needs to be re-calculated based on cable rated
+/// strength.
+void CablePlotPane::UpdatePlotScaling() {
+  // gets the plot data limits and ranges
   const Plot2dDataLimits& limits = plot_.LimitsData();
   const double x_range = limits.x_max - limits.x_min;
   const double y_range = limits.y_max - limits.y_min;
 
-  const double ratio_plot_prev = plot_.ratio_aspect();
-  const double ratio_plot_new =  1 / (y_range / x_range);
-  plot_.set_ratio_aspect(ratio_plot_new);
+  // calculates a new scale for the y-axis
+  const double scale_y_prev = plot_.scale_y();
+  const double scale_y_new =  1 / (y_range / x_range);
+  plot_.set_scale_y(scale_y_new);
 
+  // calculates a new plot offset
   Point2d<float> point_offset = plot_.offset();
-  point_offset.y = point_offset.y * (ratio_plot_prev / ratio_plot_new);
+  point_offset.y = point_offset.y * (scale_y_prev / scale_y_new);
   plot_.set_offset(point_offset);
 }
 

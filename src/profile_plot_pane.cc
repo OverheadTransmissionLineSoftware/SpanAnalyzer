@@ -28,8 +28,12 @@ ProfilePlotPane::ProfilePlotPane(wxWindow* parent, wxView* view)
     : PlotPane2d(parent) {
   view_ = view;
 
-  plot_.set_ratio_aspect(10);
-  plot_.set_zoom_factor_fitted(1.2);
+  // sets plot defaults
+  plot_.set_background(*wxBLACK_BRUSH);
+  plot_.set_is_fitted(true);
+  plot_.set_scale_x(1);
+  plot_.set_scale_y(10);
+  plot_.set_zoom_factor_fitted(1.0 / 1.2);
 }
 
 ProfilePlotPane::~ProfilePlotPane() {
@@ -103,11 +107,6 @@ void ProfilePlotPane::OnContextMenuSelect(wxCommandEvent& event) {
 }
 
 void ProfilePlotPane::OnMouse(wxMouseEvent& event) {
-  // skips if no plot renderers are active
-  if (plot_.HasRenderers() == false) {
-    return;
-  }
-
   // overrides for right mouse click
   if (event.RightDown() == true) {
     // builds a context menu
@@ -127,24 +126,19 @@ void ProfilePlotPane::OnMouse(wxMouseEvent& event) {
     PlotPane2d::OnMouse(event);
   }
 
-  // updates status bar
-  if (plot_.HasRenderers() == true) {
-    // converts graphics point to data point
-    wxPoint point_graphics;
-    point_graphics.x = event.GetX();
-    point_graphics.y = event.GetY();
-    const Point2d<float> point_data = plot_.PointGraphicsToData(point_graphics);
+  // converts graphics point to data point
+  wxPoint point_graphics;
+  point_graphics.x = event.GetX();
+  point_graphics.y = event.GetY();
+  const Point2d<float> point_data = plot_.PointGraphicsToData(point_graphics);
 
-    // logs to status bar
-    std::string str = "X="
-                      + helper::DoubleToFormattedString(point_data.x, 2)
-                      + "   Y="
-                      + helper::DoubleToFormattedString(point_data.y, 2);
+  // logs to status bar
+  std::string str = "X="
+                    + helper::DoubleToFormattedString(point_data.x, 2)
+                    + "   Y="
+                    + helper::DoubleToFormattedString(point_data.y, 2);
 
-    status_bar_log::SetText(str, 1);
-  } else {
-    status_bar_log::SetText("", 1);
-  }
+  status_bar_log::SetText(str, 1);
 }
 
 void ProfilePlotPane::UpdatePlotDatasets() {
@@ -220,6 +214,11 @@ void ProfilePlotPane::UpdatePlotDatasets() {
 }
 
 void ProfilePlotPane::UpdatePlotRenderers() {
+  // checks if dataset has any data
+  if (dataset_catenary_.data()->empty() == true) {
+    return;
+  }
+
   wxLogVerbose("Updating profile plot renderers.");
 
   // creates renderer

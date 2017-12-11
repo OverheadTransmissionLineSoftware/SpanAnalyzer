@@ -89,6 +89,9 @@ class CablePlotPane : public PlotPane2d {
   /// This includes re-calculating the dataset.
   void UpdatePlotRenderers() override;
 
+  /// \brief Updates the plot scaling.
+  void UpdatePlotScaling();
+
   /// \brief Updates the strain values.
   /// \param[in] model
   ///   The cable elongation model.
