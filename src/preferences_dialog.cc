@@ -3,6 +3,7 @@
 
 #include "preferences_dialog.h"
 
+#include "wx/clrpicker.h"
 #include "wx/filepicker.h"
 #include "wx/xrc/xmlres.h"
 
@@ -21,7 +22,6 @@ PreferencesDialog::PreferencesDialog(
   // saves doc reference
   config_ = config;
 
-  // updates the cable directory
   // sets application data path for file picker ctrl
   wxFilePickerCtrl* filepickerctrl = XRCCTRL(*this, "filepickerctrl_data",
                                              wxFilePickerCtrl);
@@ -45,6 +45,11 @@ PreferencesDialog::PreferencesDialog(
     radiobox->SetSelection(1);
   }
 
+  // sets the color in the color picker
+  wxColourPickerCtrl* pickerctrl =
+      XRCCTRL(*this, "colorpicker_background", wxColourPickerCtrl);
+  pickerctrl->SetColour(config_->color_background);
+
   // fits the dialog around the sizers
   this->Fit();
 }
@@ -52,20 +57,19 @@ PreferencesDialog::PreferencesDialog(
 PreferencesDialog::~PreferencesDialog() {
 }
 
-/// \brief Handles the cancel button event.
-/// \param[in] event
-///   The event.
 void PreferencesDialog::OnButtonCancel(wxCommandEvent& event) {
   EndModal(wxID_CANCEL);
 }
 
-/// \brief Handles the Ok button event.
-/// \param[in] event
-///   The event.
 void PreferencesDialog::OnButtonOk(wxCommandEvent& event) {
   wxBusyCursor cursor;
 
   wxRadioBox* radiobox = nullptr;
+
+  // transfers application data path
+  wxFilePickerCtrl* filepickerctrl = XRCCTRL(*this, "filepickerctrl_data",
+                                             wxFilePickerCtrl);
+  config_->filepath_data = filepickerctrl->GetPath();
 
   // transfers units
   radiobox = XRCCTRL(*this, "radiobox_units", wxRadioBox);
@@ -83,10 +87,10 @@ void PreferencesDialog::OnButtonOk(wxCommandEvent& event) {
     config_->level_log = wxLOG_Info;
   }
 
-  // transfers application data path
-  wxFilePickerCtrl* filepickerctrl = XRCCTRL(*this, "filepickerctrl_data",
-                                             wxFilePickerCtrl);
-  config_->filepath_data = filepickerctrl->GetPath();
+  // transfers background color
+  wxColourPickerCtrl* pickerctrl =
+      XRCCTRL(*this, "colorpicker_background", wxColourPickerCtrl);
+  config_->color_background = pickerctrl->GetColour();
 
   EndModal(wxID_OK);
 }

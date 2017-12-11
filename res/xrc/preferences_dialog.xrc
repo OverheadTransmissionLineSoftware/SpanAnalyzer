@@ -82,6 +82,30 @@
         </object>
         <object class="sizeritem">
           <option>0</option>
+          <flag></flag>
+          <border>0</border>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL|wxALIGN_CENTER</flag>
+              <border>5</border>
+              <object class="wxStaticText" name="statictext_background">
+                <label>Background</label>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL|wxALIGN_CENTER</flag>
+              <border>5</border>
+              <object class="wxColourPickerCtrl" name="colorpicker_background">
+                <value>BLACK</value>
+              </object>
+            </object>
+          </object>
+        </object>
+        <object class="sizeritem">
+          <option>0</option>
           <flag>wxALIGN_RIGHT</flag>
           <border>0</border>
           <object class="wxBoxSizer">

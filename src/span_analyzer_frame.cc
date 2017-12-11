@@ -226,8 +226,17 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
 
   // application data change is implemented on app restart
 
+  // updates logging level
+  wxLog::SetLogLevel(config->level_log);
+  if (config->level_log == wxLOG_Message) {
+    wxLog::SetVerbose(false);
+  } else if (config->level_log == wxLOG_Info) {
+    wxLog::SetVerbose(true);
+  }
+
   // converts unit system if it changed
   SpanAnalyzerData* data = wxGetApp().data();
+  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
   if (units_before != config->units) {
     wxLogVerbose("Converting unit system.");
 
@@ -250,25 +259,16 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
           cablefile->cable);
     }
 
-    // updates document/views
-    SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
+    // updates document
     if (doc != nullptr) {
       doc->ConvertUnitSystem(units_before, config->units);
       doc->RunAnalysis();
-
-      // updates views
-      UpdateHint hint(HintType::kPreferencesEdit);
-      doc->UpdateAllViews(nullptr, &hint);
     }
   }
 
-  // updates logging level
-  wxLog::SetLogLevel(config->level_log);
-  if (config->level_log == wxLOG_Message) {
-    wxLog::SetVerbose(false);
-  } else if (config->level_log == wxLOG_Info) {
-    wxLog::SetVerbose(true);
-  }
+  // updates views
+  UpdateHint hint(HintType::kPreferencesEdit);
+  doc->UpdateAllViews(nullptr, &hint);
 }
 
 void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
