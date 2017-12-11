@@ -9,7 +9,7 @@
 /// context menu enum
 enum {
   kClear = 0,
-  kCopyToClipboard = 1
+  kCopy,
 };
 
 BEGIN_EVENT_TABLE(LogPaneTextCtrl, wxPanel)
@@ -45,7 +45,7 @@ void LogPaneTextCtrl::OnContextMenuSelect(wxCommandEvent& event) {
   const int id_event = event.GetId();
   if (id_event == kClear) {
     Clear();
-  } else if (id_event == kCopyToClipboard) {
+  } else if (id_event == kCopy) {
     CopyLogToClipboard();
   }
 }
@@ -56,7 +56,7 @@ void LogPaneTextCtrl::OnMouse(wxMouseEvent& event) {
     wxMenu menu;
 
     menu.Append(kClear, "Clear");
-    menu.Append(kCopyToClipboard, "Copy To Clipboard");
+    menu.Append(kCopy, "Copy");
 
     // shows context menu
     // the event is caught by the pane
