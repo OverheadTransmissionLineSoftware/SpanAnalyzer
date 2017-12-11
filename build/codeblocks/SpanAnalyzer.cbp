@@ -26,7 +26,7 @@
 					<Add directory="../../external/Models/build/codeblocks/debug" />
 				</Linker>
 				<ExtraCommands>
-					<Add before="../../external/wxWidgets/build-debug/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
+					<Add before="../../external/wxWidgets/build-debug/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
 				</ExtraCommands>
 			</Target>
 			<Target title="release">
@@ -49,7 +49,7 @@
 					<Add directory="../../external/Models/build/codeblocks/release" />
 				</Linker>
 				<ExtraCommands>
-					<Add before="../../external/wxWidgets/build-release/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
+					<Add before="../../external/wxWidgets/build-release/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
 				</ExtraCommands>
 			</Target>
 		</Build>
@@ -139,6 +139,9 @@
 			<Option virtualFolder="Common Header Files/" />
 		</Unit>
 		<Unit filename="../../external/AppCommon/include/appcommon/xml/cable_xml_handler.h">
+			<Option virtualFolder="Common Header Files/" />
+		</Unit>
+		<Unit filename="../../external/AppCommon/include/appcommon/xml/color_xml_handler.h">
 			<Option virtualFolder="Common Header Files/" />
 		</Unit>
 		<Unit filename="../../external/AppCommon/include/appcommon/xml/line_cable_xml_handler.h">
@@ -243,6 +246,9 @@
 		<Unit filename="../../external/AppCommon/src/xml/cable_xml_handler.cc">
 			<Option virtualFolder="Common Source Files/" />
 		</Unit>
+		<Unit filename="../../external/AppCommon/src/xml/color_xml_handler.cc">
+			<Option virtualFolder="Common Source Files/" />
+		</Unit>
 		<Unit filename="../../external/AppCommon/src/xml/line_cable_xml_handler.cc">
 			<Option virtualFolder="Common Source Files/" />
 		</Unit>
@@ -267,10 +273,13 @@
 		<Unit filename="../../include/analysis_filter_xml_handler.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/cable_elongation_model_plot_pane.h">
+		<Unit filename="../../include/cable_file_manager_dialog.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/cable_file_manager_dialog.h">
+		<Unit filename="../../include/cable_plot_options_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/cable_plot_pane.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
 		<Unit filename="../../include/edit_pane.h">
@@ -283,6 +292,9 @@
 			<Option virtualFolder="Header Files/" />
 		</Unit>
 		<Unit filename="../../include/preferences_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/profile_plot_options_dialog.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
 		<Unit filename="../../include/profile_plot_pane.h">
@@ -380,10 +392,16 @@
 		<Unit filename="../../res/xrc/cable_file_manager_dialog.xrc">
 			<Option virtualFolder="Resource Files/" />
 		</Unit>
+		<Unit filename="../../res/xrc/cable_plot_options_dialog.xrc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
 		<Unit filename="../../res/xrc/edit_pane.xrc">
 			<Option virtualFolder="Resource Files/" />
 		</Unit>
 		<Unit filename="../../res/xrc/preferences_dialog.xrc">
+			<Option virtualFolder="Resource Files/" />
+		</Unit>
+		<Unit filename="../../res/xrc/profile_plot_options_dialog.xrc">
 			<Option virtualFolder="Resource Files/" />
 		</Unit>
 		<Unit filename="../../res/xrc/results_pane.xrc">
@@ -413,10 +431,13 @@
 		<Unit filename="../../src/analysis_filter_xml_handler.cc">
 			<Option virtualFolder="Source Files/" />
 		</Unit>
-		<Unit filename="../../src/cable_elongation_model_plot_pane.cc">
+		<Unit filename="../../src/cable_file_manager_dialog.cc">
 			<Option virtualFolder="Source Files/" />
 		</Unit>
-		<Unit filename="../../src/cable_file_manager_dialog.cc">
+		<Unit filename="../../src/cable_plot_options_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/cable_plot_pane.cc">
 			<Option virtualFolder="Source Files/" />
 		</Unit>
 		<Unit filename="../../src/edit_pane.cc">
@@ -429,6 +450,9 @@
 			<Option virtualFolder="Source Files/" />
 		</Unit>
 		<Unit filename="../../src/preferences_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/profile_plot_options_dialog.cc">
 			<Option virtualFolder="Source Files/" />
 		</Unit>
 		<Unit filename="../../src/profile_plot_pane.cc">

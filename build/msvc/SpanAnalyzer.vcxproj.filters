@@ -42,9 +42,6 @@
     <ClCompile Include="..\..\src\analysis_filter_xml_handler.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\cable_elongation_model_plot_pane.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\cable_file_manager_dialog.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -195,6 +192,18 @@
     <ClCompile Include="..\..\src\span_analyzer_printout.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\cable_plot_options_dialog.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cable_plot_pane.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\profile_plot_options_dialog.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\AppCommon\src\xml\color_xml_handler.cc">
+      <Filter>Common Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\test\test.spananalyzer">
@@ -269,6 +278,12 @@
     <None Include="..\..\external\AppCommon\res\xrc\weather_load_case_editor_dialog.xrc">
       <Filter>Common Resource Files</Filter>
     </None>
+    <None Include="..\..\res\xrc\cable_plot_options_dialog.xrc">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\res\xrc\profile_plot_options_dialog.xrc">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\res\icon.ico">
@@ -291,9 +306,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\analysis_filter_xml_handler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\cable_elongation_model_plot_pane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\cable_file_manager_dialog.h">
@@ -454,6 +466,18 @@
     </ClInclude>
     <ClInclude Include="..\..\include\span_analyzer_printout.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\cable_plot_options_dialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\cable_plot_pane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\profile_plot_options_dialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\color_xml_handler.h">
+      <Filter>Common Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

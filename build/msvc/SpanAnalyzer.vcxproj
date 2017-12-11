@@ -50,7 +50,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>..\..\external\wxWidgets\utils\wxrc\vc_mswud_x64\wxrc.exe -v -c -o=../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc</Command>
+      <Command>..\..\external\wxWidgets\utils\wxrc\vc_mswud_x64\wxrc.exe -v -c -o=../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -65,7 +65,7 @@
       <AdditionalDependencies>otlsmodels_base.lib;otlsmodels_sagtension.lib;otlsmodels_transmissionline.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxexpat.lib;wxjpeg.lib;wxmsw31u_adv.lib;wxmsw31u_core.lib;wxmsw31u_xrc.lib;wxpng.lib;wxregexu.lib;wxscintilla.lib;wxtiff.lib;wxzlib.lib;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;winspool.lib;winmm.lib;shell32.lib;shlwapi.lib;comctl32.lib;ole32.lib;oleaut32.lib;uuid.lib;rpcrt4.lib;advapi32.lib;version.lib;wsock32.lib;wininet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>..\..\external\wxWidgets\utils\wxrc\vc_mswu_x64\wxrc.exe -v -c -o=../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc</Command>
+      <Command>..\..\external\wxWidgets\utils\wxrc\vc_mswu_x64\wxrc.exe -v -c -o=../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -94,6 +94,7 @@
     <ClCompile Include="..\..\external\AppCommon\src\widgets\timer.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\xml\cable_constraint_xml_handler.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\xml\cable_xml_handler.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\xml\color_xml_handler.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\xml\line_cable_xml_handler.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\xml\vector_xml_handler.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\xml\weather_load_case_xml_handler.cc" />
@@ -103,12 +104,14 @@
     <ClCompile Include="..\..\src\analysis_filter_editor_dialog.cc" />
     <ClCompile Include="..\..\src\analysis_filter_manager_dialog.cc" />
     <ClCompile Include="..\..\src\analysis_filter_xml_handler.cc" />
-    <ClCompile Include="..\..\src\cable_elongation_model_plot_pane.cc" />
     <ClCompile Include="..\..\src\cable_file_manager_dialog.cc" />
+    <ClCompile Include="..\..\src\cable_plot_options_dialog.cc" />
+    <ClCompile Include="..\..\src\cable_plot_pane.cc" />
     <ClCompile Include="..\..\src\edit_pane.cc" />
     <ClCompile Include="..\..\src\file_handler.cc" />
     <ClCompile Include="..\..\src\log_pane.cc" />
     <ClCompile Include="..\..\src\preferences_dialog.cc" />
+    <ClCompile Include="..\..\src\profile_plot_options_dialog.cc" />
     <ClCompile Include="..\..\src\profile_plot_pane.cc" />
     <ClCompile Include="..\..\src\results_pane.cc" />
     <ClCompile Include="..\..\src\span.cc" />
@@ -143,8 +146,10 @@
     <None Include="..\..\res\xrc\cable_file_manager_dialog.xrc">
       <SubType>Designer</SubType>
     </None>
+    <None Include="..\..\res\xrc\cable_plot_options_dialog.xrc" />
     <None Include="..\..\res\xrc\edit_pane.xrc" />
     <None Include="..\..\res\xrc\preferences_dialog.xrc" />
+    <None Include="..\..\res\xrc\profile_plot_options_dialog.xrc" />
     <None Include="..\..\res\xrc\results_pane.xrc" />
     <None Include="..\..\res\xrc\span_analyzer_menubar.xrc" />
     <None Include="..\..\res\xrc\span_editor_dialog.xrc" />
@@ -190,6 +195,7 @@
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\timer.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\cable_constraint_xml_handler.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\cable_xml_handler.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\color_xml_handler.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\line_cable_xml_handler.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\vector_xml_handler.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\weather_load_case_xml_handler.h" />
@@ -198,12 +204,14 @@
     <ClInclude Include="..\..\include\analysis_filter_editor_dialog.h" />
     <ClInclude Include="..\..\include\analysis_filter_manager_dialog.h" />
     <ClInclude Include="..\..\include\analysis_filter_xml_handler.h" />
-    <ClInclude Include="..\..\include\cable_elongation_model_plot_pane.h" />
     <ClInclude Include="..\..\include\cable_file_manager_dialog.h" />
+    <ClInclude Include="..\..\include\cable_plot_options_dialog.h" />
+    <ClInclude Include="..\..\include\cable_plot_pane.h" />
     <ClInclude Include="..\..\include\edit_pane.h" />
     <ClInclude Include="..\..\include\file_handler.h" />
     <ClInclude Include="..\..\include\log_pane.h" />
     <ClInclude Include="..\..\include\preferences_dialog.h" />
+    <ClInclude Include="..\..\include\profile_plot_options_dialog.h" />
     <ClInclude Include="..\..\include\profile_plot_pane.h" />
     <ClInclude Include="..\..\include\results_pane.h" />
     <ClInclude Include="..\..\include\sag_tension_analysis_results.h" />
