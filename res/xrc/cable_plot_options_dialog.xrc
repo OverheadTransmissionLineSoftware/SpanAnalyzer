@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<resource version="2.5.3.0">
+	<object class="wxDialog" name="cable_plot_options_dialog">
+		<style>wxDEFAULT_DIALOG_STYLE</style>
+		<exstyle>wxWS_EX_VALIDATE_RECURSIVELY</exstyle>
+		<title>Profile Plot Options</title>
+    <object class="wxPanel" name="cable_plot_options_panel">
+      <style>wxTAB_TRAVERSAL</style>
+      <object class="wxBoxSizer">
+        <orient>wxVERTICAL</orient>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxEXPAND</flag>
+          <border>0</border>
+          <object class="wxStaticBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <label>Shell</label>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxEXPAND</flag>
+              <border>0</border>
+              <object class="wxFlexGridSizer">
+                <rows>5</rows>
+                <cols>2</cols>
+                <vgap>0</vgap>
+                <hgap>0</hgap>
+                <flexibledirection>wxHORIZONTAL</flexibledirection>
+                <growablecols></growablecols>
+                <growablerows></growablerows>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxStaticText" name="statictext_core">
+                    <label>Core</label>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL|wxALIGN_RIGHT</flag>
+                  <border>5</border>
+                  <object class="wxColourPickerCtrl" name="colorpicker_core">
+                    <value>BLACK</value>
+                    <size>75,-1</size>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxStaticText" name="statictext_shell">
+                    <label>Shell</label>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL|wxALIGN_RIGHT</flag>
+                  <border>5</border>
+                  <object class="wxColourPickerCtrl" name="colorpicker_shell">
+                    <value>BLACK</value>
+                    <size>75,-1</size>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxStaticText" name="statictext_total">
+                    <label>Total</label>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL|wxALIGN_RIGHT</flag>
+                  <border>5</border>
+                  <object class="wxColourPickerCtrl" name="colorpicker_total">
+                    <value>BLACK</value>
+                    <size>75,-1</size>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxStaticText" name="statictext_markers">
+                    <label>Markers</label>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL|wxALIGN_RIGHT</flag>
+                  <border>5</border>
+                  <object class="wxColourPickerCtrl" name="colorpicker_markers">
+                    <value>BLACK</value>
+                    <size>75,-1</size>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                  <object class="wxStaticText" name="statictext_line_thickness">
+                    <label>Line Thickness</label>
+                  </object>
+                </object>
+                <object class="sizeritem">
+                  <option>0</option>
+                  <flag>wxALL|wxALIGN_RIGHT</flag>
+                  <border>5</border>
+                  <object class="wxSpinCtrl" name="spinctrl_line_thickness">
+                    <value>1</value>
+                    <min>1</min>
+                    <max>100</max>
+                    <size>75,-1</size>
+                  </object>
+                </object>
+              </object>
+            </object>
+          </object>
+        </object>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxALIGN_RIGHT</flag>
+          <border>0</border>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="wxID_CANCEL">
+                <label>Cancel</label>
+                <default>0</default>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="wxID_OK">
+                <label>OK</label>
+                <default>1</default>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+	</object>
+</resource>
+

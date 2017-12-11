@@ -10,6 +10,7 @@
 #include "models/base/helper.h"
 #include "wx/dcbuffer.h"
 
+#include "cable_plot_options_dialog.h"
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
@@ -19,6 +20,7 @@
 /// This is the enumeration for the context menu.
 enum {
   kFitPlotData = 0,
+  kOptions,
 };
 
 BEGIN_EVENT_TABLE(CablePlotPane, PlotPane2d)
@@ -139,6 +141,16 @@ void CablePlotPane::OnContextMenuSelect(wxCommandEvent& event) {
       plot_.set_is_fitted(true);
       this->Refresh();
     }
+  } else if (id_event == kOptions) {
+    // creates dialog and shows
+    CablePlotOptionsDialog dialog(this, options_);
+    if (dialog.ShowModal() != wxID_OK) {
+      return;
+    }
+
+    // updates plot and redraws
+    UpdateHint hint(HintType::kViewSelect);
+    Update(&hint);
   }
 }
 
@@ -150,6 +162,8 @@ void CablePlotPane::OnMouse(wxMouseEvent& event) {
 
     menu.AppendCheckItem(kFitPlotData, "Fit Plot");
     menu.Check(kFitPlotData, plot_.is_fitted());
+    menu.AppendSeparator();
+    menu.Append(kOptions, "Options");
 
     // shows context menu
     // the event is caught by the pane
