@@ -102,8 +102,8 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   pane_profile_ = new ProfilePlotPane(notebook_plot_, this);
   notebook_plot_->AddPage(pane_profile_, "Profile");
 
-  pane_cable_ = new CableElongationModelPlotPane(notebook_plot_, this);
-  notebook_plot_->AddPage(pane_cable_, "Cable Model");
+  pane_cable_ = new CablePlotPane(notebook_plot_, this);
+  notebook_plot_->AddPage(pane_cable_, "Cable");
 
   manager->AddPane(notebook_plot_, info);
 
@@ -314,7 +314,7 @@ const int SpanAnalyzerView::index_filter() const {
   return index_filter_;
 }
 
-CableElongationModelPlotPane* SpanAnalyzerView::pane_cable() {
+CablePlotPane* SpanAnalyzerView::pane_cable() {
   return pane_cable_;
 }
 

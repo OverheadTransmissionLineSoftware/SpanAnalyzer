@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "cable_elongation_model_plot_pane.h"
+#include "cable_plot_pane.h"
 
 #include "appcommon/graphics/circle_renderer_2d.h"
 #include "appcommon/graphics/line_renderer_2d.h"
@@ -20,13 +20,13 @@ enum {
   kFitPlotData = 0,
 };
 
-BEGIN_EVENT_TABLE(CableElongationModelPlotPane, PlotPane2d)
-  EVT_MENU(wxID_ANY, CableElongationModelPlotPane::OnContextMenuSelect)
-  EVT_MOTION(CableElongationModelPlotPane::OnMouse)
-  EVT_RIGHT_DOWN(CableElongationModelPlotPane::OnMouse)
+BEGIN_EVENT_TABLE(CablePlotPane, PlotPane2d)
+  EVT_MENU(wxID_ANY, CablePlotPane::OnContextMenuSelect)
+  EVT_MOTION(CablePlotPane::OnMouse)
+  EVT_RIGHT_DOWN(CablePlotPane::OnMouse)
 END_EVENT_TABLE()
 
-CableElongationModelPlotPane::CableElongationModelPlotPane(
+CablePlotPane::CablePlotPane(
     wxWindow* parent, wxView* view)
     : PlotPane2d(parent) {
   view_ = view;
@@ -34,10 +34,10 @@ CableElongationModelPlotPane::CableElongationModelPlotPane(
   plot_.set_zoom_factor_fitted(1.2);
 }
 
-CableElongationModelPlotPane::~CableElongationModelPlotPane() {
+CablePlotPane::~CablePlotPane() {
 }
 
-void CableElongationModelPlotPane::Update(wxObject* hint) {
+void CablePlotPane::Update(wxObject* hint) {
   // typically only null on initialization
   if (hint == nullptr) {
     return;
@@ -88,7 +88,7 @@ void CableElongationModelPlotPane::Update(wxObject* hint) {
   }
 }
 
-void CableElongationModelPlotPane::ClearDataSets() {
+void CablePlotPane::ClearDataSets() {
   dataset_axis_lines_.Clear();
   dataset_axis_text_.Clear();
   dataset_core_.Clear();
@@ -98,7 +98,7 @@ void CableElongationModelPlotPane::ClearDataSets() {
   strains_.clear();
 }
 
-void CableElongationModelPlotPane::OnContextMenuSelect(wxCommandEvent& event) {
+void CablePlotPane::OnContextMenuSelect(wxCommandEvent& event) {
   // not creating busy cursor to avoid cursor flicker
 
   // gets context menu selection and sends to handler function
@@ -114,7 +114,7 @@ void CableElongationModelPlotPane::OnContextMenuSelect(wxCommandEvent& event) {
   }
 }
 
-void CableElongationModelPlotPane::OnMouse(wxMouseEvent& event) {
+void CablePlotPane::OnMouse(wxMouseEvent& event) {
   // skips if no plot renderers are active
   if (plot_.HasRenderers() == false) {
     return;
@@ -159,7 +159,7 @@ void CableElongationModelPlotPane::OnMouse(wxMouseEvent& event) {
   }
 }
 
-void CableElongationModelPlotPane::UpdateDataSetAxes(
+void CablePlotPane::UpdateDataSetAxes(
     const double& x_min, const double& x_max,
     const double& y_min, const double& y_max) {
   Line2d* line = nullptr;
@@ -232,7 +232,7 @@ void CableElongationModelPlotPane::UpdateDataSetAxes(
   dataset_axis_text_.Add(text);
 }
 
-void CableElongationModelPlotPane::UpdateDataSetCable(
+void CablePlotPane::UpdateDataSetCable(
     const CableElongationModel& model,
     const CableElongationModel::ComponentType& type_component,
     LineDataSet2d& dataset) {
@@ -268,7 +268,7 @@ void CableElongationModelPlotPane::UpdateDataSetCable(
   }
 }
 
-void CableElongationModelPlotPane::UpdateDataSetMarker(
+void CablePlotPane::UpdateDataSetMarker(
     const CableElongationModel& model,
     const SagTensionAnalysisResult* result) {
   // calculates points
@@ -308,7 +308,7 @@ void CableElongationModelPlotPane::UpdateDataSetMarker(
   }
 }
 
-void CableElongationModelPlotPane::UpdatePlotDatasets() {
+void CablePlotPane::UpdatePlotDatasets() {
   wxLogVerbose("Updating cable elongation model plot datasets.");
 
   ClearDataSets();
@@ -370,7 +370,7 @@ void CableElongationModelPlotPane::UpdatePlotDatasets() {
   UpdateDataSetMarker(model, result);
 }
 
-void CableElongationModelPlotPane::UpdatePlotRenderers() {
+void CablePlotPane::UpdatePlotRenderers() {
   wxLogVerbose("Updating cable elongation model plot renderers.");
 
   // clears plot datasets and renderers
@@ -426,7 +426,7 @@ void CableElongationModelPlotPane::UpdatePlotRenderers() {
   plot_.set_offset(point_offset);
 }
 
-void CableElongationModelPlotPane::UpdateStrains(
+void CablePlotPane::UpdateStrains(
     const CableElongationModel& model) {
   // gets the unloaded points
   const double strain_unloaded_core =

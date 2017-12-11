@@ -9,7 +9,7 @@
 #include "wx/docview.h"
 #include "wx/notebook.h"
 
-#include "cable_elongation_model_plot_pane.h"
+#include "cable_plot_pane.h"
 #include "edit_pane.h"
 #include "profile_plot_pane.h"
 #include "results_pane.h"
@@ -113,7 +113,7 @@ class SpanAnalyzerView : public wxView {
 
   /// \brief Gets the cable model pane.
   /// \return The cable model pane.
-  CableElongationModelPlotPane* pane_cable();
+  CablePlotPane* pane_cable();
 
   /// \brief Gets the edit pane.
   /// \return The edit pane.
@@ -160,8 +160,8 @@ class SpanAnalyzerView : public wxView {
   wxNotebook* notebook_plot_;
 
   /// \var pane_cable_
-  ///   The cable elongation model plot pane.
-  CableElongationModelPlotPane* pane_cable_;
+  ///   The cable plot pane.
+  CablePlotPane* pane_cable_;
 
   /// \var pane_edit_
   ///   The edit pane.

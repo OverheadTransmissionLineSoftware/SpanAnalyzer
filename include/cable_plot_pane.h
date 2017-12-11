@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_CABLEELONGATIONMODELPLOTPANE_H_
-#define OTLS_SPANANALYZER_CABLEELONGATIONMODELPLOTPANE_H_
+#ifndef OTLS_SPANANALYZER_CABLEPLOTPANE_H_
+#define OTLS_SPANANALYZER_CABLEPLOTPANE_H_
 
 #include "wx/docview.h"
 
@@ -18,17 +18,17 @@
 ///
 /// This class is a wxAUI pane that displays the cable elongation model of the
 /// activated span.
-class CableElongationModelPlotPane : public PlotPane2d {
+class CablePlotPane : public PlotPane2d {
  public:
   /// \brief Constructor.
   /// \param[in] parent
   ///   The parent window.
   /// \param[in] view
   ///   The view.
-  CableElongationModelPlotPane(wxWindow* parent, wxView* view);
+  CablePlotPane(wxWindow* parent, wxView* view);
 
   /// \brief Destructor.
-  ~CableElongationModelPlotPane();
+  ~CablePlotPane();
 
   /// \brief Updates the pane.
   /// \param[in] hint
@@ -129,4 +129,4 @@ class CableElongationModelPlotPane : public PlotPane2d {
   DECLARE_EVENT_TABLE()
 };
 
-# endif //  OTLS_SPANANALYZER_CABLEELONGATIONMODELPLOTPANE_H_
+# endif  // OTLS_SPANANALYZER_CABLEPLOTPANE_H_
