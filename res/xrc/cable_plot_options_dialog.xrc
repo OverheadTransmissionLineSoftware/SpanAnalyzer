@@ -3,7 +3,7 @@
 	<object class="wxDialog" name="cable_plot_options_dialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<exstyle>wxWS_EX_VALIDATE_RECURSIVELY</exstyle>
-		<title>Profile Plot Options</title>
+		<title>Cable Plot Options</title>
     <object class="wxPanel" name="cable_plot_options_panel">
       <style>wxTAB_TRAVERSAL</style>
       <object class="wxBoxSizer">
