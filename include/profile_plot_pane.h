@@ -8,6 +8,8 @@
 #include "appcommon/graphics/plot_pane_2d.h"
 #include "wx/docview.h"
 
+#include "span_analyzer_config.h"
+
 /// \par OVERVIEW
 ///
 /// This class is a wxAUI pane that displays a profile plot of the activated
@@ -50,6 +52,10 @@ class ProfilePlotPane : public PlotPane2d {
   /// \var dataset_catenary_
   ///   The catenary plot dataset.
   LineDataSet2d dataset_catenary_;
+
+  /// \var options_
+  ///   The plot options, which are stored in the application config.
+  ProfilePlotOptions* options_;
 
   /// \var view_
   ///   The view.

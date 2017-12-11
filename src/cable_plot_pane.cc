@@ -10,6 +10,7 @@
 #include "models/base/helper.h"
 #include "wx/dcbuffer.h"
 
+#include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
 
@@ -31,8 +32,14 @@ CablePlotPane::CablePlotPane(
     : PlotPane2d(parent) {
   view_ = view;
 
+  // gets options from config
+  SpanAnalyzerConfig* config = wxGetApp().config();
+  options_ = &config->options_plot_cable;
+
   // sets plot defaults
-  plot_.set_background(*wxBLACK_BRUSH);
+  const wxBrush* brush =
+      wxTheBrushList->FindOrCreateBrush(config->color_background);
+  plot_.set_background(*brush);
   plot_.set_is_fitted(true);
   plot_.set_scale(100000);
   plot_.set_scale_x(1);
@@ -52,6 +59,12 @@ void CablePlotPane::Update(wxObject* hint) {
   // gets a buffered dc to prevent flickering
   wxClientDC dc(this);
   wxBufferedDC dc_buf(&dc, bitmap_buffer_);
+
+  // updates plot based on app config
+  SpanAnalyzerConfig* config = wxGetApp().config();
+  const wxBrush* brush =
+      wxTheBrushList->FindOrCreateBrush(config->color_background);
+  plot_.set_background(*brush);
 
   // interprets hint
   const UpdateHint* hint_update = dynamic_cast<UpdateHint*>(hint);
@@ -393,25 +406,34 @@ void CablePlotPane::UpdatePlotRenderers() {
   CircleRenderer2d* renderer_circle = nullptr;
   LineRenderer2d* renderer_line = nullptr;
   TextRenderer2d* renderer_text = nullptr;
+  const wxBrush* brush = nullptr;
+  const wxPen* pen = nullptr;
 
+  pen = wxThePenList->FindOrCreatePen(options_->color_core,
+                                      options_->thickness_line);
   renderer_line = new LineRenderer2d();
   renderer_line->set_dataset(&dataset_core_);
-  renderer_line->set_pen(wxRED_PEN);
+  renderer_line->set_pen(pen);
   plot_.AddRenderer(renderer_line);
 
+  pen = wxThePenList->FindOrCreatePen(options_->color_shell,
+                                      options_->thickness_line);
   renderer_line = new LineRenderer2d();
   renderer_line->set_dataset(&dataset_shell_);
-  renderer_line->set_pen(wxBLUE_PEN);
+  renderer_line->set_pen(pen);
   plot_.AddRenderer(renderer_line);
 
+  pen = wxThePenList->FindOrCreatePen(options_->color_total,
+                                      options_->thickness_line);
   renderer_line = new LineRenderer2d();
   renderer_line->set_dataset(&dataset_total_);
-  renderer_line->set_pen(wxYELLOW_PEN);
+  renderer_line->set_pen(pen);
   plot_.AddRenderer(renderer_line);
 
+  pen = wxThePenList->FindOrCreatePen(*wxWHITE, options_->thickness_line);
   renderer_line = new LineRenderer2d();
   renderer_line->set_dataset(&dataset_axis_lines_);
-  renderer_line->set_pen(wxWHITE_PEN);
+  renderer_line->set_pen(pen);
   plot_.AddRenderer(renderer_line);
 
   renderer_text = new TextRenderer2d();
@@ -419,10 +441,13 @@ void CablePlotPane::UpdatePlotRenderers() {
   renderer_text->set_color(wxWHITE);
   plot_.AddRenderer(renderer_text);
 
+  brush = wxTheBrushList->FindOrCreateBrush(options_->color_markers);
+  pen = wxThePenList->FindOrCreatePen(options_->color_markers,
+                                      options_->thickness_line);
   renderer_circle = new CircleRenderer2d();
   renderer_circle->set_dataset(&dataset_markers_);
-  renderer_circle->set_brush(wxGREEN_BRUSH);
-  renderer_circle->set_pen(wxGREEN_PEN);
+  renderer_circle->set_brush(brush);
+  renderer_circle->set_pen(pen);
   plot_.AddRenderer(renderer_circle);
 }
 

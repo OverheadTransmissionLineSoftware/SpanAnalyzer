@@ -3,6 +3,7 @@
 
 #include "span_analyzer_config_xml_handler.h"
 
+#include "appcommon/xml/color_xml_handler.h"
 #include "wx/filename.h"
 
 #include "span_analyzer_app.h"
@@ -18,8 +19,10 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
   // variables used to create XML node
   wxXmlNode* node_root = nullptr;
   wxXmlNode* node_element = nullptr;
+  wxXmlNode* sub_node = nullptr;
   std::string title;
   std::string content;
+  const wxColour* color = nullptr;
 
   // creates a node for the root
   node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "span_analyzer_config");
@@ -45,6 +48,69 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
   node_element = CreateElementNodeWithContent(title, content);
   node_root->AddChild(node_element);
 
+  // creates color-background node
+  node_element = ColorXmlHandler::CreateNode(config.color_background,
+                                             "background");
+  node_root->AddChild(node_element);
+
+  // creates options-plot-cable node
+  title = "options_plot_cable";
+  node_element = new wxXmlNode(wxXML_ELEMENT_NODE, title);
+
+  sub_node = ColorXmlHandler::CreateNode(
+      config.options_plot_cable.color_core, "core");
+  node_element->AddChild(sub_node);
+
+  sub_node = ColorXmlHandler::CreateNode(
+      config.options_plot_cable.color_markers, "markers");
+  node_element->AddChild(sub_node);
+
+  sub_node = ColorXmlHandler::CreateNode(
+      config.options_plot_cable.color_shell, "shell");
+  node_element->AddChild(sub_node);
+
+  sub_node = ColorXmlHandler::CreateNode(
+      config.options_plot_cable.color_total, "total");
+  node_element->AddChild(sub_node);
+
+  title = "thickness_line";
+  content = std::to_string(config.options_plot_profile.thickness_line);
+  sub_node = CreateElementNodeWithContent(title, content);
+  node_element->AddChild(sub_node);
+
+  node_root->AddChild(node_element);
+
+  // creates options-plot-profile node
+  title = "options_plot_profile";
+  node_element = new wxXmlNode(wxXML_ELEMENT_NODE, title);
+
+  sub_node = ColorXmlHandler::CreateNode(
+      config.options_plot_profile.color_catenary, "catenary");
+  node_element->AddChild(sub_node);
+
+  title = "scale_horizontal";
+  content = std::to_string(config.options_plot_profile.scale_horizontal);
+  sub_node = CreateElementNodeWithContent(title, content);
+  node_element->AddChild(sub_node);
+
+  title = "scale_vertical";
+  content = std::to_string(config.options_plot_profile.scale_vertical);
+  sub_node = CreateElementNodeWithContent(title, content);
+  node_element->AddChild(sub_node);
+
+  title = "thickness_line";
+  content = std::to_string(config.options_plot_profile.thickness_line);
+  sub_node = CreateElementNodeWithContent(title, content);
+  node_element->AddChild(sub_node);
+
+  node_root->AddChild(node_element);
+
+  // creates perspective node
+  title = "perspective";
+  content = config.perspective;
+  node_element = CreateElementNodeWithContent(title, content);
+  node_root->AddChild(node_element);
+
   // creates size-frame node
   title = "size_frame";
   content = "";
@@ -55,12 +121,6 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
   node_element->AddAttribute("x", str);
   str = std::to_string(config.size_frame.GetHeight());
   node_element->AddAttribute("y", str);
-  node_root->AddChild(node_element);
-
-  // creates perspective node
-  title = "perspective";
-  content = config.perspective;
-  node_element = CreateElementNodeWithContent(title, content);
   node_root->AddChild(node_element);
 
   // creates units node
@@ -122,7 +182,10 @@ bool SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
     const wxString title = node->GetName();
     const wxString content = ParseElementNodeWithContent(node);
 
-    if (title == "filepath_data") {
+    if ((title == "color") && (node->GetAttribute("name") == "background")) {
+      status = ColorXmlHandler::ParseNode(node, filepath,
+                                          config.color_background);
+    } else if (title == "filepath_data") {
       if (content.empty() == false) {
         config.filepath_data = content;
       } else {
@@ -138,17 +201,122 @@ bool SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
         config.level_log = wxLOG_Info;
       } else {
         message = FileAndLineNumber(filepath, node)
-                  + "Logging level isn't recognized. Keeping default setting.";
+                  + "Logging level isn't recognized. Keeping default "
+                  "setting.";
         wxLogWarning(message);
       }
+    } else if (title == "options_plot_cable") {
+      // gets sub-nodes
+      wxXmlNode* sub_node = node->GetChildren();
+      while (sub_node != nullptr) {
+        wxString sub_title = sub_node->GetName();
+        wxString sub_content = ParseElementNodeWithContent(sub_node);
+        long value = -9999;
+
+        if (sub_title == "color") {
+          if (sub_node->GetAttribute("name") == "core") {
+            status = ColorXmlHandler::ParseNode(
+                sub_node, filepath,
+                config.options_plot_cable.color_core);
+          } else if (sub_node->GetAttribute("name") == "markers") {
+            status = ColorXmlHandler::ParseNode(
+                sub_node, filepath,
+                config.options_plot_cable.color_markers);
+          } else if (sub_node->GetAttribute("name") == "shell") {
+            status = ColorXmlHandler::ParseNode(
+                sub_node, filepath,
+                config.options_plot_cable.color_shell);
+          } else if (sub_node->GetAttribute("name") == "total") {
+            status = ColorXmlHandler::ParseNode(
+                sub_node, filepath,
+                config.options_plot_cable.color_total);
+          } else {
+            message = FileAndLineNumber(filepath, node)
+                      + "XML node isn't recognized. Skipping.";
+            wxLogError(message);
+            status = false;
+          }
+        } else if (sub_title == "thickness_line") {
+          if (sub_content.ToLong(&value) == true) {
+            config.options_plot_cable.thickness_line = value;
+          } else {
+            message = FileAndLineNumber(filepath, node)
+                      + "Invalid line thickness. Skipping.";
+            wxLogError(message);
+            status = false;
+          }
+        } else {
+          message = FileAndLineNumber(filepath, node)
+                    + "XML node isn't recognized. Skipping.";
+          wxLogError(message);
+          status = false;
+        }
+
+        sub_node = sub_node->GetNext();
+      }
+    } else if (title == "options_plot_profile") {
+      // gets sub-nodes
+      wxXmlNode* sub_node = node->GetChildren();
+      while (sub_node != nullptr) {
+        wxString sub_title = sub_node->GetName();
+        wxString sub_content = ParseElementNodeWithContent(sub_node);
+        long value = -9999;
+
+        if (sub_title == "color") {
+          if (sub_node->GetAttribute("name") == "catenary") {
+            status = ColorXmlHandler::ParseNode(
+                sub_node, filepath,
+                config.options_plot_profile.color_catenary);
+          } else {
+            message = FileAndLineNumber(filepath, node)
+                      + "XML node isn't recognized. Skipping.";
+            wxLogError(message);
+            status = false;
+          }
+        } else if (sub_title == "scale_horizontal") {
+          if (sub_content.ToLong(&value) == true) {
+            config.options_plot_profile.scale_horizontal = value;
+          } else {
+            message = FileAndLineNumber(filepath, node)
+                      + "Invalid horizontal scale. Skipping.";
+            wxLogError(message);
+            status = false;
+          }
+        } else if (sub_title == "scale_vertical") {
+          if (sub_content.ToLong(&value) == true) {
+            config.options_plot_profile.scale_vertical = value;
+          } else {
+            message = FileAndLineNumber(filepath, node)
+                      + "Invalid vertical scale. Skipping.";
+            wxLogError(message);
+            status = false;
+          }
+        } else if (sub_title == "thickness_line") {
+          if (sub_content.ToLong(&value) == true) {
+            config.options_plot_profile.thickness_line = value;
+          } else {
+            message = FileAndLineNumber(filepath, node)
+                      + "Invalid line thickness. Skipping.";
+            wxLogError(message);
+            status = false;
+          }
+        } else {
+          message = FileAndLineNumber(filepath, node)
+                    + "XML node isn't recognized. Skipping.";
+          wxLogError(message);
+          status = false;
+        }
+
+        sub_node = sub_node->GetNext();
+      }
+    } else if (title == "perspective") {
+      config.perspective = content;
     } else if (title == "size_frame") {
       std::string str;
       str = node->GetAttribute("x");
       config.size_frame.SetWidth(std::stoi(str));
       str = node->GetAttribute("y");
       config.size_frame.SetHeight(std::stoi(str));
-    } else if (title == "perspective") {
-      config.perspective = content;
     } else if (title == "units") {
       if (content == "Metric") {
         config.units = units::UnitSystem::kMetric;

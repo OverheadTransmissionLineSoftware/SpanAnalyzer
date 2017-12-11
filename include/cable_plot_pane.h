@@ -13,6 +13,7 @@
 #include "models/sagtension/cable_elongation_model.h"
 
 #include "sag_tension_analysis_results.h"
+#include "span_analyzer_config.h"
 
 /// \par OVERVIEW
 ///
@@ -120,6 +121,10 @@ class CablePlotPane : public PlotPane2d {
   /// \var dataset_total_
   ///   The dataset for the entire cable.
   LineDataSet2d dataset_total_;
+
+  /// \var options_
+  ///   The plot options, which are stored in the application config.
+  CablePlotOptions* options_;
 
   /// \var strains_
   ///   The strain values to calculate points for.

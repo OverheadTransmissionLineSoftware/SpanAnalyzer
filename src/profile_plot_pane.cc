@@ -8,6 +8,7 @@
 #include "models/base/helper.h"
 #include "wx/dcbuffer.h"
 
+#include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
 
@@ -28,11 +29,17 @@ ProfilePlotPane::ProfilePlotPane(wxWindow* parent, wxView* view)
     : PlotPane2d(parent) {
   view_ = view;
 
+  // gets options from config
+  SpanAnalyzerConfig* config = wxGetApp().config();
+  options_ = &config->options_plot_profile;
+
   // sets plot defaults
-  plot_.set_background(*wxBLACK_BRUSH);
+  const wxBrush* brush =
+      wxTheBrushList->FindOrCreateBrush(config->color_background);
+  plot_.set_background(*brush);
   plot_.set_is_fitted(true);
-  plot_.set_scale_x(1);
-  plot_.set_scale_y(10);
+  plot_.set_scale_x(options_->scale_horizontal);
+  plot_.set_scale_y(options_->scale_vertical);
   plot_.set_zoom_factor_fitted(1.0 / 1.2);
 }
 
@@ -48,6 +55,16 @@ void ProfilePlotPane::Update(wxObject* hint) {
   // gets a buffered dc to prevent flickering
   wxClientDC dc(this);
   wxBufferedDC dc_buf(&dc, bitmap_buffer_);
+
+  // updates plot based on app config
+  SpanAnalyzerConfig* config = wxGetApp().config();
+  const wxBrush* brush =
+      wxTheBrushList->FindOrCreateBrush(config->color_background);
+  plot_.set_background(*brush);
+
+  // updates plot based on options
+  plot_.set_scale_x(options_->scale_horizontal);
+  plot_.set_scale_y(options_->scale_vertical);
 
   // interprets hint
   const UpdateHint* hint_update = dynamic_cast<UpdateHint*>(hint);
@@ -222,9 +239,12 @@ void ProfilePlotPane::UpdatePlotRenderers() {
   wxLogVerbose("Updating profile plot renderers.");
 
   // creates renderer
+  const wxPen* pen = wxThePenList->FindOrCreatePen(options_->color_catenary,
+                                                   options_->thickness_line);
+
   LineRenderer2d* renderer = new LineRenderer2d();
   renderer->set_dataset(&dataset_catenary_);
-  renderer->set_pen(wxCYAN_PEN);
+  renderer->set_pen(pen);
 
   // adds renderer 2D plot
   plot_.AddRenderer(renderer);
