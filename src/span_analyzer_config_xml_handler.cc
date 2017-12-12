@@ -73,7 +73,7 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
   node_element->AddChild(sub_node);
 
   title = "thickness_line";
-  content = std::to_string(config.options_plot_profile.thickness_line);
+  content = std::to_string(config.options_plot_cable.thickness_line);
   sub_node = CreateElementNodeWithContent(title, content);
   node_element->AddChild(sub_node);
 
