@@ -217,6 +217,7 @@ void CablePlotPane::UpdateDataSetAxes(
   text = new Text2d();
   text->angle = 0;
   text->message = "Strain";
+  text->offset = Point2d<int>(0, -5);
   text->point.x = (x_max + x_min) / 2;
   text->point.y = 0;
   text->position = Text2d::BoundaryPosition::kCenterUpper;
@@ -225,6 +226,7 @@ void CablePlotPane::UpdateDataSetAxes(
   text = new Text2d();
   text->angle = 0;
   text->message = helper::DoubleToFormattedString(x_min, 2);
+  text->offset = Point2d<int>(5, -5);
   text->point.x = x_min;
   text->point.y = 0;
   text->position = Text2d::BoundaryPosition::kLeftUpper;
@@ -233,6 +235,7 @@ void CablePlotPane::UpdateDataSetAxes(
   text = new Text2d();
   text->angle = 0;
   text->message = helper::DoubleToFormattedString(x_max, 2);
+  text->offset = Point2d<int>(0, -5);
   text->point.x = x_max;
   text->point.y = 0;
   text->position = Text2d::BoundaryPosition::kCenterUpper;
@@ -242,6 +245,7 @@ void CablePlotPane::UpdateDataSetAxes(
   text = new Text2d();
   text->angle = 90;
   text->message = "Load";
+  text->offset = Point2d<int>(0, 5);
   text->point.x = 0;
   text->point.y = (y_max + y_min) / 2;
   text->position = Text2d::BoundaryPosition::kCenterLower;
@@ -250,6 +254,7 @@ void CablePlotPane::UpdateDataSetAxes(
   text = new Text2d();
   text->angle = 0;
   text->message = helper::DoubleToFormattedString(y_min, 0) + " ";
+  text->offset = Point2d<int>(-5, 5);
   text->point.x = 0;
   text->point.y = y_min;
   text->position = Text2d::BoundaryPosition::kRightLower;
@@ -258,6 +263,7 @@ void CablePlotPane::UpdateDataSetAxes(
   text = new Text2d();
   text->angle = 0;
   text->message = helper::DoubleToFormattedString(y_max, 0) + " ";
+  text->offset = Point2d<int>(-5, 0);
   text->point.x = 0;
   text->point.y = y_max;
   text->position = Text2d::BoundaryPosition::kRightCenter;
