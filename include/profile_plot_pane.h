@@ -6,6 +6,8 @@
 
 #include "appcommon/graphics/line_data_set_2d.h"
 #include "appcommon/graphics/plot_pane_2d.h"
+#include "appcommon/graphics/text_data_set_2d.h"
+#include "models/transmissionline/catenary.h"
 #include "wx/docview.h"
 
 #include "span_analyzer_config.h"
@@ -33,6 +35,9 @@ class ProfilePlotPane : public PlotPane2d {
   void Update(wxObject* hint = nullptr);
 
  protected:
+  /// \brief Clears the datasets.
+  void ClearDataSets();
+
   /// \brief Handles the context menu select event.
   /// \param[in] event
   ///   The event.
@@ -43,6 +48,16 @@ class ProfilePlotPane : public PlotPane2d {
   ///   The event.
   void OnMouse(wxMouseEvent& event);
 
+  /// \brief Updates a catenary dataset.
+  /// \param[in] catenary
+  ///   The catenary.
+  void UpdateDatasetCatenary(const Catenary3d& catenary);
+
+  /// \brief Updates the dimension dataset.
+  /// \param[in] catenary
+  ///   The catenary.
+  void UpdateDatasetDimensions(const Catenary3d& catenary);
+
   /// \brief Updates the plot datasets.
   void UpdatePlotDatasets() override;
 
@@ -50,8 +65,16 @@ class ProfilePlotPane : public PlotPane2d {
   void UpdatePlotRenderers() override;
 
   /// \var dataset_catenary_
-  ///   The catenary plot dataset.
+  ///   The catenary dataset.
   LineDataSet2d dataset_catenary_;
+
+  /// \var dataset_dimension_lines_
+  ///   The dimension line dataset.
+  LineDataSet2d dataset_dimension_lines_;
+
+  /// \var dataset_dimension_text_
+  ///   The dimension text dataset.
+  TextDataSet2d dataset_dimension_text_;
 
   /// \var options_
   ///   The plot options, which are stored in the application config.
