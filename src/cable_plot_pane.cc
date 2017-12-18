@@ -357,14 +357,12 @@ void CablePlotPane::UpdatePlotDatasets() {
   // gets filter group
   const AnalysisFilterGroup* group_filters = view->group_filters();
   if (group_filters == nullptr) {
-    plot_.ClearRenderers();
     return;
   }
 
   // gets analysis result filter
   const AnalysisFilter* filter = view->AnalysisFilterActive();
   if (filter == nullptr) {
-    plot_.ClearRenderers();
     return;
   }
 
@@ -376,7 +374,6 @@ void CablePlotPane::UpdatePlotDatasets() {
   const SagTensionAnalysisResult* result = doc->Result(index,
                                                        filter->condition);
   if (result == nullptr) {
-    plot_.ClearRenderers();
     return;
   }
 
@@ -412,15 +409,15 @@ void CablePlotPane::UpdatePlotDatasets() {
 }
 
 void CablePlotPane::UpdatePlotRenderers() {
+  wxLogVerbose("Updating cable elongation model plot renderers.");
+
+  // clears existing renderers
+  plot_.ClearRenderers();
+
   // checks if dataset has any data
   if (dataset_total_.data()->empty() == true) {
     return;
   }
-
-  wxLogVerbose("Updating cable elongation model plot renderers.");
-
-  // clears plot datasets and renderers
-  plot_.ClearRenderers();
 
   // updates renderers
   CircleRenderer2d* renderer_circle = nullptr;
