@@ -182,7 +182,6 @@ void ProfilePlotPane::UpdatePlotDatasets() {
   const AnalysisFilterGroup* group_filters = view->group_filters();
   if (group_filters == nullptr) {
     dataset_catenary_ = LineDataSet2d();
-    plot_.ClearRenderers();
     return;
   }
 
@@ -190,7 +189,6 @@ void ProfilePlotPane::UpdatePlotDatasets() {
   const AnalysisFilter* filter = view->AnalysisFilterActive();
   if (filter == nullptr) {
     dataset_catenary_ = LineDataSet2d();
-    plot_.ClearRenderers();
     return;
   }
 
@@ -203,7 +201,6 @@ void ProfilePlotPane::UpdatePlotDatasets() {
                                                        filter->condition);
   if (result == nullptr) {
     dataset_catenary_ = LineDataSet2d();
-    plot_.ClearRenderers();
     return;
   }
 
@@ -245,12 +242,15 @@ void ProfilePlotPane::UpdatePlotDatasets() {
 }
 
 void ProfilePlotPane::UpdatePlotRenderers() {
+  wxLogVerbose("Updating profile plot renderers.");
+
+  // clears existing renderers
+  plot_.ClearRenderers();
+
   // checks if dataset has any data
   if (dataset_catenary_.data()->empty() == true) {
     return;
   }
-
-  wxLogVerbose("Updating profile plot renderers.");
 
   // creates renderer
   const wxPen* pen = wxThePenList->FindOrCreatePen(options_->color_catenary,
