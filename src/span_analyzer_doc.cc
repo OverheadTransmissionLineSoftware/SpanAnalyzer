@@ -367,7 +367,12 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
 
 void SpanAnalyzerDoc::SetSpanAnalysis(const Span* span) {
   controller_analysis_.set_span(span);
-  controller_analysis_.RunAnalysis();
+
+  if (span != nullptr) {
+    controller_analysis_.RunAnalysis();
+  } else {
+    controller_analysis_.ClearResults();
+  }
 
   UpdateHint hint(HintType::kSpansEdit);
   UpdateAllViews(nullptr, &hint);

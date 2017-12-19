@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "cable_elongation_model_plot_pane.h"
+#include "cable_plot_pane.h"
 
 #include "appcommon/graphics/circle_renderer_2d.h"
 #include "appcommon/graphics/line_renderer_2d.h"
@@ -10,6 +10,8 @@
 #include "models/base/helper.h"
 #include "wx/dcbuffer.h"
 
+#include "cable_plot_options_dialog.h"
+#include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
 #include "span_analyzer_view.h"
 
@@ -18,26 +20,39 @@
 /// This is the enumeration for the context menu.
 enum {
   kFitPlotData = 0,
+  kOptions,
 };
 
-BEGIN_EVENT_TABLE(CableElongationModelPlotPane, PlotPane2d)
-  EVT_MENU(wxID_ANY, CableElongationModelPlotPane::OnContextMenuSelect)
-  EVT_MOTION(CableElongationModelPlotPane::OnMouse)
-  EVT_RIGHT_DOWN(CableElongationModelPlotPane::OnMouse)
+BEGIN_EVENT_TABLE(CablePlotPane, PlotPane2d)
+  EVT_MENU(wxID_ANY, CablePlotPane::OnContextMenuSelect)
+  EVT_MOTION(CablePlotPane::OnMouse)
+  EVT_RIGHT_DOWN(CablePlotPane::OnMouse)
 END_EVENT_TABLE()
 
-CableElongationModelPlotPane::CableElongationModelPlotPane(
+CablePlotPane::CablePlotPane(
     wxWindow* parent, wxView* view)
     : PlotPane2d(parent) {
   view_ = view;
 
-  plot_.set_zoom_factor_fitted(1.2);
+  // gets options from config
+  SpanAnalyzerConfig* config = wxGetApp().config();
+  options_ = &config->options_plot_cable;
+
+  // sets plot defaults
+  const wxBrush* brush =
+      wxTheBrushList->FindOrCreateBrush(config->color_background);
+  plot_.set_background(*brush);
+  plot_.set_is_fitted(true);
+  plot_.set_scale(100000);
+  plot_.set_scale_x(1);
+  plot_.set_scale_y(0.0000001);
+  plot_.set_zoom_factor_fitted(1.0 / 1.2);
 }
 
-CableElongationModelPlotPane::~CableElongationModelPlotPane() {
+CablePlotPane::~CablePlotPane() {
 }
 
-void CableElongationModelPlotPane::Update(wxObject* hint) {
+void CablePlotPane::Update(wxObject* hint) {
   // typically only null on initialization
   if (hint == nullptr) {
     return;
@@ -47,44 +62,63 @@ void CableElongationModelPlotPane::Update(wxObject* hint) {
   wxClientDC dc(this);
   wxBufferedDC dc_buf(&dc, bitmap_buffer_);
 
+  // updates plot based on app config
+  SpanAnalyzerConfig* config = wxGetApp().config();
+  const wxBrush* brush =
+      wxTheBrushList->FindOrCreateBrush(config->color_background);
+  plot_.set_background(*brush);
+
   // interprets hint
   const UpdateHint* hint_update = dynamic_cast<UpdateHint*>(hint);
   if (hint_update == nullptr) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    UpdatePlotScaling();
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kAnalysisFilterGroupEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    UpdatePlotScaling();
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kAnalysisFilterGroupSelect) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    UpdatePlotScaling();
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kAnalysisFilterSelect) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    UpdatePlotScaling();
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kCablesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    UpdatePlotScaling();
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kPreferencesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    UpdatePlotScaling();
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kSpansEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    UpdatePlotScaling();
+    view_->OnDraw(&dc_buf);
+  } else if (hint_update->type() == HintType::kViewSelect) {
+    UpdatePlotDatasets();
+    UpdatePlotRenderers();
+    UpdatePlotScaling();
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == HintType::kWeathercasesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
-    RenderPlot(dc_buf);
+    UpdatePlotScaling();
+    view_->OnDraw(&dc_buf);
   }
 }
 
-void CableElongationModelPlotPane::ClearDataSets() {
+void CablePlotPane::ClearDataSets() {
   dataset_axis_lines_.Clear();
   dataset_axis_text_.Clear();
   dataset_core_.Clear();
@@ -94,7 +128,7 @@ void CableElongationModelPlotPane::ClearDataSets() {
   strains_.clear();
 }
 
-void CableElongationModelPlotPane::OnContextMenuSelect(wxCommandEvent& event) {
+void CablePlotPane::OnContextMenuSelect(wxCommandEvent& event) {
   // not creating busy cursor to avoid cursor flicker
 
   // gets context menu selection and sends to handler function
@@ -107,15 +141,20 @@ void CableElongationModelPlotPane::OnContextMenuSelect(wxCommandEvent& event) {
       plot_.set_is_fitted(true);
       this->Refresh();
     }
+  } else if (id_event == kOptions) {
+    // creates dialog and shows
+    CablePlotOptionsDialog dialog(this, options_);
+    if (dialog.ShowModal() != wxID_OK) {
+      return;
+    }
+
+    // updates plot and redraws
+    UpdateHint hint(HintType::kViewSelect);
+    Update(&hint);
   }
 }
 
-void CableElongationModelPlotPane::OnMouse(wxMouseEvent& event) {
-  // skips if no plot renderers are active
-  if (plot_.HasRenderers() == false) {
-    return;
-  }
-
+void CablePlotPane::OnMouse(wxMouseEvent& event) {
   // overrides for right mouse click
   if (event.RightDown() == true) {
     // builds a context menu
@@ -123,6 +162,8 @@ void CableElongationModelPlotPane::OnMouse(wxMouseEvent& event) {
 
     menu.AppendCheckItem(kFitPlotData, "Fit Plot");
     menu.Check(kFitPlotData, plot_.is_fitted());
+    menu.AppendSeparator();
+    menu.Append(kOptions, "Options");
 
     // shows context menu
     // the event is caught by the pane
@@ -135,27 +176,22 @@ void CableElongationModelPlotPane::OnMouse(wxMouseEvent& event) {
     PlotPane2d::OnMouse(event);
   }
 
-  // updates status bar
-  if (plot_.HasRenderers() == true) {
-    // converts graphics point to data point
-    wxPoint point_graphics;
-    point_graphics.x = event.GetX();
-    point_graphics.y = event.GetY();
-    const Point2d<float> point_data = plot_.PointGraphicsToData(point_graphics);
+  // converts graphics point to data point
+  wxPoint point_graphics;
+  point_graphics.x = event.GetX();
+  point_graphics.y = event.GetY();
+  const Point2d<float> point_data = plot_.PointGraphicsToData(point_graphics);
 
-    // logs to status bar
-    std::string str = "X="
-                      + helper::DoubleToFormattedString(point_data.x, 5)
-                      + "   Y="
-                      + helper::DoubleToFormattedString(point_data.y, 2);
+  // logs to status bar
+  std::string str = "X="
+                    + helper::DoubleToFormattedString(point_data.x, 5)
+                    + "   Y="
+                    + helper::DoubleToFormattedString(point_data.y, 2);
 
-    status_bar_log::SetText(str, 1);
-  } else {
-    status_bar_log::SetText("", 1);
-  }
+  status_bar_log::SetText(str, 1);
 }
 
-void CableElongationModelPlotPane::UpdateDataSetAxes(
+void CablePlotPane::UpdateDataSetAxes(
     const double& x_min, const double& x_max,
     const double& y_min, const double& y_max) {
   Line2d* line = nullptr;
@@ -181,6 +217,7 @@ void CableElongationModelPlotPane::UpdateDataSetAxes(
   text = new Text2d();
   text->angle = 0;
   text->message = "Strain";
+  text->offset = Point2d<int>(0, -5);
   text->point.x = (x_max + x_min) / 2;
   text->point.y = 0;
   text->position = Text2d::BoundaryPosition::kCenterUpper;
@@ -189,6 +226,7 @@ void CableElongationModelPlotPane::UpdateDataSetAxes(
   text = new Text2d();
   text->angle = 0;
   text->message = helper::DoubleToFormattedString(x_min, 2);
+  text->offset = Point2d<int>(5, -5);
   text->point.x = x_min;
   text->point.y = 0;
   text->position = Text2d::BoundaryPosition::kLeftUpper;
@@ -197,6 +235,7 @@ void CableElongationModelPlotPane::UpdateDataSetAxes(
   text = new Text2d();
   text->angle = 0;
   text->message = helper::DoubleToFormattedString(x_max, 2);
+  text->offset = Point2d<int>(0, -5);
   text->point.x = x_max;
   text->point.y = 0;
   text->position = Text2d::BoundaryPosition::kCenterUpper;
@@ -206,6 +245,7 @@ void CableElongationModelPlotPane::UpdateDataSetAxes(
   text = new Text2d();
   text->angle = 90;
   text->message = "Load";
+  text->offset = Point2d<int>(0, 5);
   text->point.x = 0;
   text->point.y = (y_max + y_min) / 2;
   text->position = Text2d::BoundaryPosition::kCenterLower;
@@ -214,6 +254,7 @@ void CableElongationModelPlotPane::UpdateDataSetAxes(
   text = new Text2d();
   text->angle = 0;
   text->message = helper::DoubleToFormattedString(y_min, 0) + " ";
+  text->offset = Point2d<int>(-5, 5);
   text->point.x = 0;
   text->point.y = y_min;
   text->position = Text2d::BoundaryPosition::kRightLower;
@@ -222,13 +263,14 @@ void CableElongationModelPlotPane::UpdateDataSetAxes(
   text = new Text2d();
   text->angle = 0;
   text->message = helper::DoubleToFormattedString(y_max, 0) + " ";
+  text->offset = Point2d<int>(-5, 0);
   text->point.x = 0;
   text->point.y = y_max;
   text->position = Text2d::BoundaryPosition::kRightCenter;
   dataset_axis_text_.Add(text);
 }
 
-void CableElongationModelPlotPane::UpdateDataSetCable(
+void CablePlotPane::UpdateDataSetCable(
     const CableElongationModel& model,
     const CableElongationModel::ComponentType& type_component,
     LineDataSet2d& dataset) {
@@ -264,7 +306,7 @@ void CableElongationModelPlotPane::UpdateDataSetCable(
   }
 }
 
-void CableElongationModelPlotPane::UpdateDataSetMarker(
+void CablePlotPane::UpdateDataSetMarker(
     const CableElongationModel& model,
     const SagTensionAnalysisResult* result) {
   // calculates points
@@ -304,7 +346,7 @@ void CableElongationModelPlotPane::UpdateDataSetMarker(
   }
 }
 
-void CableElongationModelPlotPane::UpdatePlotDatasets() {
+void CablePlotPane::UpdatePlotDatasets() {
   wxLogVerbose("Updating cable elongation model plot datasets.");
 
   ClearDataSets();
@@ -366,35 +408,49 @@ void CableElongationModelPlotPane::UpdatePlotDatasets() {
   UpdateDataSetMarker(model, result);
 }
 
-void CableElongationModelPlotPane::UpdatePlotRenderers() {
+void CablePlotPane::UpdatePlotRenderers() {
   wxLogVerbose("Updating cable elongation model plot renderers.");
 
-  // clears plot datasets and renderers
+  // clears existing renderers
   plot_.ClearRenderers();
+
+  // checks if dataset has any data
+  if (dataset_total_.data()->empty() == true) {
+    return;
+  }
 
   // updates renderers
   CircleRenderer2d* renderer_circle = nullptr;
   LineRenderer2d* renderer_line = nullptr;
   TextRenderer2d* renderer_text = nullptr;
+  const wxBrush* brush = nullptr;
+  const wxPen* pen = nullptr;
 
+  pen = wxThePenList->FindOrCreatePen(options_->color_core,
+                                      options_->thickness_line);
   renderer_line = new LineRenderer2d();
   renderer_line->set_dataset(&dataset_core_);
-  renderer_line->set_pen(wxRED_PEN);
+  renderer_line->set_pen(pen);
   plot_.AddRenderer(renderer_line);
 
+  pen = wxThePenList->FindOrCreatePen(options_->color_shell,
+                                      options_->thickness_line);
   renderer_line = new LineRenderer2d();
   renderer_line->set_dataset(&dataset_shell_);
-  renderer_line->set_pen(wxBLUE_PEN);
+  renderer_line->set_pen(pen);
   plot_.AddRenderer(renderer_line);
 
+  pen = wxThePenList->FindOrCreatePen(options_->color_total,
+                                      options_->thickness_line);
   renderer_line = new LineRenderer2d();
   renderer_line->set_dataset(&dataset_total_);
-  renderer_line->set_pen(wxYELLOW_PEN);
+  renderer_line->set_pen(pen);
   plot_.AddRenderer(renderer_line);
 
+  pen = wxThePenList->FindOrCreatePen(*wxWHITE, options_->thickness_line);
   renderer_line = new LineRenderer2d();
   renderer_line->set_dataset(&dataset_axis_lines_);
-  renderer_line->set_pen(wxWHITE_PEN);
+  renderer_line->set_pen(pen);
   plot_.AddRenderer(renderer_line);
 
   renderer_text = new TextRenderer2d();
@@ -402,27 +458,37 @@ void CableElongationModelPlotPane::UpdatePlotRenderers() {
   renderer_text->set_color(wxWHITE);
   plot_.AddRenderer(renderer_text);
 
+  brush = wxTheBrushList->FindOrCreateBrush(options_->color_markers);
+  pen = wxThePenList->FindOrCreatePen(options_->color_markers,
+                                      options_->thickness_line);
   renderer_circle = new CircleRenderer2d();
   renderer_circle->set_dataset(&dataset_markers_);
-  renderer_circle->set_brush(wxGREEN_BRUSH);
-  renderer_circle->set_pen(wxGREEN_PEN);
+  renderer_circle->set_brush(brush);
+  renderer_circle->set_pen(pen);
   plot_.AddRenderer(renderer_circle);
+}
 
-  // updates so the plot remains in place and square
+/// This function is necessary so that the plot stays square. The x-axis should
+/// remain fixed, but the y-axis needs to be re-calculated based on cable rated
+/// strength.
+void CablePlotPane::UpdatePlotScaling() {
+  // gets the plot data limits and ranges
   const Plot2dDataLimits& limits = plot_.LimitsData();
   const double x_range = limits.x_max - limits.x_min;
   const double y_range = limits.y_max - limits.y_min;
 
-  const double ratio_plot_prev = plot_.ratio_aspect();
-  const double ratio_plot_new =  1 / (y_range / x_range);
-  plot_.set_ratio_aspect(ratio_plot_new);
+  // calculates a new scale for the y-axis
+  const double scale_y_prev = plot_.scale_y();
+  const double scale_y_new =  1 / (y_range / x_range);
+  plot_.set_scale_y(scale_y_new);
 
+  // calculates a new plot offset
   Point2d<float> point_offset = plot_.offset();
-  point_offset.y = point_offset.y * (ratio_plot_prev / ratio_plot_new);
+  point_offset.y = point_offset.y * (scale_y_prev / scale_y_new);
   plot_.set_offset(point_offset);
 }
 
-void CableElongationModelPlotPane::UpdateStrains(
+void CablePlotPane::UpdateStrains(
     const CableElongationModel& model) {
   // gets the unloaded points
   const double strain_unloaded_core =

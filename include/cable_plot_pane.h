@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_CABLEELONGATIONMODELPLOTPANE_H_
-#define OTLS_SPANANALYZER_CABLEELONGATIONMODELPLOTPANE_H_
+#ifndef OTLS_SPANANALYZER_CABLEPLOTPANE_H_
+#define OTLS_SPANANALYZER_CABLEPLOTPANE_H_
 
 #include "wx/docview.h"
 
@@ -13,22 +13,23 @@
 #include "models/sagtension/cable_elongation_model.h"
 
 #include "sag_tension_analysis_results.h"
+#include "span_analyzer_config.h"
 
 /// \par OVERVIEW
 ///
 /// This class is a wxAUI pane that displays the cable elongation model of the
 /// activated span.
-class CableElongationModelPlotPane : public PlotPane2d {
+class CablePlotPane : public PlotPane2d {
  public:
   /// \brief Constructor.
   /// \param[in] parent
   ///   The parent window.
   /// \param[in] view
   ///   The view.
-  CableElongationModelPlotPane(wxWindow* parent, wxView* view);
+  CablePlotPane(wxWindow* parent, wxView* view);
 
   /// \brief Destructor.
-  ~CableElongationModelPlotPane();
+  ~CablePlotPane();
 
   /// \brief Updates the pane.
   /// \param[in] hint
@@ -89,6 +90,9 @@ class CableElongationModelPlotPane : public PlotPane2d {
   /// This includes re-calculating the dataset.
   void UpdatePlotRenderers() override;
 
+  /// \brief Updates the plot scaling.
+  void UpdatePlotScaling();
+
   /// \brief Updates the strain values.
   /// \param[in] model
   ///   The cable elongation model.
@@ -118,6 +122,10 @@ class CableElongationModelPlotPane : public PlotPane2d {
   ///   The dataset for the entire cable.
   LineDataSet2d dataset_total_;
 
+  /// \var options_
+  ///   The plot options, which are stored in the application config.
+  CablePlotOptions* options_;
+
   /// \var strains_
   ///   The strain values to calculate points for.
   std::list<double> strains_;
@@ -129,4 +137,4 @@ class CableElongationModelPlotPane : public PlotPane2d {
   DECLARE_EVENT_TABLE()
 };
 
-# endif //  OTLS_SPANANALYZER_CABLEELONGATIONMODELPLOTPANE_H_
+# endif  // OTLS_SPANANALYZER_CABLEPLOTPANE_H_

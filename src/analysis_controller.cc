@@ -9,6 +9,8 @@
 #include "wx/wx.h"
 
 AnalysisThread::AnalysisThread() : wxThread(wxTHREAD_JOINABLE) {
+  line_cable_ = nullptr;
+  spacing_catenary_ = nullptr;
 }
 
 void AnalysisThread::AddAnalysisJob(AnalysisJob* job) {
@@ -31,24 +33,35 @@ void AnalysisThread::set_line_cable(const LineCable* line_cable) {
   line_cable_ = line_cable;
 }
 
+void AnalysisThread::set_spacing_catenary(const Vector3d* spacing_catenary) {
+  spacing_catenary_ = spacing_catenary;
+}
+
+const Vector3d* AnalysisThread::spacing_catenary() const {
+  return spacing_catenary_;
+}
+
 void AnalysisThread::DoAnalysisJob(const int& index) {
   std::string message;
   AnalysisJob* job = *std::next(jobs_.begin(), index);
 
-  // sets up reloader
+  // sets up loaders for job
   reloader_.set_condition_reloaded(job->condition);
   reloader_.set_weathercase_reloaded(job->weathercase);
 
+  unloader_.set_condition_unloaded(job->condition);
+  unloader_.set_temperature_unloaded(job->weathercase->temperature_cable);
+
   // validates reloader and logs any errors
   std::list<ErrorMessage> messages;
-  const bool status = reloader_.Validate(false, &messages);
-  if (status == false) {
+  const bool status_reloader = reloader_.Validate(false, &messages);
+  if (status_reloader == false) {
     // errors were present
     // adds analysis controller error message to give context
     ErrorMessage message;
     message.title = "ANALYSIS THREAD";
     if (job->condition == CableConditionType::kCreep) {
-      message.description = "No solution for "
+      message.description = "No reloader solution for "
                             + job->weathercase->description
                             + " Creep.";
     } else if (job->condition == CableConditionType::kInitial) {
@@ -67,16 +80,47 @@ void AnalysisThread::DoAnalysisJob(const int& index) {
     messages_.splice(messages_.cend(), messages);
   }
 
+  // validates unloader and logs any errors
+  const bool status_unloader = unloader_.Validate(false, &messages);
+  if (status_unloader == false) {
+    // errors were present
+    // adds analysis controller error message to give context
+    ErrorMessage message;
+    message.title = "ANALYSIS THREAD";
+    if (job->condition == CableConditionType::kCreep) {
+      message.description = "No unloader solution for "
+                            + job->weathercase->description
+                            + " Creep.";
+    } else if (job->condition == CableConditionType::kInitial) {
+      message.description = "No solution for "
+                            + job->weathercase->description
+                            + " Initial.";
+    } else if (job->condition == CableConditionType::kLoad) {
+      message.description = "No solution for "
+                            + job->weathercase->description
+                            + " Load.";
+    }
+
+    messages_.push_back(message);
+
+    // adds unloader error messages
+    messages_.splice(messages_.cend(), messages);
+  }
+
   // populates result
   SagTensionAnalysisResult& result = *job->result;
   result.weathercase = job->weathercase;
 
-  if (status == true) {
+  if ((status_reloader == true) && (status_unloader == true)) {
     // no errors were present
     result.condition = job->condition;
 
     // gets reloaded catenary and populates sag-tension result
     Catenary3d catenary = reloader_.CatenaryReloaded();
+
+    result.length_unloaded = unloader_.LengthUnloaded();
+
+    result.state = reloader_.StateReloaded();
 
     result.tension_average = catenary.TensionAverage();
     result.tension_average_core = reloader_.TensionAverageComponent(
@@ -91,11 +135,13 @@ void AnalysisThread::DoAnalysisJob(const int& index) {
         CableElongationModel::ComponentType::kShell);
 
     result.weight_unit = catenary.weight_unit();
-
-    result.state = reloader_.StateReloaded();
   } else {
     // flags this as an invalid result
     result.condition = CableConditionType::kNull;
+
+    result.length_unloaded = -999999;
+
+    result.state = CableStretchState();
 
     result.tension_average = -999999;
     result.tension_average_core = -999999;
@@ -106,14 +152,15 @@ void AnalysisThread::DoAnalysisJob(const int& index) {
     result.tension_horizontal_shell = -999999;
 
     result.weight_unit = Vector3d();
-
-    result.state = CableStretchState();
   }
 }
 
 wxThread::ExitCode AnalysisThread::Entry() {
-  // initializes reloader
+  // initializes loaders
   reloader_.set_line_cable(line_cable_);
+
+  unloader_.set_line_cable(line_cable_);
+  unloader_.set_spacing_attachments(*spacing_catenary_);
 
   // does all jobs in the list
   const int kSizeJobs = jobs_.size();
@@ -273,6 +320,7 @@ void AnalysisController::RunAnalysis() {
   for (int i = 0; i < num_threads; i++) {
     AnalysisThread* thread = new AnalysisThread();
     thread->set_line_cable(&span_->linecable);
+    thread->set_spacing_catenary(&span_->spacing_catenary);
     threads.push_back(thread);
   }
 

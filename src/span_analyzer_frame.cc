@@ -6,6 +6,7 @@
 #include "appcommon/units/cable_unit_converter.h"
 #include "appcommon/units/weather_load_case_unit_converter.h"
 #include "wx/aboutdlg.h"
+#include "wx/printdlg.h"
 #include "wx/xrc/xmlres.h"
 
 #include "analysis_filter_manager_dialog.h"
@@ -14,6 +15,7 @@
 #include "preferences_dialog.h"
 #include "span_analyzer_app.h"
 #include "span_analyzer_doc.h"
+#include "span_analyzer_printout.h"
 #include "span_analyzer_view.h"
 #include "weather_load_case_manager_dialog.h"
 #include "xpm/icon.xpm"
@@ -56,9 +58,9 @@ BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxDocParentFrame)
   EVT_MENU(XRCID("menuitem_edit_analysisfilters"), SpanAnalyzerFrame::OnMenuEditAnalysisFilters)
   EVT_MENU(XRCID("menuitem_edit_cables"), SpanAnalyzerFrame::OnMenuEditCables)
   EVT_MENU(XRCID("menuitem_edit_weathercases"), SpanAnalyzerFrame::OnMenuEditWeathercases)
+  EVT_MENU(XRCID("menuitem_file_pagesetup"), SpanAnalyzerFrame::OnMenuFilePageSetup)
   EVT_MENU(XRCID("menuitem_file_preferences"), SpanAnalyzerFrame::OnMenuFilePreferences)
   EVT_MENU(XRCID("menuitem_help_about"), SpanAnalyzerFrame::OnMenuHelpAbout)
-  EVT_MENU(XRCID("menuitem_view_cable_model"), SpanAnalyzerFrame::OnMenuViewCableModel)
   EVT_MENU(XRCID("menuitem_view_log"), SpanAnalyzerFrame::OnMenuViewLog)
 END_EVENT_TABLE()
 
@@ -191,6 +193,21 @@ void SpanAnalyzerFrame::OnMenuEditWeathercases(
   }
 }
 
+void SpanAnalyzerFrame::OnMenuFilePageSetup(wxCommandEvent& event) {
+  // gets application page setup data
+  wxPageSetupDialogData* data_page = wxGetApp().config()->data_page;
+
+  // creates and shows dialog
+  //wxPageSetupDialogData data_page(data_print);
+  wxPageSetupDialog dialog(this, data_page);
+  if (dialog.ShowModal() != wxID_OK) {
+    return;
+  }
+
+  // updates print data
+  *data_page = dialog.GetPageSetupDialogData();
+}
+
 void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
   // gets the application config
   SpanAnalyzerConfig* config = wxGetApp().config();
@@ -209,8 +226,17 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
 
   // application data change is implemented on app restart
 
+  // updates logging level
+  wxLog::SetLogLevel(config->level_log);
+  if (config->level_log == wxLOG_Message) {
+    wxLog::SetVerbose(false);
+  } else if (config->level_log == wxLOG_Info) {
+    wxLog::SetVerbose(true);
+  }
+
   // converts unit system if it changed
   SpanAnalyzerData* data = wxGetApp().data();
+  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
   if (units_before != config->units) {
     wxLogVerbose("Converting unit system.");
 
@@ -233,25 +259,16 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
           cablefile->cable);
     }
 
-    // updates document/views
-    SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
+    // updates document
     if (doc != nullptr) {
       doc->ConvertUnitSystem(units_before, config->units);
       doc->RunAnalysis();
-
-      // updates views
-      UpdateHint hint(HintType::kPreferencesEdit);
-      doc->UpdateAllViews(nullptr, &hint);
     }
   }
 
-  // updates logging level
-  wxLog::SetLogLevel(config->level_log);
-  if (config->level_log == wxLOG_Message) {
-    wxLog::SetVerbose(false);
-  } else if (config->level_log == wxLOG_Info) {
-    wxLog::SetVerbose(true);
-  }
+  // updates views
+  UpdateHint hint(HintType::kPreferencesEdit);
+  doc->UpdateAllViews(nullptr, &hint);
 }
 
 void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
@@ -259,7 +276,7 @@ void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
   wxAboutDialogInfo info;
   info.SetIcon(wxICON(icon));
   info.SetName(wxGetApp().GetAppDisplayName());
-  info.SetVersion("0.4.0");
+  info.SetVersion("0.5.0");
   info.SetCopyright("License:   http://unlicense.org/");
   info.SetDescription(
     "This application provides a GUI for calculating the sag-tension response\n"
@@ -279,17 +296,6 @@ void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
 
   // shows the dialog
   wxAboutBox(info, this);
-}
-
-void SpanAnalyzerFrame::OnMenuViewCableModel(wxCommandEvent& event) {
-  wxAuiPaneInfo& info = manager_.GetPane("Cable");
-  if (info.IsShown() == false) {
-    info.Show(true);
-  } else {
-    info.Show(false);
-  }
-
-  manager_.Update();
 }
 
 void SpanAnalyzerFrame::OnMenuViewLog(wxCommandEvent& event) {

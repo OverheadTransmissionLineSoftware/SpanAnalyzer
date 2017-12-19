@@ -20,6 +20,7 @@ class ResultsPane : public wxPanel {
   enum class ReportType {
     kCatenary,
     kCatenaryEndpoints,
+    kLength,
     kSagTension,
     kTensionDistribution,
   };
@@ -68,13 +69,19 @@ class ResultsPane : public wxPanel {
   /// \brief Updates the report data with catenary results.
   /// \param[in] results
   ///   The filtered results from the document.
-  void UpdateReportDataCatenary(
+  void UpdateReportDataCatenaryCurve(
       const std::list<const SagTensionAnalysisResult*>* results);
 
   /// \brief Updates the report data with catenary endpoint results.
   /// \param[in] results
   ///   The filtered results from the document.
   void UpdateReportDataCatenaryEndpoints(
+      const std::list<const SagTensionAnalysisResult*>* results);
+
+  /// \brief Updates the report data with length results.
+  /// \param[in] results
+  ///   The filtered results from the document.
+  void UpdateReportDataLength(
       const std::list<const SagTensionAnalysisResult*>* results);
 
   /// \brief Updates the report data with sag-tension results.
@@ -108,4 +115,4 @@ class ResultsPane : public wxPanel {
   DECLARE_EVENT_TABLE()
 };
 
-# endif //  OTLS_SPANANALYZER_RESULTSPANE_H_
+# endif  // OTLS_SPANANALYZER_RESULTSPANE_H_

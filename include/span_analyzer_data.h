@@ -83,4 +83,4 @@ struct SpanAnalyzerData {
   std::list<WeatherLoadCase*> weathercases;
 };
 
-#endif //  OTLS_SPANANALYZER_SPANANALYZERDATA_H_
+#endif  // OTLS_SPANANALYZER_SPANANALYZERDATA_H_

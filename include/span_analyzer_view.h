@@ -7,8 +7,9 @@
 #include <list>
 
 #include "wx/docview.h"
+#include "wx/notebook.h"
 
-#include "cable_elongation_model_plot_pane.h"
+#include "cable_plot_pane.h"
 #include "edit_pane.h"
 #include "profile_plot_pane.h"
 #include "results_pane.h"
@@ -20,6 +21,15 @@
 /// displaying information and results from the SpanAnalyzerDoc.
 class SpanAnalyzerView : public wxView {
  public:
+  /// \par OVERVIEW
+  ///
+  /// This enum contains types of render targets.
+  enum class RenderTarget {
+    kNull,
+    kPrint,
+    kScreen
+  };
+
   /// \brief Constructor.
   SpanAnalyzerView();
 
@@ -30,6 +40,10 @@ class SpanAnalyzerView : public wxView {
   /// \return The analysis filter. If an active analysis filter is not valid
   ///   a nullptr is returned.
   const AnalysisFilter* AnalysisFilterActive() const;
+
+  /// \brief Gets the graphics plot rect.
+  /// \return The graphics plot rect.
+  wxRect GraphicsPlotRect() const;
 
   /// \brief Gets the weathercase index for the filter.
   /// \param[in] filter
@@ -53,11 +67,30 @@ class SpanAnalyzerView : public wxView {
   /// This function is called by wxWidgets.
   virtual bool OnCreate(wxDocument *doc, long flags);
 
+  /// \brief Creates a printout.
+  /// \return A printout.
+  virtual wxPrintout* OnCreatePrintout();
+
   /// \brief Handles drawing/rendering the view.
   /// \param[in] dc
   ///   The device context.
   /// This function is called by wxWidgets.
   virtual void OnDraw(wxDC *dc);
+
+  /// \brief Handles the notebook page change event.
+  /// \param[in] event
+  ///   The event.
+  void OnNotebookPageChange(wxBookCtrlEvent& event);
+
+  /// \brief Handles the print event.
+  /// \param[in] event
+  ///   The event.
+  void OnPrint(wxCommandEvent& event);
+
+  /// \brief Handles the print preview event.
+  /// \param[in] event
+  ///   The event.
+  void OnPrintPreview(wxCommandEvent& event);
 
   /// \brief Handles updating of the view.
   /// \param[in] sender
@@ -80,7 +113,7 @@ class SpanAnalyzerView : public wxView {
 
   /// \brief Gets the cable model pane.
   /// \return The cable model pane.
-  CableElongationModelPlotPane* pane_cable();
+  CablePlotPane* pane_cable();
 
   /// \brief Gets the edit pane.
   /// \return The edit pane.
@@ -104,6 +137,15 @@ class SpanAnalyzerView : public wxView {
   ///   The selected filter index.
   void set_index_filter(const int& index_filter);
 
+  /// \brief Sets the render target.
+  /// \param[in] target_render
+  ///   The render target.
+  void set_target_render(const RenderTarget& target_render);
+
+  /// \brief Gets the render target.
+  /// \return The render target.
+  RenderTarget target_render() const;
+
  private:
   /// \var group_filters_
   ///   The group of filters that is currently activated.
@@ -113,9 +155,13 @@ class SpanAnalyzerView : public wxView {
   ///   The filter index that is currently selected.
   int index_filter_;
 
+  /// \var notebook_plot_
+  ///   The notebook that contains the plots.
+  wxNotebook* notebook_plot_;
+
   /// \var pane_cable_
-  ///   The cable elongation model plot pane.
-  CableElongationModelPlotPane* pane_cable_;
+  ///   The cable plot pane.
+  CablePlotPane* pane_cable_;
 
   /// \var pane_edit_
   ///   The edit pane.
@@ -129,9 +175,15 @@ class SpanAnalyzerView : public wxView {
   ///   The results pane.
   ResultsPane* pane_results_;
 
+  /// \var target_render_
+  ///   The render target.
+  RenderTarget target_render_;
+
   /// \brief This allows wxWidgets to create this class dynamically as part of
   ///   the docview framework.
   wxDECLARE_DYNAMIC_CLASS(SpanAnalyzerView);
+
+  DECLARE_EVENT_TABLE()
 };
 
-#endif //  OTLS_SPANANALYZER_SPANANALYZERVIEW_H_
+#endif  // OTLS_SPANANALYZER_SPANANALYZERVIEW_H_

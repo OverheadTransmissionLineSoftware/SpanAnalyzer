@@ -85,6 +85,8 @@ int SpanAnalyzerApp::OnExit() {
   FileHandler::SaveConfigFile(filepath_config_, config_);
 
   // cleans up allocated resources
+  delete config_.data_page;
+
   for (auto iter = data_.cablefiles.begin(); iter != data_.cablefiles.end();
        iter++) {
     const CableFile* cablefile = *iter;
@@ -138,8 +140,24 @@ bool SpanAnalyzerApp::OnInit() {
   // manually initailizes application config defaults
   wxFileName filename;
   filename = wxFileName(filepath_config_);
+  wxPrintData data_print;
+  data_print.SetOrientation(wxLANDSCAPE);
+  config_.color_background = *wxBLACK;
+  config_.data_page = new wxPageSetupDialogData();
+  config_.data_page->SetPrintData(data_print);
+  config_.data_page->SetMarginBottomRight(wxPoint(15, 15));
+  config_.data_page->SetMarginTopLeft(wxPoint(15, 15));
   config_.filepath_data = filename.GetPathWithSep() + "appdata.xml";
   config_.level_log = wxLOG_Message;
+  config_.options_plot_cable.color_core = *wxRED;
+  config_.options_plot_cable.color_markers = *wxGREEN;
+  config_.options_plot_cable.color_shell = *wxBLUE;
+  config_.options_plot_cable.color_total = *wxYELLOW;
+  config_.options_plot_cable.thickness_line = 1;
+  config_.options_plot_profile.color_catenary = *wxCYAN;
+  config_.options_plot_profile.scale_horizontal = 1;
+  config_.options_plot_profile.scale_vertical = 10;
+  config_.options_plot_profile.thickness_line = 1;
   config_.perspective = "";
   config_.size_frame = wxSize(0, 0);
   config_.units = units::UnitSystem::kImperial;

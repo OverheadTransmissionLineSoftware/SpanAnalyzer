@@ -20,6 +20,11 @@ struct SagTensionAnalysisResult {
   ///   The condition of the cable.
   CableConditionType condition;
 
+  /// \var length_unloaded
+  ///   The unloaded length of cable. This is based on the catenary spacing,
+  ///   not the ruling span spacing.
+  double length_unloaded;
+
   /// \var state
   ///   The cable state.
   CableState state;
