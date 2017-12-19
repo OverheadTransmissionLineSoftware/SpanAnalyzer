@@ -81,10 +81,19 @@ bool SpanAnalyzerView::OnClose(bool WXUNUSED(deleteWindow)) {
   // saves AUI perspective
   wxGetApp().config()->perspective = manager->SavePerspective();
 
-  // detaches panes and un-init manager
+  // detaches panes
   manager->DetachPane(notebook_plot_);
   manager->DetachPane(pane_edit_);
   manager->DetachPane(pane_results_);
+
+  // adjusts log if the pane was docked
+  wxAuiPaneInfo& info = manager->GetPane("Log");
+  if (info.IsDocked() == true) {
+    info.Float();
+    info.Hide();
+  }
+
+  // updates manager to show changes
   manager->Update();
 
   // destroys panes
