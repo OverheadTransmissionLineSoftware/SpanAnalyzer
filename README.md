@@ -15,7 +15,6 @@ specific [releases](https://github.com/OverheadTransmissionLineSoftware/SpanAnal
 
 ## Get Involved!
 This is an open source effort to create transmission line design software. This
-software is released in the public domain (see
-[UNLICENSE](https://github.com/OverheadTransmissionLineSoftware/SpanAnalyzer/blob/master/UNLICENSE)
- file), so we can contribute to this collectively without worrying about
-intellectual property.
+software is [licensed](https://github.com/OverheadTransmissionLineSoftware/SpanAnalyzer/blob/master/LICENSE.md)
+ in the public domain, so we can contribute to this collectively without
+worrying about intellectual property.
