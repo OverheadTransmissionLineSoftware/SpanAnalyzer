@@ -90,10 +90,10 @@ class SpanEditorDialog : public wxDialog {
   /// \brief Sets the control validators on the form.
   void SetValidators();
 
-  /// \brief Toggles the catenary geometry controls.
+  /// \brief Toggles the span geometry controls.
   /// \param[in] is_enabled
   ///   Whether the controls are enabled.
-  void ToggleCatenaryGeometrySpacingControls(const bool& is_enabled);
+  void ToggleSpanGeometrySpacingControls(const bool& is_enabled);
 
   /// \brief Toggles the controls to dead-end span mode.
   /// Controls are disabled, but the values are not cleared.

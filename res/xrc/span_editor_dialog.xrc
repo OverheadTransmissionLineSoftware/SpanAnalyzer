@@ -42,30 +42,6 @@
               <option>0</option>
               <flag>wxALL</flag>
               <border>5</border>
-              <object class="wxStaticText" name="statictext_span_type">
-                <label>Span Type</label>
-              </object>
-            </object>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag>wxALL</flag>
-              <border>5</border>
-              <object class="wxChoice" name="choice_span_type">
-                <size>150,-1</size>
-              </object>
-            </object>
-          </object>
-        </object>
-        <object class="sizeritem">
-          <option>0</option>
-          <flag>wxEXPAND</flag>
-          <border>0</border>
-          <object class="wxBoxSizer">
-            <orient>wxHORIZONTAL</orient>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag>wxALL</flag>
-              <border>5</border>
               <object class="wxStaticText" name="statictext_cable">
                 <label>Cable</label>
               </object>
@@ -144,73 +120,6 @@
           <border>0</border>
           <object class="wxFlexGridSizer">
             <rows>2</rows>
-            <cols>3</cols>
-            <vgap>0</vgap>
-            <hgap>0</hgap>
-            <growablecols></growablecols>
-            <growablerows></growablerows>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag>wxALL</flag>
-              <border>5</border>
-              <object class="wxStaticText" name="statictext_constraint_spacing_horizontal">
-                <label>Horizontal</label>
-              </object>
-            </object>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag>wxALL</flag>
-              <border>5</border>
-              <object class="wxStaticText" name="statictext_constraint_spacing_horizontal_units">
-                <label>WWW</label>
-              </object>
-            </object>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag>wxALL</flag>
-              <border>5</border>
-              <object class="wxTextCtrl" name="textctrl_constraint_spacing_horizontal">
-                <value></value>
-                <size>70,-1</size>
-                <maxlength>0</maxlength>
-                <tooltip>The horizontal spacing between cable attachments. This is the geometry used in the sag-tension calculation.</tooltip>
-              </object>
-            </object>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag>wxALL</flag>
-              <border>5</border>
-              <object class="wxStaticText" name="statictext_constraint_spacing_vertical">
-                <label>Vertical</label>
-              </object>
-            </object>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag>wxALL</flag>
-              <border>5</border>
-              <object class="wxStaticText" name="statictext_constraint_spacing_vertical_units">
-                <label>WWW</label>
-              </object>
-            </object>
-            <object class="sizeritem">
-              <option>0</option>
-              <flag>wxALL</flag>
-              <border>5</border>
-              <object class="wxTextCtrl" name="textctrl_constraint_spacing_vertical">
-                <value></value>
-                <size>70,-1</size>
-                <maxlength>0</maxlength>
-                <tooltip>The vertical spacing between cable attachments. Positive values mean the ahead-on-line attachment is higher than the back-on-line attachment. This is the geometry used in the sag-tension calculation.</tooltip>
-              </object>
-            </object>
-          </object>
-        </object>
-        <object class="sizeritem">
-          <option>0</option>
-          <flag></flag>
-          <border>0</border>
-          <object class="wxFlexGridSizer">
-            <rows>2</rows>
             <cols>2</cols>
             <vgap>0</vgap>
             <hgap>0</hgap>
@@ -221,7 +130,7 @@
               <flag>wxALL</flag>
               <border>5</border>
               <object class="wxStaticText" name="statictext_stretch_load_weathercase">
-                <label>Stretch-Load</label>
+                <label>Stretch - Load</label>
               </object>
             </object>
             <object class="sizeritem">
@@ -239,7 +148,7 @@
               <flag>wxALL</flag>
               <border>5</border>
               <object class="wxStaticText" name="statictext_stretch_creep_weathercase">
-                <label>Stretch-Creep</label>
+                <label>Stretch - Creep</label>
               </object>
             </object>
             <object class="sizeritem">
@@ -256,84 +165,192 @@
         </object>
         <object class="sizeritem">
           <option>0</option>
-          <flag>wxEXPAND|wxALL</flag>
-          <border>5</border>
-          <object class="wxStaticBoxSizer">
-            <orient>wxVERTICAL</orient>
-            <label>Catenary Geometry</label>
+          <flag>wxEXPAND</flag>
+          <border>0</border>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
             <object class="sizeritem">
               <option>0</option>
               <flag>wxALL</flag>
               <border>5</border>
-              <object class="wxCheckBox" name="checkbox_match_constraint_geometry">
-                <label>Match Constraint Geometry</label>
+              <object class="wxStaticText" name="statictext_span_type">
+                <label>Span Type</label>
               </object>
             </object>
             <object class="sizeritem">
               <option>0</option>
-              <flag></flag>
-              <border>0</border>
-              <object class="wxFlexGridSizer">
-                <rows>2</rows>
-                <cols>3</cols>
-                <vgap>0</vgap>
-                <hgap>0</hgap>
-                <growablecols></growablecols>
-                <growablerows></growablerows>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxChoice" name="choice_span_type">
+                <size>150,-1</size>
+              </object>
+            </object>
+          </object>
+        </object>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxEXPAND</flag>
+          <border>0</border>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxStaticBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <label>Line Section Geometry</label>
                 <object class="sizeritem">
                   <option>0</option>
-                  <flag>wxALL</flag>
-                  <border>5</border>
-                  <object class="wxStaticText" name="statictext_catenary_spacing_horizontal">
-                    <label>Horizontal</label>
+                  <flag></flag>
+                  <border>0</border>
+                  <object class="wxFlexGridSizer">
+                    <rows>2</rows>
+                    <cols>3</cols>
+                    <vgap>0</vgap>
+                    <hgap>0</hgap>
+                    <growablecols></growablecols>
+                    <growablerows></growablerows>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxStaticText" name="statictext_line_section_spacing_horizontal">
+                        <label>Horizontal</label>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxStaticText" name="statictext_line_section_spacing_horizontal_units">
+                        <label>WWW</label>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxTextCtrl" name="textctrl_line_section_spacing_horizontal">
+                        <value></value>
+                        <size>70,-1</size>
+                        <maxlength>0</maxlength>
+                        <tooltip>The average horizontal spacing between span ends.</tooltip>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxStaticText" name="statictext_line_section_spacing_vertical">
+                        <label>Vertical</label>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxStaticText" name="statictext_line_section_spacing_vertical_units">
+                        <label>WWW</label>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxTextCtrl" name="textctrl_line_section_spacing_vertical">
+                        <value></value>
+                        <size>70,-1</size>
+                        <maxlength>0</maxlength>
+                        <tooltip>The average vertical spacing between span ends. Positive values mean the ahead-on-line attachment is higher than the back-on-line attachment.</tooltip>
+                      </object>
+                    </object>
                   </object>
                 </object>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxStaticBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <label>Span Geometry</label>
                 <object class="sizeritem">
                   <option>0</option>
-                  <flag>wxALL</flag>
-                  <border>5</border>
-                  <object class="wxStaticText" name="statictext_catenary_spacing_horizontal_units">
-                    <label>WWW</label>
+                  <flag></flag>
+                  <border>0</border>
+                  <object class="wxFlexGridSizer">
+                    <rows>2</rows>
+                    <cols>3</cols>
+                    <vgap>0</vgap>
+                    <hgap>0</hgap>
+                    <growablecols></growablecols>
+                    <growablerows></growablerows>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxStaticText" name="statictext_span_spacing_horizontal">
+                        <label>Horizontal</label>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxStaticText" name="statictext_span_spacing_horizontal_units">
+                        <label>WWW</label>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxTextCtrl" name="textctrl_span_spacing_horizontal">
+                        <value></value>
+                        <size>70,-1</size>
+                        <maxlength>0</maxlength>
+                        <tooltip>The horizontal spacing between span ends.</tooltip>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxStaticText" name="statictext_span_spacing_vertical">
+                        <label>Vertical</label>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxStaticText" name="statictext_span_spacing_vertical_units">
+                        <label>WWW</label>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <option>0</option>
+                      <flag>wxALL</flag>
+                      <border>5</border>
+                      <object class="wxTextCtrl" name="textctrl_span_spacing_vertical">
+                        <value></value>
+                        <size>70,-1</size>
+                        <maxlength>0</maxlength>
+                        <tooltip>The vertical spacing between span ends. Positive values mean the ahead-on-line attachment is higher than the back-on-line attachment.</tooltip>
+                      </object>
+                    </object>
                   </object>
                 </object>
-                <object class="sizeritem">
-                  <option>0</option>
-                  <flag>wxALL</flag>
-                  <border>5</border>
-                  <object class="wxTextCtrl" name="textctrl_catenary_spacing_horizontal">
-                    <value></value>
-                    <size>70,-1</size>
-                    <maxlength>0</maxlength>
-                    <tooltip>The horizontal spacing between cable attachments. This is the geometry is used after the sag-tension process, when a catenary is being fitted using the sag-tension results.</tooltip>
-                  </object>
-                </object>
-                <object class="sizeritem">
-                  <option>0</option>
-                  <flag>wxALL</flag>
-                  <border>5</border>
-                  <object class="wxStaticText" name="statictext_catenary_spacing_vertical">
-                    <label>Vertical</label>
-                  </object>
-                </object>
-                <object class="sizeritem">
-                  <option>0</option>
-                  <flag>wxALL</flag>
-                  <border>5</border>
-                  <object class="wxStaticText" name="statictext_catenary_spacing_vertical_units">
-                    <label>WWW</label>
-                  </object>
-                </object>
-                <object class="sizeritem">
-                  <option>0</option>
-                  <flag>wxALL</flag>
-                  <border>5</border>
-                  <object class="wxTextCtrl" name="textctrl_catenary_spacing_vertical">
-                    <value></value>
-                    <size>70,-1</size>
-                    <maxlength>0</maxlength>
-                    <tooltip>The vertical spacing between cable attachments. Positive values mean the ahead-on-line attachment is higher than the back-on-line attachment. This is the geometry is used after the sag-tension process, when a catenary is being fitted using the sag-tension results.</tooltip>
-                  </object>
-                </object>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL|wxALIGN_CENTER</flag>
+              <border>5</border>
+              <object class="wxCheckBox" name="checkbox_match_line_section_geometry">
+                <label>Match Geometry</label>
               </object>
             </object>
           </object>
