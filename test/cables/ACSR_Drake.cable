@@ -6,10 +6,23 @@
   <weight_unit units="lbs/feet">1.094</weight_unit>
   <strength_rated units="lbs">31500</strength_rated>
   <temperature_properties_components units="deg F">70</temperature_properties_components>
-  <cable_component name="shell" version="1">
+  <absorptivity units="">0.50</absorptivity>
+  <emissivity units="">0.50</emissivity>
+  <resistances_ac>
+    <resistance_point>
+      <resistance units="ohm/mi">0.1166</resistance>
+      <temperature units="deg F">77</temperature>
+    </resistance_point>
+    <resistance_point>
+      <resistance units="ohm/mi">0.1390</resistance>
+      <temperature units="deg F">167</temperature>
+    </resistance_point>
+  </resistances_ac>
+  <cable_component version="1" name="shell">
+    <capacity_heat units="W-s/ft-degF">180.2</capacity_heat>
     <coefficient_expansion_linear_thermal units="deg F">0.0000128</coefficient_expansion_linear_thermal>
-    <modulus_tension_elastic units="lbs/in^2">6400000</modulus_tension_elastic>
     <modulus_compression_elastic units="lbs/in^2">0</modulus_compression_elastic>
+    <modulus_tension_elastic units="lbs/in^2">6400000</modulus_tension_elastic>
     <coefficients name="stress-strain">
       <coefficient units="lbs/in^2">-1213.0</coefficient>
       <coefficient units="lbs/in^2">44308.1</coefficient>
@@ -27,10 +40,11 @@
     </coefficients>
     <limit_polynomial_creep units="lbs/in^2">14655.0</limit_polynomial_creep>
   </cable_component>
-  <cable_component name="core" version="1">
+  <cable_component version="1" name="core">
+    <capacity_heat units="W-s/ft-degF">41.3</capacity_heat>
     <coefficient_expansion_linear_thermal units="deg F">0.0000064</coefficient_expansion_linear_thermal>
-    <modulus_tension_elastic units="lbs/in^2">3700000</modulus_tension_elastic>
     <modulus_compression_elastic units="lbs/in^2">0</modulus_compression_elastic>
+    <modulus_tension_elastic units="lbs/in^2">3700000</modulus_tension_elastic>
     <coefficients name="stress-strain">
       <coefficient units="lbs/in^2">-69.3</coefficient>
       <coefficient units="lbs/in^2">38629.0</coefficient>
