@@ -25,6 +25,18 @@
     <Filter Include="Common Source Files">
       <UniqueIdentifier>{eb78e5fc-765c-4a64-9582-c81b89427987}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\XPM">
+      <UniqueIdentifier>{b3bfc520-6afe-48fa-8274-a63481e43e61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\XRC">
+      <UniqueIdentifier>{a2a742b4-4469-4e3b-a064-c81267aa8bdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common Resource Files\XPM">
+      <UniqueIdentifier>{d4240828-c65c-4ca4-a2a5-924d145857b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common Resource Files\XRC">
+      <UniqueIdentifier>{fb21934d-0052-4554-bed0-4aef2a28f600}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\res\resources.cc">
@@ -218,71 +230,71 @@
     <None Include="..\..\appdata.xml">
       <Filter>Test</Filter>
     </None>
-    <None Include="..\..\res\xpm\copy.xpm">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\res\xpm\minus.xpm">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\res\xpm\move_arrow_down.xpm">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\res\xpm\move_arrow_up.xpm">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\res\xpm\plus.xpm">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\res\xpm\wrench.xpm">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="..\..\res\xrc\analysis_filter_editor_dialog.xrc">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\XRC</Filter>
     </None>
     <None Include="..\..\res\xrc\analysis_filter_manager_dialog.xrc">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\XRC</Filter>
     </None>
     <None Include="..\..\res\xrc\cable_file_manager_dialog.xrc">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\res\xrc\edit_pane.xrc">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\res\xrc\preferences_dialog.xrc">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\res\xrc\results_pane.xrc">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\res\xrc\span_analyzer_menubar.xrc">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\res\xrc\span_editor_dialog.xrc">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\res\xrc\weather_load_case_manager_dialog.xrc">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\external\AppCommon\res\xpm\sort_arrow_down.xpm">
-      <Filter>Common Resource Files</Filter>
-    </None>
-    <None Include="..\..\external\AppCommon\res\xpm\sort_arrow_up.xpm">
-      <Filter>Common Resource Files</Filter>
-    </None>
-    <None Include="..\..\external\AppCommon\res\xrc\cable_editor_dialog.xrc">
-      <Filter>Common Resource Files</Filter>
-    </None>
-    <None Include="..\..\external\AppCommon\res\xrc\error_message_dialog.xrc">
-      <Filter>Common Resource Files</Filter>
-    </None>
-    <None Include="..\..\external\AppCommon\res\xrc\weather_load_case_editor_dialog.xrc">
-      <Filter>Common Resource Files</Filter>
+      <Filter>Resource Files\XRC</Filter>
     </None>
     <None Include="..\..\res\xrc\cable_plot_options_dialog.xrc">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\XRC</Filter>
+    </None>
+    <None Include="..\..\res\xpm\copy.xpm">
+      <Filter>Resource Files\XPM</Filter>
+    </None>
+    <None Include="..\..\res\xpm\minus.xpm">
+      <Filter>Resource Files\XPM</Filter>
+    </None>
+    <None Include="..\..\res\xpm\move_arrow_down.xpm">
+      <Filter>Resource Files\XPM</Filter>
+    </None>
+    <None Include="..\..\res\xpm\move_arrow_up.xpm">
+      <Filter>Resource Files\XPM</Filter>
+    </None>
+    <None Include="..\..\res\xpm\plus.xpm">
+      <Filter>Resource Files\XPM</Filter>
+    </None>
+    <None Include="..\..\res\xrc\edit_pane.xrc">
+      <Filter>Resource Files\XRC</Filter>
+    </None>
+    <None Include="..\..\res\xrc\preferences_dialog.xrc">
+      <Filter>Resource Files\XRC</Filter>
     </None>
     <None Include="..\..\res\xrc\profile_plot_options_dialog.xrc">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\XRC</Filter>
+    </None>
+    <None Include="..\..\res\xrc\results_pane.xrc">
+      <Filter>Resource Files\XRC</Filter>
+    </None>
+    <None Include="..\..\res\xrc\span_analyzer_menubar.xrc">
+      <Filter>Resource Files\XRC</Filter>
+    </None>
+    <None Include="..\..\res\xrc\span_editor_dialog.xrc">
+      <Filter>Resource Files\XRC</Filter>
+    </None>
+    <None Include="..\..\res\xrc\weather_load_case_manager_dialog.xrc">
+      <Filter>Resource Files\XRC</Filter>
+    </None>
+    <None Include="..\..\res\xpm\wrench.xpm">
+      <Filter>Resource Files\XPM</Filter>
+    </None>
+    <None Include="..\..\external\AppCommon\res\xrc\cable_editor_dialog.xrc">
+      <Filter>Common Resource Files\XRC</Filter>
+    </None>
+    <None Include="..\..\external\AppCommon\res\xrc\error_message_dialog.xrc">
+      <Filter>Common Resource Files\XRC</Filter>
+    </None>
+    <None Include="..\..\external\AppCommon\res\xrc\weather_load_case_editor_dialog.xrc">
+      <Filter>Common Resource Files\XRC</Filter>
+    </None>
+    <None Include="..\..\external\AppCommon\res\xpm\sort_arrow_down.xpm">
+      <Filter>Common Resource Files\XPM</Filter>
+    </None>
+    <None Include="..\..\external\AppCommon\res\xpm\sort_arrow_up.xpm">
+      <Filter>Common Resource Files\XPM</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
