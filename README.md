@@ -1,12 +1,12 @@
 ## SpanAnalyzer
 This repository contains a desktop application that models the sag-tension
-response of transmisison cables.
+response of transmission line cables.
 
 ## Platforms
 This application is built using the wxWidgets framework, and is supported on the
 following platforms:
 * Linux (Ubuntu)
-* Windows 10
+* Windows 7, 8, 10
 
 ## Branches
 The master branch contains stable code most of the time, but it's best to use
