@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sag-Tension</title>
+</head>
+<body>
+  <h1>3. Sag-Tension</h1>
+  <h3>3.1 Overview</h3>
+  <p>
+    Sag-tension methods allow an overhead cable to be modeled at varying ice,
+    wind, temperature, and stretch combinations. To solve for this, a catenary
+    is used to determine the mechanical loading and a cable model is used to
+    determine how a cable elongates under load.
+  </p>
+  <p>
+    Many of the steps involved in sag-tension are numerical, as there often
+    isn't an analytical equation that can be developed. The end solution is
+    producing a catenary model for the specific weathercase, which is often
+    represented by horizontal tension and unit weight.
+  </p>
+  <p>
+    The basic sag-tension process is as follows:
+    <ul>
+      <li>
+        Model the starting constraint(s)
+        <ul>
+          <li>Create catenary and cable model</li>
+        </ul>
+      </li>
+      <li>
+        Reload to a specific weathercase
+        <ul>
+          <li>Create cable model</li>
+          <li>Solve for a catenary model numerically</li>
+        </ul>
+      </li>
+    </ul>
+  </p>
+  <p>
+    The following sections detail how each model is used, and typical procedures
+    that are done to find a sag-tension solution.
+  </p>
+  <h3>3.2 Using the Catenary Model</h3>
+  <h5>3.2.1 Converting Weathercases to Unit Weight</h5>
+  <p>
+    The catenary unit weight incorporates the weight of the cable, as well as
+    any additional weight due to ice and wind.
+  </p>
+  <p>
+    Vertical weight is determined by summing the bare cable weight, and any
+    accumulated ice.
+  </p>
+  <br />
+  <br />
+  <img src="equation_21.png" alt="" />
+  <br />
+  <br />
+  <img src="equation_22.png" alt="" />
+  <br />
+  <img src="unit_weight_vertical.png" alt="" />
+  <br />
+  <p>
+    Transverse weight is determined by calculating the drag force on the largest
+    projection area of the cable.
+  </p>
+  <br />
+  <br />
+  <img src="equation_23.png" alt="" />
+  <br />
+  <img src="unit_weight_transverse.png" alt="" />
+  <br />
+  <p>
+    The catenary unit weight is the vector sum of the vertical and transverse
+    unit weight.
+  </p>
+  <br />
+  <br />
+  <img src="equation_24.png" alt="" />
+  <h5>3.2.2 Projecting 3D End Point Spacings onto the 2D Catenary Plane</h5>
+  <p>
+    The 2D catenary plane is always aligned with the resultant unit load.
+    Converting end point spacings from a 3D coordinate system to the 2D catenary
+    plane may require the vertical and horizontal spacing projections to be
+    adjusted. This occurs when a span has inclined 3D geometry and a transverse
+    unit load.
+  </p>
+  <p>Vertical Spacing on 2D Catenary Plane:</p>
+  <br />
+  <br />
+  <img src="equation_25.png" alt="" />
+  <br />
+  <p>Horizontal Spacing on 2D Catenary Plane:</p>
+  <br />
+  <br />
+  <img src="equation_26.png" alt="" />
+  <h5>3.2.3 Converting a Constraint Limit to Catenary Horizontal Tension</h5>
+  <p>
+    Constraint limits can be defined as:
+    <ul>
+      <li>H/w</li>
+      <li>Horizontal Tension</li>
+      <li>Length</li>
+      <li>Sag</li>
+      <li>Support Tension</li>
+    </ul>
+  </p>
+  <p>
+    Some of the constraint limits can be converted directly to horizontal
+    tension. For all remaining limit types, an iterative approach must be used.
+    The iterative solution requires that the catenary unit weight and end point
+    spacing are already known. The horizontal tension can be guessed, and the
+    result verified against the constraint limit. 
+  </p>
+  <h3>3.3 Using the Cable Model</h3>
+  <h5>3.3.1 Converting Catenary Tensions to Axial Tension</h5>
+  <p>
+    The catenary tension varies along the curve, as shown in the figure below.
+    To account for this, the catenary tension is averaged using Equation 11 to
+    produce a tension that is equivalent to the constant axial tensions in the
+    cable model.
+  </p>
+  <br />
+  <br />
+  <img src="tension_conversion.png" alt="" />
+  <h5>3.3.2 Calculating Stretch for Cable Components</h5>
+  <p>
+    The stretch for the entire cable is defined by a temperature and load. The
+    load on the individual component can then be determined, and set as the
+    stretch point for the final modulus. When the cable is thermally shifted to
+    different temperatures, this stretch load will remain constant for each
+    component.
+  </p>
+  <br />
+  <br />
+  <img src="cable_stretch_components.png" alt="" />
+  <h5>3.3.3 Calculating Reloaded Cable Length</h5>
+  <p>
+    Cable models are used to calculate the length of the cable at a new state
+    (temperature and load). The new cable length, also known as the reloaded
+    cable length, is determined by the following method:
+    <ol>
+      <li>Create a cable model for the start state.</li>
+      <li>Create a cable model for the finish state.</li>
+      <li>
+        Determine the start and finish strain values, based on the corresponding
+        loads.
+      </li>
+      <li>
+        Calculate the strain difference.
+        <br />
+        <br />
+        <img src="equation_27.png" alt="" />
+      </li>
+      <li>
+        The finished, reloaded length can be calculated using the following
+        equations.
+        <br />
+        <br />
+        <img src="equation_28.png" alt="" />
+        <br />
+        <br />
+        <img src="equation_29.png" alt="" />
+      </li>
+    </ol>
+  </p>
+  <p>
+    Figure 14 shows two cable models overlayed on the same chart. The starting
+    model is the leftmost one, while the finish model has a temperature increase
+    and is shifted to the right. By comparing the two strain points relative to
+    each other the net strain difference between start and finish can be
+    determined and used to solve for the reloaded length of cable according to
+    the above equations.
+  </p>
+  <br />
+  <br />
+  <img src="cable_strain_comparison.png" alt="" />
+  <br />
+  <p>
+    This example shows that the axial load remained the same between the start
+    and finish cable models. This is not always the case, however the same
+    method can be applied even when the load changes between start and finish.
+  </p>
+  <h3>3.4 Reloading From Constraint to a Specific Weathercase</h3>
+  <p>
+    This is the heart of the sag-tension process: taking a cable from a known
+    tension and weathercase/condition, and reloading at a new
+    weathercase/condition to solve for the tension.
+  </p>
+  <p>
+    General Overview:
+    <ul>
+      <li>
+        The constraint models are fully defined, but the reloaded models are
+        incomplete and need to be solved iteratively.
+      </li>
+      <li>
+        The catenary horizontal tension determines the load-strain point on the
+        corresponding cable model.
+      </li>
+      <li>
+        The primary purpose for the cable models is calculating the reloaded
+        cable length, as detailed in Section 3.3.3.
+      </li>
+      <li>
+        The solution is found when the reloaded catenary length matches the
+        reloaded cable length predicted by the cable models.
+      </li>
+    </ul>
+  </p>
+  <br />
+  <img src="sagtension_reloaded_models.png" alt="" />
+  <br />
+  <p>
+    The detailed calculation process is as follows:
+    <ol>
+      <li>
+        Create a catenary model for the constraint.
+        <ol>
+          <li>Solve the catenary unit weight using Section 3.2.1.</li>
+          <li>Solve the catenary spacing using Section 3.2.2.</li>
+          <li>Solve the catenary horizontal tension using Section 3.2.3.</li>
+        </ol>
+      </li>
+      <li>
+        Create a cable model for the constraint.
+        <ol>
+          <li>Set the cable model load-strain point using Section 3.3.1.</li>
+        </ol>
+      </li>
+      <li>
+        Create a cable model for the reloaded weathercase and condition.
+        <ol>
+          <li>
+            The load-strain point is dependent on the catenary tension, so it
+            cannot be set yet.
+          </li>
+        </ol>
+      </li>
+      <li>
+        Solve for the catenary model and cable model load-strain point for the
+        reloaded weathercase.
+        <ol>
+          <li>Solve the catenary unit weight using Section 3.2.1.</li>
+          <li>Solve the catenary spacing using Section 3.2.2.</li>
+          <li>Guess or refine the catenary horizontal tension.</li>
+          <li>
+            Set the reloaded cable model load-strain point using Section 3.3.1.
+          </li>
+          <li>
+            Calculate the reloaded cable length using Section 3.3.3. The
+            constraint model is the start and the reloaded model is the finish.
+            The start length is the constraint catenary length, calculated using
+            Equation 8.
+          </li>
+          <li>Calculate the reloaded catenary length using Equation 8.</li>
+          <li>
+            Compare the reloaded catenary length and reloaded cable length.
+          </li>
+          <li>If error is too large, repeat steps 3-7.</li>
+        </ol>
+      </li>
+    </ol>
+  </p>
+  <h3>3.5 Determining Cable Model Stretch</h3>
+  <p>
+    Solving for the cable model stretch can usually be determined by reloading
+    from the constraint weathercase and condition to the stretch weathercase
+    and Initial condition, according to the steps detailed in Section 3.4. The
+    stretch load will be the average tension of the reloaded catenary, which can
+    be calculated using Equation 11.
+  </p>
+  <p>
+    If the constraint condition is defined using a final modulus, the cable
+    model stretch load can still be determined, but must be solved iteratively.
+    The solution requires the reloaded catenary average tension to match the
+    stretch load in the constraint cable model.
+  </p>
+  <h3>3.6 Span Geometry</h3>
+  <p>
+    Sag-tension modeling is usually limited to a single span. This is due to
+    the additional complexity of solving for a simultaneous force balance at
+    the support points in the line section.
+  </p>
+  <p>
+    For line sections with a single span, the geometry can match the horizontal
+    and vertical spacing of the span. The geometry does not need to be converted
+    to an equivalent flat span.
+  </p>
+  <br />
+  <img src="span_geometry_deadend.png" alt="" />
+  <br />
+  <p>
+    For line sections with multiple spans, the geometry is typically simplified
+    down to a single, flat representative span, call the Ruling Span.
+    Sag-tension is done on this span alone, and then the sag-tension solution
+    (i.e. horizontal tension) is applied to all spans in the line section.
+  </p>
+  <br />
+  <img src="span_geometry_ruling.png" alt="" />
+</body>
+</html>

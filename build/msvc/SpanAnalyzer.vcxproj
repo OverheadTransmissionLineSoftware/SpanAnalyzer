@@ -52,6 +52,10 @@
     <PreBuildEvent>
       <Command>..\..\external\wxWidgets\utils\wxrc\vc_mswud_x64\wxrc.exe -v -c -o=../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>MKDIR .\Debug\res
+XCOPY ..\..\res\help\*.htb .\Debug\res /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -67,6 +71,10 @@
     <PreBuildEvent>
       <Command>..\..\external\wxWidgets\utils\wxrc\vc_mswu_x64\wxrc.exe -v -c -o=../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>MKDIR .\Release\res
+XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\external\AppCommon\src\editors\cable_editor_dialog.cc" />
@@ -135,6 +143,32 @@
     <None Include="..\..\external\AppCommon\res\xrc\cable_editor_dialog.xrc" />
     <None Include="..\..\external\AppCommon\res\xrc\error_message_dialog.xrc" />
     <None Include="..\..\external\AppCommon\res\xrc\weather_load_case_editor_dialog.xrc" />
+    <None Include="..\..\res\help\calculations\cable_model.html" />
+    <None Include="..\..\res\help\calculations\calculations.hhc" />
+    <None Include="..\..\res\help\calculations\calculations.hhk" />
+    <None Include="..\..\res\help\calculations\calculations.hhp" />
+    <None Include="..\..\res\help\calculations\catenary_model.html" />
+    <None Include="..\..\res\help\calculations\sag_tension.html" />
+    <None Include="..\..\res\help\interface\analysis_filters.html" />
+    <None Include="..\..\res\help\interface\analyzing_a_span.html" />
+    <None Include="..\..\res\help\interface\application_files.html" />
+    <None Include="..\..\res\help\interface\editing_cables.html" />
+    <None Include="..\..\res\help\interface\editing_spans.html" />
+    <None Include="..\..\res\help\interface\editing_weathercases.html" />
+    <None Include="..\..\res\help\interface\errors.html" />
+    <None Include="..\..\res\help\interface\interface.hhc" />
+    <None Include="..\..\res\help\interface\interface.hhk" />
+    <None Include="..\..\res\help\interface\interface.hhp" />
+    <None Include="..\..\res\help\interface\plots.html" />
+    <None Include="..\..\res\help\interface\printing.html" />
+    <None Include="..\..\res\help\interface\reports.html" />
+    <None Include="..\..\res\help\interface\windows.html" />
+    <None Include="..\..\res\help\overview\introduction.html" />
+    <None Include="..\..\res\help\overview\license.html" />
+    <None Include="..\..\res\help\overview\overview.hhc" />
+    <None Include="..\..\res\help\overview\overview.hhk" />
+    <None Include="..\..\res\help\overview\overview.hhp" />
+    <None Include="..\..\res\help\overview\technical_support.html" />
     <None Include="..\..\res\xpm\copy.xpm" />
     <None Include="..\..\res\xpm\minus.xpm" />
     <None Include="..\..\res\xpm\move_arrow_down.xpm" />

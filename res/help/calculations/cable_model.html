@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cable Model</title>
+</head>
+<body>
+  <h1>2. Cable Model</h1>
+  <h3>2.1 Overview</h3>
+  <p>
+    The cable model describes how the cable elongates as load increases. The
+    x-axis represents strain, while the y-axis represents load.
+  </p>
+  <p>
+    The cable elongation models are similar to material stress-strain models,
+    but have some important differences.
+    <ul>
+      <li>
+        The modulus of elasticity (stiffness) cannot be determined by material
+        properties alone. The stranding design has a significant impact on the
+        effective stiffness. This is difficult to account for analytically, and
+        is often determined by empirical tests.
+      </li>
+      <li>
+        For a new cable, plastic elongation occurs after any amount of load is
+        applied. There isn't a specific yield stress as there is in material
+        stress-strain models. When the cable is unloaded, the cable follows a
+        different modulus of elasticity that accounts for the plastic
+        elongation.
+      </li>
+    </ul>
+  </p>
+  <h3>2.2 Initial Polynomial</h3>
+  <p>
+    Elongation is modeled using a 4th order polynomial. To create the
+    polynomial, data points are collected in a lab test and are regression
+    fitted. The polynomial represents a new cable that has been subjected to
+    minimal stretching. This state is called the 'Initial' condition.
+  </p>
+  <br />
+  <br />
+  <img src="cable_initial.png" alt="" />
+  <br />
+  <p>
+    Depending on how the regression fitting was done, the polynomial may pass
+    through the origin, or it may intersect the x-axis at an arbitrary point.
+    Although it is ideal that zero load equals zero strain, this is not
+    necessary. The polynomial slope also typically decreases, indicating that
+    that more plastic strain occurs at high loads.
+  </p>
+  <p>
+    Given a strain, the load can be calculated by:
+  </p>
+  <br />
+  <br />
+  <img src="equation_18.png" alt="" />
+  <h3>2.3 Temperature Shift</h3>
+  <p>
+    As the cable temperature changes from the reference temperature, the cable
+    will either expand or contract based on the coefficient of thermal
+    expansion. This is modeled by shifting the elongation curve along the strain
+    axis by the amount of thermal strain from reference temperature. To
+    calculate the thermal strain:
+  </p>
+  <br />
+  <br />
+  <img src="equation_19.png" alt="" />
+  <br />
+  <img src="cable_temperature_shift.png" alt="" />
+  <h3>2.4 Stretch</h3>
+  <p>
+    Stretch is modeled two separate ways. The methods are not additive - either
+    the cable stretches from one or the other. Both methods rely on a
+    combination of tension and time exposure to set a stretch point on the
+    Initial Polynomial.
+  </p>
+  <br />
+  <br />
+  <img src="cable_stretch.png" alt="" />
+  <p>
+    If the load is decreased relative to the stretch point, the cable follows
+    a different stiffness modulus than the polynomial. This stretched modulus,
+    commonly referred to as the 'Final' modulus, is constant and should be
+    steeper than any point on the Initial Polynomial.
+  </p>
+  <p>
+    If the load is increased relative to the stretch point, the cable follows
+    the Initial Polynomial. The stretch point will shift to match the highest
+    load along the polynomial.
+  </p>
+  <h5>2.4.1 Creep Stretch Point</h5>
+  <p>
+    This method of stretching is caused at relatively low tensions over a long
+    period of time. A special Creep Polynomial is used that shows how much
+    plastic elongation has occurred relative to the Initial Polynomial. Like
+    the Initial Polynomial, the Creep Polynomial uses data points that are
+    collected in a long term lab test. The data points are typically
+    extrapolated out to 10 years, and then are regression fitted to define the
+    polynomial.
+  </p>
+  <p>
+    To find the stretch point, a point on the Creep Polynomial is identified
+    that matches the everyday loading of the cable. The Final modulus is
+    extended from the Creep Polynomial point until it intersects the Initial
+    Polynomial, which will set the stretch point.
+  </p>
+  <br />
+  <br />
+  <img src="cable_stretch_creep.png" alt="" />
+  <h5>2.4.2 Load Stretch Point</h5>
+  <p>
+    This method of stretching is caused at relatively high tensions over a short
+    period of time. Icing and wind is typically associated with load based
+    stretching. The highest load experienced by the cable sets the stretch point
+    on the Initial polynomial.
+  </p>
+  <br />
+  <br />
+  <img src="cable_stretch_load.png" alt="" />
+  <h3>2.5 Components</h3>
+  <p>
+    Cables can be composed of non-homogenous materials. For high tension cables,
+    there is often a core component which mechanically supports the outer shell
+    component which conducts electricity. To model non-homogenous cables, two
+    sets of data points are needed: one for the outer shell and one for the
+    core. The total cable model can be determined by summing the core and shell
+    components.
+  </p>
+  <br />
+  <br />
+  <img src="cable_components.png" alt="" />
+  <br />
+  <p>
+    Solving for the shell data points allows the component polynomial,
+    temperature, and stretch to be modeled independently and summed together to
+    model the load-strain behavior of the entire cable.
+  </p>
+  <p>The load can be determined by:</p>
+  <br />
+  <br />
+  <img src="equation_20.png" alt="" />
+</body>
+</html>

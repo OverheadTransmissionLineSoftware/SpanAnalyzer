@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Editing Spans</title>
+</head>
+<body>
+  <h1>Editing Spans</h1>
+  <p>
+    Span data is stored in a document (.spananalyzer) file. All of the span
+    editing starts from the Edit Pane. Spans can be added, removed, copied,
+    edited, or moved within the list.
+  </p>
+  <p>
+    To trigger an editing action, either:
+    <ul>
+      <li>Select a span and click a button in the edit pane.</li>
+      <li>Right click a span and select a menu entry.</li>
+    </ul>
+  </p>
+  <h3>Span Editor</h3>
+  <p>
+    The span editor is launched when an individual span needs to be edited.
+  </p>
+  <br />
+  <br />
+  <img src="span_editor_dialog.png" alt="" />
+  <br />
+  <h5>Cable</h5>
+  <p>
+    The cable to use. All of the cables in the application data are displayed.
+  </p>
+  <h5>Constraint Limit</h5>
+  <p>
+    The constraint limit is the primary factor for setting the span tension.
+    There are several methods to define the limit, but all are tied to a
+    specific weathercase and condition.
+  </p>
+  <h5>Stretch</h5>
+  <p>
+    Stretch can be determined two different ways: heavy load and creep. There
+    are weather cases that can be selected for each stretch type.
+  </p>
+  <h5>Span Type</h5>
+  <p>
+    The span type determines the which span geometry options are available.
+    <ul>
+      <li>
+        Dead-end - Indicates that there is only a single span between dead-end
+        structures. Only the line section geometry is used.
+      </li>
+      <li>
+        Ruling Span - Indicates that there are several spans between dead-end
+        structures. Both the line section and span geometry can be used.
+      </li>
+    </ul>
+  </p>
+  <h5>Geometry</h5>
+  <p>
+    The Line Section Geometry represents the average geometry of all the spans.
+    Usually the average is weighted to favor longer spans.
+  </p>
+  <p>
+    The Span Geometry represents the geometry of a single span within a line
+    section.
+  </p>
+  <br />
+  <br />
+  <ul>
+    <li>
+      Horizontal Spacing - The horizontal spacing between span ends.
+    </li>
+    <li>
+      Vertical Spacing - The vertical spacing between span ends. Positive values
+      indicate the ahead-on-line end is higher than the back-on-line end.
+    </li>
+  </ul>
+</body>
+</html>

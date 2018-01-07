@@ -61,6 +61,7 @@ BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxDocParentFrame)
   EVT_MENU(XRCID("menuitem_file_pagesetup"), SpanAnalyzerFrame::OnMenuFilePageSetup)
   EVT_MENU(XRCID("menuitem_file_preferences"), SpanAnalyzerFrame::OnMenuFilePreferences)
   EVT_MENU(XRCID("menuitem_help_about"), SpanAnalyzerFrame::OnMenuHelpAbout)
+  EVT_MENU(XRCID("menuitem_help_manual"), SpanAnalyzerFrame::OnMenuHelpManual)
   EVT_MENU(XRCID("menuitem_view_log"), SpanAnalyzerFrame::OnMenuViewLog)
 END_EVENT_TABLE()
 
@@ -279,23 +280,20 @@ void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
   info.SetVersion("0.5.0");
   info.SetCopyright("License:   http://unlicense.org/");
   info.SetDescription(
-    "This application provides a GUI for calculating the sag-tension response\n"
-    "of transmission line cables.\n"
+    "This is an open-source application for calculating the sag-tension\n"
+    "response of transmission line cables.\n"
     "\n"
-    "This application is part of the Overhead Transmission Line Software\n"
-    "suite. For the actual engineering modeling and sag-tension computations,\n"
-    "see the Models library.\n"
-     "\n"
-    "This software was developed so that transmission engineers can know\n"
-    "exactly how results are calculated, and so that the software can be\n"
-    "freely modified to fit the unique needs of the utility they represent.\n"
-    "\n"
-    "To get involved in project development, or to review the code, see the\n"
-    "website link.");
+    "To get involved in the project development or to review the code, see\n"
+    "the website.");
   info.SetWebSite("https://github.com/OverheadTransmissionLineSoftware/SpanAnalyzer");
 
   // shows the dialog
   wxAboutBox(info, this);
+}
+
+void SpanAnalyzerFrame::OnMenuHelpManual(wxCommandEvent& event) {
+  wxHtmlHelpController* help = wxGetApp().help();
+  help->DisplayContents();
 }
 
 void SpanAnalyzerFrame::OnMenuViewLog(wxCommandEvent& event) {

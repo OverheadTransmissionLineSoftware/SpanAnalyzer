@@ -30,17 +30,15 @@
 
 # doxygen generated files #
 ###########################
-*.aux
-*.css
-*.dvi
-*.html
-*.js
 *.log
-*.png
-*.tex
+docs/html/*
 
 # generated resources #
 #######################
+build/codeblocks/debug/res/*
+build/codeblocks/release/res/*
+build/msvc/Debug/res/*
+build/msvc/Release/res/*
 res/resources.cc
 
 # generated executables #

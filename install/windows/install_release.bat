@@ -10,6 +10,10 @@ REM copies executable
 MKDIR C:\OTLS\SpanAnalyzer
 XCOPY *.exe C:\OTLS\SpanAnalyzer /y
 
+REM copies resource files
+MKDIR C:\OTLS\SpanAnalyzer\res
+XCOPY res\*.htb C:\OTLS\SpanAnalyzer\res /y
+
 REM copies example file(s)
 MKDIR C:\OTLS\SpanAnalyzer\Examples
 XCOPY Examples\*.cable C:\OTLS\SpanAnalyzer\Examples /y 

@@ -1,0 +1,62 @@
+<ul>
+  <li>
+    <object type="text/sitemap">
+      <param name="Name" value="Application Files"></param>
+      <param name="Local" value="application_files.html"></param>
+    </object>
+  </li>
+  <li>
+    <object type="text/sitemap">
+      <param name="Name" value="Windows"></param>
+      <param name="Local" value="windows.html"></param>
+    </object>
+  </li>
+  <li>
+    <object type="text/sitemap">
+      <param name="Name" value="Editing Cables"></param>
+      <param name="Local" value="editing_cables.html"></param>
+    </object>
+  </li>
+  <li>
+    <object type="text/sitemap">
+      <param name="Name" value="Editing Weathercases"></param>
+      <param name="Local" value="editing_weathercases.html"></param>
+    </object>
+  </li>
+  <li>
+    <object type="text/sitemap">
+      <param name="Name" value="Editing Spans"></param>
+      <param name="Local" value="editing_spans.html"></param>
+    </object>
+  </li>
+  <li>
+    <object type="text/sitemap">
+      <param name="Name" value="Analyzing a Span"></param>
+      <param name="Local" value="analyzing_a_span.html"></param>
+    </object>
+  </li>
+  <li>
+    <object type="text/sitemap">
+      <param name="Name" value="Analysis Filters"></param>
+      <param name="Local" value="analysis_filters.html"></param>
+    </object>
+  </li>
+  <li>
+    <object type="text/sitemap">
+      <param name="Name" value="Reports"></param>
+      <param name="Local" value="reports.html"></param>
+    </object>
+  </li>
+  <li>
+    <object type="text/sitemap">
+      <param name="Name" value="Plots"></param>
+      <param name="Local" value="plots.html"></param>
+    </object>
+  </li>
+  <li>
+    <object type="text/sitemap">
+      <param name="Name" value="Errors"></param>
+      <param name="Local" value="errors.html"></param>
+    </object>
+  </li>
+</ul>

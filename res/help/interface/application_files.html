@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Application Files</title>
+</head>
+<body>
+  <h1>Applicaton Files</h1>
+  <p>
+    SpanAnalyzer uses a few different file types to keep everything straight.
+  </p>
+  <h3>Config File</h3>
+  <p>
+    The config file holds the user settings, such as:
+    <ul>
+      <li>Window size and layout</li>
+      <li>Unit System</li>
+      <li>Plot colors</li>
+    </ul>
+  </p>
+  <p>
+    The file location depends on the platform and user.
+    <ul>
+      <li>Linux: $HOME/.config/otls/span-analyzer/spananalyzer.conf</li>
+      <li>Windows: %AppData%\OTLS\SpanAnalyzer\spananalyzer.conf</li>
+    </ul>
+  </p>
+  <br />
+  <p>
+    If this file is not available on startup, a new one will be created.
+  </p>
+  <h3>Data File</h3>
+  <p>
+    SpanAnalyzer stores data that is loaded on every startup. This includes:
+    <ul>
+      <li>Cable File Paths</li>
+      <li>Weathercases</li>
+      <li>Analysis Filters</li>
+    </ul>
+  </p>
+  <p>
+    The data file is stored alongside the config file (above) by default, but
+    that can be changed in the application preferences. If this file is not
+    available on startup, a new one will be created.
+  </p>
+  <h3>Cable Files</h3>
+  <p>
+    Cables are stored in separate files so that adding to and removing from the
+    program is as modular as possible. Cable files have an extension of
+    '.cable'. These files can be stored anywhere on the system.
+  </p>
+  <p>
+    Only the cable filepath is stored in the application data file. On startup,
+    SpanAnalyzer will load all cable files that it knows about. Use caution when
+    moving cable files that may be referenced in the application data.
+  </p>
+  <h3>Document Files</h3>
+  <p>
+    SpanAnalyzer uses document files so projects can be closed and reopened at
+    a later time. Document files have an extension of '.spananalyzer'. These
+    files can be stored anywhere on the system.
+  </p>
+  <p>
+    The document file stores details for the spans, including:
+    <ul>
+      <li>Name</li>
+      <li>Cable</li>
+      <li>Constraint</li>
+      <li>Stretch Weathercases</li>
+      <li>Span Length / Elevation Change</li>
+    </ul>
+  </p>
+  <p>
+    The document file references application data, such as cables and
+    weathercases. If any of the referenced data is removed, it may cause
+    problems next time the document is loaded. Use caution when removing
+    application data that may be referenced in document files.
+  </p>
+</body>
+</html>

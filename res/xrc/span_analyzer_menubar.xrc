@@ -84,6 +84,10 @@
     </object>
     <object class="wxMenu" name="menu_help">
       <label>Help</label>
+      <object class="wxMenuItem" name="menuitem_help_manual">
+        <label>Manual</label>
+        <help></help>
+      </object>
       <object class="wxMenuItem" name="menuitem_help_about">
         <label>About</label>
         <help></help>
