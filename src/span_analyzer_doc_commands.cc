@@ -54,6 +54,11 @@ bool SpanCommand::CreateSpanFromXml(const wxXmlNode* node, Span& span) {
 bool SpanCommand::Do() {
   bool status = false;
 
+  // clears undo node so it's ready to cache the existing state
+  if (node_undo_ != nullptr) {
+    delete node_undo_;
+  }
+
   // selects based on command name
   const std::string name = GetName();
   if (name == kNameDelete) {
