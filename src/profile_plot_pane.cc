@@ -352,7 +352,7 @@ void ProfilePlotPane::UpdatePlotDatasets() {
   }
 
   // gets span from document
-  const Span* span = doc->SpanAnalysis();
+  const Span* span = doc->SpanActivated();
 
   // creates a catenary with the result parameters
   Catenary3d catenary;

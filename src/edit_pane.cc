@@ -119,15 +119,19 @@ void EditPane::ActivateSpan(const wxTreeItemId& id) {
 
   wxLogVerbose("Activating span.");
 
-  // updates document and view
+  // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
   SpanTreeItemData* data =
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
   auto iter = data->iter();
-  doc->SetSpanAnalysis(&(*iter));
+  const int index = doc->IndexSpan(&(*iter));
+  doc->set_index_activated(index);
+
+  // posts a view update
+  UpdateHint hint(HintType::kSpansEdit);
+  doc->UpdateAllViews(nullptr, &hint);
 
   // updates treectrl focus
-  const int index = std::distance(doc->spans().cbegin(), iter);
   FocusTreeCtrlSpanItem(index);
 }
 
@@ -212,9 +216,13 @@ void EditPane::DeactivateSpan(const wxTreeItemId& id) {
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
   auto iter = data->iter();
 
-  // updates document and view
+  // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
-  doc->SetSpanAnalysis(nullptr);
+  doc->set_index_activated(-1);
+
+  // posts a view update
+  UpdateHint hint(HintType::kSpansEdit);
+  doc->UpdateAllViews(nullptr, &hint);
 
   // updates treectrl focus
   const int index = std::distance(doc->spans().cbegin(), iter);
@@ -544,7 +552,7 @@ void EditPane::OnItemMenu(wxTreeEvent& event) {
   const Span* span_selected = &(*data->iter());
 
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
-  const Span* span_activated = doc->SpanAnalysis();
+  const Span* span_activated = doc->SpanActivated();
 
   bool is_activated = false;
   if (span_selected == span_activated) {
@@ -586,7 +594,7 @@ void EditPane::UpdateTreeCtrlSpanItems() {
   // gets information from document and treectrl
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
   const std::list<Span>& spans = doc->spans();
-  const Span* span_activated = doc->SpanAnalysis();
+  const Span* span_activated = doc->SpanActivated();
 
   wxTreeItemId root = treectrl_->GetRootItem();
   treectrl_->DeleteChildren(root);

@@ -59,7 +59,7 @@ class UpdateHint : public wxObject {
 /// \par SPANS
 ///
 /// The document holds all of the spans that can be analyzed and allows them to
-/// be edited. Once a span is selected, an analysis can be performed on it.
+/// be edited. Once a span is activated, an analysis will be performed on it.
 ///
 /// \par SAG-TENSION ANALYSIS CONTROLLER
 ///
@@ -88,8 +88,8 @@ class UpdateHint : public wxObject {
 /// \par wxWIDGETS LIBRARY BUILD NOTE
 ///
 /// This class requires that the wxWidgets library deviate from the standard
-/// build. The wxUSE_STD_IOSTREAM configuration flag must be set to 0, which will
-/// force wxWidgets to generate wxInputStream/wxOutputStream classes on the
+/// build. The wxUSE_STD_IOSTREAM configuration flag must be set to 0, which
+/// will force wxWidgets to generate wxInputStream/wxOutputStream classes on the
 /// LoadObject() and SaveObject() functions. This is required because this class
 /// uses a series of XML handlers to load/save the document, and wxWidgets does
 /// not allow std::streams to be used with the XmlDocument::Load() and
@@ -135,6 +135,12 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return Success status.
   /// This function may trigger an update if it matches the selected span.
   bool DeleteSpan(const int& index);
+
+  /// \brief Gets the index of the span.
+  /// \param[in] span
+  ///   The span.
+  /// \return The index. If no span is matched, -1 is returned.
+  int IndexSpan(const Span* span);
 
   /// \brief Inserts a span before the specified position.
   /// \param[in] index
@@ -215,15 +221,10 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return The output stream.
   wxOutputStream& SaveObject(wxOutputStream& stream);
 
-  /// \brief Sets the analysis span.
-  /// \param[in] span
-  ///   The span to analyze.
-  /// If no span is to be analyzed, a nullptr can be specified.
-  void SetSpanAnalysis(const Span* span);
-
-  /// \brief Gets the analysis span.
-  /// \return The analysis span.
-  const Span* SpanAnalysis() const;
+  /// \brief Gets the span activated for analysis.
+  /// \return The activated span. If no span is activated, a nullptr is
+  ///   returned.
+  const Span* SpanActivated() const;
 
   /// \brief Gets the analysis stretch state for the specified condition.
   /// \param[in] condition
@@ -232,14 +233,32 @@ class SpanAnalyzerDoc : public wxDocument {
   ///   is available, a nullptr is returned.
   const CableStretchState* StretchState(const CableConditionType& condition);
 
+  /// \brief Gets activated span index.
+  /// \return The activated span index. If no span is activated, -1 is returned.
+  int index_activated() const;
+
+  /// \brief Sets the index of the activated span.
+  /// \param[in] index
+  ///   The span index to activate. To deactivate a span, set to -1.
+  /// \return If the span index has been activated/deactivated.
+  bool set_index_activated(const int& index);
+
   /// \brief Gets the spans.
   /// \return The spans.
   const std::list<Span>& spans() const;
 
  private:
+  /// \brief Updates the analysis controller with the activated span index.
+  void SyncAnalysisController();
+
   /// \var controller_analysis_
   ///   The analysis controller, which generates sag-tension results.
   mutable AnalysisController controller_analysis_;
+
+  /// \var index_activated_
+  ///   The index of the span that is activated for analysis. If no span is
+  ///   activated, this should be set to -1.
+  int index_activated_;
 
   /// \var spans_
   ///   The spans. This is a list so spans can be added, deleted, or modified

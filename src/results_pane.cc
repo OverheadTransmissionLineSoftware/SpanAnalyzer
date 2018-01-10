@@ -318,7 +318,7 @@ void ResultsPane::UpdateReportDataCatenaryCurve(
   // gets the selected span from the document
   const SpanAnalyzerDoc* doc =
       dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
-  const Span* span = doc->SpanAnalysis();
+  const Span* span = doc->SpanActivated();
 
   // fills each row with data
   for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
@@ -457,7 +457,7 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
   const SpanAnalyzerDoc* doc =
       dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
 
-  const Span* span = doc->SpanAnalysis();
+  const Span* span = doc->SpanActivated();
 
   // fills each row with data
   for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
@@ -569,7 +569,7 @@ void ResultsPane::UpdateReportDataLength(
   const SpanAnalyzerDoc* doc =
       dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
 
-  const Span* span = doc->SpanAnalysis();
+  const Span* span = doc->SpanActivated();
 
   // fills each row with data
   for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
