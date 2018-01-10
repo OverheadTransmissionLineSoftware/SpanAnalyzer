@@ -275,16 +275,16 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
 void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
   // sets the dialog info
   wxAboutDialogInfo info;
-  info.SetIcon(wxICON(icon));
+  info.SetIcon(wxIcon(icon_xpm));
   info.SetName(wxGetApp().GetAppDisplayName());
   info.SetVersion(wxGetApp().version());
   info.SetCopyright("License:   http://unlicense.org/");
   info.SetDescription(
-    "This is an open-source application for calculating the sag-tension\n"
+    "This is an open-source application for calculating the sag-tension "
     "response of transmission line cables.\n"
     "\n"
-    "To get involved in the project development or to review the code, see\n"
-    "the website.");
+    "To get involved in the project development or to review the code, see the "
+    "website.");
   info.SetWebSite("https://github.com/OverheadTransmissionLineSoftware/SpanAnalyzer");
 
   // shows the dialog
