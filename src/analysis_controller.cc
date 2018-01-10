@@ -195,6 +195,8 @@ void AnalysisController::ClearResults() {
   results_creep_.clear();
   results_initial_.clear();
   results_load_.clear();
+  state_stretch_creep_ = CableStretchState();
+  state_stretch_load_ = CableStretchState();
 
   status_bar_log::SetText("Ready", 0);
 }
@@ -244,6 +246,9 @@ const std::vector<SagTensionAnalysisResult>* AnalysisController::Results(
 void AnalysisController::RunAnalysis() {
   std::string message;
 
+  // clears cached results
+  ClearResults();
+
   // checks if span has been selected
   if (span_ == nullptr) {
     wxLogVerbose("No span is selected. Aborting analysis.");
@@ -266,13 +271,6 @@ void AnalysisController::RunAnalysis() {
 
     return;
   }
-
-  // clears cached results
-  results_creep_.clear();
-  results_initial_.clear();
-  results_load_.clear();
-  state_stretch_creep_ = CableStretchState();
-  state_stretch_load_ = CableStretchState();
 
   // starts analysis timer
   Timer timer;
