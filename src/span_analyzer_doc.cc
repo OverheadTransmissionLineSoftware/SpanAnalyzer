@@ -320,6 +320,37 @@ bool SpanAnalyzerDoc::OnCreate(const wxString& path, long flags) {
   // initializes analysis controller
   controller_analysis_.set_weathercases(&wxGetApp().data()->weathercases);
 
+  // initializes base structure
+  StructureAttachment attachment;
+  attachment.offset_longitudinal = 0;
+  attachment.offset_transverse = 0;
+  attachment.offset_vertical_top = 0;
+
+  structure_.name = "";
+  structure_.height = 100;
+  structure_.attachments.push_back(attachment);
+
+  // initializes hardware
+  hardware_.name = "";
+  hardware_.area_cross_section = 0;
+  hardware_.length = 0;
+  hardware_.type = Hardware::HardwareType::kDeadEnd;
+  hardware_.weight = 0;
+
+  // initializes line structures
+  LineStructure line_structure;
+  line_structure.set_height_adjustment(0);
+  line_structure.set_offset(0);
+  line_structure.set_rotation(0);
+  line_structure.set_structure(&structure_);
+  line_structure.AttachHardware(0, &hardware_);
+
+  line_structure.set_station(0);
+  line_structures_.push_back(line_structure);
+
+  line_structure.set_station(1000);
+  line_structures_.push_back(line_structure);
+
   // calls base class function
   return wxDocument::OnCreate(path, flags);
 }
@@ -354,6 +385,9 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
   ConvertUnitStyle(units, units::UnitStyle::kConsistent,
                    units::UnitStyle::kDifferent);
 
+  // disconnects activated line cable
+  DisconnectLineCableActivated();
+
   // generates an xml node
   wxXmlNode* root = SpanAnalyzerDocXmlHandler::CreateNode(*this, units);
 
@@ -371,6 +405,9 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
   wxXmlDocument doc_xml;
   doc_xml.SetRoot(root);
   doc_xml.Save(stream);
+
+  // connects activated line cable
+  ConnectLineCableActivated();
 
   // converts back to a consistent unit style
   ConvertUnitStyle(units, units::UnitStyle::kDifferent,
@@ -411,8 +448,14 @@ bool SpanAnalyzerDoc::set_index_activated(const int& index) {
     return false;
   }
 
+  // disconnects the existing line cable
+  DisconnectLineCableActivated();
+
   // updates activated index
   index_activated_ = index;
+
+  // connects the newly activated line cable
+  ConnectLineCableActivated();
 
   // syncs controller
   SyncAnalysisController();
@@ -422,6 +465,31 @@ bool SpanAnalyzerDoc::set_index_activated(const int& index) {
 
 const std::list<Span>& SpanAnalyzerDoc::spans() const {
   return spans_;
+}
+
+void SpanAnalyzerDoc::ConnectLineCableActivated() {
+  if (index_activated_ == -1) {
+    return;
+  }
+
+  Span& span = *std::next(spans_.begin(), index_activated_);
+  LineCable& line_cable = span.linecable;
+  LineCableConnection connection;
+
+  connection.line_structure = &line_structures_[0];
+  connection.index_attachment = 0;
+  line_cable.AddConnection(connection);
+
+  connection.line_structure = &line_structures_[1];
+  connection.index_attachment = 0;
+  line_cable.AddConnection(connection);
+}
+
+void SpanAnalyzerDoc::DisconnectLineCableActivated() {
+  if (index_activated_ != -1) {
+    Span& span = *std::next(spans_.begin(), index_activated_);
+    span.linecable.ClearConnections();
+  }
 }
 
 void SpanAnalyzerDoc::SyncAnalysisController() {

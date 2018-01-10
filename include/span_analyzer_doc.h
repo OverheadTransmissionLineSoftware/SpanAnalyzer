@@ -5,8 +5,11 @@
 #define OTLS_SPANANALYZER_SPANANALYZERDOC_H_
 
 #include <list>
+#include <vector>
 
 #include "models/base/units.h"
+#include "models/transmissionline/hardware.h"
+#include "models/transmissionline/line_structure.h"
 #include "wx/docview.h"
 
 #include "analysis_controller.h"
@@ -60,6 +63,9 @@ class UpdateHint : public wxObject {
 ///
 /// The document holds all of the spans that can be analyzed and allows them to
 /// be edited. Once a span is activated, an analysis will be performed on it.
+///
+/// The span is connected to dummy structures. This is only for validation error
+/// suppression.
 ///
 /// \par SAG-TENSION ANALYSIS CONTROLLER
 ///
@@ -248,6 +254,12 @@ class SpanAnalyzerDoc : public wxDocument {
   const std::list<Span>& spans() const;
 
  private:
+  /// \brief Connects the activated line cable to the line structures.
+  void ConnectLineCableActivated();
+
+  /// \brief Disconnects the activated line cable from the line structures.
+  void DisconnectLineCableActivated();
+
   /// \brief Updates the analysis controller with the activated span index.
   void SyncAnalysisController();
 
@@ -255,15 +267,36 @@ class SpanAnalyzerDoc : public wxDocument {
   ///   The analysis controller, which generates sag-tension results.
   mutable AnalysisController controller_analysis_;
 
+  /// \var hardware_
+  ///   The hardware that the span connects to. This helps suppress validation
+  ///   errors related to the line cable not being connected to anything. This
+  ///   is not presented to the user, or saved with the rest of the document
+  ///   data.
+  Hardware hardware_;
+
   /// \var index_activated_
   ///   The index of the span that is activated for analysis. If no span is
   ///   activated, this should be set to -1.
   int index_activated_;
 
+  /// \var line_structures_
+  ///   The line structures that the span connects to. These help suppress
+  ///   validation errors related to the line cable not being connected to
+  ///   anything. This is not presented to the user or saved with the rest of
+  ///   the document data.
+  std::vector<LineStructure> line_structures_;
+
   /// \var spans_
   ///   The spans. This is a list so spans can be added, deleted, or modified
   ///   with a std container efficiently.
   std::list<Span> spans_;
+
+  /// \var structure_
+  ///   The base structure that is referenced by the line structures. This helps
+  ///   suppress validation errors related to the line cable not being connected
+  ///   to anything. This is not presented to the user or saved with the rest
+  ///   of the document data.
+  Structure structure_;
 
   /// \brief This allows wxWidgets to create this class dynamically as part of
   ///   the docview framework.
