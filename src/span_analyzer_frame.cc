@@ -277,7 +277,7 @@ void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
   wxAboutDialogInfo info;
   info.SetIcon(wxICON(icon));
   info.SetName(wxGetApp().GetAppDisplayName());
-  info.SetVersion("0.5.0");
+  info.SetVersion(wxGetApp().version());
   info.SetCopyright("License:   http://unlicense.org/");
   info.SetDescription(
     "This is an open-source application for calculating the sag-tension\n"

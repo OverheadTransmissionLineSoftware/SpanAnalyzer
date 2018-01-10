@@ -90,6 +90,10 @@ class SpanAnalyzerApp : public wxApp {
   /// \return The document manager.
   wxDocManager* manager_doc();
 
+  /// \brief Gets the application version.
+  /// \return The application version.
+  std::string version() const;
+
  private:
   /// \var config_
   ///   The application configuration settings.
@@ -120,6 +124,10 @@ class SpanAnalyzerApp : public wxApp {
   /// \var manager_doc_
   ///   The document manager.
   wxDocManager* manager_doc_;
+
+  /// \var version_
+  ///   The app version.
+  std::string version_;
 };
 
 /// This is an array of command line options.

@@ -115,9 +115,10 @@ bool SpanAnalyzerApp::OnInit() {
     return false;
   }
 
-  // sets application name
+  // sets application info
   SetAppDisplayName("Span Analyzer");
   SetAppName("SpanAnalyzer");
+  version_ = "0.5.0";
 
   // creates a document manager and sets to single document interface
   manager_doc_ = new wxDocManager();
@@ -292,4 +293,8 @@ wxHtmlHelpController* SpanAnalyzerApp::help() {
 
 wxDocManager* SpanAnalyzerApp::manager_doc() {
   return manager_doc_;
+}
+
+std::string SpanAnalyzerApp::version() const {
+  return version_;
 }
