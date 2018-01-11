@@ -7,6 +7,7 @@
 
 Span::Span() {
   name = "";
+  type = Span::Type::kNull;
 }
 
 Span::~Span() {
@@ -59,7 +60,7 @@ bool Span::Validate(const bool& is_included_warnings,
   }
 
   // validates type
-  if ((type != Span::Type::kDeadendSpan) && (type != Span::Type::kRulingSpan)) {
+  if (type == Span::Type::kNull) {
     is_valid = false;
     if (messages != nullptr) {
       message.description = "Invalid span type";

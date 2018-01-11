@@ -20,6 +20,7 @@ struct Span {
   ///
   ///  This enum contains types of spans.
   enum class Type {
+    kNull,
     kDeadendSpan,
     kRulingSpan
   };
