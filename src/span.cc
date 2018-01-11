@@ -33,27 +33,27 @@ bool Span::Validate(const bool& is_included_warnings,
     }
   }
 
-  // validates spacing-catenary
-  if (spacing_catenary.x() < 0) {
+  // validates spacing-attachments
+  if (spacing_attachments.x() < 0) {
     is_valid = false;
     if (messages != nullptr) {
-      message.description = "Invalid catenary spacing - x";
+      message.description = "Invalid attachment spacing - x";
       messages->push_back(message);
     }
   }
 
-  if (spacing_catenary.y() != 0) {
+  if (spacing_attachments.y() != 0) {
     is_valid = false;
     if (messages != nullptr) {
-      message.description = "Invalid catenary spacing - y";
+      message.description = "Invalid attachment spacing - y";
       messages->push_back(message);
     }
   }
 
-  if (1000 < std::abs(spacing_catenary.z())) {
+  if (1000 < std::abs(spacing_attachments.z())) {
     is_valid = false;
     if (messages != nullptr) {
-      message.description = "Invalid catenary spacing - z";
+      message.description = "Invalid attachment spacing - z";
       messages->push_back(message);
     }
   }

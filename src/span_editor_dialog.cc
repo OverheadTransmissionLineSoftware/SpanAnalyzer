@@ -484,7 +484,7 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
     }
   }
 
-  span_modified_.spacing_catenary = spacing;
+  span_modified_.spacing_attachments = spacing;
 }
 
 void SpanEditorDialog::TransferCustomDataToWindow() {
@@ -592,7 +592,7 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
   // transfers span geometry
   const Vector3d& spacing_section =
       span_modified_.linecable.spacing_attachments_ruling_span();
-  const Vector3d& spacing_span = span_modified_.spacing_catenary;
+  const Vector3d& spacing_span = span_modified_.spacing_attachments;
 
   const bool is_match =
       ((spacing_section.x() == spacing_span.x())

@@ -58,8 +58,8 @@ wxXmlNode* SpanXmlHandler::CreateNode(
   } else if (units == units::UnitSystem::kMetric) {
     attribute = wxXmlAttribute("units", "m");
   }
-  node_element = Vector3dXmlHandler::CreateNode(span.spacing_catenary,
-                                                "spacing_catenary",
+  node_element = Vector3dXmlHandler::CreateNode(span.spacing_attachments,
+                                                "spacing_attachments",
                                                 attribute,
                                                 1);
   node_root->AddChild(node_element);
@@ -162,7 +162,7 @@ bool SpanXmlHandler::ParseNodeV1(
       }
     } else if (title == "vector_3d") {
       const bool status_node = Vector3dXmlHandler::ParseNode(
-          node, filepath, span.spacing_catenary);
+          node, filepath, span.spacing_attachments);
       if (status_node == false) {
         status = false;
       }

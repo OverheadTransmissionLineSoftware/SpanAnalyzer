@@ -356,7 +356,7 @@ void ProfilePlotPane::UpdatePlotDatasets() {
 
   // creates a catenary with the result parameters
   Catenary3d catenary;
-  catenary.set_spacing_endpoints(span->spacing_catenary);
+  catenary.set_spacing_endpoints(span->spacing_attachments);
   catenary.set_tension_horizontal(result->tension_horizontal);
   catenary.set_weight_unit(result->weight_unit);
 

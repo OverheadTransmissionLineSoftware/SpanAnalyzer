@@ -26,29 +26,29 @@ void SpanUnitConverter::ConvertUnitSystem(
     const units::UnitSystem& system_to,
     Span& span) {
   if (system_to == units::UnitSystem::kMetric) {
-    // converts catenary spacing
-    Vector3d& spacing_catenary =  span.spacing_catenary;
-    spacing_catenary.set_x(units::ConvertLength(
-        spacing_catenary.x(),
+    // converts spacing-attachments
+    Vector3d& spacing_attachments =  span.spacing_attachments;
+    spacing_attachments.set_x(units::ConvertLength(
+        spacing_attachments.x(),
         units::LengthConversionType::kFeetToMeters));
-    spacing_catenary.set_y(units::ConvertLength(
-        spacing_catenary.y(),
+    spacing_attachments.set_y(units::ConvertLength(
+        spacing_attachments.y(),
         units::LengthConversionType::kFeetToMeters));
-    spacing_catenary.set_z(units::ConvertLength(
-        spacing_catenary.z(),
+    spacing_attachments.set_z(units::ConvertLength(
+        spacing_attachments.z(),
         units::LengthConversionType::kFeetToMeters));
 
   } else if (system_to == units::UnitSystem::kImperial) {
-    // converts catenary spacing
-    Vector3d& spacing_catenary =  span.spacing_catenary;
-    spacing_catenary.set_x(units::ConvertLength(
-        spacing_catenary.x(),
+    // converts spacing-attachments
+    Vector3d& spacing_attachments =  span.spacing_attachments;
+    spacing_attachments.set_x(units::ConvertLength(
+        spacing_attachments.x(),
         units::LengthConversionType::kMetersToFeet));
-    spacing_catenary.set_y(units::ConvertLength(
-        spacing_catenary.y(),
+    spacing_attachments.set_y(units::ConvertLength(
+        spacing_attachments.y(),
         units::LengthConversionType::kMetersToFeet));
-    spacing_catenary.set_z(units::ConvertLength(
-        spacing_catenary.z(),
+    spacing_attachments.set_z(units::ConvertLength(
+        spacing_attachments.z(),
         units::LengthConversionType::kMetersToFeet));
   }
 

@@ -318,7 +318,7 @@ void AnalysisController::RunAnalysis() {
   for (int i = 0; i < num_threads; i++) {
     AnalysisThread* thread = new AnalysisThread();
     thread->set_line_cable(&span_->linecable);
-    thread->set_spacing_catenary(&span_->spacing_catenary);
+    thread->set_spacing_catenary(&span_->spacing_attachments);
     threads.push_back(thread);
   }
 
