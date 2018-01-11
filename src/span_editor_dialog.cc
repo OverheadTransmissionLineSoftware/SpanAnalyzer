@@ -402,7 +402,7 @@ void SpanEditorDialog::TransferCustomDataFromWindow() {
   choice = XRCCTRL(*this, "choice_constraint_condition", wxChoice);
   index = choice->GetSelection();
   if (index == wxNOT_FOUND) {
-    // can't set enum class to invalid, do nothing
+    constraint.condition = CableConditionType::kNull;
   } else {
     str = choice->GetString(index);
     if (str == "Initial") {
