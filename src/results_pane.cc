@@ -318,7 +318,7 @@ void ResultsPane::UpdateReportDataCatenaryCurve(
   // gets the selected span from the document
   const SpanAnalyzerDoc* doc =
       dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
-  const Span* span = doc->SpanAnalysis();
+  const Span* span = doc->SpanActivated();
 
   // fills each row with data
   for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
@@ -342,7 +342,7 @@ void ResultsPane::UpdateReportDataCatenaryCurve(
 
     // creates a catenary to calculate results
     Catenary3d catenary;
-    catenary.set_spacing_endpoints(span->spacing_catenary);
+    catenary.set_spacing_endpoints(span->spacing_attachments);
     catenary.set_tension_horizontal(result->tension_horizontal);
     catenary.set_weight_unit(result->weight_unit);
 
@@ -457,7 +457,7 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
   const SpanAnalyzerDoc* doc =
       dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
 
-  const Span* span = doc->SpanAnalysis();
+  const Span* span = doc->SpanActivated();
 
   // fills each row with data
   for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
@@ -481,7 +481,7 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
 
     // creates a catenary to calculate results
     Catenary3d catenary;
-    catenary.set_spacing_endpoints(span->spacing_catenary);
+    catenary.set_spacing_endpoints(span->spacing_attachments);
     catenary.set_tension_horizontal(result->tension_horizontal);
     catenary.set_weight_unit(result->weight_unit);
 
@@ -569,7 +569,7 @@ void ResultsPane::UpdateReportDataLength(
   const SpanAnalyzerDoc* doc =
       dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
 
-  const Span* span = doc->SpanAnalysis();
+  const Span* span = doc->SpanActivated();
 
   // fills each row with data
   for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
@@ -593,7 +593,7 @@ void ResultsPane::UpdateReportDataLength(
 
     // creates a catenary to calculate results
     Catenary3d catenary;
-    catenary.set_spacing_endpoints(span->spacing_catenary);
+    catenary.set_spacing_endpoints(span->spacing_attachments);
     catenary.set_tension_horizontal(result->tension_horizontal);
     catenary.set_weight_unit(result->weight_unit);
 

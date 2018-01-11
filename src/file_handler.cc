@@ -354,9 +354,9 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
                                        cable_converted);
 
   // generates an xml node
-  wxXmlNode* root = CableXmlHandler::CreateNode(cable_converted, filepath,
-                                                units);
-  // gets the units
+  wxXmlNode* root = CableXmlHandler::CreateNode(cable_converted, "", units);
+
+  // gets the units and adds attribute
   if (units == units::UnitSystem::kImperial) {
     root->AddAttribute("units", "Imperial");
   } else if (units == units::UnitSystem::kMetric) {

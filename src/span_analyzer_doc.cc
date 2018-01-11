@@ -69,31 +69,37 @@ bool SpanAnalyzerDoc::DeleteSpan(const int& index) {
     return false;
   }
 
-  // gets iterator with edit capability
-  auto iter = std::next(spans_.begin(), index);
-
-  // determines if span matches analysis span
-  bool is_selected = false;
-  if (&(*iter) == controller_analysis_.span()) {
-    is_selected = true;
-  }
-
   // deletes from span list
+  auto iter = std::next(spans_.begin(), index);
   spans_.erase(iter);
 
   // marks as modified
   Modify(true);
 
-  // updates if span matched analysis span
-  if (is_selected == true) {
-    controller_analysis_.set_span(nullptr);
-    controller_analysis_.ClearResults();
-
-    UpdateHint hint(HintType::kSpansEdit);
-    UpdateAllViews(nullptr, &hint);
+  // updates activated span index
+  if (index == index_activated_) {
+    index_activated_ = -1;
+  } else if (index < index_activated_) {
+    index_activated_--;
   }
 
+  // syncs controller
+  SyncAnalysisController();
+
   return true;
+}
+
+int SpanAnalyzerDoc::IndexSpan(const Span* span) {
+  // searches list of spans for a match
+  for (auto iter = spans_.cbegin(); iter != spans_.cend(); iter++) {
+    const Span* span_doc = &(*iter);
+    if (span == span_doc) {
+      return std::distance(spans_.cbegin(), iter);
+    }
+  }
+
+  // if it reaches this point, no match was found
+  return -1;
 }
 
 bool SpanAnalyzerDoc::InsertSpan(const int& index, const Span& span) {
@@ -102,13 +108,20 @@ bool SpanAnalyzerDoc::InsertSpan(const int& index, const Span& span) {
     return false;
   }
 
-  // gets iterator with edit capability
-  auto iter = std::next(spans_.begin(), index);
-
   // inserts span
+  auto iter = std::next(spans_.begin(), index);
   spans_.insert(iter, span);
 
+  // marks as modified
   Modify(true);
+
+  // updates activated span index
+  if (index < index_activated_) {
+    index_activated_++;
+  }
+
+  // syncs controller
+  SyncAnalysisController();
 
   return true;
 }
@@ -249,27 +262,16 @@ bool SpanAnalyzerDoc::ModifySpan(const int& index, const Span& span) {
     return false;
   }
 
-  // gets iterator with edit capability
-  auto iter = std::next(spans_.begin(), index);
-
-  // determines if span matches analysis span
-  bool is_selected = false;
-  if (&(*iter) == controller_analysis_.span()) {
-    is_selected = true;
-  }
-
   // modifies span in list
+  auto iter = std::next(spans_.begin(), index);
   *iter = Span(span);
 
   // sets document flag as modified
   Modify(true);
 
-  // updates if span matched analysis span
-  if (is_selected == true) {
+  // runs analysis if necessary
+  if (index == index_activated_) {
     controller_analysis_.RunAnalysis();
-
-    UpdateHint hint(HintType::kSpansEdit);
-    UpdateAllViews(nullptr, &hint);
   }
 
   return true;
@@ -285,20 +287,69 @@ bool SpanAnalyzerDoc::MoveSpan(const int& index_from, const int& index_to) {
     return false;
   }
 
-  // gets iterators with edit capability
+  // gets an iterator to the activated span
+  std::list<Span>::const_iterator iter_activated;
+  if (index_activated_ != -1) {
+    iter_activated = std::next(spans_.cbegin(), index_activated_);
+  }
+
+  // moves span in list
   auto iter_from = std::next(spans_.begin(), index_from);
   auto iter_to = std::next(spans_.begin(), index_to);
 
   spans_.splice(iter_to, spans_, iter_from);
 
+  // marks as modified
   Modify(true);
+
+  // updates activated index
+  if (index_activated_ != -1) {
+    index_activated_ = std::distance(spans_.cbegin(), iter_activated);
+  }
+
+  // syncs controller
+  SyncAnalysisController();
 
   return true;
 }
 
 bool SpanAnalyzerDoc::OnCreate(const wxString& path, long flags) {
+  // initializes activated span
+  index_activated_ = -1;
+
   // initializes analysis controller
   controller_analysis_.set_weathercases(&wxGetApp().data()->weathercases);
+
+  // initializes base structure
+  StructureAttachment attachment;
+  attachment.offset_longitudinal = 0;
+  attachment.offset_transverse = 0;
+  attachment.offset_vertical_top = 0;
+
+  structure_.name = "";
+  structure_.height = 100;
+  structure_.attachments.push_back(attachment);
+
+  // initializes hardware
+  hardware_.name = "";
+  hardware_.area_cross_section = 0;
+  hardware_.length = 0;
+  hardware_.type = Hardware::HardwareType::kDeadEnd;
+  hardware_.weight = 0;
+
+  // initializes line structures
+  LineStructure line_structure;
+  line_structure.set_height_adjustment(0);
+  line_structure.set_offset(0);
+  line_structure.set_rotation(0);
+  line_structure.set_structure(&structure_);
+  line_structure.AttachHardware(0, &hardware_);
+
+  line_structure.set_station(0);
+  line_structures_.push_back(line_structure);
+
+  line_structure.set_station(1000);
+  line_structures_.push_back(line_structure);
 
   // calls base class function
   return wxDocument::OnCreate(path, flags);
@@ -334,6 +385,9 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
   ConvertUnitStyle(units, units::UnitStyle::kConsistent,
                    units::UnitStyle::kDifferent);
 
+  // disconnects activated line cable
+  DisconnectLineCableActivated();
+
   // generates an xml node
   wxXmlNode* root = SpanAnalyzerDocXmlHandler::CreateNode(*this, units);
 
@@ -347,10 +401,13 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
     root->AddAttribute("units", "Metric");
   }
 
-  // creates an XML document and savaes to stream
+  // creates an XML document and saves to stream
   wxXmlDocument doc_xml;
   doc_xml.SetRoot(root);
   doc_xml.Save(stream);
+
+  // connects activated line cable
+  ConnectLineCableActivated();
 
   // converts back to a consistent unit style
   ConvertUnitStyle(units, units::UnitStyle::kDifferent,
@@ -365,20 +422,7 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
   return stream;
 }
 
-void SpanAnalyzerDoc::SetSpanAnalysis(const Span* span) {
-  controller_analysis_.set_span(span);
-
-  if (span != nullptr) {
-    controller_analysis_.RunAnalysis();
-  } else {
-    controller_analysis_.ClearResults();
-  }
-
-  UpdateHint hint(HintType::kSpansEdit);
-  UpdateAllViews(nullptr, &hint);
-}
-
-const Span* SpanAnalyzerDoc::SpanAnalysis() const {
+const Span* SpanAnalyzerDoc::SpanActivated() const {
   return controller_analysis_.span();
 }
 
@@ -387,6 +431,81 @@ const CableStretchState* SpanAnalyzerDoc::StretchState(
   return controller_analysis_.StretchState(condition);
 }
 
+int SpanAnalyzerDoc::index_activated() const {
+  return index_activated_;
+}
+
+bool SpanAnalyzerDoc::set_index_activated(const int& index) {
+  // checks if span is to be deactivated
+  if (index == -1) {
+    index_activated_ = index;
+    SyncAnalysisController();
+    return true;
+  }
+
+  // checks index
+  if (IsValidIndex(index, false) == false) {
+    return false;
+  }
+
+  // disconnects the existing line cable
+  DisconnectLineCableActivated();
+
+  // updates activated index
+  index_activated_ = index;
+
+  // connects the newly activated line cable
+  ConnectLineCableActivated();
+
+  // syncs controller
+  SyncAnalysisController();
+
+  return true;
+}
+
 const std::list<Span>& SpanAnalyzerDoc::spans() const {
   return spans_;
+}
+
+void SpanAnalyzerDoc::ConnectLineCableActivated() {
+  if (index_activated_ == -1) {
+    return;
+  }
+
+  Span& span = *std::next(spans_.begin(), index_activated_);
+  LineCable& line_cable = span.linecable;
+  LineCableConnection connection;
+
+  connection.line_structure = &line_structures_[0];
+  connection.index_attachment = 0;
+  line_cable.AddConnection(connection);
+
+  connection.line_structure = &line_structures_[1];
+  connection.index_attachment = 0;
+  line_cable.AddConnection(connection);
+}
+
+void SpanAnalyzerDoc::DisconnectLineCableActivated() {
+  if (index_activated_ != -1) {
+    Span& span = *std::next(spans_.begin(), index_activated_);
+    span.linecable.ClearConnections();
+  }
+}
+
+void SpanAnalyzerDoc::SyncAnalysisController() {
+  // exits if no span is activated
+  if (index_activated_ == -1) {
+    controller_analysis_.set_span(nullptr);
+    controller_analysis_.ClearResults();
+    return;
+  }
+
+  // gets a pointer to the activated span
+  const Span* span = &(*std::next(spans_.cbegin(), index_activated_));
+
+  // forces controller to update if spans don't match
+  if (span != controller_analysis_.span()) {
+    controller_analysis_.set_span(span);
+    controller_analysis_.RunAnalysis();
+  }
 }

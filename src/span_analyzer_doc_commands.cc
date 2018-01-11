@@ -54,6 +54,11 @@ bool SpanCommand::CreateSpanFromXml(const wxXmlNode* node, Span& span) {
 bool SpanCommand::Do() {
   bool status = false;
 
+  // clears undo node so it's ready to cache the existing state
+  if (node_undo_ != nullptr) {
+    delete node_undo_;
+  }
+
   // selects based on command name
   const std::string name = GetName();
   if (name == kNameDelete) {
@@ -104,9 +109,13 @@ bool SpanCommand::Do() {
 }
 
 wxXmlNode* SpanCommand::SaveSpanToXml(const Span& span) {
-  units::UnitSystem units = wxGetApp().config()->units;
+  // copies span and removes connections
+  Span span_modified = span;
+  span_modified.linecable.ClearConnections();
 
-  return SpanXmlHandler::CreateNode(span, "", units);;
+  // gets unit system and returns xml node
+  units::UnitSystem units = wxGetApp().config()->units;
+  return SpanXmlHandler::CreateNode(span_modified, "", units);;
 }
 
 bool SpanCommand::Undo() {

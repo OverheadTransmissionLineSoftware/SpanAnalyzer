@@ -313,7 +313,7 @@ void ProfilePlotPane::UpdateDatasetDimensions(const Catenary3d& catenary) {
 
   text = new Text2d();
   text->angle = 0;
-  text->message = helper::DoubleToFormattedString(catenary.Sag(), 2);
+  text->message = helper::DoubleToFormattedString(line->p0.y - line->p1.y, 2);
   text->offset = Point2d<int>(5, 0);
   text->point = point;
   text->position = Text2d::BoundaryPosition::kLeftCenter;
@@ -352,11 +352,11 @@ void ProfilePlotPane::UpdatePlotDatasets() {
   }
 
   // gets span from document
-  const Span* span = doc->SpanAnalysis();
+  const Span* span = doc->SpanActivated();
 
   // creates a catenary with the result parameters
   Catenary3d catenary;
-  catenary.set_spacing_endpoints(span->spacing_catenary);
+  catenary.set_spacing_endpoints(span->spacing_attachments);
   catenary.set_tension_horizontal(result->tension_horizontal);
   catenary.set_weight_unit(result->weight_unit);
 

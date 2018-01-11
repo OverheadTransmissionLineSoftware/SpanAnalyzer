@@ -8,6 +8,7 @@
 
 #include "wx/cmdline.h"
 #include "wx/docview.h"
+#include "wx/html/helpctrl.h"
 #include "wx/wx.h"
 
 #include "span_analyzer_config.h"
@@ -81,9 +82,17 @@ class SpanAnalyzerApp : public wxApp {
   /// \return The main application frame.
   SpanAnalyzerFrame* frame();
 
+  /// \brief Gets the help controller.
+  /// \return The help controller.
+  wxHtmlHelpController* help();
+
   /// \brief Gets the document manager.
   /// \return The document manager.
   wxDocManager* manager_doc();
+
+  /// \brief Gets the application version.
+  /// \return The application version.
+  std::string version() const;
 
  private:
   /// \var config_
@@ -108,9 +117,17 @@ class SpanAnalyzerApp : public wxApp {
   ///   The main application frame.
   SpanAnalyzerFrame* frame_;
 
+  /// \var help_
+  ///   The help controller.
+  wxHtmlHelpController* help_;
+
   /// \var manager_doc_
   ///   The document manager.
   wxDocManager* manager_doc_;
+
+  /// \var version_
+  ///   The app version.
+  std::string version_;
 };
 
 /// This is an array of command line options.

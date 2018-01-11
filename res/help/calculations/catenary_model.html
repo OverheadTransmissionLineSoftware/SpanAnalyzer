@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Catenary Model</title>
+</head>
+<body>
+  <h1>1. Catenary Model</h1>
+  <h3>1.1 Overview</h3>
+  <p>
+    A catenary is a curve that can be used to model the position and tension of
+    an overhead cable. It is assumed to be formed by a perfectly flexible, yet
+    inextensible cable of uniform density and cross section hanging freely from
+    two fixed points. For the typical span lengths and cable tolerances on
+    transmission lines, these assumptions can be safely made.
+  </p>
+  <h3>1.2 Parameters</h3>
+  <p>
+    The following parameters are needed to define a catenary:
+    <ul>
+      <li>Horizontal tension</li>
+      <li>Unit weight</li>
+      <li>Horizontal spacing, from left end point to right end point</li>
+      <li>Vertical spacing, from left end point to right end point</li>
+    </ul>
+  </p>
+  <h3>1.3 Coordinate System</h3>
+  <p>The coordinate system origin (0, 0) is the catenary lowpoint.</p>
+  <br />
+  <img src="catenary.png" alt="" />
+  <h3>1.4 Equations</h3>
+  <h5>End Points</h5>
+  <br />
+  <img src="equation_1.png" alt="" />
+  <br />
+  <img src="equation_2.png" alt="" />
+  <br />
+  <p><b>Where:</b></p>
+  <br />
+  <img src="equation_3.png" alt="" />
+  <br />
+  <h5>X Coordinate</h5>
+  <br />
+  <img src="equation_4.png" alt="" />
+  <br />
+  <h5>Y Coordinate</h5>
+  <br />
+  <img src="equation_5.png" alt="" />
+  <br />
+  <h5>Length</h5>
+  <br />
+  <img src="equation_6.png" alt="" />
+  <br />
+  <img src="equation_7.png" alt="" />
+  <br />
+  <img src="equation_8.png" alt="" />
+  <br />
+  <h5>Chord Length</h5>
+  <br />
+  <img src="equation_9.png" alt="" />
+  <br />
+  <h5>Tension</h5>
+  <br />
+  <img src="equation_10.png" alt="" />
+  <br />
+  <h5>Tension - Average</h5>
+  <br />
+  <img src="equation_11.png" alt="" />
+  <br />
+  <h5>Sag - Approximate</h5>
+  <br />
+  <img src="equation_12.png" alt="" />
+  <br />
+  <h5>Sag - Exact</h5>
+  <ol>
+    <li>
+      Find the catenary x value that has a tangent slope equal to the chord
+      line.
+      <br />
+      <img src="equation_13.png" alt="" />
+    </li>
+    <li>
+      Calculate the chord y value at the sag point.
+      <br />
+      <img src="equation_14.png" alt="" />
+    </li>
+    <li>
+      Calculate the catenary y value at the sag point.
+      <br />
+      <img src="equation_15.png" alt="" />
+    </li>
+    <li>
+      Get the height difference between the chord and the catenary curve.
+      <br />
+      <img src="equation_16.png" alt="" />
+    </li>
+  </ol>
+  <h5>Slope</h5>
+  <br />
+  <img src="equation_17.png" alt="" />
+</body>
+</html>

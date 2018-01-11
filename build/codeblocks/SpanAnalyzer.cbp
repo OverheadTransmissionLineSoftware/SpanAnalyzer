@@ -5,7 +5,7 @@
 		<Option title="SpanAnalyzer" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Header Files/;Resource Files/;Source Files/;Test/;Common Header Files/;Common Resource Files/;Common Source Files/;" />
+		<Option virtualFolders="Common Header Files/;Common Resource Files/;Common Resource Files/XPM/;Common Resource Files/XRC/;Common Source Files/;Header Files/;Resource Files/;Resource Files/XPM/;Resource Files/XRC/;Source Files/;Test/;Resource Files/Help/;" />
 		<Build>
 			<Target title="debug">
 				<Option output="debug/SpanAnalyzer" prefix_auto="1" extension_auto="1" />
@@ -13,7 +13,7 @@
 				<Option object_output="debug/obj/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="--config=./spananalyzer.conf test/test.spananalyzer" />
+				<Option parameters="--config=test/spananalyzer.conf test/test.spananalyzer" />
 				<Compiler>
 					<Add option="-g" />
 					<Add option="`../../external/wxWidgets/build-debug/wx-config --cxxflags`" />
@@ -27,6 +27,8 @@
 				</Linker>
 				<ExtraCommands>
 					<Add before="../../external/wxWidgets/build-debug/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
+					<Add after="mkdir -p debug/res" />
+					<Add after="cp ../../res/help/*.htb debug/res/" />
 				</ExtraCommands>
 			</Target>
 			<Target title="release">
@@ -35,7 +37,7 @@
 				<Option object_output="release/obj/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="--config=./spananalyzer.conf test/test.spananalyzer" />
+				<Option parameters="--config=test/spananalyzer.conf test/test.spananalyzer" />
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="`../../external/wxWidgets/build-release/wx-config --cxxflags`" />
@@ -50,6 +52,8 @@
 				</Linker>
 				<ExtraCommands>
 					<Add before="../../external/wxWidgets/build-release/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
+					<Add after="mkdir -p release/res" />
+					<Add after="cp ../../res/help/*.htb release/res/" />
 				</ExtraCommands>
 			</Target>
 		</Build>
@@ -157,19 +161,19 @@
 			<Option virtualFolder="Common Header Files/" />
 		</Unit>
 		<Unit filename="../../external/AppCommon/res/xpm/sort_arrow_down.xpm">
-			<Option virtualFolder="Common Resource Files/" />
+			<Option virtualFolder="Common Resource Files/XPM/" />
 		</Unit>
 		<Unit filename="../../external/AppCommon/res/xpm/sort_arrow_up.xpm">
-			<Option virtualFolder="Common Resource Files/" />
+			<Option virtualFolder="Common Resource Files/XPM/" />
 		</Unit>
 		<Unit filename="../../external/AppCommon/res/xrc/cable_editor_dialog.xrc">
-			<Option virtualFolder="Common Resource Files/" />
+			<Option virtualFolder="Common Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../external/AppCommon/res/xrc/error_message_dialog.xrc">
-			<Option virtualFolder="Common Resource Files/" />
+			<Option virtualFolder="Common Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc">
-			<Option virtualFolder="Common Resource Files/" />
+			<Option virtualFolder="Common Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../external/AppCommon/src/editors/cable_editor_dialog.cc">
 			<Option virtualFolder="Common Source Files/" />
@@ -354,6 +358,84 @@
 		<Unit filename="../../include/weather_load_case_manager_dialog.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
+		<Unit filename="../../res/help/calculations/cable_model.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/calculations/calculations.hhc">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/calculations/calculations.hhk">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/calculations/calculations.hhp">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/calculations/catenary_model.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/calculations/sag_tension.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/interface/analysis_filters.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/interface/analyzing_a_span.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/interface/application_files.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/interface/editing_cables.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/interface/editing_spans.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/interface/editing_weathercases.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/interface/errors.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/interface/interface.hhc">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/interface/interface.hhk">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/interface/interface.hhp">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/interface/plots.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/interface/printing.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/interface/reports.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/interface/windows.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/overview/introduction.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/overview/license.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/overview/overview.hhc">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/overview/overview.hhk">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/overview/overview.hhp">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
+		<Unit filename="../../res/help/overview/technical_support.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
 		<Unit filename="../../res/icon.ico">
 			<Option virtualFolder="Resource Files/" />
 		</Unit>
@@ -366,55 +448,55 @@
 			<Option virtualFolder="Resource Files/" />
 		</Unit>
 		<Unit filename="../../res/xpm/copy.xpm">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XPM/" />
 		</Unit>
 		<Unit filename="../../res/xpm/minus.xpm">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XPM/" />
 		</Unit>
 		<Unit filename="../../res/xpm/move_arrow_down.xpm">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XPM/" />
 		</Unit>
 		<Unit filename="../../res/xpm/move_arrow_up.xpm">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XPM/" />
 		</Unit>
 		<Unit filename="../../res/xpm/plus.xpm">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XPM/" />
 		</Unit>
 		<Unit filename="../../res/xpm/wrench.xpm">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XPM/" />
 		</Unit>
 		<Unit filename="../../res/xrc/analysis_filter_editor_dialog.xrc">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../res/xrc/analysis_filter_manager_dialog.xrc">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../res/xrc/cable_file_manager_dialog.xrc">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../res/xrc/cable_plot_options_dialog.xrc">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../res/xrc/edit_pane.xrc">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../res/xrc/preferences_dialog.xrc">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../res/xrc/profile_plot_options_dialog.xrc">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../res/xrc/results_pane.xrc">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../res/xrc/span_analyzer_menubar.xrc">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../res/xrc/span_editor_dialog.xrc">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../res/xrc/weather_load_case_manager_dialog.xrc">
-			<Option virtualFolder="Resource Files/" />
+			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../spananalyzer.conf">
 			<Option virtualFolder="Test/" />

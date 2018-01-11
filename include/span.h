@@ -20,6 +20,7 @@ struct Span {
   ///
   ///  This enum contains types of spans.
   enum class Type {
+    kNull,
     kDeadendSpan,
     kRulingSpan
   };
@@ -48,9 +49,11 @@ struct Span {
   ///   The name.
   std::string name;
 
-  /// \var spacing_catenary
-  ///   The catenary spacing.
-  Vector3d spacing_catenary;
+  /// \var spacing_attachments
+  ///   The attachment spacing for the span. The line cable spacing contains the
+  ///   attachment spacing for the entire line section. When the span type is
+  ///   set to Dead-End, this spacing should match the line cable spacing.
+  Vector3d spacing_attachments;
 
   /// \var type
   ///   The span type.

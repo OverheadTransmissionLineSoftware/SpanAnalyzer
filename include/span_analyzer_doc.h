@@ -5,8 +5,11 @@
 #define OTLS_SPANANALYZER_SPANANALYZERDOC_H_
 
 #include <list>
+#include <vector>
 
 #include "models/base/units.h"
+#include "models/transmissionline/hardware.h"
+#include "models/transmissionline/line_structure.h"
 #include "wx/docview.h"
 
 #include "analysis_controller.h"
@@ -59,7 +62,10 @@ class UpdateHint : public wxObject {
 /// \par SPANS
 ///
 /// The document holds all of the spans that can be analyzed and allows them to
-/// be edited. Once a span is selected, an analysis can be performed on it.
+/// be edited. Once a span is activated, an analysis will be performed on it.
+///
+/// The span is connected to dummy structures. This is only for validation error
+/// suppression.
 ///
 /// \par SAG-TENSION ANALYSIS CONTROLLER
 ///
@@ -88,8 +94,8 @@ class UpdateHint : public wxObject {
 /// \par wxWIDGETS LIBRARY BUILD NOTE
 ///
 /// This class requires that the wxWidgets library deviate from the standard
-/// build. The wxUSE_STD_IOSTREAM configuration flag must be set to 0, which will
-/// force wxWidgets to generate wxInputStream/wxOutputStream classes on the
+/// build. The wxUSE_STD_IOSTREAM configuration flag must be set to 0, which
+/// will force wxWidgets to generate wxInputStream/wxOutputStream classes on the
 /// LoadObject() and SaveObject() functions. This is required because this class
 /// uses a series of XML handlers to load/save the document, and wxWidgets does
 /// not allow std::streams to be used with the XmlDocument::Load() and
@@ -135,6 +141,12 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return Success status.
   /// This function may trigger an update if it matches the selected span.
   bool DeleteSpan(const int& index);
+
+  /// \brief Gets the index of the span.
+  /// \param[in] span
+  ///   The span.
+  /// \return The index. If no span is matched, -1 is returned.
+  int IndexSpan(const Span* span);
 
   /// \brief Inserts a span before the specified position.
   /// \param[in] index
@@ -215,15 +227,10 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return The output stream.
   wxOutputStream& SaveObject(wxOutputStream& stream);
 
-  /// \brief Sets the analysis span.
-  /// \param[in] span
-  ///   The span to analyze.
-  /// If no span is to be analyzed, a nullptr can be specified.
-  void SetSpanAnalysis(const Span* span);
-
-  /// \brief Gets the analysis span.
-  /// \return The analysis span.
-  const Span* SpanAnalysis() const;
+  /// \brief Gets the span activated for analysis.
+  /// \return The activated span. If no span is activated, a nullptr is
+  ///   returned.
+  const Span* SpanActivated() const;
 
   /// \brief Gets the analysis stretch state for the specified condition.
   /// \param[in] condition
@@ -232,19 +239,64 @@ class SpanAnalyzerDoc : public wxDocument {
   ///   is available, a nullptr is returned.
   const CableStretchState* StretchState(const CableConditionType& condition);
 
+  /// \brief Gets activated span index.
+  /// \return The activated span index. If no span is activated, -1 is returned.
+  int index_activated() const;
+
+  /// \brief Sets the index of the activated span.
+  /// \param[in] index
+  ///   The span index to activate. To deactivate a span, set to -1.
+  /// \return If the span index has been activated/deactivated.
+  bool set_index_activated(const int& index);
+
   /// \brief Gets the spans.
   /// \return The spans.
   const std::list<Span>& spans() const;
 
  private:
+  /// \brief Connects the activated line cable to the line structures.
+  void ConnectLineCableActivated();
+
+  /// \brief Disconnects the activated line cable from the line structures.
+  void DisconnectLineCableActivated();
+
+  /// \brief Updates the analysis controller with the activated span index.
+  void SyncAnalysisController();
+
   /// \var controller_analysis_
   ///   The analysis controller, which generates sag-tension results.
   mutable AnalysisController controller_analysis_;
+
+  /// \var hardware_
+  ///   The hardware that the span connects to. This helps suppress validation
+  ///   errors related to the line cable not being connected to anything. This
+  ///   is not presented to the user, or saved with the rest of the document
+  ///   data.
+  Hardware hardware_;
+
+  /// \var index_activated_
+  ///   The index of the span that is activated for analysis. If no span is
+  ///   activated, this should be set to -1.
+  int index_activated_;
+
+  /// \var line_structures_
+  ///   The line structures that the span connects to. These help suppress
+  ///   validation errors related to the line cable not being connected to
+  ///   anything. This is not presented to the user or saved with the rest of
+  ///   the document data.
+  std::vector<LineStructure> line_structures_;
 
   /// \var spans_
   ///   The spans. This is a list so spans can be added, deleted, or modified
   ///   with a std container efficiently.
   std::list<Span> spans_;
+
+  /// \var structure_
+  ///   The base structure that is referenced by the line structures. This helps
+  ///   suppress validation errors related to the line cable not being connected
+  ///   to anything. This is not presented to the user or saved with the rest
+  ///   of the document data.
+  Structure structure_;
 
   /// \brief This allows wxWidgets to create this class dynamically as part of
   ///   the docview framework.

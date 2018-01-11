@@ -16,6 +16,11 @@ DIR_APP=$DIR_OTLS/span-analyzer
 mkdir -p $DIR_APP
 cp SpanAnalyzer $DIR_APP
 
+# copies resource files
+DIR_RESOURCES=$DIR_APP/res
+mkdir -p $DIR_RESOURCES
+cp res/*.htb $DIR_RESOURCES
+
 # copies example file(s)
 DIR_EXAMPLES=$DIR_APP/examples
 mkdir -p $DIR_EXAMPLES

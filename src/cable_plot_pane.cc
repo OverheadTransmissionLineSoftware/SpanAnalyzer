@@ -378,7 +378,7 @@ void CablePlotPane::UpdatePlotDatasets() {
   }
 
   // creates a cable elongation model
-  const Span* span = doc->SpanAnalysis();
+  const Span* span = doc->SpanActivated();
 
   SagTensionCable cable;
   cable.set_cable_base(span->linecable.cable());

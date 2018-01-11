@@ -92,7 +92,7 @@ void AnalysisFilterEditorDialog::TransferCustomDataFromWindow() {
   choice = XRCCTRL(*this, "choice_condition", wxChoice);
   index = choice->GetSelection();
   if (index == wxNOT_FOUND) {
-    // can't set enum class to invalid, do nothing
+    filter_modified_.condition = CableConditionType::kNull;
   } else {
     str = choice->GetString(index);
 

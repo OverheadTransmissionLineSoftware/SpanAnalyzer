@@ -15,5 +15,8 @@
 *.vcxproj.user text eol=crlf
 
 # Binary files that should be ignored.
+*.htb binary
 *.jpg binary
-*.png binary 
+*.ods binary
+*.odt binary
+*.png binary

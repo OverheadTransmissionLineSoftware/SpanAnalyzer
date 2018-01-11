@@ -5,6 +5,7 @@
 
 #include "appcommon/widgets/status_bar_log.h"
 #include "wx/filename.h"
+#include "wx/fs_zip.h"
 #include "wx/stdpaths.h"
 #include "wx/xrc/xmlres.h"
 
@@ -99,6 +100,7 @@ int SpanAnalyzerApp::OnExit() {
     delete weathercase;
   }
 
+  delete help_;
   delete manager_doc_;
 
   // continues exit process
@@ -106,14 +108,17 @@ int SpanAnalyzerApp::OnExit() {
 }
 
 bool SpanAnalyzerApp::OnInit() {
+  wxFileName filename;
+
   // initializes command line
   if (wxApp::OnInit() == false) {
     return false;
   }
 
-  // sets application name
+  // sets application info
   SetAppDisplayName("Span Analyzer");
   SetAppName("SpanAnalyzer");
+  version_ = "0.5.0";
 
   // creates a document manager and sets to single document interface
   manager_doc_ = new wxDocManager();
@@ -138,7 +143,6 @@ bool SpanAnalyzerApp::OnInit() {
   wxLog::SetActiveTarget(log);
 
   // manually initailizes application config defaults
-  wxFileName filename;
   filename = wxFileName(filepath_config_);
   wxPrintData data_print;
   data_print.SetOrientation(wxLANDSCAPE);
@@ -178,6 +182,48 @@ bool SpanAnalyzerApp::OnInit() {
     wxLog::SetVerbose(true);
   }
 
+  // creates help controller and adds content
+  help_ = new wxHtmlHelpController(wxHF_DEFAULT_STYLE);
+  wxInitAllImageHandlers();
+  wxFileSystem::AddHandler(new wxZipFSHandler);
+
+  filename = wxStandardPaths::Get().GetExecutablePath();
+  filename.AppendDir("res");
+  filename.SetExt("htb");
+
+  filename.SetName("overview");
+  if (filename.Exists() == true) {
+    if (help_->AddBook(filename) == false) {
+      wxLogError("Couldn't load overview help manual.");
+    }
+  } else {
+    wxLogError("Overview help manual file doesn't exist. Needs to be located "
+               "at: "
+               + filename.GetFullPath());
+  }
+
+  filename.SetName("interface");
+  if (filename.Exists() == true) {
+    if (help_->AddBook(filename) == false) {
+      wxLogError("Couldn't load interface help manual.");
+    }
+  } else {
+    wxLogError("Interface help manual file doesn't exist. Needs to be located "
+               "at: "
+               + filename.GetFullPath());
+  }
+
+  filename.SetName("calculations");
+  if (filename.Exists() == true) {
+    if (help_->AddBook(filename) == false) {
+      wxLogError("Couldn't load calculations help manual.");
+    }
+  } else {
+    wxLogError("Calculations help manual file doesn't exist. Needs to be "
+               " located at: "
+               + filename.GetFullPath());
+  }
+
   // loads app data from file, or saves a file if it doesn't exist
   // filehandler handles all logging
   filename = wxFileName(config_.filepath_data);
@@ -193,7 +239,7 @@ bool SpanAnalyzerApp::OnInit() {
     }
   } else {
     // logs
-    std::string message = "Applicaton data file doesn't exist. Creating a new "
+    std::string message = "Application data file doesn't exist. Creating a new "
                           "file.";
     wxLogError(message.c_str());
 
@@ -241,6 +287,14 @@ SpanAnalyzerFrame* SpanAnalyzerApp::frame() {
   return frame_;
 }
 
+wxHtmlHelpController* SpanAnalyzerApp::help() {
+  return help_;
+}
+
 wxDocManager* SpanAnalyzerApp::manager_doc() {
   return manager_doc_;
+}
+
+std::string SpanAnalyzerApp::version() const {
+  return version_;
 }
