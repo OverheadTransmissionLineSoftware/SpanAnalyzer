@@ -13,7 +13,7 @@
 				<Option object_output="debug/obj/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="--config=./spananalyzer.conf test/test.spananalyzer" />
+				<Option parameters="--config=test/spananalyzer.conf test/test.spananalyzer" />
 				<Compiler>
 					<Add option="-g" />
 					<Add option="`../../external/wxWidgets/build-debug/wx-config --cxxflags`" />
@@ -37,7 +37,7 @@
 				<Option object_output="release/obj/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="--config=./spananalyzer.conf test/test.spananalyzer" />
+				<Option parameters="--config=test/spananalyzer.conf test/test.spananalyzer" />
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="`../../external/wxWidgets/build-release/wx-config --cxxflags`" />
