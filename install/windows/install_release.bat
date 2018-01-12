@@ -6,22 +6,30 @@ REM System and user files are installed.
 REM To avoid overwriting existing files already stored on the system, either
 REM delete or change file extension on specific installation files.
 
+REM creates otls directory
+SET DIR_OTLS=C:\OTLS
+MKDIR %DIR_OTLS%
+
 REM copies executable
-MKDIR C:\OTLS\SpanAnalyzer
-XCOPY *.exe C:\OTLS\SpanAnalyzer /y
+SET DIR_APP=%DIR_OTLS%\SpanAnalyzer
+MKDIR %DIR_APP%
+XCOPY *.exe %DIR_APP% /y
 
 REM copies resource files
-MKDIR C:\OTLS\SpanAnalyzer\res
-XCOPY res\*.htb C:\OTLS\SpanAnalyzer\res /y
+SET DIR_RESOURCES=%DIR_APP%\res
+MKDIR %DIR_RESOURCES%
+XCOPY res\*.htb %DIR_RESOURCES% /y
 
 REM copies example file(s)
-MKDIR C:\OTLS\SpanAnalyzer\Examples
-XCOPY Examples\*.cable C:\OTLS\SpanAnalyzer\Examples /y 
-XCOPY Examples\*.spananalyzer C:\OTLS\SpanAnalyzer\Examples /y
+SET DIR_EXAMPLES=%DIR_APP%\Examples
+MKDIR %DIR_EXAMPLES%
+XCOPY Examples\*.cable %DIR_EXAMPLES% /y
+XCOPY Examples\*.spananalyzer %DIR_EXAMPLES% /y
 
 REM copies user file(s)
-MKDIR %APPDATA%\OTLS\SpanAnalyzer
-XCOPY *.xml %APPDATA%\OTLS\SpanAnalyzer /y
+SET DIR_USER=%APPDATA%\OTLS\SpanAnalyzer
+MKDIR %DIR_USER%
+XCOPY *.xml %DIR_USER% /y
 
 REM creates a shortcut
-mklink %USERPROFILE%\Desktop\SpanAnalyzer.lnk C:\OTLS\SpanAnalyzer\SpanAnalyzer.exe
+MKLINK %USERPROFILE%\Desktop\SpanAnalyzer.lnk %DIR_APP%\SpanAnalyzer.exe
