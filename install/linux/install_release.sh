@@ -33,5 +33,4 @@ mkdir -p $DIR_USER
 cp *.xml $DIR_USER
 
 # creates a shortcut
-TARGET=$HOME/Desktop/SpanAnalyzer
-ln -f -s $DIR_APP/SpanAnalyzer $TARGET
+ln -f -s $DIR_APP/SpanAnalyzer $HOME/Desktop/SpanAnalyzer
