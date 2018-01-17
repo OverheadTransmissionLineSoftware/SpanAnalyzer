@@ -67,9 +67,6 @@
 			<Add directory="../../external/wxWidgets/include" />
 			<Add directory="../../res" />
 		</Compiler>
-		<Unit filename="../../appdata.xml">
-			<Option virtualFolder="Test/" />
-		</Unit>
 		<Unit filename="../../external/AppCommon/include/appcommon/editors/cable_editor_dialog.h">
 			<Option virtualFolder="Common Header Files/" />
 		</Unit>
@@ -498,9 +495,6 @@
 		<Unit filename="../../res/xrc/weather_load_case_manager_dialog.xrc">
 			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
-		<Unit filename="../../spananalyzer.conf">
-			<Option virtualFolder="Test/" />
-		</Unit>
 		<Unit filename="../../src/analysis_controller.cc">
 			<Option virtualFolder="Source Files/" />
 		</Unit>
@@ -585,7 +579,13 @@
 		<Unit filename="../../src/weather_load_case_manager_dialog.cc">
 			<Option virtualFolder="Source Files/" />
 		</Unit>
+		<Unit filename="../../test/appdata.xml">
+			<Option virtualFolder="Test/" />
+		</Unit>
 		<Unit filename="../../test/cables/ACSR_Drake.cable">
+			<Option virtualFolder="Test/" />
+		</Unit>
+		<Unit filename="../../test/spananalyzer.conf">
 			<Option virtualFolder="Test/" />
 		</Unit>
 		<Unit filename="../../test/test.spananalyzer">

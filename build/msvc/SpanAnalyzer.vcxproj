@@ -188,14 +188,9 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <None Include="..\..\res\xrc\span_analyzer_menubar.xrc" />
     <None Include="..\..\res\xrc\span_editor_dialog.xrc" />
     <None Include="..\..\res\xrc\weather_load_case_manager_dialog.xrc" />
-    <None Include="..\..\spananalyzer.conf" />
     <None Include="..\..\test\cables\ACSR_Drake.cable" />
+    <None Include="..\..\test\spananalyzer.conf" />
     <None Include="..\..\test\test.spananalyzer" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\appdata.xml">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\res\icon.ico" />
@@ -265,6 +260,9 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <ClInclude Include="..\..\include\span_unit_converter.h" />
     <ClInclude Include="..\..\include\span_xml_handler.h" />
     <ClInclude Include="..\..\include\weather_load_case_manager_dialog.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\test\appdata.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

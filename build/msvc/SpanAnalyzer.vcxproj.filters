@@ -224,13 +224,7 @@
     <None Include="..\..\test\test.spananalyzer">
       <Filter>Test</Filter>
     </None>
-    <None Include="..\..\spananalyzer.conf">
-      <Filter>Test</Filter>
-    </None>
     <None Include="..\..\test\cables\ACSR_Drake.cable">
-      <Filter>Test</Filter>
-    </None>
-    <None Include="..\..\appdata.xml">
       <Filter>Test</Filter>
     </None>
     <None Include="..\..\res\xrc\analysis_filter_editor_dialog.xrc">
@@ -376,6 +370,12 @@
     </None>
     <None Include="..\..\res\help\overview\overview.hhp">
       <Filter>Resource Files\Help</Filter>
+    </None>
+    <None Include="..\..\test\spananalyzer.conf">
+      <Filter>Test</Filter>
+    </None>
+    <None Include="..\..\test\appdata.xml">
+      <Filter>Test</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
