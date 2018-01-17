@@ -84,10 +84,23 @@ void AnalysisFilterManagerDialog::OnButtonFilterAdd(wxCommandEvent& event) {
   wxBusyCursor cursor;
 
   // adds filter to group
-  group.filters.push_back(filter);
+  if (index_filter_selected_ == wxNOT_FOUND) {
+    // nothing is selected so the cable is appended
+    group.filters.push_back(filter);
+  } else {
+    // an index is selected so the filter is inserted after selection
+    auto iter = std::next(group.filters.begin(), index_filter_selected_ + 1);
+    group.filters.insert(iter, filter);
+  }
 
   // adds to listctrl
-  const long index = listctrl_filters_->GetItemCount();
+  long index = -1;
+  if (index_filter_selected_ == wxNOT_FOUND) {
+    index = listctrl_filters_->GetItemCount();
+  } else {
+    index = index_filter_selected_ + 1;
+  }
+
   wxListItem item;
   item.SetId(index);
   listctrl_filters_->InsertItem(item);
@@ -120,11 +133,24 @@ void AnalysisFilterManagerDialog::OnButtonFilterDelete(wxCommandEvent& event) {
   // updates filter listctrl
   listctrl_filters_->DeleteItem(index_filter_selected_);
 
-  // resets filter index if invalid
-  if (index_filter_selected_ < listctrl_filters_->GetItemCount()) {
-    /// do nothing
-  } else {
+  // reselects listctrl item
+  const int kSize = listctrl_filters_->GetItemCount();
+  if (kSize == 0) {
+    // no items left in listctrl
     index_filter_selected_ = wxNOT_FOUND;
+    return;
+  } else if (index_filter_selected_ < kSize) {
+    // reselects index
+    listctrl_filters_->SetItemState(index_filter_selected_,
+                                    wxLIST_STATE_SELECTED,
+                                    wxLIST_STATE_SELECTED);
+  } else {
+    // last item in the listctrl was deleted
+    // decrements index and reselects
+    index_filter_selected_--;
+    listctrl_filters_->SetItemState(index_filter_selected_,
+                                    wxLIST_STATE_SELECTED,
+                                    wxLIST_STATE_SELECTED);
   }
 }
 
