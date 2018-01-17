@@ -150,6 +150,7 @@ void CableFileManagerDialog::OnButtonAdd(wxCommandEvent& event) {
   dialog_file.GetPaths(paths);
 
   // adds all selected files
+  int num_added = 0;
   for (auto iter = paths.begin(); iter != paths.end(); iter++) {
     const wxString path = *iter;
 
@@ -184,13 +185,35 @@ void CableFileManagerDialog::OnButtonAdd(wxCommandEvent& event) {
         continue;
       }
 
+      // increments number of files added
+      num_added++;
+
       // adds to app data
       CableFile* cablefile_new = new CableFile(cablefile);
-      cablefiles_->push_back(cablefile_new);
-      cablefiles_modified_.push_back(cablefile_new);
+
+      if (index_selected_ == wxNOT_FOUND) {
+        // nothing is selected so the cable is appended
+        cablefiles_->push_back(cablefile_new);
+        cablefiles_modified_.push_back(cablefile_new);
+      } else {
+        // an index is selected so the cable is inserted after selection
+        auto iter = std::next(cablefiles_->begin(),
+                              index_selected_ + num_added);
+        cablefiles_->insert(iter, cablefile_new);
+
+        iter = std::next(cablefiles_modified_.begin(),
+                         index_selected_ + num_added);
+        cablefiles_modified_.insert(iter, cablefile_new);
+      }
 
       // adds to listctrl
-      const long index = listctrl_->GetItemCount();
+      long index = -1;
+      if (index_selected_ == wxNOT_FOUND) {
+        index = listctrl_->GetItemCount();
+      } else {
+        index = index_selected_ + num_added;
+      }
+
       wxListItem item;
       item.SetId(index);
       listctrl_->InsertItem(item);
@@ -320,11 +343,28 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
   if (index_existing == wxNOT_FOUND) {
     // adds to end of application data
     CableFile* cablefile_new = new CableFile(cablefile);
-    cablefiles_->push_back(cablefile_new);
-    cablefiles_modified_.push_back(cablefile_new);
+
+    if (index_selected_ == wxNOT_FOUND) {
+      // nothing is selected so the cable is appended
+      cablefiles_->push_back(cablefile_new);
+      cablefiles_modified_.push_back(cablefile_new);
+    } else {
+      // an index is selected so the cable is inserted after selection
+      auto iter = std::next(cablefiles_->begin(), index_selected_ + 1);
+      cablefiles_->insert(iter, cablefile_new);
+
+      iter = std::next(cablefiles_modified_.begin(), index_selected_ + 1);
+      cablefiles_modified_.insert(iter, cablefile_new);
+    }
 
     // adds to end of listctrl
-    const long index = listctrl_->GetItemCount();
+    long index = 0; // listctrl_->GetItemCount();
+    if (index == wxNOT_FOUND) {
+      index = listctrl_->GetItemCount();
+    } else {
+      index = index_selected_ + 1;
+    }
+
     wxListItem item;
     item.SetId(index);
     listctrl_->InsertItem(item);
@@ -382,8 +422,23 @@ void CableFileManagerDialog::OnButtonRemove(wxCommandEvent& event) {
   // removes from listctrl
   listctrl_->DeleteItem(index_selected_);
 
-  // resets cached index
-  index_selected_ = wxNOT_FOUND;
+  // reselects listctrl item
+  const int kSize = listctrl_->GetItemCount();
+  if (kSize == 0) {
+    // no items left in listctrl
+    index_selected_ = wxNOT_FOUND;
+    return;
+  } else if (index_selected_ < kSize) {
+    // reselects index
+    listctrl_->SetItemState(index_selected_, wxLIST_STATE_SELECTED,
+                            wxLIST_STATE_SELECTED);
+  } else {
+    // last item in the listctrl was deleted
+    // decrements index and reselects
+    index_selected_--;
+    listctrl_->SetItemState(index_selected_, wxLIST_STATE_SELECTED,
+                            wxLIST_STATE_SELECTED);
+  }
 }
 
 void CableFileManagerDialog::OnClose(wxCloseEvent &event) {
