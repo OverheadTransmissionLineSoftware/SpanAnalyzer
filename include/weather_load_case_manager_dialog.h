@@ -81,6 +81,11 @@ class WeatherLoadCaseManagerDialog : public wxDialog {
   ///   The event.
   void OnListBoxDoubleClick(wxCommandEvent& event);
 
+  /// \brief Handles the weathercase listbox selection event.
+  /// \param[in] event
+  ///   The event.
+  void OnListBoxSelect(wxCommandEvent& event);
+
   /// \brief Handles the Ok button event.
   /// \param[in] event
   ///   The event.
@@ -95,6 +100,18 @@ class WeatherLoadCaseManagerDialog : public wxDialog {
   /// \param[in] event
   ///   The event.
   void OnSpinButtonUp(wxSpinEvent& event);
+
+  /// \var index_selected_
+  ///   The selected listbox item.
+  int index_selected_;
+
+  /// \var listbox_weathercases_
+  ///   The listbox containing weathercases.
+  wxListBox* listbox_weathercases_;
+
+  /// \var units_
+  ///   The unit system.
+  const units::UnitSystem* units_;
 
   /// \var weathercases_
   ///   The master list of weathercases allocated by the application. This list
@@ -112,14 +129,6 @@ class WeatherLoadCaseManagerDialog : public wxDialog {
   ///   The weathercases that are originally passed to the dialog. This list is
   ///   committed to the master list when the user cancels or closes the form.
   std::list<WeatherLoadCase*> weathercases_original_;
-
-  /// \var listbox_weathercases_
-  ///   The listbox containing weathercases.
-  wxListBox* listbox_weathercases_;
-
-  /// \var units_
-  ///   The unit system.
-  const units::UnitSystem* units_;
 
   DECLARE_EVENT_TABLE()
 };

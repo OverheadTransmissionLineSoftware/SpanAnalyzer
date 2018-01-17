@@ -17,6 +17,7 @@ BEGIN_EVENT_TABLE(WeatherLoadCaseManagerDialog, wxDialog)
   EVT_BUTTON(wxID_CANCEL, WeatherLoadCaseManagerDialog::OnCancel)
   EVT_BUTTON(wxID_OK, WeatherLoadCaseManagerDialog::OnOk)
   EVT_CLOSE(WeatherLoadCaseManagerDialog::OnClose)
+  EVT_LISTBOX(XRCID("listbox_weathercases"), WeatherLoadCaseManagerDialog::OnListBoxSelect)
   EVT_LISTBOX_DCLICK(XRCID("listbox_weathercases"), WeatherLoadCaseManagerDialog::OnListBoxDoubleClick)
   EVT_SPIN_DOWN(XRCID("spinbutton_weathercases"), WeatherLoadCaseManagerDialog::OnSpinButtonDown)
   EVT_SPIN_UP(XRCID("spinbutton_weathercases"), WeatherLoadCaseManagerDialog::OnSpinButtonUp)
@@ -47,6 +48,9 @@ WeatherLoadCaseManagerDialog::WeatherLoadCaseManagerDialog(
     const WeatherLoadCase* weathercase = *iter;
     listbox_weathercases_->Append(weathercase->description);
   }
+
+  // initializes index
+  index_selected_ = wxNOT_FOUND;
 
   // fits the dialog around the sizers
   this->Fit();
@@ -187,19 +191,38 @@ void WeatherLoadCaseManagerDialog::OnButtonAdd(wxCommandEvent& event) {
 
   // adds weathercase to set
   WeatherLoadCase* weathercase_new = new WeatherLoadCase(weathercase);
-  weathercases_->push_back(weathercase_new);
-  weathercases_modified_.push_back(weathercase_new);
+
+  if (index_selected_ == wxNOT_FOUND) {
+    // nothing is selected so the weathercase is appended
+    weathercases_->push_back(weathercase_new);
+    weathercases_modified_.push_back(weathercase_new);
+  } else {
+    // an index is selected so the weathercase is inserted after selection
+    auto iter = std::next(weathercases_->begin(), index_selected_ + 1);
+    weathercases_->insert(iter, weathercase_new);
+
+    iter = std::next(weathercases_modified_.begin(), index_selected_ + 1);
+    weathercases_modified_.insert(iter, weathercase_new);
+  }
 
   // updates weathercase listbox
-  listbox_weathercases_->Append(weathercase.description);
+  if (index_selected_ == wxNOT_FOUND) {
+    listbox_weathercases_->Append(weathercase.description);
+  } else {
+    index_selected_++;
+    listbox_weathercases_->Insert(weathercase.description, index_selected_);
+    listbox_weathercases_->SetSelection(index_selected_);
+  }
 }
 
 void WeatherLoadCaseManagerDialog::OnButtonDelete(wxCommandEvent& event) {
-  // gets weathercase listbox index
-  const int index = listbox_weathercases_->GetSelection();
+  // checks index
+  if (index_selected_ == wxNOT_FOUND) {
+    return;
+  }
 
   // gets the weathercase
-  auto iter = std::next(weathercases_modified_.begin(), index);
+  auto iter = std::next(weathercases_modified_.begin(), index_selected_);
   WeatherLoadCase* weathercase = *iter;
 
   // checks if weathercase is referenced by analysis filters
@@ -230,7 +253,21 @@ void WeatherLoadCaseManagerDialog::OnButtonDelete(wxCommandEvent& event) {
   weathercases_modified_.erase(iter);
 
   // updates weathercase listbox
-  listbox_weathercases_->Delete(index);
+  listbox_weathercases_->Delete(index_selected_);
+
+  // reselects item in listbox
+  const int kSize = listbox_weathercases_->GetCount();
+  if (kSize == 0) {
+    // no items left in listbox
+    index_selected_ = wxNOT_FOUND;
+  } else if (index_selected_ < kSize) {
+    // do nothing
+  } else {
+    // last item in the listbox was deleted, decrements index
+    index_selected_--;
+  }
+
+  listbox_weathercases_->SetSelection(index_selected_);
 }
 
 void WeatherLoadCaseManagerDialog::OnCancel(wxCommandEvent& event) {
@@ -248,15 +285,14 @@ void WeatherLoadCaseManagerDialog::OnClose(wxCloseEvent& event) {
 }
 
 void WeatherLoadCaseManagerDialog::OnListBoxDoubleClick(wxCommandEvent& event) {
-  // gets the weathercase listbox index
-  const int index_weathercases = listbox_weathercases_->GetSelection();
-  if (index_weathercases == wxNOT_FOUND) {
+  // checks index
+  if (index_selected_ == wxNOT_FOUND) {
     return;
   }
 
   // gets the weathercase, copies, and converts to different unit style
   auto iter_weathercase = std::next(weathercases_modified_.begin(),
-                                    index_weathercases);
+                                    index_selected_);
   WeatherLoadCase* weathercase = *iter_weathercase;
   WeatherLoadCaseUnitConverter::ConvertUnitStyle(*units_,
                                                  units::UnitStyle::kConsistent,
@@ -274,7 +310,7 @@ void WeatherLoadCaseManagerDialog::OnListBoxDoubleClick(wxCommandEvent& event) {
     }
 
     // checks if the weathercase name is unique
-    is_unique = IsUniqueName(weathercase->description, index_weathercases);
+    is_unique = IsUniqueName(weathercase->description, index_selected_);
     if (is_unique == false) {
       std::string message = "Weathercase name is a duplicate. Please provide "
                             "another name.";
@@ -295,8 +331,12 @@ void WeatherLoadCaseManagerDialog::OnListBoxDoubleClick(wxCommandEvent& event) {
   *iter_weathercase = weathercase;
 
   // updates listbox of description change
-  listbox_weathercases_->SetString(index_weathercases,
+  listbox_weathercases_->SetString(index_selected_,
                                    weathercase->description);
+}
+
+void WeatherLoadCaseManagerDialog::OnListBoxSelect(wxCommandEvent& event) {
+  index_selected_ = listbox_weathercases_->GetSelection();
 }
 
 void WeatherLoadCaseManagerDialog::OnOk(wxCommandEvent& event) {
@@ -313,60 +353,58 @@ void WeatherLoadCaseManagerDialog::OnOk(wxCommandEvent& event) {
 }
 
 void WeatherLoadCaseManagerDialog::OnSpinButtonDown(wxSpinEvent& event) {
-  // gets weathercase index
-  const int index = listbox_weathercases_->GetSelection();
-
-  // exits if nothing is selected
-  if (index == wxNOT_FOUND) {
+  // checks index
+  if (index_selected_ == wxNOT_FOUND) {
     return;
   }
 
   // exits if the selected index is the last weathercase
   const int kCount = listbox_weathercases_->GetCount() - 1;
-  if (index == kCount) {
+  if (index_selected_ == kCount) {
     return;
   }
 
   wxBusyCursor cursor;
 
   // switches weathercases in list using iterators
-  auto iter_selection = std::next(weathercases_modified_.begin(), index);
+  auto iter_selection = std::next(weathercases_modified_.begin(),
+                                  index_selected_);
   auto iter_position = std::next(iter_selection, 2);
   weathercases_modified_.splice(iter_position, weathercases_modified_,
                                 iter_selection);
 
   // updates listbox
   const WeatherLoadCase* weathercase = *iter_selection;
-  listbox_weathercases_->Delete(index);
-  listbox_weathercases_->Insert(weathercase->description, index + 1);
-  listbox_weathercases_->SetSelection(index + 1);
+  listbox_weathercases_->Delete(index_selected_);
+  listbox_weathercases_->Insert(weathercase->description, index_selected_ + 1);
+  index_selected_++;
+  listbox_weathercases_->SetSelection(index_selected_);
 }
 
 void WeatherLoadCaseManagerDialog::OnSpinButtonUp(wxSpinEvent& event) {
-  // gets weathercase index
-  const int index = listbox_weathercases_->GetSelection();
-
-  // exits if nothing is selected
-  if (index == wxNOT_FOUND) {
+  // checks index
+  if (index_selected_ == wxNOT_FOUND) {
     return;
   }
 
   // exits if the selected index is the first weathercase
-  if (index == 0) {
+  if (index_selected_ == 0) {
     return;
   }
 
   wxBusyCursor cursor;
 
   // switches weathercases in list using iterators
-  auto iter_selection = std::next(weathercases_modified_.begin(), index);
+  auto iter_selection = std::next(weathercases_modified_.begin(),
+                                  index_selected_);
   auto iter_position = std::prev(iter_selection, 1);
   weathercases_modified_.splice(iter_position, weathercases_modified_,
                                 iter_selection);
 
   // updates listbox
   const WeatherLoadCase* weathercase = *iter_selection;
-  listbox_weathercases_->Delete(index);
-  listbox_weathercases_->Insert(weathercase->description, index - 1);
-  listbox_weathercases_->SetSelection(index - 1);
+  listbox_weathercases_->Delete(index_selected_);
+  listbox_weathercases_->Insert(weathercase->description, index_selected_ - 1);
+  index_selected_--;
+  listbox_weathercases_->SetSelection(index_selected_);
 }
