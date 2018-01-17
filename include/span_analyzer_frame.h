@@ -93,6 +93,11 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   ///   The event.
   void OnMenuViewLog(wxCommandEvent& event);
 
+  /// \brief Handles a resize event.
+  /// \param[in] event
+  ///   The event.
+  void OnResize(wxSizeEvent& event);
+
   /// \brief Gets the log pane.
   /// \return The log pane.
   LogPane* pane_log();

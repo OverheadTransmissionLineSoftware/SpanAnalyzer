@@ -63,6 +63,7 @@ BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxDocParentFrame)
   EVT_MENU(XRCID("menuitem_help_about"), SpanAnalyzerFrame::OnMenuHelpAbout)
   EVT_MENU(XRCID("menuitem_help_manual"), SpanAnalyzerFrame::OnMenuHelpManual)
   EVT_MENU(XRCID("menuitem_view_log"), SpanAnalyzerFrame::OnMenuViewLog)
+  EVT_SIZE(SpanAnalyzerFrame::OnResize)
 END_EVENT_TABLE()
 
 SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
@@ -100,13 +101,9 @@ SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
 }
 
 SpanAnalyzerFrame::~SpanAnalyzerFrame() {
-  // saves frame size to application config
+  // saves if frame is maximized to application config
   SpanAnalyzerConfig* config = wxGetApp().config();
-  if (this->IsMaximized() == true) {
-    config->size_frame = wxSize(0, 0);
-  } else {
-    config->size_frame = this->GetSize();
-  }
+  config->is_maximized_frame = IsMaximized();
 
   manager_.UnInit();
 }
@@ -305,6 +302,17 @@ void SpanAnalyzerFrame::OnMenuViewLog(wxCommandEvent& event) {
   }
 
   manager_.Update();
+}
+
+void SpanAnalyzerFrame::OnResize(wxSizeEvent& event) {
+  // skips caching frame size if maximized
+  if (IsMaximized() == true) {
+    return;
+  }
+
+  // saves frame size to application config
+  SpanAnalyzerConfig* config = wxGetApp().config();
+  config->size_frame = event.GetSize();
 }
 
 LogPane* SpanAnalyzerFrame::pane_log() {

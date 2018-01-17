@@ -152,6 +152,7 @@ bool SpanAnalyzerApp::OnInit() {
   config_.data_page->SetMarginBottomRight(wxPoint(15, 15));
   config_.data_page->SetMarginTopLeft(wxPoint(15, 15));
   config_.filepath_data = filename.GetPathWithSep() + "appdata.xml";
+  config_.is_maximized_frame = true;
   config_.level_log = wxLOG_Message;
   config_.options_plot_cable.color_core = *wxRED;
   config_.options_plot_cable.color_markers = *wxGREEN;
@@ -163,7 +164,7 @@ bool SpanAnalyzerApp::OnInit() {
   config_.options_plot_profile.scale_vertical = 10;
   config_.options_plot_profile.thickness_line = 1;
   config_.perspective = "";
-  config_.size_frame = wxSize(0, 0);
+  config_.size_frame = wxSize(400, 400);
   config_.units = units::UnitSystem::kImperial;
 
   // loads config settings from file, or saves a file if it doesn't exist
@@ -224,6 +225,13 @@ bool SpanAnalyzerApp::OnInit() {
                + filename.GetFullPath());
   }
 
+  // sets application frame based on config setting
+  // this needs to be done before any messages are shown
+  frame_->SetSize(config_.size_frame);
+  if (config_.is_maximized_frame == true) {
+    frame_->Maximize();
+  }
+
   // loads app data from file, or saves a file if it doesn't exist
   // filehandler handles all logging
   filename = wxFileName(config_.filepath_data);
@@ -252,13 +260,7 @@ bool SpanAnalyzerApp::OnInit() {
     manager_doc_->CreateDocument(filepath_start_);
   }
 
-  // sets application frame based on config setting and shows
-  if (config_.size_frame.GetHeight() < 100
-      || config_.size_frame.GetWidth() < 100) {
-    frame_->Maximize();
-  } else {
-    frame_->SetSize(config_.size_frame);
-  }
+  // shows application frame
   frame_->Centre(wxBOTH);
   frame_->Show(true);
 

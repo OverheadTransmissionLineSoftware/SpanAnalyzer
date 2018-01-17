@@ -75,6 +75,11 @@ struct SpanAnalyzerConfig {
   ///   The file path for the application data.
   std::string filepath_data;
 
+  /// \var is_maximized_frame
+  ///   An indicator that determines if the frame is maximized when created.
+  ///   This is only updated on startup/exit.
+  bool is_maximized_frame;
+
   /// \var level_log
   ///   The log level of the application.
   wxLogLevelValues level_log;

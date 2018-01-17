@@ -120,6 +120,8 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
   node_element->AddAttribute("x", str);
   str = std::to_string(config.size_frame.GetHeight());
   node_element->AddAttribute("y", str);
+  str = std::to_string(config.is_maximized_frame);
+  node_element->AddAttribute("is_maximized", str);
   node_root->AddChild(node_element);
 
   // creates units node
@@ -312,10 +314,26 @@ bool SpanAnalyzerConfigXmlHandler::ParseNodeV1(const wxXmlNode* root,
       config.perspective = content;
     } else if (title == "size_frame") {
       std::string str;
+      int value;
+
       str = node->GetAttribute("x");
-      config.size_frame.SetWidth(std::stoi(str));
+      value = std::stoi(str);
+      if (400 < value) {
+        config.size_frame.SetWidth(value);
+      }
+
       str = node->GetAttribute("y");
-      config.size_frame.SetHeight(std::stoi(str));
+      value = std::stoi(str);
+      if (400 < value) {
+        config.size_frame.SetHeight(value);
+      }
+
+      str = node->GetAttribute("is_maximized");
+      if (str == "0") {
+        config.is_maximized_frame = false;
+      } else if (str =="1") {
+        config.is_maximized_frame = true;
+      }
     } else if (title == "units") {
       if (content == "Metric") {
         config.units = units::UnitSystem::kMetric;
