@@ -118,7 +118,7 @@ bool SpanAnalyzerApp::OnInit() {
   // sets application info
   SetAppDisplayName("Span Analyzer");
   SetAppName("SpanAnalyzer");
-  version_ = "0.5.0";
+  version_ = "1.0.0";
 
   // creates a document manager and sets to single document interface
   manager_doc_ = new wxDocManager();
