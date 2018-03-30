@@ -66,9 +66,6 @@
     <ClCompile Include="..\..\src\file_handler.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\log_pane.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\preferences_dialog.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -217,6 +214,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\external\AppCommon\src\xml\color_xml_handler.cc">
+      <Filter>Common Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\external\AppCommon\src\widgets\log_pane.cc">
       <Filter>Common Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -410,9 +410,6 @@
     <ClInclude Include="..\..\include\file_handler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\log_pane.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\preferences_dialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -570,6 +567,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\color_xml_handler.h">
+      <Filter>Common Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\log_pane.h">
       <Filter>Common Header Files</Filter>
     </ClInclude>
   </ItemGroup>

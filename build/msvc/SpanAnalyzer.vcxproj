@@ -97,6 +97,7 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <ClCompile Include="..\..\external\AppCommon\src\units\line_cable_unit_converter.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\units\weather_load_case_unit_converter.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\widgets\error_message_dialog.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\widgets\log_pane.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\widgets\report_table.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\widgets\status_bar_log.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\widgets\timer.cc" />
@@ -117,7 +118,6 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <ClCompile Include="..\..\src\cable_plot_pane.cc" />
     <ClCompile Include="..\..\src\edit_pane.cc" />
     <ClCompile Include="..\..\src\file_handler.cc" />
-    <ClCompile Include="..\..\src\log_pane.cc" />
     <ClCompile Include="..\..\src\preferences_dialog.cc" />
     <ClCompile Include="..\..\src\profile_plot_options_dialog.cc" />
     <ClCompile Include="..\..\src\profile_plot_pane.cc" />
@@ -219,6 +219,7 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\units\line_cable_unit_converter.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\units\weather_load_case_unit_converter.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\error_message_dialog.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\log_pane.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\report_table.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\status_bar_log.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\timer.h" />
@@ -238,7 +239,6 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <ClInclude Include="..\..\include\cable_plot_pane.h" />
     <ClInclude Include="..\..\include\edit_pane.h" />
     <ClInclude Include="..\..\include\file_handler.h" />
-    <ClInclude Include="..\..\include\log_pane.h" />
     <ClInclude Include="..\..\include\preferences_dialog.h" />
     <ClInclude Include="..\..\include\profile_plot_options_dialog.h" />
     <ClInclude Include="..\..\include\profile_plot_pane.h" />

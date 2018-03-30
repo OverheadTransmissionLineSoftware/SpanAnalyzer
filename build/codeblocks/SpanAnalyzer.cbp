@@ -128,6 +128,9 @@
 		<Unit filename="../../external/AppCommon/include/appcommon/widgets/error_message_dialog.h">
 			<Option virtualFolder="Common Header Files/" />
 		</Unit>
+		<Unit filename="../../external/AppCommon/include/appcommon/widgets/log_pane.h">
+			<Option virtualFolder="Common Header Files/" />
+		</Unit>
 		<Unit filename="../../external/AppCommon/include/appcommon/widgets/report_table.h">
 			<Option virtualFolder="Common Header Files/" />
 		</Unit>
@@ -233,6 +236,9 @@
 		<Unit filename="../../external/AppCommon/src/widgets/error_message_dialog.cc">
 			<Option virtualFolder="Common Source Files/" />
 		</Unit>
+		<Unit filename="../../external/AppCommon/src/widgets/log_pane.cc">
+			<Option virtualFolder="Common Source Files/" />
+		</Unit>
 		<Unit filename="../../external/AppCommon/src/widgets/report_table.cc">
 			<Option virtualFolder="Common Source Files/" />
 		</Unit>
@@ -288,9 +294,6 @@
 			<Option virtualFolder="Header Files/" />
 		</Unit>
 		<Unit filename="../../include/file_handler.h">
-			<Option virtualFolder="Header Files/" />
-		</Unit>
-		<Unit filename="../../include/log_pane.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
 		<Unit filename="../../include/preferences_dialog.h">
@@ -521,9 +524,6 @@
 			<Option virtualFolder="Source Files/" />
 		</Unit>
 		<Unit filename="../../src/file_handler.cc">
-			<Option virtualFolder="Source Files/" />
-		</Unit>
-		<Unit filename="../../src/log_pane.cc">
 			<Option virtualFolder="Source Files/" />
 		</Unit>
 		<Unit filename="../../src/preferences_dialog.cc">

@@ -4,11 +4,10 @@
 #ifndef OTLS_SPANANALYZER_SPANANALYZERFRAME_H_
 #define OTLS_SPANANALYZER_SPANANALYZERFRAME_H_
 
+#include "appcommon/widgets/log_pane.h"
 #include "wx/aui/framemanager.h"
 #include "wx/docview.h"
 #include "wx/dnd.h"
-
-#include "log_pane.h"
 
 /// \par OVERVIEW
 ///
