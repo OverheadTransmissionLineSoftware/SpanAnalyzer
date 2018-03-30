@@ -67,7 +67,8 @@ BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxDocParentFrame)
 END_EVENT_TABLE()
 
 SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
-    : wxDocParentFrame(manager, nullptr, wxID_ANY, "Span Analyzer") {
+    : wxDocParentFrame(manager, nullptr, wxID_ANY,
+                       wxGetApp().GetAppDisplayName()) {
   // loads dialog from virtual xrc file system
   wxXmlResource::Get()->LoadMenuBar(this, "span_analyzer_menubar");
 

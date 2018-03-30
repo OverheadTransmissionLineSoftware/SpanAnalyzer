@@ -116,7 +116,7 @@ bool SpanAnalyzerApp::OnInit() {
   }
 
   // sets application info
-  SetAppDisplayName("Span Analyzer");
+  SetAppDisplayName("SpanAnalyzer");
   SetAppName("SpanAnalyzer");
   version_ = "1.0.0";
 
