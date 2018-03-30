@@ -5,12 +5,6 @@
 
 #include "span_xml_handler.h"
 
-SpanAnalyzerDocXmlHandler::SpanAnalyzerDocXmlHandler() {
-}
-
-SpanAnalyzerDocXmlHandler::~SpanAnalyzerDocXmlHandler() {
-}
-
 wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
     const SpanAnalyzerDoc& doc,
     const units::UnitSystem& units) {

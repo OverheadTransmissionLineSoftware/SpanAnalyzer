@@ -3,12 +3,6 @@
 
 #include "analysis_filter_xml_handler.h"
 
-AnalysisFilterXmlHandler::AnalysisFilterXmlHandler() {
-}
-
-AnalysisFilterXmlHandler::~AnalysisFilterXmlHandler() {
-}
-
 wxXmlNode* AnalysisFilterXmlHandler::CreateNode(const AnalysisFilter& filter,
                                                 const std::string& name) {
   // variables used to create XML node

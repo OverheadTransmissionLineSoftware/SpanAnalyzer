@@ -5,12 +5,6 @@
 
 #include "appcommon/units/line_cable_unit_converter.h"
 
-SpanUnitConverter::SpanUnitConverter() {
-}
-
-SpanUnitConverter::~SpanUnitConverter() {
-}
-
 void SpanUnitConverter::ConvertUnitStyle(
     const units::UnitSystem& system,
     const units::UnitStyle& style_from,

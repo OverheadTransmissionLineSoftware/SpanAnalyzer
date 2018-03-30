@@ -28,12 +28,6 @@
 /// systems.
 class SpanAnalyzerDocXmlHandler : public XmlHandler {
  public:
-  /// \brief Constructor.
-  SpanAnalyzerDocXmlHandler();
-
-  /// \brief Destructor.
-  ~SpanAnalyzerDocXmlHandler();
-
   /// \brief Creates an XML node for a span analyzer document.
   /// \param[in] doc
   ///   The document.

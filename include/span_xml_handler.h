@@ -30,12 +30,6 @@
 /// systems.
 class SpanXmlHandler : public XmlHandler {
  public:
-  /// \brief Constructor.
-  SpanXmlHandler();
-
-  /// \brief Destructor.
-  ~SpanXmlHandler();
-
   /// \brief Creates an XML node for a span.
   /// \param[in] span
   ///   The span.

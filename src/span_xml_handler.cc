@@ -6,12 +6,6 @@
 #include "appcommon/xml/line_cable_xml_handler.h"
 #include "appcommon/xml/vector_xml_handler.h"
 
-SpanXmlHandler::SpanXmlHandler() {
-}
-
-SpanXmlHandler::~SpanXmlHandler() {
-}
-
 wxXmlNode* SpanXmlHandler::CreateNode(
     const Span& span,
     const std::string& name,

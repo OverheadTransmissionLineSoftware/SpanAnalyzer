@@ -18,12 +18,6 @@
 ///  - WeatherLoadCase
 class SpanUnitConverter {
  public:
-  /// \brief Constructor.
-  SpanUnitConverter();
-
-  /// \brief Destructor.
-  ~SpanUnitConverter();
-
   /// \brief Converts the span between unit styles.
   /// \param[in] system
   ///   The unit system.

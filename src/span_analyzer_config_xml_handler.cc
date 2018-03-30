@@ -8,12 +8,6 @@
 
 #include "span_analyzer_app.h"
 
-SpanAnalyzerConfigXmlHandler::SpanAnalyzerConfigXmlHandler() {
-}
-
-SpanAnalyzerConfigXmlHandler::~SpanAnalyzerConfigXmlHandler() {
-}
-
 wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
     const SpanAnalyzerConfig& config) {
   // variables used to create XML node

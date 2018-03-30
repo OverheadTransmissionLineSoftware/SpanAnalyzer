@@ -16,12 +16,6 @@
 #include "span_analyzer_config_xml_handler.h"
 #include "span_analyzer_data_xml_handler.h"
 
-FileHandler::FileHandler() {
-}
-
-FileHandler::~FileHandler() {
-}
-
 int FileHandler::LoadAppData(const std::string& filepath,
                              const units::UnitSystem& units,
                              SpanAnalyzerData& data) {

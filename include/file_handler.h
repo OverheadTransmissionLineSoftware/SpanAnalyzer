@@ -24,12 +24,6 @@
 /// units, but the data is converted to consistent unit style.
 class FileHandler {
  public:
-  /// \brief Constructor.
-  FileHandler();
-
-  /// \brief Destructor.
-  ~FileHandler();
-
   /// \brief Loads the application data file.
   /// \param[in] filepath
   ///   The file path for the application data.

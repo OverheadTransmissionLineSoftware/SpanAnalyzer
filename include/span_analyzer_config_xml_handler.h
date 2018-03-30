@@ -20,12 +20,6 @@
 /// only be generated with the most recent version.
 class SpanAnalyzerConfigXmlHandler : public XmlHandler {
  public:
-  /// \brief Constructor.
-  SpanAnalyzerConfigXmlHandler();
-
-  /// \brief Destructor.
-  ~SpanAnalyzerConfigXmlHandler();
-
   /// \brief Creates an XML node for the config settings.
   /// \param[in] config
   ///   The config settings.

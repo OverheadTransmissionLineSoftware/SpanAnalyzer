@@ -20,12 +20,6 @@
 /// only be generated with the most recent version.
 class AnalysisFilterXmlHandler : public XmlHandler {
  public:
-  /// \brief Default constructor.
-  AnalysisFilterXmlHandler();
-
-  /// \brief Destructor.
-  ~AnalysisFilterXmlHandler();
-
   /// \brief Creates an XML node for an analysis filter object.
   /// \param[in] filter
   ///   The filter.
