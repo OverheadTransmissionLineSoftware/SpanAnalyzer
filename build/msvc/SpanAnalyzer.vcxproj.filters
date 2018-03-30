@@ -419,9 +419,6 @@
     <ClInclude Include="..\..\include\results_pane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\sag_tension_analysis_results.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\span.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -571,6 +568,9 @@
     </ClInclude>
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\log_pane.h">
       <Filter>Common Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sag_tension_analysis_result.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -12,7 +12,7 @@
 #include "appcommon/graphics/text_data_set_2d.h"
 #include "models/sagtension/cable_elongation_model.h"
 
-#include "sag_tension_analysis_results.h"
+#include "sag_tension_analysis_result.h"
 #include "span_analyzer_config.h"
 
 /// \par OVERVIEW

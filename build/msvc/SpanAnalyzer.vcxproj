@@ -243,7 +243,7 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <ClInclude Include="..\..\include\profile_plot_options_dialog.h" />
     <ClInclude Include="..\..\include\profile_plot_pane.h" />
     <ClInclude Include="..\..\include\results_pane.h" />
-    <ClInclude Include="..\..\include\sag_tension_analysis_results.h" />
+    <ClInclude Include="..\..\include\sag_tension_analysis_result.h" />
     <ClInclude Include="..\..\include\span.h" />
     <ClInclude Include="..\..\include\span_analyzer_app.h" />
     <ClInclude Include="..\..\include\span_analyzer_config.h" />

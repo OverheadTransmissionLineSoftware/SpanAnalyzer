@@ -308,7 +308,7 @@
 		<Unit filename="../../include/results_pane.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/sag_tension_analysis_results.h">
+		<Unit filename="../../include/sag_tension_analysis_result.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
 		<Unit filename="../../include/span.h">
