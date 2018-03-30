@@ -91,7 +91,6 @@ class FileHandler {
   ///   The filepath.
   /// \param[in] config
   ///   The application configuration settings.
-  /// This function will create a file in the application directory.
   static void SaveConfigFile(const std::string& filepath,
                              const SpanAnalyzerConfig& config);
 };

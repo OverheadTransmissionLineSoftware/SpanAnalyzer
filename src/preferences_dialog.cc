@@ -95,9 +95,6 @@ void PreferencesDialog::OnButtonOk(wxCommandEvent& event) {
   EndModal(wxID_OK);
 }
 
-/// \brief Handles the close event.
-/// \param[in] event
-///   The event.
 void PreferencesDialog::OnClose(wxCloseEvent& event) {
   EndModal(wxID_CLOSE);
 }
