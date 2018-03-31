@@ -582,12 +582,10 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
 
   textctrl = XRCCTRL(*this, "textctrl_line_section_spacing_vertical",
                       wxTextCtrl);
-  if (span_modified_.type == Span::Type::kDeadendSpan) {
-    str = wxString::FromDouble(
-        span_modified_.linecable.spacing_attachments_ruling_span().z(),
-        1);
-    textctrl->SetValue(str);
-  }
+  str = wxString::FromDouble(
+      span_modified_.linecable.spacing_attachments_ruling_span().z(),
+      1);
+  textctrl->SetValue(str);
 
   // transfers span geometry
   const Vector3d& spacing_section =

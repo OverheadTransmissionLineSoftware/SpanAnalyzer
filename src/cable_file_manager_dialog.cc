@@ -287,7 +287,38 @@ void CableFileManagerDialog::OnButtonEdit(wxCommandEvent& event) {
 
 void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
   // creates new cable file
+  // initializes values to zero
   CableFile cablefile;
+
+  Cable& cable = cablefile.cable;
+  cable.absorptivity = 0;
+  cable.area_physical = 0;
+  cable.diameter = 0;
+  cable.emissivity = 0;
+
+  cable.resistances_ac.resize(2);
+  cable.resistances_ac.front().resistance = 0;
+  cable.resistances_ac.front().temperature = 0;
+  cable.resistances_ac.back().resistance = 0;
+  cable.resistances_ac.back().temperature = 0;
+
+  cable.strength_rated = 0;
+  cable.temperature_properties_components = 0;
+  cable.weight_unit = 0;
+
+  cable.component_core.capacity_heat = 0;
+  cable.component_core.coefficient_expansion_linear_thermal = 0;
+  cable.component_core.load_limit_polynomial_creep = 0;
+  cable.component_core.load_limit_polynomial_loadstrain = 0;
+  cable.component_core.modulus_compression_elastic_area = 0;
+  cable.component_core.modulus_tension_elastic_area = 0;
+
+  cable.component_shell.capacity_heat = 0;
+  cable.component_shell.coefficient_expansion_linear_thermal = 0;
+  cable.component_shell.load_limit_polynomial_creep = 0;
+  cable.component_shell.load_limit_polynomial_loadstrain = 0;
+  cable.component_shell.modulus_compression_elastic_area = 0;
+  cable.component_shell.modulus_tension_elastic_area = 0;
 
   // lets user edit cable file
   // ensures that the cable name is unique

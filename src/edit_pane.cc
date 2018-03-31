@@ -137,8 +137,16 @@ void EditPane::ActivateSpan(const wxTreeItemId& id) {
 
 void EditPane::AddSpan() {
   // creates new span and editor
+  // initializes values to zero
   Span span;
   span.name = "NEW";
+
+  CableConstraint constraint;
+  constraint.limit = 0;
+  span.linecable.set_constraint(constraint);
+
+  span.linecable.set_spacing_attachments_ruling_span(Vector3d(0, 0, 0));
+  span.spacing_attachments = Vector3d(0, 0, 0);
 
   // gets referenced objects and makes sure that they exist
   const std::list<CableFile*>& cablefiles = wxGetApp().data()->cablefiles;

@@ -159,7 +159,12 @@ bool WeatherLoadCaseManagerDialog::IsUniqueName(const std::string& name,
 
 void WeatherLoadCaseManagerDialog::OnButtonAdd(wxCommandEvent& event) {
   // creates a weathercase
+  // initializes values to zero
   WeatherLoadCase weathercase;
+  weathercase.density_ice = 0;
+  weathercase.pressure_wind = 0;
+  weathercase.temperature_cable = 0;
+  weathercase.thickness_ice = 0;
 
   // lets user edit weathercase
   // ensures that the weathercase name is unique
