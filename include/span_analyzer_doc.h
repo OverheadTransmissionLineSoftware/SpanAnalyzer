@@ -15,42 +15,42 @@
 #include "analysis_controller.h"
 #include "span.h"
 
-/// This enum class contains types of update hints.
-enum class HintType {
-  kAnalysisFilterGroupEdit,
-  kAnalysisFilterGroupSelect,
-  kAnalysisFilterSelect,
-  kCablesEdit,
-  kPreferencesEdit,
-  kSpansEdit,
-  kViewSelect,
-  kWeathercasesEdit
-};
-
 /// \par OVERVIEW
 ///
 /// This class is a used when updating the view associated with the document.
 class UpdateHint : public wxObject {
  public:
+  /// This enum class contains types of update hints.
+  enum class Type {
+    kAnalysisFilterGroupEdit,
+    kAnalysisFilterGroupSelect,
+    kAnalysisFilterSelect,
+    kCablesEdit,
+    kPreferencesEdit,
+    kSpansEdit,
+    kViewSelect,
+    kWeathercasesEdit
+  };
+
   /// \brief Default Constructor.
   UpdateHint() {};
 
   /// \brief Alternate constructor.
-  UpdateHint(HintType hint) {type_ = hint;};
+  UpdateHint(Type hint) {type_ = hint;};
 
   /// \brief Sets the hint type.
   /// \param[in] type
   ///   The hint type.
-  void set_type(const HintType& type) {type_ = type;};
+  void set_type(const Type& type) {type_ = type;};
 
   /// \brief Gets the hint type.
   /// \return The hint type.
-  const HintType& type() const {return type_;};
+  const Type& type() const {return type_;};
 
  private:
   /// \var type_
   ///   The hint type.
-  HintType type_;
+  Type type_;
 };
 
 /// \par OVERVIEW

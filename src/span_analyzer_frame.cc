@@ -128,7 +128,7 @@ void SpanAnalyzerFrame::OnMenuEditAnalysisFilters(wxCommandEvent& event) {
     // updates document/views
     SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
     if (doc != nullptr) {
-      UpdateHint hint(HintType::kAnalysisFilterGroupEdit);
+      UpdateHint hint(UpdateHint::Type::kAnalysisFilterGroupEdit);
       doc->UpdateAllViews(nullptr, &hint);
     }
   }
@@ -157,7 +157,7 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
   if (doc != nullptr) {
     doc->RunAnalysis();
 
-    UpdateHint hint(HintType::kCablesEdit);
+    UpdateHint hint(UpdateHint::Type::kCablesEdit);
     doc->UpdateAllViews(nullptr, &hint);
   }
 }
@@ -187,7 +187,7 @@ void SpanAnalyzerFrame::OnMenuEditWeathercases(
   if (doc != nullptr) {
     doc->RunAnalysis();
 
-    UpdateHint hint(HintType::kWeathercasesEdit);
+    UpdateHint hint(UpdateHint::Type::kWeathercasesEdit);
     doc->UpdateAllViews(nullptr, &hint);
   }
 }
@@ -266,7 +266,7 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
   }
 
   // updates views
-  UpdateHint hint(HintType::kPreferencesEdit);
+  UpdateHint hint(UpdateHint::Type::kPreferencesEdit);
   doc->UpdateAllViews(nullptr, &hint);
 }
 

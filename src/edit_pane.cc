@@ -91,19 +91,21 @@ void EditPane::Update(wxObject* hint) {
   const UpdateHint* hint_update = dynamic_cast<UpdateHint*>(hint);
   if (hint_update == nullptr) {
     InitializeTreeCtrl();
-  } else if (hint_update->type() == HintType::kAnalysisFilterGroupEdit) {
+  } else if (hint_update->type()
+      == UpdateHint::Type::kAnalysisFilterGroupEdit) {
     // do nothing
-  } else if (hint_update->type() == HintType::kAnalysisFilterGroupSelect) {
+  } else if (hint_update->type()
+      == UpdateHint::Type::kAnalysisFilterGroupSelect) {
     // do nothing
-  } else if (hint_update->type() == HintType::kAnalysisFilterSelect) {
+  } else if (hint_update->type() == UpdateHint::Type::kAnalysisFilterSelect) {
     // do nothing
-  } else if (hint_update->type() == HintType::kCablesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kCablesEdit) {
     // do nothing
-  } else if (hint_update->type() == HintType::kPreferencesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kPreferencesEdit) {
     // do nothing
-  } else if (hint_update->type() == HintType::kSpansEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kSpansEdit) {
     UpdateTreeCtrlSpanItems();
-  } else if (hint_update->type() == HintType::kWeathercasesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kWeathercasesEdit) {
     // do nothing
   }
 }
@@ -128,7 +130,7 @@ void EditPane::ActivateSpan(const wxTreeItemId& id) {
   doc->set_index_activated(index);
 
   // posts a view update
-  UpdateHint hint(HintType::kSpansEdit);
+  UpdateHint hint(UpdateHint::Type::kSpansEdit);
   doc->UpdateAllViews(nullptr, &hint);
 
   // updates treectrl focus
@@ -229,7 +231,7 @@ void EditPane::DeactivateSpan(const wxTreeItemId& id) {
   doc->set_index_activated(-1);
 
   // posts a view update
-  UpdateHint hint(HintType::kSpansEdit);
+  UpdateHint hint(UpdateHint::Type::kSpansEdit);
   doc->UpdateAllViews(nullptr, &hint);
 
   // updates treectrl focus

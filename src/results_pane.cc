@@ -56,25 +56,27 @@ void ResultsPane::Update(wxObject* hint) {
   const UpdateHint* hint_update = dynamic_cast<UpdateHint*>(hint);
   if (hint_update == nullptr) {
     // do nothing, this is only passed when pane is created
-  } else if (hint_update->type() == HintType::kAnalysisFilterGroupEdit) {
+  } else if (hint_update->type()
+      == UpdateHint::Type::kAnalysisFilterGroupEdit) {
     UpdateFilterGroupChoice();
     UpdateReportData();
     table_->Refresh();
-  } else if (hint_update->type() == HintType::kAnalysisFilterGroupSelect) {
+  } else if (hint_update->type()
+      == UpdateHint::Type::kAnalysisFilterGroupSelect) {
     UpdateReportData();
     table_->Refresh();
-  } else if (hint_update->type() == HintType::kAnalysisFilterSelect) {
+  } else if (hint_update->type() == UpdateHint::Type::kAnalysisFilterSelect) {
     // do nothing
-  } else if (hint_update->type() == HintType::kCablesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kCablesEdit) {
     UpdateReportData();
     table_->Refresh();
-  } else if (hint_update->type() == HintType::kPreferencesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kPreferencesEdit) {
     UpdateReportData();
     table_->Refresh();
-  } else if (hint_update->type() == HintType::kSpansEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kSpansEdit) {
     UpdateReportData();
     table_->Refresh();
-  } else if (hint_update->type() == HintType::kWeathercasesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kWeathercasesEdit) {
     UpdateReportData();
     table_->Refresh();
   }
@@ -91,7 +93,7 @@ void ResultsPane::OnChoiceFilterGroup(wxCommandEvent& event) {
   UpdateFilterGroupSelected();
 
   // updates views
-  UpdateHint hint(HintType::kAnalysisFilterGroupSelect);
+  UpdateHint hint(UpdateHint::Type::kAnalysisFilterGroupSelect);
   view_->GetDocument()->UpdateAllViews(nullptr, &hint);
 }
 
@@ -142,7 +144,7 @@ void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
   view->set_index_filter(table_->IndexReportRow(index_selected));
 
   // updates views
-  UpdateHint hint(HintType::kAnalysisFilterSelect);
+  UpdateHint hint(UpdateHint::Type::kAnalysisFilterSelect);
   view_->GetDocument()->UpdateAllViews(nullptr, &hint);
 }
 

@@ -98,7 +98,7 @@ bool SpanCommand::Do() {
   // checks if command succeeded
   if (status == true) {
     // posts a view update
-    UpdateHint hint(HintType::kSpansEdit);
+    UpdateHint hint(UpdateHint::Type::kSpansEdit);
     doc_->UpdateAllViews(nullptr, &hint);
   } else {
     // logs error
@@ -143,7 +143,7 @@ bool SpanCommand::Undo() {
   // checks if command succeeded
   if (status == true) {
     // posts a view update
-    UpdateHint hint(HintType::kSpansEdit);
+    UpdateHint hint(UpdateHint::Type::kSpansEdit);
     doc_->UpdateAllViews(nullptr, &hint);
   } else {
     // logs error

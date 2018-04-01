@@ -235,7 +235,7 @@ void SpanAnalyzerView::OnNotebookPageChange(wxBookCtrlEvent& event) {
   }
 
   // creates an update hint for the plot pane
-  UpdateHint hint(HintType::kViewSelect);
+  UpdateHint hint(UpdateHint::Type::kViewSelect);
 
   // gets page index and sends update to corresponding pane
   const int index_page = event.GetSelection();
