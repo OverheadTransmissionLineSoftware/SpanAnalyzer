@@ -3,6 +3,8 @@
 
 #include "edit_pane.h"
 
+#include <sstream>
+
 #include "wx/xrc/xmlres.h"
 
 #include "span_analyzer_app.h"
@@ -141,7 +143,7 @@ void EditPane::AddSpan() {
   // creates new span and editor
   // initializes values to zero
   Span span;
-  span.name = "NEW";
+  span.name = NameVersioned("New");
 
   CableConstraint constraint;
   constraint.limit = 0;
@@ -197,8 +199,9 @@ void EditPane::CopySpan(const wxTreeItemId& id) {
   SpanTreeItemData* data =
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
 
-  // copies span
+  // copies span and updates name
   Span span = *(data->iter());
+  span.name = NameVersioned(span.name);
 
   wxLogVerbose("Copying span.");
 
@@ -408,6 +411,64 @@ void EditPane::MoveSpanUp(const wxTreeItemId& id) {
 
   // adjusts treectrl focus
   FocusTreeCtrlSpanItem(command->index());
+}
+
+std::string EditPane::NameVersioned(const std::string& name) const {
+  // gets document
+  SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
+
+  // determines is existing name is versioned
+  const int pos_end = name.rfind(")", name.size());
+  const int pos_start = name.rfind("(", pos_end);
+
+  bool is_versioned = true;
+  int version = 1;
+  const int kSize = name.size();
+  if (pos_end != kSize - 1) {
+    // the last character is not a version closing
+    is_versioned = false;
+  } else if ((name.at(pos_start) == '(') && (name.at(pos_end) == ')')) {
+    // extracts the numbers
+    const int length = pos_end - pos_start;
+    std::string str_extracted = name.substr(pos_start + 1, length - 1);
+
+    // attempts to convert string to integer
+    std::stringstream stream(str_extracted);
+    stream >> version;
+
+    // checks conversion status
+    if (!stream) {
+      is_versioned = false;
+    }
+  }
+
+  // creates base string
+  std::string str_base;
+  if (is_versioned == false) {
+    str_base = name + " ";
+  } else {
+    str_base = name.substr(0, pos_start);
+  }
+
+  // determines a unique description for the span
+  std::string str_version;
+  std::string name_versioned;
+  while (true) {
+    // creates version string
+    str_version = "(" + std::to_string(version) + ")";
+
+    // combines the base and version names
+    name_versioned = str_base + str_version;
+
+    // compares against spans in doc
+    if (doc->IsUniqueName(name_versioned) == true) {
+      break;
+    } else {
+      version++;
+    }
+  }
+
+  return name_versioned;
 }
 
 void EditPane::OnButtonAdd(wxCommandEvent& event) {

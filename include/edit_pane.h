@@ -115,6 +115,12 @@ class EditPane : public wxPanel {
   ///   The item ID of the selected span.
   void MoveSpanUp(const wxTreeItemId& id);
 
+  /// \brief Gets a name with versioning.
+  /// \param[in] name
+  ///   The starting name.
+  /// \return The versioned name.
+  std::string NameVersioned(const std::string& name) const;
+
   /// \brief Handles the add button event.
   /// \param[in] event
   ///   The event.

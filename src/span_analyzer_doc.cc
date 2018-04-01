@@ -126,6 +126,21 @@ bool SpanAnalyzerDoc::InsertSpan(const int& index, const Span& span) {
   return true;
 }
 
+bool SpanAnalyzerDoc::IsUniqueName(const std::string& name) const {
+  // searches all spans for a match
+  for (auto iter = spans_.cbegin(); iter != spans_.cend(); iter++) {
+    const Span& span = *iter;
+
+    // compares and breaks if name is not unique
+    if (span.name == name) {
+      return false;
+    }
+  }
+
+  // if it makes it to this point, the name is unique
+  return true;
+}
+
 bool SpanAnalyzerDoc::IsValidIndex(const int& index,
                                    const bool& is_included_end) const {
   const int kSizeSpans = spans_.size();

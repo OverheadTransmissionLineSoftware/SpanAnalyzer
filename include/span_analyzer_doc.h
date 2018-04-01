@@ -156,6 +156,12 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return Success status.
   bool InsertSpan(const int& index, const Span& span);
 
+  /// \brief Determines if the span name is unique.
+  /// \param[in] name
+  ///   The name to check.
+  /// \return If the span name is unique.
+  bool IsUniqueName(const std::string& name) const;
+
   /// \brief Determines if the index is valid.
   /// \param[in] index
   ///   The list index.
