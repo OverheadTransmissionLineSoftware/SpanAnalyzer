@@ -130,18 +130,54 @@ void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
 
   wxLogVerbose("Updating displayed analysis filter index.");
 
+  // gets view
+  SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);
+
   // gets selected index
   const long index_selected = event.GetItem().GetId();
 
   // updates report table
   table_->set_index_selected(index_selected);
 
+  // gets selected index with no sorting applied
+  // this still may not be the correct index, as invalid results are excluded
+  // from the table
+  const long index_unsorted = table_->IndexReportRow(index_selected);
+
+  // gets the selected-sorted-unfiltered index
+  // this will account for any invalid results that were left out of the table
+  // this is done by comparing the weathercase/condition combination
+
+  // extracts string from table
+  long index_document = -1;
+  const std::string& str_table = table_->ValueTable(index_unsorted, 0) + ","
+                                 + table_->ValueTable(index_unsorted, 1);
+
+  // searches analysis filters for a match
+  const std::list<AnalysisFilter>& filters = view->group_filters()->filters;
+  for (auto iter = filters.cbegin(); iter != filters.cend(); iter++) {
+    // gets filter
+    const AnalysisFilter& filter = *iter;
+
+    // extracts string from filter
+    std::string str_filter = filter.weathercase->description + ",";
+    if (filter.condition == CableConditionType::kCreep) {
+      str_filter += "Creep";
+    } else if (filter.condition == CableConditionType::kInitial) {
+      str_filter += "Initial";
+    } else if (filter.condition == CableConditionType::kLoad) {
+      str_filter += "Load";
+    }
+
+    // compares table string to filter string
+    if (str_table == str_filter) {
+      index_document = std::distance(filters.cbegin(), iter);
+      break;
+    }
+  }
+
   // updates view index
-  // the selected report table index may be different than the report data index
-  // due to sorting, so the index needs to be converted to match the correct
-  // analysis result index
-  SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);
-  view->set_index_filter(table_->IndexReportRow(index_selected));
+  view->set_index_filter(index_document);
 
   // updates views
   UpdateHint hint(UpdateHint::Type::kAnalysisFilterSelect);
