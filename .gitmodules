@@ -7,3 +7,6 @@
 [submodule "external/AppCommon"]
 	path = external/AppCommon
 	url = https://github.com/OverheadTransmissionLineSoftware/AppCommon.git
+[submodule "external/styleguide"]
+	path = external/styleguide
+	url = https://github.com/google/styleguide.git

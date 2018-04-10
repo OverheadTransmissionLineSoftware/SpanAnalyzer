@@ -13,6 +13,9 @@ rather included into the SpanAnalyzer build.
 This repository contains the engineering calculation libraries. See the
 `external/Models/build` subdirectory for build instructions.
 
+## styleguide
+This repository contains the google style guidelines and code linter.
+
 ## wxWidgets
 This repository contains the GUI framework libraries, which are highly
 configurable. Detailed build instructions below.
