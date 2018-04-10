@@ -33,6 +33,10 @@
 *.log
 docs/html/*
 
+# oclint generated files #
+##########################
+check/*.html
+
 # generated resources #
 #######################
 build/codeblocks/debug/res/*
