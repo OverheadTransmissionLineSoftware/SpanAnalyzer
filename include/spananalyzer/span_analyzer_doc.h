@@ -12,8 +12,8 @@
 #include "models/transmissionline/line_structure.h"
 #include "wx/docview.h"
 
-#include "analysis_controller.h"
-#include "span.h"
+#include "spananalyzer/analysis_controller.h"
+#include "spananalyzer/span.h"
 
 /// \par OVERVIEW
 ///

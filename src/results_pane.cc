@@ -1,15 +1,15 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "results_pane.h"
+#include "spananalyzer/results_pane.h"
 
 #include "models/base/helper.h"
 #include "models/transmissionline/catenary.h"
 #include "wx/xrc/xmlres.h"
 
-#include "span_analyzer_app.h"
-#include "span_analyzer_doc.h"
-#include "span_analyzer_view.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_doc.h"
+#include "spananalyzer/span_analyzer_view.h"
 
 BEGIN_EVENT_TABLE(ResultsPane, wxPanel)
   EVT_CHOICE(XRCID("choice_report"), ResultsPane::OnChoiceReport)

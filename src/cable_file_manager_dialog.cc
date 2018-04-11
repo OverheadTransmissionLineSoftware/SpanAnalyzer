@@ -1,16 +1,16 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "cable_file_manager_dialog.h"
+#include "spananalyzer/cable_file_manager_dialog.h"
 
 #include "appcommon/editors/cable_editor_dialog.h"
 #include "appcommon/units/cable_unit_converter.h"
 #include "wx/spinbutt.h"
 #include "wx/xrc/xmlres.h"
 
-#include "file_handler.h"
-#include "span_analyzer_app.h"
-#include "span_analyzer_doc.h"
+#include "spananalyzer/file_handler.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_doc.h"
 
 BEGIN_EVENT_TABLE(CableFileManagerDialog, wxDialog)
   EVT_BUTTON(XRCID("button_add"), CableFileManagerDialog::OnButtonAdd)

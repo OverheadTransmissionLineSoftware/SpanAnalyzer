@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "span_editor_dialog.h"
+#include "spananalyzer/span_editor_dialog.h"
 
 #include "appcommon/widgets/error_message_dialog.h"
 #include "models/base/helper.h"

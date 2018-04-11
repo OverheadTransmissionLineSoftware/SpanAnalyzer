@@ -1,16 +1,18 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_SPANANALYZERDOCXMLHANDLER_H_
-#define OTLS_SPANANALYZER_SPANANALYZERDOCXMLHANDLER_H_
+#ifndef OTLS_SPANANALYZER_SPANXMLHANDLER_H_
+#define OTLS_SPANANALYZER_SPANXMLHANDLER_H_
 
 #include <list>
+#include <string>
 
 #include "appcommon/xml/xml_handler.h"
 #include "models/base/units.h"
+#include "wx/xml/xml.h"
 
-#include "span_analyzer_data.h"
-#include "span_analyzer_doc.h"
+#include "spananalyzer/span.h"
+#include "spananalyzer/span_analyzer_data.h"
 
 /// \par OVERVIEW
 ///
@@ -26,20 +28,24 @@
 ///
 /// This class supports attributing the child XML nodes for various unit
 /// systems.
-class SpanAnalyzerDocXmlHandler : public XmlHandler {
+class SpanXmlHandler : public XmlHandler {
  public:
-  /// \brief Creates an XML node for a span analyzer document.
-  /// \param[in] doc
-  ///   The document.
+  /// \brief Creates an XML node for a span.
+  /// \param[in] span
+  ///   The span.
+  /// \param[in] name
+  ///   The name of the XML node. This will be an attribute for the created
+  ///   node. If empty, no attribute will be created.
   /// \param[in] units
   ///   The unit system, which is used for attributing child XML nodes.
-  /// \return An XML node for the document.
-  static wxXmlNode* CreateNode(const SpanAnalyzerDoc& doc,
+  /// \return An XML node for the span.
+  static wxXmlNode* CreateNode(const Span& span,
+                               const std::string& name,
                                const units::UnitSystem& units);
 
-  /// \brief Parses an XML node and populates a document.
+  /// \brief Parses an XML node and populates a span.
   /// \param[in] root
-  ///   The XML root node for the document.
+  ///   The XML root node for the span.
   /// \param[in] filepath
   ///   The filepath that the xml node was loaded from. This is for logging
   ///   purposes only and can be left blank.
@@ -50,8 +56,8 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   ///   A list of weathercases that is matched against a weathercase
   ///   description. If found, a pointer will be set to the matching
   ///   weathercase.
-  /// \param[out] doc
-  ///   The document that is populated.
+  /// \param[out] span
+  ///   The span that is populated.
   /// \return The status of the xml node parse. If any errors are encountered
   ///   false is returned.
   /// All errors are logged to the active application log target. Critical
@@ -61,12 +67,12 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
                         const std::string& filepath,
                         const std::list<CableFile*>* cablefiles,
                         const std::list<WeatherLoadCase*>* weathercases,
-                        SpanAnalyzerDoc& doc);
+                        Span& span);
 
  private:
-  /// \brief Parses a version 1 XML node and populates a document.
+  /// \brief Parses a version 1 XML node and populates a span.
   /// \param[in] root
-  ///   The XML root node for the document.
+  ///   The XML root node for the span.
   /// \param[in] filepath
   ///   The filepath that the xml node was loaded from. This is for logging
   ///   purposes only and can be left blank.
@@ -77,8 +83,8 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
   ///   A list of weathercases that is matched against a weathercase
   ///   description. If found, a pointer will be set to the matching
   ///   weathercase.
-  /// \param[out] doc
-  ///   The document that is populated.
+  /// \param[out] span
+  ///   The span that is populated.
   /// \return The status of the xml node parse. If any errors are encountered
   ///   false is returned.
   /// All errors are logged to the active application log target. Critical
@@ -88,7 +94,7 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
                           const std::string& filepath,
                           const std::list<CableFile*>* cablefiles,
                           const std::list<WeatherLoadCase*>* weathercases,
-                          SpanAnalyzerDoc& doc);
+                          Span& span);
 };
 
-#endif  // OTLS_SPANANALYZER_SPANANALYZERDOCXMLHANDLER_H_
+#endif  // OTLS_SPANANALYZER_SPANXMLHANDLER_H_

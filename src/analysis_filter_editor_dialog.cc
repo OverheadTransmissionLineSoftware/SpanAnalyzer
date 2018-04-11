@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "analysis_filter_editor_dialog.h"
+#include "spananalyzer/analysis_filter_editor_dialog.h"
 
 #include "wx/xrc/xmlres.h"
 
@@ -109,7 +109,7 @@ void AnalysisFilterEditorDialog::TransferCustomDataFromWindow() {
 void AnalysisFilterEditorDialog::TransferCustomDataToWindow() {
   wxChoice* choice = nullptr;
   int index = -9999;
-  
+
   // transfers weathercase
   if (filter_modified_.weathercase != nullptr) {
     choice = XRCCTRL(*this, "choice_weathercase", wxChoice);

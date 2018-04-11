@@ -9,11 +9,11 @@
 #include "wx/docview.h"
 #include "wx/notebook.h"
 
-#include "cable_plot_pane.h"
-#include "edit_pane.h"
-#include "profile_plot_pane.h"
-#include "results_pane.h"
-#include "span_analyzer_data.h"
+#include "spananalyzer/cable_plot_pane.h"
+#include "spananalyzer/edit_pane.h"
+#include "spananalyzer/profile_plot_pane.h"
+#include "spananalyzer/results_pane.h"
+#include "spananalyzer/span_analyzer_data.h"
 
 /// \par OVERVIEW
 ///

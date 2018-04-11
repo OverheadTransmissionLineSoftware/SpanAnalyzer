@@ -1,15 +1,15 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "span_analyzer_doc.h"
+#include "spananalyzer/span_analyzer_doc.h"
 
 #include "appcommon/widgets/status_bar_log.h"
 #include "wx/cmdproc.h"
 #include "wx/xml/xml.h"
 
-#include "span_analyzer_app.h"
-#include "span_analyzer_doc_xml_handler.h"
-#include "span_unit_converter.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_doc_xml_handler.h"
+#include "spananalyzer/span_unit_converter.h"
 
 IMPLEMENT_DYNAMIC_CLASS(SpanAnalyzerDoc, wxDocument)
 

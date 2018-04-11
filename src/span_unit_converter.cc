@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "span_unit_converter.h"
+#include "spananalyzer/span_unit_converter.h"
 
 #include "appcommon/units/line_cable_unit_converter.h"
 

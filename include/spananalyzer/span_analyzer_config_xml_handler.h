@@ -7,7 +7,7 @@
 #include "appcommon/xml/xml_handler.h"
 #include "wx/xml/xml.h"
 
-#include "span_analyzer_config.h"
+#include "spananalyzer/span_analyzer_config.h"
 
 /// \par OVERVIEW
 ///

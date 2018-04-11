@@ -6,7 +6,7 @@
 
 #include "models/base/units.h"
 
-#include "span.h"
+#include "spananalyzer/span.h"
 
 /// \par OVERVIEW
 ///

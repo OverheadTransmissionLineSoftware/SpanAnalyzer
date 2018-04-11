@@ -1,9 +1,9 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "span_analyzer_doc_xml_handler.h"
+#include "spananalyzer/span_analyzer_doc_xml_handler.h"
 
-#include "span_xml_handler.h"
+#include "spananalyzer/span_xml_handler.h"
 
 wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
     const SpanAnalyzerDoc& doc,

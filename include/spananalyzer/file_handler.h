@@ -7,8 +7,8 @@
 #include <list>
 #include <string>
 
-#include "span_analyzer_config.h"
-#include "span_analyzer_data.h"
+#include "spananalyzer/span_analyzer_config.h"
+#include "spananalyzer/span_analyzer_data.h"
 
 /// \par OVERVIEW
 ///

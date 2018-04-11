@@ -11,10 +11,10 @@
 #include "wx/html/helpctrl.h"
 #include "wx/wx.h"
 
-#include "span_analyzer_config.h"
-#include "span_analyzer_data.h"
-#include "span_analyzer_doc.h"
-#include "span_analyzer_frame.h"
+#include "spananalyzer/span_analyzer_config.h"
+#include "spananalyzer/span_analyzer_data.h"
+#include "spananalyzer/span_analyzer_doc.h"
+#include "spananalyzer/span_analyzer_frame.h"
 
 /// \par OVERVIEW
 ///

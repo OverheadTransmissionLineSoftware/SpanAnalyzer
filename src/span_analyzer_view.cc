@@ -1,13 +1,13 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "span_analyzer_view.h"
+#include "spananalyzer/span_analyzer_view.h"
 
 #include "appcommon/widgets/status_bar_log.h"
 #include "wx/cmdproc.h"
 
-#include "span_analyzer_app.h"
-#include "span_analyzer_printout.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_printout.h"
 
 IMPLEMENT_DYNAMIC_CLASS(SpanAnalyzerView, wxView)
 

@@ -1,32 +1,32 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_PROFILEPLOTOPTIONSDIALOG_H_
-#define OTLS_SPANANALYZER_PROFILEPLOTOPTIONSDIALOG_H_
+#ifndef OTLS_SPANANALYZER_CABLEPLOTOPTIONSDIALOG_H_
+#define OTLS_SPANANALYZER_CABLEPLOTOPTIONSDIALOG_H_
 
 #include "wx/wx.h"
 
-#include "span_analyzer_config.h"
+#include "spananalyzer/span_analyzer_config.h"
 
 /// \par OVERVIEW
 ///
-/// This class is a profile plot pane options dialog.
+/// This class is a cable elongation model plot pane options dialog.
 ///
 /// \par GUI CONTROLS AND DATA TRANSFER
 ///
 /// The form controls and layout are defined in the XRC file. The values are
 /// transferred between the controls and the options data by class methods.
-class ProfilePlotOptionsDialog : public wxDialog {
+class CablePlotOptionsDialog : public wxDialog {
  public:
   /// \brief Constructor.
   /// \param[in] parent
   ///   The parent window.
   /// \param[in] options
   ///   The plot options.
-  ProfilePlotOptionsDialog(wxWindow* parent, ProfilePlotOptions* options);
+  CablePlotOptionsDialog(wxWindow* parent, CablePlotOptions* options);
 
   /// \brief Destructor.
-  ~ProfilePlotOptionsDialog();
+  ~CablePlotOptionsDialog();
 
  private:
   /// \brief Handles the cancel button event.
@@ -54,13 +54,13 @@ class ProfilePlotOptionsDialog : public wxDialog {
 
   /// \var options_
   ///   The reference options, which the user edits if changes are accepted.
-  ProfilePlotOptions* options_;
+  CablePlotOptions* options_;
 
   /// \var options_modified_
   ///   The options that are modified and tied to the dialog controls.
-  ProfilePlotOptions options_modified_;
+  CablePlotOptions options_modified_;
 
   DECLARE_EVENT_TABLE()
 };
 
-# endif  // OTLS_SPANANALYZER_PROFILEPLOTOPTIONSDIALOG_H_
+# endif  // OTLS_SPANANALYZER_CABLEPLOTOPTIONSDIALOG_H_

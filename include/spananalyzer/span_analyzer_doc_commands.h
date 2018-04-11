@@ -9,8 +9,8 @@
 #include "wx/cmdproc.h"
 #include "wx/xml/xml.h"
 
-#include "span_analyzer_data.h"
-#include "span_analyzer_doc.h"
+#include "spananalyzer/span_analyzer_data.h"
+#include "spananalyzer/span_analyzer_doc.h"
 
 /// \par OVERVIEW
 ///

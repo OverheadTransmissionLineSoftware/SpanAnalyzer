@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "file_handler.h"
+#include "spananalyzer/file_handler.h"
 
 #include "appcommon/units/cable_unit_converter.h"
 #include "appcommon/units/weather_load_case_unit_converter.h"
@@ -12,9 +12,9 @@
 #include "wx/filename.h"
 #include "wx/xml/xml.h"
 
-#include "span_analyzer_app.h"
-#include "span_analyzer_config_xml_handler.h"
-#include "span_analyzer_data_xml_handler.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_config_xml_handler.h"
+#include "spananalyzer/span_analyzer_data_xml_handler.h"
 
 int FileHandler::LoadAppData(const std::string& filepath,
                              const units::UnitSystem& units,

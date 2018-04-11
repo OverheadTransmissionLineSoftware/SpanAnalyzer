@@ -10,7 +10,7 @@
 #include "models/transmissionline/catenary.h"
 #include "wx/docview.h"
 
-#include "span_analyzer_config.h"
+#include "spananalyzer/span_analyzer_config.h"
 
 /// \par OVERVIEW
 ///

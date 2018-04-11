@@ -8,8 +8,8 @@
 #include "wx/docview.h"
 #include "wx/wx.h"
 
-#include "sag_tension_analysis_result.h"
-#include "span_analyzer_data.h"
+#include "spananalyzer/sag_tension_analysis_result.h"
+#include "spananalyzer/span_analyzer_data.h"
 
 /// \par OVERVIEW
 ///

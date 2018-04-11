@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "profile_plot_pane.h"
+#include "spananalyzer/profile_plot_pane.h"
 
 #include <algorithm>
 
@@ -11,10 +11,10 @@
 #include "models/base/helper.h"
 #include "wx/dcbuffer.h"
 
-#include "profile_plot_options_dialog.h"
-#include "span_analyzer_app.h"
-#include "span_analyzer_doc.h"
-#include "span_analyzer_view.h"
+#include "spananalyzer/profile_plot_options_dialog.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_doc.h"
+#include "spananalyzer/span_analyzer_view.h"
 
 /// \par OVERVIEW
 ///

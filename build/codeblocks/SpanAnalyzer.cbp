@@ -269,94 +269,94 @@
 		<Unit filename="../../external/AppCommon/src/xml/xml_handler.cc">
 			<Option virtualFolder="Common Source Files/" />
 		</Unit>
-		<Unit filename="../../include/analysis_controller.h">
+		<Unit filename="../../include/spananalyzer/analysis_controller.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/analysis_filter_editor_dialog.h">
+		<Unit filename="../../include/spananalyzer/analysis_filter_editor_dialog.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/analysis_filter_manager_dialog.h">
+		<Unit filename="../../include/spananalyzer/analysis_filter_manager_dialog.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/analysis_filter_xml_handler.h">
+		<Unit filename="../../include/spananalyzer/analysis_filter_xml_handler.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/cable_file_manager_dialog.h">
+		<Unit filename="../../include/spananalyzer/cable_file_manager_dialog.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/cable_plot_options_dialog.h">
+		<Unit filename="../../include/spananalyzer/cable_plot_options_dialog.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/cable_plot_pane.h">
+		<Unit filename="../../include/spananalyzer/cable_plot_pane.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/edit_pane.h">
+		<Unit filename="../../include/spananalyzer/edit_pane.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/file_handler.h">
+		<Unit filename="../../include/spananalyzer/file_handler.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/preferences_dialog.h">
+		<Unit filename="../../include/spananalyzer/preferences_dialog.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/profile_plot_options_dialog.h">
+		<Unit filename="../../include/spananalyzer/profile_plot_options_dialog.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/profile_plot_pane.h">
+		<Unit filename="../../include/spananalyzer/profile_plot_pane.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/results_pane.h">
+		<Unit filename="../../include/spananalyzer/results_pane.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/sag_tension_analysis_result.h">
+		<Unit filename="../../include/spananalyzer/sag_tension_analysis_result.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span.h">
+		<Unit filename="../../include/spananalyzer/span.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span_analyzer_app.h">
+		<Unit filename="../../include/spananalyzer/span_analyzer_app.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span_analyzer_config.h">
+		<Unit filename="../../include/spananalyzer/span_analyzer_config.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span_analyzer_config_xml_handler.h">
+		<Unit filename="../../include/spananalyzer/span_analyzer_config_xml_handler.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span_analyzer_data.h">
+		<Unit filename="../../include/spananalyzer/span_analyzer_data.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span_analyzer_data_xml_handler.h">
+		<Unit filename="../../include/spananalyzer/span_analyzer_data_xml_handler.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span_analyzer_doc.h">
+		<Unit filename="../../include/spananalyzer/span_analyzer_doc.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span_analyzer_doc_commands.h">
+		<Unit filename="../../include/spananalyzer/span_analyzer_doc_commands.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span_analyzer_doc_xml_handler.h">
+		<Unit filename="../../include/spananalyzer/span_analyzer_doc_xml_handler.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span_analyzer_frame.h">
+		<Unit filename="../../include/spananalyzer/span_analyzer_frame.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span_analyzer_printout.h">
+		<Unit filename="../../include/spananalyzer/span_analyzer_printout.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span_analyzer_view.h">
+		<Unit filename="../../include/spananalyzer/span_analyzer_view.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span_editor_dialog.h">
+		<Unit filename="../../include/spananalyzer/span_editor_dialog.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span_unit_converter.h">
+		<Unit filename="../../include/spananalyzer/span_unit_converter.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/span_xml_handler.h">
+		<Unit filename="../../include/spananalyzer/span_xml_handler.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
-		<Unit filename="../../include/weather_load_case_manager_dialog.h">
+		<Unit filename="../../include/spananalyzer/weather_load_case_manager_dialog.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
 		<Unit filename="../../res/help/calculations/cable_model.html">

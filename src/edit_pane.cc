@@ -1,17 +1,17 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "edit_pane.h"
+#include "spananalyzer/edit_pane.h"
 
 #include <sstream>
 
 #include "wx/xrc/xmlres.h"
 
-#include "span_analyzer_app.h"
-#include "span_analyzer_doc.h"
-#include "span_analyzer_doc_commands.h"
-#include "span_editor_dialog.h"
-#include "span_unit_converter.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_doc.h"
+#include "spananalyzer/span_analyzer_doc_commands.h"
+#include "spananalyzer/span_editor_dialog.h"
+#include "spananalyzer/span_unit_converter.h"
 #include "xpm/copy.xpm"
 #include "xpm/minus.xpm"
 #include "xpm/move_arrow_down.xpm"

@@ -6,7 +6,7 @@
 
 #include "wx/print.h"
 
-#include "span_analyzer_view.h"
+#include "spananalyzer/span_analyzer_view.h"
 
 /// \par OVERVIEW
 ///

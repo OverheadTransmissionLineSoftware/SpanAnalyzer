@@ -8,7 +8,7 @@
 #include "wx/treectrl.h"
 #include "wx/wx.h"
 
-#include "span.h"
+#include "spananalyzer/span.h"
 
 /// \par OVERVIEW
 ///

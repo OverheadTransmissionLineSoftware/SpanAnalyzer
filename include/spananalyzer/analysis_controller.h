@@ -10,8 +10,8 @@
 #include "models/sagtension/line_cable_unloader.h"
 #include "wx/wx.h"
 
-#include "sag_tension_analysis_result.h"
-#include "span.h"
+#include "spananalyzer/sag_tension_analysis_result.h"
+#include "spananalyzer/span.h"
 
 /// \par OVERVIEW
 ///

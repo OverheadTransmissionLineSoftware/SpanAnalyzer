@@ -9,7 +9,7 @@
 #include "wx/listctrl.h"
 #include "wx/wx.h"
 
-#include "span_analyzer_data.h"
+#include "spananalyzer/span_analyzer_data.h"
 
 /// \par OVERVIEW
 ///

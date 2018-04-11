@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "span_analyzer_frame.h"
+#include "spananalyzer/span_analyzer_frame.h"
 
 #include "appcommon/units/cable_unit_converter.h"
 #include "appcommon/units/weather_load_case_unit_converter.h"
@@ -9,15 +9,15 @@
 #include "wx/printdlg.h"
 #include "wx/xrc/xmlres.h"
 
-#include "analysis_filter_manager_dialog.h"
-#include "cable_file_manager_dialog.h"
-#include "file_handler.h"
-#include "preferences_dialog.h"
-#include "span_analyzer_app.h"
-#include "span_analyzer_doc.h"
-#include "span_analyzer_printout.h"
-#include "span_analyzer_view.h"
-#include "weather_load_case_manager_dialog.h"
+#include "spananalyzer/analysis_filter_manager_dialog.h"
+#include "spananalyzer/cable_file_manager_dialog.h"
+#include "spananalyzer/file_handler.h"
+#include "spananalyzer/preferences_dialog.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_doc.h"
+#include "spananalyzer/span_analyzer_printout.h"
+#include "spananalyzer/span_analyzer_view.h"
+#include "spananalyzer/weather_load_case_manager_dialog.h"
 #include "xpm/icon.xpm"
 
 DocumentFileDropTarget::DocumentFileDropTarget(wxWindow* parent) {
