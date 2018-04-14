@@ -82,15 +82,14 @@ class UpdateHint : public wxObject {
 ///
 /// \par UPDATES
 ///
-/// The document and view(s) need to be updated when:
-///  - The application data is changed
-///  - The selected analysis span is changed
+/// The document will automatically update itself for all span related changes.
+/// However, the document will need to be manually updated when the application
+/// data is changed. Document updates are done with the RunAnalysis() method.
 ///
-/// Most updates are done with the UpdateAllViews() method. There are also hints
-/// that are passed along to help the view update. The document will handle most
-/// of the updates for the selected span, but updates will need to be called
-/// outside the document when the application data changes. See the function
-/// declarations/definitions to see for sure.
+/// All view updates must be manually posted. This makes it so that several
+/// document changes can be made before the view is refreshed. View updates are
+/// posted with the UpdateAllViews() method. Hints should be passed along to
+/// help the view update properly.
 ///
 /// \par wxWIDGETS LIBRARY BUILD NOTE
 ///
