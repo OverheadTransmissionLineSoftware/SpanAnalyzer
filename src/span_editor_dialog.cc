@@ -162,7 +162,6 @@ void SpanEditorDialog::OnOk(wxCommandEvent &event) {
   // validates span data
   std::list<ErrorMessage> messages;
   if (span_modified_.Validate(true, &messages) == true) {
-
     // updates original cable reference based on user form edits
     *span_ = Span(span_modified_);
 

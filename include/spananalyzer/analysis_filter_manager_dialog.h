@@ -1,8 +1,8 @@
 ﻿// This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_ANALYSISFILTERMANAGERDIALOG_H_
-#define OTLS_SPANANALYZER_ANALYSISFILTERMANAGERDIALOG_H_
+#ifndef SPANANALYZER_ANALYSIS_FILTER_MANAGER_DIALOG_H_
+#define SPANANALYZER_ANALYSIS_FILTER_MANAGER_DIALOG_H_
 
 #include <list>
 
@@ -13,6 +13,7 @@
 
 /// \par OVERVIEW
 ///
+/// This dialog manages the analysis filters and allows the user to edit them.
 class AnalysisFilterManagerDialog : public wxDialog {
  public:
   /// \brief Constructor.
@@ -143,4 +144,4 @@ class AnalysisFilterManagerDialog : public wxDialog {
   DECLARE_EVENT_TABLE()
 };
 
-#endif  // OTLS_SPANANALYZER_ANALYSISFILTERMANAGERDIALOG_H_
+#endif  // SPANANALYZER_ANALYSIS_FILTER_MANAGER_DIALOG_H_

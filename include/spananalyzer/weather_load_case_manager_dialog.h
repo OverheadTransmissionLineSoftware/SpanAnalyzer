@@ -1,8 +1,11 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_WEATHERLOADCASEMANAGERDIALOG_H_
-#define OTLS_SPANANALYZER_WEATHERLOADCASEMANAGERDIALOG_H_
+#ifndef SPANANALYZER_WEATHER_LOAD_CASE_MANAGER_DIALOG_H_
+#define SPANANALYZER_WEATHER_LOAD_CASE_MANAGER_DIALOG_H_
+
+#include <list>
+#include <string>
 
 #include "models/base/units.h"
 #include "wx/wx.h"
@@ -133,4 +136,4 @@ class WeatherLoadCaseManagerDialog : public wxDialog {
   DECLARE_EVENT_TABLE()
 };
 
-#endif  // OTLS_SPANANALYZER_WEATHERLOADCASEMANAGERDIALOG_H_
+#endif  // SPANANALYZER_WEATHER_LOAD_CASE_MANAGER_DIALOG_H_

@@ -1,10 +1,11 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_SPANANALYZERDOC_H_
-#define OTLS_SPANANALYZER_SPANANALYZERDOC_H_
+#ifndef SPANANALYZER_SPAN_ANALYZER_DOC_H_
+#define SPANANALYZER_SPAN_ANALYZER_DOC_H_
 
 #include <list>
+#include <string>
 #include <vector>
 
 #include "models/base/units.h"
@@ -33,19 +34,19 @@ class UpdateHint : public wxObject {
   };
 
   /// \brief Default Constructor.
-  UpdateHint() {};
+  UpdateHint() {}
 
   /// \brief Alternate constructor.
-  UpdateHint(Type hint) {type_ = hint;};
+  UpdateHint(Type hint) {type_ = hint;}
 
   /// \brief Sets the hint type.
   /// \param[in] type
   ///   The hint type.
-  void set_type(const Type& type) {type_ = type;};
+  void set_type(const Type& type) {type_ = type;}
 
   /// \brief Gets the hint type.
   /// \return The hint type.
-  const Type& type() const {return type_;};
+  const Type& type() const {return type_;}
 
  private:
   /// \var type_
@@ -309,4 +310,4 @@ class SpanAnalyzerDoc : public wxDocument {
   wxDECLARE_DYNAMIC_CLASS(SpanAnalyzerDoc);
 };
 
-#endif  // OTLS_SPANANALYZER_SPANANALYZERDOC_H_
+#endif  // SPANANALYZER_SPAN_ANALYZER_DOC_H_

@@ -197,7 +197,6 @@ void SpanAnalyzerFrame::OnMenuFilePageSetup(wxCommandEvent& event) {
   wxPageSetupDialogData* data_page = wxGetApp().config()->data_page;
 
   // creates and shows dialog
-  //wxPageSetupDialogData data_page(data_print);
   wxPageSetupDialog dialog(this, data_page);
   if (dialog.ShowModal() != wxID_OK) {
     return;

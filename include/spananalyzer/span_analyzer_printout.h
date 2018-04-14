@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_SPANANALYZERPRINTOUT_H_
-#define OTLS_SPANANALYZER_SPANANALYZERPRINTOUT_H_
+#ifndef SPANANALYZER_SPAN_ANALYZER_PRINTOUT_H_
+#define SPANANALYZER_SPAN_ANALYZER_PRINTOUT_H_
 
 #include "wx/print.h"
 
@@ -36,20 +36,20 @@ class SpanAnalyzerPrintout : public wxPrintout {
   ///   The start of the required print range.
   /// \param[in] to
   ///   The end of the required print range.
-  virtual void GetPageInfo(int* min, int* max, int* from, int* to) override;
+  void GetPageInfo(int* min, int* max, int* from, int* to) override;
 
   /// \brief Determines if the page number is present.
   /// \param[in] number
   ///   The page number.
   /// \return If the page number is present.
   /// The page numbers start at 1 (as opposed to 0).
-  virtual bool HasPage(int number) override;
+  bool HasPage(int number) override;
 
   /// \brief Prints the page.
   /// \param[in] number
   ///   The page number.
   /// \return If the print job should continue.
-  virtual bool OnPrintPage(int number) override;
+  bool OnPrintPage(int number) override;
 
  protected:
   /// \var view_
@@ -57,4 +57,4 @@ class SpanAnalyzerPrintout : public wxPrintout {
   SpanAnalyzerView* view_;
 };
 
-#endif  // OTLS_SPANANALYZER_SPANANALYZERPRINTOUT_H_
+#endif  // SPANANALYZER_SPAN_ANALYZER_PRINTOUT_H_

@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_SPANANALYZERAPP_H_
-#define OTLS_SPANANALYZER_SPANANALYZERAPP_H_
+#ifndef SPANANALYZER_SPAN_ANALYZER_APP_H_
+#define SPANANALYZER_SPAN_ANALYZER_APP_H_
 
 #include <string>
 
@@ -131,7 +131,7 @@ class SpanAnalyzerApp : public wxApp {
 };
 
 /// This is an array of command line options.
-static const wxCmdLineEntryDesc cmd_line_desc [] = {
+static const wxCmdLineEntryDesc cmd_line_desc[] = {
   {wxCMD_LINE_SWITCH, nullptr, "help", "shows this help message",
       wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP},
   {wxCMD_LINE_OPTION, nullptr, "config", "the application configuration file",
@@ -144,4 +144,4 @@ static const wxCmdLineEntryDesc cmd_line_desc [] = {
 
 DECLARE_APP(SpanAnalyzerApp)
 
-#endif  // OTLS_SPANANALYZER_SPANANALYZERAPP_H_
+#endif  // SPANANALYZER_SPAN_ANALYZER_APP_H_

@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_SPANANALYZERCONFIG_H_
-#define OTLS_SPANANALYZER_SPANANALYZERCONFIG_H_
+#ifndef SPANANALYZER_SPAN_ANALYZER_CONFIG_H_
+#define SPANANALYZER_SPAN_ANALYZER_CONFIG_H_
 
 #include <string>
 
@@ -107,4 +107,4 @@ struct SpanAnalyzerConfig {
   units::UnitSystem units;
 };
 
-#endif  // OTLS_SPANANALYZER_SPANANALYZERCONFIG_H_
+#endif  // SPANANALYZER_SPAN_ANALYZER_CONFIG_H_

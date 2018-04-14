@@ -1,9 +1,10 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_ANALYSISCONTROLLER_H_
-#define OTLS_SPANANALYZER_ANALYSISCONTROLLER_H_
+#ifndef SPANANALYZER_ANALYSIS_CONTROLLER_H_
+#define SPANANALYZER_ANALYSIS_CONTROLLER_H_
 
+#include <list>
 #include <vector>
 
 #include "models/sagtension/line_cable_reloader.h"
@@ -240,4 +241,4 @@ class AnalysisController {
   const std::list<WeatherLoadCase*>* weathercases_;
 };
 
-#endif  // OTLS_SPANANALYZER_ANALYSISCONTROLLER_H_
+#endif  // SPANANALYZER_ANALYSIS_CONTROLLER_H_

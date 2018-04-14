@@ -241,7 +241,7 @@ void ResultsPane::UpdateFilterGroupSelected() {
   }
 
   // updates the view if the index if it is not valid anymore
-  if ((int)group->filters.size() <= view->index_filter()) {
+  if (static_cast<int>(group->filters.size()) <= view->index_filter()) {
     view->set_index_filter(-1);
   }
 }

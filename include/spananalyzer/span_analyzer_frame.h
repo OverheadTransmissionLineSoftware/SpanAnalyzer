@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_SPANANALYZERFRAME_H_
-#define OTLS_SPANANALYZER_SPANANALYZERFRAME_H_
+#ifndef SPANANALYZER_SPAN_ANALYZER_FRAME_H_
+#define SPANANALYZER_SPAN_ANALYZER_FRAME_H_
 
 #include "appcommon/widgets/log_pane.h"
 #include "wx/aui/framemanager.h"
@@ -113,4 +113,4 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   DECLARE_EVENT_TABLE()
 };
 
-#endif  // OTLS_SPANANALYZER_SPANANALYZERFRAME_H_
+#endif  // SPANANALYZER_SPAN_ANALYZER_FRAME_H_

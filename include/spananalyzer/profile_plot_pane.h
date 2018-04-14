@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_PROFILEPLOTPANE_H_
-#define OTLS_SPANANALYZER_PROFILEPLOTPANE_H_
+#ifndef SPANANALYZER_PROFILE_PLOT_PANE_H_
+#define SPANANALYZER_PROFILE_PLOT_PANE_H_
 
 #include "appcommon/graphics/line_data_set_2d.h"
 #include "appcommon/graphics/plot_pane_2d.h"
@@ -87,4 +87,4 @@ class ProfilePlotPane : public PlotPane2d {
   DECLARE_EVENT_TABLE()
 };
 
-# endif  // OTLS_SPANANALYZER_PROFILEPLOTPANE_H_
+#endif  // SPANANALYZER_PROFILE_PLOT_PANE_H_

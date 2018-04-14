@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_SPANXMLHANDLER_H_
-#define OTLS_SPANANALYZER_SPANXMLHANDLER_H_
+#ifndef SPANANALYZER_SPAN_XML_HANDLER_H_
+#define SPANANALYZER_SPAN_XML_HANDLER_H_
 
 #include <list>
 #include <string>
@@ -97,4 +97,4 @@ class SpanXmlHandler : public XmlHandler {
                           Span& span);
 };
 
-#endif  // OTLS_SPANANALYZER_SPANXMLHANDLER_H_
+#endif  // SPANANALYZER_SPAN_XML_HANDLER_H_

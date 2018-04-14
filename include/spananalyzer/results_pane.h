@@ -1,8 +1,10 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_RESULTSPANE_H_
-#define OTLS_SPANANALYZER_RESULTSPANE_H_
+#ifndef SPANANALYZER_RESULTS_PANE_H_
+#define SPANANALYZER_RESULTS_PANE_H_
+
+#include <list>
 
 #include "appcommon/widgets/report_table.h"
 #include "wx/docview.h"
@@ -115,4 +117,4 @@ class ResultsPane : public wxPanel {
   DECLARE_EVENT_TABLE()
 };
 
-# endif  // OTLS_SPANANALYZER_RESULTSPANE_H_
+#endif  // SPANANALYZER_RESULTS_PANE_H_

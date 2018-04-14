@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_SAGTENSIONANALYSISRESULTS_H_
-#define OTLS_SPANANALYZER_SAGTENSIONANALYSISRESULTS_H_
+#ifndef SPANANALYZER_SAG_TENSION_ANALYSIS_RESULT_H_
+#define SPANANALYZER_SAG_TENSION_ANALYSIS_RESULT_H_
 
 #include "models/base/vector.h"
 #include "models/sagtension/cable_state.h"
@@ -62,4 +62,4 @@ struct SagTensionAnalysisResult {
   Vector3d weight_unit;
 };
 
-#endif  // OTLS_SPANANALYZER_SAGTENSIONANALYSISRESULTS_H_
+#endif  // SPANANALYZER_SAG_TENSION_ANALYSIS_RESULT_H_

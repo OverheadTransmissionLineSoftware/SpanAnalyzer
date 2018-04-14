@@ -1,8 +1,11 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_EDITPANE_H_
-#define OTLS_SPANANALYZER_EDITPANE_H_
+#ifndef SPANANALYZER_EDIT_PANE_H_
+#define SPANANALYZER_EDIT_PANE_H_
+
+#include <list>
+#include <string>
 
 #include "wx/docview.h"
 #include "wx/treectrl.h"
@@ -182,4 +185,4 @@ class EditPane : public wxPanel {
   DECLARE_EVENT_TABLE()
 };
 
-# endif  // OTLS_SPANANALYZER_EDITPANE_H_
+#endif  // SPANANALYZER_EDIT_PANE_H_

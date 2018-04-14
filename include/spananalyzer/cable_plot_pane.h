@@ -1,8 +1,10 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_CABLEPLOTPANE_H_
-#define OTLS_SPANANALYZER_CABLEPLOTPANE_H_
+#ifndef SPANANALYZER_CABLE_PLOT_PANE_H_
+#define SPANANALYZER_CABLE_PLOT_PANE_H_
+
+#include <list>
 
 #include "wx/docview.h"
 
@@ -137,4 +139,4 @@ class CablePlotPane : public PlotPane2d {
   DECLARE_EVENT_TABLE()
 };
 
-# endif  // OTLS_SPANANALYZER_CABLEPLOTPANE_H_
+#endif  // SPANANALYZER_CABLE_PLOT_PANE_H_

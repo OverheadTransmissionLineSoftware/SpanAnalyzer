@@ -1,8 +1,10 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_SPANANALYZERCONFIGXMLHANDLER_H_
-#define OTLS_SPANANALYZER_SPANANALYZERCONFIGXMLHANDLER_H_
+#ifndef SPANANALYZER_SPAN_ANALYZER_CONFIG_XML_HANDLER_H_
+#define SPANANALYZER_SPAN_ANALYZER_CONFIG_XML_HANDLER_H_
+
+#include <string>
 
 #include "appcommon/xml/xml_handler.h"
 #include "wx/xml/xml.h"
@@ -62,4 +64,4 @@ class SpanAnalyzerConfigXmlHandler : public XmlHandler {
                           SpanAnalyzerConfig& config);
 };
 
-#endif  // OTLS_SPANANALYZER_SPANANALYZERCONFIGXMLHANDLER_H_
+#endif  // SPANANALYZER_SPAN_ANALYZER_CONFIG_XML_HANDLER_H_

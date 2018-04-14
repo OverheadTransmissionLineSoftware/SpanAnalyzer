@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_SPANANALYZERDOCCOMMANDS_H_
-#define OTLS_SPANANALYZER_SPANANALYZERDOCCOMMANDS_H_
+#ifndef SPANANALYZER_SPAN_ANALYZER_DOC_COMMANDS_H_
+#define SPANANALYZER_SPAN_ANALYZER_DOC_COMMANDS_H_
 
 #include <string>
 
@@ -148,4 +148,4 @@ class SpanCommand : public wxCommand {
   const wxXmlNode* node_undo_;
 };
 
-#endif  // OTLS_SPANANALYZER_SPANANALYZERDOCCOMMANDS_H_
+#endif  // SPANANALYZER_SPAN_ANALYZER_DOC_COMMANDS_H_

@@ -372,7 +372,7 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
 
   // merges cable file into application data and listctrl
   if (index_existing == wxNOT_FOUND) {
-    // adds to end of application data
+    // adds to application data
     CableFile* cablefile_new = new CableFile(cablefile);
 
     if (index_selected_ == wxNOT_FOUND) {
@@ -388,8 +388,8 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
       cablefiles_modified_.insert(iter, cablefile_new);
     }
 
-    // adds to end of listctrl
-    long index = 0; // listctrl_->GetItemCount();
+    // inserts into listctrl
+    long index = 0;
     if (index == wxNOT_FOUND) {
       index = listctrl_->GetItemCount();
     } else {

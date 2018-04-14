@@ -1,8 +1,11 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_ANALYSISFILTERXMLHANDLER_H_
-#define OTLS_SPANANALYZER_ANALYSISFILTERXMLHANDLER_H_
+#ifndef SPANANALYZER_ANALYSIS_FILTER_XML_HANDLER_H_
+#define SPANANALYZER_ANALYSIS_FILTER_XML_HANDLER_H_
+
+#include <list>
+#include <string>
 
 #include "appcommon/xml/xml_handler.h"
 #include "wx/xml/xml.h"
@@ -77,4 +80,4 @@ class AnalysisFilterXmlHandler : public XmlHandler {
                           AnalysisFilter& filter);
 };
 
-#endif  // OTLS_SPANANALYZER_ANALYSISFILTERXMLHANDLER_H_
+#endif  // SPANANALYZER_ANALYSIS_FILTER_XML_HANDLER_H_

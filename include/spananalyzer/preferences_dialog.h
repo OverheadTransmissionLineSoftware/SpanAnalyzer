@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_PREFERENCESDIALOG_H_
-#define OTLS_SPANANALYZER_PREFERENCESDIALOG_H_
+#ifndef SPANANALYZER_PREFERENCES_DIALOG_H_
+#define SPANANALYZER_PREFERENCES_DIALOG_H_
 
 #include "wx/wx.h"
 
@@ -46,4 +46,4 @@ class PreferencesDialog : public wxDialog {
   DECLARE_EVENT_TABLE()
 };
 
-#endif  // OTLS_SPANANALYZER_PREFERENCESDIALOG_H_
+#endif  // SPANANALYZER_PREFERENCES_DIALOG_H_

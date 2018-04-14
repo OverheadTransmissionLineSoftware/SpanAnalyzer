@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_SPANANALYZERVIEW_H_
-#define OTLS_SPANANALYZER_SPANANALYZERVIEW_H_
+#ifndef SPANANALYZER_SPAN_ANALYZER_VIEW_H_
+#define SPANANALYZER_SPAN_ANALYZER_VIEW_H_
 
 #include <list>
 
@@ -186,4 +186,4 @@ class SpanAnalyzerView : public wxView {
   DECLARE_EVENT_TABLE()
 };
 
-#endif  // OTLS_SPANANALYZER_SPANANALYZERVIEW_H_
+#endif  // SPANANALYZER_SPAN_ANALYZER_VIEW_H_

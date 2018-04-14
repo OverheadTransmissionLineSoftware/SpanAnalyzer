@@ -1,8 +1,8 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#ifndef OTLS_SPANANALYZER_FILEHANDLER_H_
-#define OTLS_SPANANALYZER_FILEHANDLER_H_
+#ifndef SPANANALYZER_FILE_HANDLER_H_
+#define SPANANALYZER_FILE_HANDLER_H_
 
 #include <list>
 #include <string>
@@ -95,4 +95,4 @@ class FileHandler {
                              const SpanAnalyzerConfig& config);
 };
 
-#endif  // OTLS_SPANANALYZER_FILEHANDLER_H_
+#endif  // SPANANALYZER_FILE_HANDLER_H_
