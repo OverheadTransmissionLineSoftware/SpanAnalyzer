@@ -8,6 +8,19 @@
 *.obj
 *.so
 
+# CMake temp files #
+####################
+*.bin
+*.check_cache
+*.cmake
+*.includecache
+*.internal
+*.make
+*.marks
+*.out
+build-debug/*
+build-release/*
+
 # Code::Blocks temp files #
 ###########################
 *.depend
