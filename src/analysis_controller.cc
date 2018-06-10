@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "analysis_controller.h"
+#include "spananalyzer/analysis_controller.h"
 
 #include "appcommon/widgets/status_bar_log.h"
 #include "appcommon/widgets/timer.h"

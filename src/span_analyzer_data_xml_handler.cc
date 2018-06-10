@@ -1,13 +1,13 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "span_analyzer_data_xml_handler.h"
+#include "spananalyzer/span_analyzer_data_xml_handler.h"
 
 #include "appcommon/xml/weather_load_case_xml_handler.h"
 #include "wx/filename.h"
 
-#include "analysis_filter_xml_handler.h"
-#include "file_handler.h"
+#include "spananalyzer/analysis_filter_xml_handler.h"
+#include "spananalyzer/file_handler.h"
 
 wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
     const SpanAnalyzerData& data,

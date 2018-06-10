@@ -55,6 +55,12 @@
   </li>
   <li>
     <object type="text/sitemap">
+      <param name="Name" value="Printing"></param>
+      <param name="Local" value="printing.html"></param>
+    </object>
+  </li>
+  <li>
+    <object type="text/sitemap">
       <param name="Name" value="Errors"></param>
       <param name="Local" value="errors.html"></param>
     </object>

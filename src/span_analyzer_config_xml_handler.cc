@@ -1,18 +1,12 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "span_analyzer_config_xml_handler.h"
+#include "spananalyzer/span_analyzer_config_xml_handler.h"
 
 #include "appcommon/xml/color_xml_handler.h"
 #include "wx/filename.h"
 
-#include "span_analyzer_app.h"
-
-SpanAnalyzerConfigXmlHandler::SpanAnalyzerConfigXmlHandler() {
-}
-
-SpanAnalyzerConfigXmlHandler::~SpanAnalyzerConfigXmlHandler() {
-}
+#include "spananalyzer/span_analyzer_app.h"
 
 wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
     const SpanAnalyzerConfig& config) {

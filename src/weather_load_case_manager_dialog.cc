@@ -1,15 +1,15 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "weather_load_case_manager_dialog.h"
+#include "spananalyzer/weather_load_case_manager_dialog.h"
 
 #include "appcommon/editors/weather_load_case_editor_dialog.h"
 #include "appcommon/units/weather_load_case_unit_converter.h"
 #include "wx/spinbutt.h"
 #include "wx/xrc/xmlres.h"
 
-#include "span_analyzer_app.h"
-#include "span_analyzer_doc.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_doc.h"
 
 BEGIN_EVENT_TABLE(WeatherLoadCaseManagerDialog, wxDialog)
   EVT_BUTTON(XRCID("button_weathercases_add"), WeatherLoadCaseManagerDialog::OnButtonAdd)
@@ -159,7 +159,12 @@ bool WeatherLoadCaseManagerDialog::IsUniqueName(const std::string& name,
 
 void WeatherLoadCaseManagerDialog::OnButtonAdd(wxCommandEvent& event) {
   // creates a weathercase
+  // initializes values to zero
   WeatherLoadCase weathercase;
+  weathercase.density_ice = 0;
+  weathercase.pressure_wind = 0;
+  weathercase.temperature_cable = 0;
+  weathercase.thickness_ice = 0;
 
   // lets user edit weathercase
   // ensures that the weathercase name is unique

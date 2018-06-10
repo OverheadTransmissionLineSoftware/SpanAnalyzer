@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "profile_plot_options_dialog.h"
+#include "spananalyzer/profile_plot_options_dialog.h"
 
 #include "wx/clrpicker.h"
 #include "wx/spinctrl.h"

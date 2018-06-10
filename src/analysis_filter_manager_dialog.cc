@@ -1,12 +1,12 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "analysis_filter_manager_dialog.h"
+#include "spananalyzer/analysis_filter_manager_dialog.h"
 
 #include "wx/spinbutt.h"
 #include "wx/xrc/xmlres.h"
 
-#include "analysis_filter_editor_dialog.h"
+#include "spananalyzer/analysis_filter_editor_dialog.h"
 
 BEGIN_EVENT_TABLE(AnalysisFilterManagerDialog, wxDialog)
   EVT_BUTTON(XRCID("button_filters_add"), AnalysisFilterManagerDialog::OnButtonFilterAdd)

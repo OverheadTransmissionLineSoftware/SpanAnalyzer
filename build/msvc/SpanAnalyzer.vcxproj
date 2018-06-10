@@ -45,7 +45,7 @@
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>..\..\external\wxWidgets\lib\vc_x64_lib;..\..\external\Models\build\msvc\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\external\Models\lib;..\..\external\wxWidgets\lib\vc_x64_lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>otlsmodels_based.lib;otlsmodels_sagtensiond.lib;otlsmodels_transmissionlined.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxexpatd.lib;wxjpegd.lib;wxmsw31ud_adv.lib;wxmsw31ud_core.lib;wxmsw31ud_xrc.lib;wxpngd.lib;wxregexud.lib;wxscintillad.lib;wxtiffd.lib;wxzlibd.lib;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;winspool.lib;winmm.lib;shell32.lib;shlwapi.lib;comctl32.lib;ole32.lib;oleaut32.lib;uuid.lib;rpcrt4.lib;advapi32.lib;version.lib;wsock32.lib;wininet.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -65,7 +65,7 @@ XCOPY ..\..\res\help\*.htb .\Debug\res /y</Command>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>..\..\external\wxWidgets\lib\vc_x64_lib;..\..\external\Models\build\msvc\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\external\Models\lib;..\..\external\wxWidgets\lib\vc_x64_lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>otlsmodels_base.lib;otlsmodels_sagtension.lib;otlsmodels_transmissionline.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxexpat.lib;wxjpeg.lib;wxmsw31u_adv.lib;wxmsw31u_core.lib;wxmsw31u_xrc.lib;wxpng.lib;wxregexu.lib;wxscintilla.lib;wxtiff.lib;wxzlib.lib;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;winspool.lib;winmm.lib;shell32.lib;shlwapi.lib;comctl32.lib;ole32.lib;oleaut32.lib;uuid.lib;rpcrt4.lib;advapi32.lib;version.lib;wsock32.lib;wininet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
@@ -97,6 +97,7 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <ClCompile Include="..\..\external\AppCommon\src\units\line_cable_unit_converter.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\units\weather_load_case_unit_converter.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\widgets\error_message_dialog.cc" />
+    <ClCompile Include="..\..\external\AppCommon\src\widgets\log_pane.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\widgets\report_table.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\widgets\status_bar_log.cc" />
     <ClCompile Include="..\..\external\AppCommon\src\widgets\timer.cc" />
@@ -117,7 +118,6 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <ClCompile Include="..\..\src\cable_plot_pane.cc" />
     <ClCompile Include="..\..\src\edit_pane.cc" />
     <ClCompile Include="..\..\src\file_handler.cc" />
-    <ClCompile Include="..\..\src\log_pane.cc" />
     <ClCompile Include="..\..\src\preferences_dialog.cc" />
     <ClCompile Include="..\..\src\profile_plot_options_dialog.cc" />
     <ClCompile Include="..\..\src\profile_plot_pane.cc" />
@@ -219,6 +219,7 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\units\line_cable_unit_converter.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\units\weather_load_case_unit_converter.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\error_message_dialog.h" />
+    <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\log_pane.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\report_table.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\status_bar_log.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\widgets\timer.h" />
@@ -229,37 +230,36 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\vector_xml_handler.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\weather_load_case_xml_handler.h" />
     <ClInclude Include="..\..\external\AppCommon\include\appcommon\xml\xml_handler.h" />
-    <ClInclude Include="..\..\include\analysis_controller.h" />
-    <ClInclude Include="..\..\include\analysis_filter_editor_dialog.h" />
-    <ClInclude Include="..\..\include\analysis_filter_manager_dialog.h" />
-    <ClInclude Include="..\..\include\analysis_filter_xml_handler.h" />
-    <ClInclude Include="..\..\include\cable_file_manager_dialog.h" />
-    <ClInclude Include="..\..\include\cable_plot_options_dialog.h" />
-    <ClInclude Include="..\..\include\cable_plot_pane.h" />
-    <ClInclude Include="..\..\include\edit_pane.h" />
-    <ClInclude Include="..\..\include\file_handler.h" />
-    <ClInclude Include="..\..\include\log_pane.h" />
-    <ClInclude Include="..\..\include\preferences_dialog.h" />
-    <ClInclude Include="..\..\include\profile_plot_options_dialog.h" />
-    <ClInclude Include="..\..\include\profile_plot_pane.h" />
-    <ClInclude Include="..\..\include\results_pane.h" />
-    <ClInclude Include="..\..\include\sag_tension_analysis_results.h" />
-    <ClInclude Include="..\..\include\span.h" />
-    <ClInclude Include="..\..\include\span_analyzer_app.h" />
-    <ClInclude Include="..\..\include\span_analyzer_config.h" />
-    <ClInclude Include="..\..\include\span_analyzer_config_xml_handler.h" />
-    <ClInclude Include="..\..\include\span_analyzer_data.h" />
-    <ClInclude Include="..\..\include\span_analyzer_data_xml_handler.h" />
-    <ClInclude Include="..\..\include\span_analyzer_doc.h" />
-    <ClInclude Include="..\..\include\span_analyzer_doc_commands.h" />
-    <ClInclude Include="..\..\include\span_analyzer_doc_xml_handler.h" />
-    <ClInclude Include="..\..\include\span_analyzer_frame.h" />
-    <ClInclude Include="..\..\include\span_analyzer_printout.h" />
-    <ClInclude Include="..\..\include\span_analyzer_view.h" />
-    <ClInclude Include="..\..\include\span_editor_dialog.h" />
-    <ClInclude Include="..\..\include\span_unit_converter.h" />
-    <ClInclude Include="..\..\include\span_xml_handler.h" />
-    <ClInclude Include="..\..\include\weather_load_case_manager_dialog.h" />
+    <ClInclude Include="..\..\include\spananalyzer\analysis_controller.h" />
+    <ClInclude Include="..\..\include\spananalyzer\analysis_filter_editor_dialog.h" />
+    <ClInclude Include="..\..\include\spananalyzer\analysis_filter_manager_dialog.h" />
+    <ClInclude Include="..\..\include\spananalyzer\analysis_filter_xml_handler.h" />
+    <ClInclude Include="..\..\include\spananalyzer\cable_file_manager_dialog.h" />
+    <ClInclude Include="..\..\include\spananalyzer\cable_plot_options_dialog.h" />
+    <ClInclude Include="..\..\include\spananalyzer\cable_plot_pane.h" />
+    <ClInclude Include="..\..\include\spananalyzer\edit_pane.h" />
+    <ClInclude Include="..\..\include\spananalyzer\file_handler.h" />
+    <ClInclude Include="..\..\include\spananalyzer\preferences_dialog.h" />
+    <ClInclude Include="..\..\include\spananalyzer\profile_plot_options_dialog.h" />
+    <ClInclude Include="..\..\include\spananalyzer\profile_plot_pane.h" />
+    <ClInclude Include="..\..\include\spananalyzer\results_pane.h" />
+    <ClInclude Include="..\..\include\spananalyzer\sag_tension_analysis_result.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span_analyzer_app.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span_analyzer_config.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span_analyzer_config_xml_handler.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span_analyzer_data.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span_analyzer_data_xml_handler.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span_analyzer_doc.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span_analyzer_doc_commands.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span_analyzer_doc_xml_handler.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span_analyzer_frame.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span_analyzer_printout.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span_analyzer_view.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span_editor_dialog.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span_unit_converter.h" />
+    <ClInclude Include="..\..\include\spananalyzer\span_xml_handler.h" />
+    <ClInclude Include="..\..\include\spananalyzer\weather_load_case_manager_dialog.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\test\appdata.xml" />

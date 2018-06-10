@@ -1,6 +1,6 @@
 ## Installation Scripts
 This directory contains the installation scripts for various platforms. The
-scripts are mainly consist of moving files to the proper directories. Each
+scripts mainly consist of moving files to the proper directories. Each
 platform has two scripts:
 - Installation from a release. This will be included in the release download.
 - Installation from the repository. This requires that the 'Release' target

@@ -1,16 +1,16 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "cable_file_manager_dialog.h"
+#include "spananalyzer/cable_file_manager_dialog.h"
 
 #include "appcommon/editors/cable_editor_dialog.h"
 #include "appcommon/units/cable_unit_converter.h"
 #include "wx/spinbutt.h"
 #include "wx/xrc/xmlres.h"
 
-#include "file_handler.h"
-#include "span_analyzer_app.h"
-#include "span_analyzer_doc.h"
+#include "spananalyzer/file_handler.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_doc.h"
 
 BEGIN_EVENT_TABLE(CableFileManagerDialog, wxDialog)
   EVT_BUTTON(XRCID("button_add"), CableFileManagerDialog::OnButtonAdd)
@@ -287,7 +287,38 @@ void CableFileManagerDialog::OnButtonEdit(wxCommandEvent& event) {
 
 void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
   // creates new cable file
+  // initializes values to zero
   CableFile cablefile;
+
+  Cable& cable = cablefile.cable;
+  cable.absorptivity = 0;
+  cable.area_physical = 0;
+  cable.diameter = 0;
+  cable.emissivity = 0;
+
+  cable.resistances_ac.resize(2);
+  cable.resistances_ac.front().resistance = 0;
+  cable.resistances_ac.front().temperature = 0;
+  cable.resistances_ac.back().resistance = 0;
+  cable.resistances_ac.back().temperature = 0;
+
+  cable.strength_rated = 0;
+  cable.temperature_properties_components = 0;
+  cable.weight_unit = 0;
+
+  cable.component_core.capacity_heat = 0;
+  cable.component_core.coefficient_expansion_linear_thermal = 0;
+  cable.component_core.load_limit_polynomial_creep = 0;
+  cable.component_core.load_limit_polynomial_loadstrain = 0;
+  cable.component_core.modulus_compression_elastic_area = 0;
+  cable.component_core.modulus_tension_elastic_area = 0;
+
+  cable.component_shell.capacity_heat = 0;
+  cable.component_shell.coefficient_expansion_linear_thermal = 0;
+  cable.component_shell.load_limit_polynomial_creep = 0;
+  cable.component_shell.load_limit_polynomial_loadstrain = 0;
+  cable.component_shell.modulus_compression_elastic_area = 0;
+  cable.component_shell.modulus_tension_elastic_area = 0;
 
   // lets user edit cable file
   // ensures that the cable name is unique
@@ -341,7 +372,7 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
 
   // merges cable file into application data and listctrl
   if (index_existing == wxNOT_FOUND) {
-    // adds to end of application data
+    // adds to application data
     CableFile* cablefile_new = new CableFile(cablefile);
 
     if (index_selected_ == wxNOT_FOUND) {
@@ -357,8 +388,8 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
       cablefiles_modified_.insert(iter, cablefile_new);
     }
 
-    // adds to end of listctrl
-    long index = 0; // listctrl_->GetItemCount();
+    // inserts into listctrl
+    long index = 0;
     if (index == wxNOT_FOUND) {
       index = listctrl_->GetItemCount();
     } else {

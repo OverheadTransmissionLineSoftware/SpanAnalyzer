@@ -743,7 +743,7 @@ WARN_LOGFILE           = "./doxygen.log"
 # spaces.
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ../include \
+INPUT                  = ../include/spananalyzer \
 			 ../src
 
 # This tag can be used to specify the character encoding of the source files

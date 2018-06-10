@@ -1,13 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "analysis_filter_xml_handler.h"
-
-AnalysisFilterXmlHandler::AnalysisFilterXmlHandler() {
-}
-
-AnalysisFilterXmlHandler::~AnalysisFilterXmlHandler() {
-}
+#include "spananalyzer/analysis_filter_xml_handler.h"
 
 wxXmlNode* AnalysisFilterXmlHandler::CreateNode(const AnalysisFilter& filter,
                                                 const std::string& name) {
@@ -26,7 +20,7 @@ wxXmlNode* AnalysisFilterXmlHandler::CreateNode(const AnalysisFilter& filter,
   }
 
   // adds child nodes for struct parameters
-  
+
   // creates condition node
   title = "condition";
   if (filter.condition == CableConditionType::kCreep) {

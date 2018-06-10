@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "span_editor_dialog.h"
+#include "spananalyzer/span_editor_dialog.h"
 
 #include "appcommon/widgets/error_message_dialog.h"
 #include "models/base/helper.h"
@@ -162,7 +162,6 @@ void SpanEditorDialog::OnOk(wxCommandEvent &event) {
   // validates span data
   std::list<ErrorMessage> messages;
   if (span_modified_.Validate(true, &messages) == true) {
-
     // updates original cable reference based on user form edits
     *span_ = Span(span_modified_);
 
@@ -582,12 +581,10 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
 
   textctrl = XRCCTRL(*this, "textctrl_line_section_spacing_vertical",
                       wxTextCtrl);
-  if (span_modified_.type == Span::Type::kDeadendSpan) {
-    str = wxString::FromDouble(
-        span_modified_.linecable.spacing_attachments_ruling_span().z(),
-        1);
-    textctrl->SetValue(str);
-  }
+  str = wxString::FromDouble(
+      span_modified_.linecable.spacing_attachments_ruling_span().z(),
+      1);
+  textctrl->SetValue(str);
 
   // transfers span geometry
   const Vector3d& spacing_section =

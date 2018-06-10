@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "preferences_dialog.h"
+#include "spananalyzer/preferences_dialog.h"
 
 #include "wx/clrpicker.h"
 #include "wx/filepicker.h"
@@ -95,9 +95,6 @@ void PreferencesDialog::OnButtonOk(wxCommandEvent& event) {
   EndModal(wxID_OK);
 }
 
-/// \brief Handles the close event.
-/// \param[in] event
-///   The event.
 void PreferencesDialog::OnClose(wxCloseEvent& event) {
   EndModal(wxID_CLOSE);
 }

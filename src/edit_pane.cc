@@ -1,15 +1,17 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "edit_pane.h"
+#include "spananalyzer/edit_pane.h"
+
+#include <sstream>
 
 #include "wx/xrc/xmlres.h"
 
-#include "span_analyzer_app.h"
-#include "span_analyzer_doc.h"
-#include "span_analyzer_doc_commands.h"
-#include "span_editor_dialog.h"
-#include "span_unit_converter.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_doc.h"
+#include "spananalyzer/span_analyzer_doc_commands.h"
+#include "spananalyzer/span_editor_dialog.h"
+#include "spananalyzer/span_unit_converter.h"
 #include "xpm/copy.xpm"
 #include "xpm/minus.xpm"
 #include "xpm/move_arrow_down.xpm"
@@ -91,19 +93,21 @@ void EditPane::Update(wxObject* hint) {
   const UpdateHint* hint_update = dynamic_cast<UpdateHint*>(hint);
   if (hint_update == nullptr) {
     InitializeTreeCtrl();
-  } else if (hint_update->type() == HintType::kAnalysisFilterGroupEdit) {
+  } else if (hint_update->type()
+      == UpdateHint::Type::kAnalysisFilterGroupEdit) {
     // do nothing
-  } else if (hint_update->type() == HintType::kAnalysisFilterGroupSelect) {
+  } else if (hint_update->type()
+      == UpdateHint::Type::kAnalysisFilterGroupSelect) {
     // do nothing
-  } else if (hint_update->type() == HintType::kAnalysisFilterSelect) {
+  } else if (hint_update->type() == UpdateHint::Type::kAnalysisFilterSelect) {
     // do nothing
-  } else if (hint_update->type() == HintType::kCablesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kCablesEdit) {
     // do nothing
-  } else if (hint_update->type() == HintType::kPreferencesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kPreferencesEdit) {
     // do nothing
-  } else if (hint_update->type() == HintType::kSpansEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kSpansEdit) {
     UpdateTreeCtrlSpanItems();
-  } else if (hint_update->type() == HintType::kWeathercasesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kWeathercasesEdit) {
     // do nothing
   }
 }
@@ -128,7 +132,7 @@ void EditPane::ActivateSpan(const wxTreeItemId& id) {
   doc->set_index_activated(index);
 
   // posts a view update
-  UpdateHint hint(HintType::kSpansEdit);
+  UpdateHint hint(UpdateHint::Type::kSpansEdit);
   doc->UpdateAllViews(nullptr, &hint);
 
   // updates treectrl focus
@@ -137,8 +141,16 @@ void EditPane::ActivateSpan(const wxTreeItemId& id) {
 
 void EditPane::AddSpan() {
   // creates new span and editor
+  // initializes values to zero
   Span span;
-  span.name = "NEW";
+  span.name = NameVersioned("New");
+
+  CableConstraint constraint;
+  constraint.limit = 0;
+  span.linecable.set_constraint(constraint);
+
+  span.linecable.set_spacing_attachments_ruling_span(Vector3d(0, 0, 0));
+  span.spacing_attachments = Vector3d(0, 0, 0);
 
   // gets referenced objects and makes sure that they exist
   const std::list<CableFile*>& cablefiles = wxGetApp().data()->cablefiles;
@@ -187,8 +199,9 @@ void EditPane::CopySpan(const wxTreeItemId& id) {
   SpanTreeItemData* data =
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
 
-  // copies span
+  // copies span and updates name
   Span span = *(data->iter());
+  span.name = NameVersioned(span.name);
 
   wxLogVerbose("Copying span.");
 
@@ -221,7 +234,7 @@ void EditPane::DeactivateSpan(const wxTreeItemId& id) {
   doc->set_index_activated(-1);
 
   // posts a view update
-  UpdateHint hint(HintType::kSpansEdit);
+  UpdateHint hint(UpdateHint::Type::kSpansEdit);
   doc->UpdateAllViews(nullptr, &hint);
 
   // updates treectrl focus
@@ -318,8 +331,7 @@ void EditPane::FocusTreeCtrlSpanItem(const int& index) {
   for (auto i = 0; i <= index; i++) {
     if (i == 0) {
       id = treectrl_->GetFirstChild(treectrl_->GetRootItem(), cookie);
-    }
-    else {
+    } else {
       id = treectrl_->GetNextSibling(id);
     }
   }
@@ -398,6 +410,64 @@ void EditPane::MoveSpanUp(const wxTreeItemId& id) {
 
   // adjusts treectrl focus
   FocusTreeCtrlSpanItem(command->index());
+}
+
+std::string EditPane::NameVersioned(const std::string& name) const {
+  // gets document
+  SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
+
+  // determines is existing name is versioned
+  const int pos_end = name.rfind(")", name.size());
+  const int pos_start = name.rfind("(", pos_end);
+
+  bool is_versioned = true;
+  int version = 1;
+  const int kSize = name.size();
+  if (pos_end != kSize - 1) {
+    // the last character is not a version closing
+    is_versioned = false;
+  } else if ((name.at(pos_start) == '(') && (name.at(pos_end) == ')')) {
+    // extracts the numbers
+    const int length = pos_end - pos_start;
+    std::string str_extracted = name.substr(pos_start + 1, length - 1);
+
+    // attempts to convert string to integer
+    std::stringstream stream(str_extracted);
+    stream >> version;
+
+    // checks conversion status
+    if (!stream) {
+      is_versioned = false;
+    }
+  }
+
+  // creates base string
+  std::string str_base;
+  if (is_versioned == false) {
+    str_base = name + " ";
+  } else {
+    str_base = name.substr(0, pos_start);
+  }
+
+  // determines a unique description for the span
+  std::string str_version;
+  std::string name_versioned;
+  while (true) {
+    // creates version string
+    str_version = "(" + std::to_string(version) + ")";
+
+    // combines the base and version names
+    name_versioned = str_base + str_version;
+
+    // compares against spans in doc
+    if (doc->IsUniqueName(name_versioned) == true) {
+      break;
+    } else {
+      version++;
+    }
+  }
+
+  return name_versioned;
 }
 
 void EditPane::OnButtonAdd(wxCommandEvent& event) {
@@ -563,7 +633,7 @@ void EditPane::OnItemMenu(wxTreeEvent& event) {
   wxMenu menu;
   if (id == treectrl_->GetRootItem()) {
     menu.Append(kTreeRootAdd, "Add Span");
-  } else { // a span is selected
+  } else {  // a span is selected
     if (is_activated == false) {
       menu.Append(kTreeItemActivate, "Activate");
     } else {

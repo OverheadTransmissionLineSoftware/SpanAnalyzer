@@ -1,15 +1,9 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "span_analyzer_doc_xml_handler.h"
+#include "spananalyzer/span_analyzer_doc_xml_handler.h"
 
-#include "span_xml_handler.h"
-
-SpanAnalyzerDocXmlHandler::SpanAnalyzerDocXmlHandler() {
-}
-
-SpanAnalyzerDocXmlHandler::~SpanAnalyzerDocXmlHandler() {
-}
+#include "spananalyzer/span_xml_handler.h"
 
 wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
     const SpanAnalyzerDoc& doc,
@@ -96,7 +90,7 @@ bool SpanAnalyzerDocXmlHandler::ParseNodeV1(
     if (title == "spans") {
       // parses each span xml node
       const wxXmlNode* sub_node = node->GetChildren();
-      while(sub_node != nullptr) {
+      while (sub_node != nullptr) {
         wxString sub_title = sub_node->GetName();
         if (sub_title == "span") {
           // creates new span and parses node

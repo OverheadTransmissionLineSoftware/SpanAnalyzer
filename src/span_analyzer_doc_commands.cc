@@ -1,13 +1,13 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "span_analyzer_doc_commands.h"
+#include "spananalyzer/span_analyzer_doc_commands.h"
 
 #include "wx/wx.h"
 
-#include "span_analyzer_app.h"
-#include "span_analyzer_doc.h"
-#include "span_xml_handler.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_doc.h"
+#include "spananalyzer/span_xml_handler.h"
 
 // These are the string definitions for the various command types.
 const std::string SpanCommand::kNameDelete = "Delete Span";
@@ -98,7 +98,7 @@ bool SpanCommand::Do() {
   // checks if command succeeded
   if (status == true) {
     // posts a view update
-    UpdateHint hint(HintType::kSpansEdit);
+    UpdateHint hint(UpdateHint::Type::kSpansEdit);
     doc_->UpdateAllViews(nullptr, &hint);
   } else {
     // logs error
@@ -143,7 +143,7 @@ bool SpanCommand::Undo() {
   // checks if command succeeded
   if (status == true) {
     // posts a view update
-    UpdateHint hint(HintType::kSpansEdit);
+    UpdateHint hint(UpdateHint::Type::kSpansEdit);
     doc_->UpdateAllViews(nullptr, &hint);
   } else {
     // logs error

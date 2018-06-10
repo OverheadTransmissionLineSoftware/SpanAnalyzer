@@ -1,15 +1,15 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "results_pane.h"
+#include "spananalyzer/results_pane.h"
 
 #include "models/base/helper.h"
 #include "models/transmissionline/catenary.h"
 #include "wx/xrc/xmlres.h"
 
-#include "span_analyzer_app.h"
-#include "span_analyzer_doc.h"
-#include "span_analyzer_view.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_doc.h"
+#include "spananalyzer/span_analyzer_view.h"
 
 BEGIN_EVENT_TABLE(ResultsPane, wxPanel)
   EVT_CHOICE(XRCID("choice_report"), ResultsPane::OnChoiceReport)
@@ -56,25 +56,27 @@ void ResultsPane::Update(wxObject* hint) {
   const UpdateHint* hint_update = dynamic_cast<UpdateHint*>(hint);
   if (hint_update == nullptr) {
     // do nothing, this is only passed when pane is created
-  } else if (hint_update->type() == HintType::kAnalysisFilterGroupEdit) {
+  } else if (hint_update->type()
+      == UpdateHint::Type::kAnalysisFilterGroupEdit) {
     UpdateFilterGroupChoice();
     UpdateReportData();
     table_->Refresh();
-  } else if (hint_update->type() == HintType::kAnalysisFilterGroupSelect) {
+  } else if (hint_update->type()
+      == UpdateHint::Type::kAnalysisFilterGroupSelect) {
     UpdateReportData();
     table_->Refresh();
-  } else if (hint_update->type() == HintType::kAnalysisFilterSelect) {
+  } else if (hint_update->type() == UpdateHint::Type::kAnalysisFilterSelect) {
     // do nothing
-  } else if (hint_update->type() == HintType::kCablesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kCablesEdit) {
     UpdateReportData();
     table_->Refresh();
-  } else if (hint_update->type() == HintType::kPreferencesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kPreferencesEdit) {
     UpdateReportData();
     table_->Refresh();
-  } else if (hint_update->type() == HintType::kSpansEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kSpansEdit) {
     UpdateReportData();
     table_->Refresh();
-  } else if (hint_update->type() == HintType::kWeathercasesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kWeathercasesEdit) {
     UpdateReportData();
     table_->Refresh();
   }
@@ -91,7 +93,7 @@ void ResultsPane::OnChoiceFilterGroup(wxCommandEvent& event) {
   UpdateFilterGroupSelected();
 
   // updates views
-  UpdateHint hint(HintType::kAnalysisFilterGroupSelect);
+  UpdateHint hint(UpdateHint::Type::kAnalysisFilterGroupSelect);
   view_->GetDocument()->UpdateAllViews(nullptr, &hint);
 }
 
@@ -128,21 +130,57 @@ void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
 
   wxLogVerbose("Updating displayed analysis filter index.");
 
+  // gets view
+  SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);
+
   // gets selected index
   const long index_selected = event.GetItem().GetId();
 
   // updates report table
   table_->set_index_selected(index_selected);
 
+  // gets selected index with no sorting applied
+  // this still may not be the correct index, as invalid results are excluded
+  // from the table
+  const long index_unsorted = table_->IndexReportRow(index_selected);
+
+  // gets the selected-sorted-unfiltered index
+  // this will account for any invalid results that were left out of the table
+  // this is done by comparing the weathercase/condition combination
+
+  // extracts string from table
+  long index_document = -1;
+  const std::string& str_table = table_->ValueTable(index_unsorted, 0) + ","
+                                 + table_->ValueTable(index_unsorted, 1);
+
+  // searches analysis filters for a match
+  const std::list<AnalysisFilter>& filters = view->group_filters()->filters;
+  for (auto iter = filters.cbegin(); iter != filters.cend(); iter++) {
+    // gets filter
+    const AnalysisFilter& filter = *iter;
+
+    // extracts string from filter
+    std::string str_filter = filter.weathercase->description + ",";
+    if (filter.condition == CableConditionType::kCreep) {
+      str_filter += "Creep";
+    } else if (filter.condition == CableConditionType::kInitial) {
+      str_filter += "Initial";
+    } else if (filter.condition == CableConditionType::kLoad) {
+      str_filter += "Load";
+    }
+
+    // compares table string to filter string
+    if (str_table == str_filter) {
+      index_document = std::distance(filters.cbegin(), iter);
+      break;
+    }
+  }
+
   // updates view index
-  // the selected report table index may be different than the report data index
-  // due to sorting, so the index needs to be converted to match the correct
-  // analysis result index
-  SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);
-  view->set_index_filter(table_->IndexReportRow(index_selected));
+  view->set_index_filter(index_document);
 
   // updates views
-  UpdateHint hint(HintType::kAnalysisFilterSelect);
+  UpdateHint hint(UpdateHint::Type::kAnalysisFilterSelect);
   view_->GetDocument()->UpdateAllViews(nullptr, &hint);
 }
 
@@ -203,7 +241,7 @@ void ResultsPane::UpdateFilterGroupSelected() {
   }
 
   // updates the view if the index if it is not valid anymore
-  if ((int)group->filters.size() <= view->index_filter()) {
+  if (static_cast<int>(group->filters.size()) <= view->index_filter()) {
     view->set_index_filter(-1);
   }
 }

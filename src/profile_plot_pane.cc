@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "profile_plot_pane.h"
+#include "spananalyzer/profile_plot_pane.h"
 
 #include <algorithm>
 
@@ -11,10 +11,10 @@
 #include "models/base/helper.h"
 #include "wx/dcbuffer.h"
 
-#include "profile_plot_options_dialog.h"
-#include "span_analyzer_app.h"
-#include "span_analyzer_doc.h"
-#include "span_analyzer_view.h"
+#include "spananalyzer/profile_plot_options_dialog.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_doc.h"
+#include "spananalyzer/span_analyzer_view.h"
 
 /// \par OVERVIEW
 ///
@@ -77,35 +77,37 @@ void ProfilePlotPane::Update(wxObject* hint) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
     view_->OnDraw(&dc_buf);
-  } else if (hint_update->type() == HintType::kAnalysisFilterGroupEdit) {
+  } else if (hint_update->type()
+      == UpdateHint::Type::kAnalysisFilterGroupEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
     view_->OnDraw(&dc_buf);
-  } else if (hint_update->type() == HintType::kAnalysisFilterGroupSelect) {
+  } else if (hint_update->type()
+      == UpdateHint::Type::kAnalysisFilterGroupSelect) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
     view_->OnDraw(&dc_buf);
-  } else if (hint_update->type() == HintType::kAnalysisFilterSelect) {
+  } else if (hint_update->type() == UpdateHint::Type::kAnalysisFilterSelect) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
     view_->OnDraw(&dc_buf);
-  } else if (hint_update->type() == HintType::kCablesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kCablesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
     view_->OnDraw(&dc_buf);
-  } else if (hint_update->type() == HintType::kPreferencesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kPreferencesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
     view_->OnDraw(&dc_buf);
-  } else if (hint_update->type() == HintType::kSpansEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kSpansEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
     view_->OnDraw(&dc_buf);
-  } else if (hint_update->type() == HintType::kViewSelect) {
+  } else if (hint_update->type() == UpdateHint::Type::kViewSelect) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
     view_->OnDraw(&dc_buf);
-  } else if (hint_update->type() == HintType::kWeathercasesEdit) {
+  } else if (hint_update->type() == UpdateHint::Type::kWeathercasesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
     view_->OnDraw(&dc_buf);
@@ -139,7 +141,7 @@ void ProfilePlotPane::OnContextMenuSelect(wxCommandEvent& event) {
     }
 
     // updates plot and redraws
-    UpdateHint hint(HintType::kViewSelect);
+    UpdateHint hint(UpdateHint::Type::kViewSelect);
     Update(&hint);
   }
 }

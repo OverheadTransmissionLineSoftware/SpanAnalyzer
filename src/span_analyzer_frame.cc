@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 // For more information, please refer to <http://unlicense.org/>
 
-#include "span_analyzer_frame.h"
+#include "spananalyzer/span_analyzer_frame.h"
 
 #include "appcommon/units/cable_unit_converter.h"
 #include "appcommon/units/weather_load_case_unit_converter.h"
@@ -9,15 +9,15 @@
 #include "wx/printdlg.h"
 #include "wx/xrc/xmlres.h"
 
-#include "analysis_filter_manager_dialog.h"
-#include "cable_file_manager_dialog.h"
-#include "file_handler.h"
-#include "preferences_dialog.h"
-#include "span_analyzer_app.h"
-#include "span_analyzer_doc.h"
-#include "span_analyzer_printout.h"
-#include "span_analyzer_view.h"
-#include "weather_load_case_manager_dialog.h"
+#include "spananalyzer/analysis_filter_manager_dialog.h"
+#include "spananalyzer/cable_file_manager_dialog.h"
+#include "spananalyzer/file_handler.h"
+#include "spananalyzer/preferences_dialog.h"
+#include "spananalyzer/span_analyzer_app.h"
+#include "spananalyzer/span_analyzer_doc.h"
+#include "spananalyzer/span_analyzer_printout.h"
+#include "spananalyzer/span_analyzer_view.h"
+#include "spananalyzer/weather_load_case_manager_dialog.h"
 #include "xpm/icon.xpm"
 
 DocumentFileDropTarget::DocumentFileDropTarget(wxWindow* parent) {
@@ -67,7 +67,8 @@ BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxDocParentFrame)
 END_EVENT_TABLE()
 
 SpanAnalyzerFrame::SpanAnalyzerFrame(wxDocManager* manager)
-    : wxDocParentFrame(manager, nullptr, wxID_ANY, "Span Analyzer") {
+    : wxDocParentFrame(manager, nullptr, wxID_ANY,
+                       wxGetApp().GetAppDisplayName()) {
   // loads dialog from virtual xrc file system
   wxXmlResource::Get()->LoadMenuBar(this, "span_analyzer_menubar");
 
@@ -127,7 +128,7 @@ void SpanAnalyzerFrame::OnMenuEditAnalysisFilters(wxCommandEvent& event) {
     // updates document/views
     SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
     if (doc != nullptr) {
-      UpdateHint hint(HintType::kAnalysisFilterGroupEdit);
+      UpdateHint hint(UpdateHint::Type::kAnalysisFilterGroupEdit);
       doc->UpdateAllViews(nullptr, &hint);
     }
   }
@@ -156,7 +157,7 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
   if (doc != nullptr) {
     doc->RunAnalysis();
 
-    UpdateHint hint(HintType::kCablesEdit);
+    UpdateHint hint(UpdateHint::Type::kCablesEdit);
     doc->UpdateAllViews(nullptr, &hint);
   }
 }
@@ -186,7 +187,7 @@ void SpanAnalyzerFrame::OnMenuEditWeathercases(
   if (doc != nullptr) {
     doc->RunAnalysis();
 
-    UpdateHint hint(HintType::kWeathercasesEdit);
+    UpdateHint hint(UpdateHint::Type::kWeathercasesEdit);
     doc->UpdateAllViews(nullptr, &hint);
   }
 }
@@ -196,7 +197,6 @@ void SpanAnalyzerFrame::OnMenuFilePageSetup(wxCommandEvent& event) {
   wxPageSetupDialogData* data_page = wxGetApp().config()->data_page;
 
   // creates and shows dialog
-  //wxPageSetupDialogData data_page(data_print);
   wxPageSetupDialog dialog(this, data_page);
   if (dialog.ShowModal() != wxID_OK) {
     return;
@@ -265,7 +265,7 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
   }
 
   // updates views
-  UpdateHint hint(HintType::kPreferencesEdit);
+  UpdateHint hint(UpdateHint::Type::kPreferencesEdit);
   doc->UpdateAllViews(nullptr, &hint);
 }
 
