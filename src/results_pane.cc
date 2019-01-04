@@ -395,37 +395,37 @@ void ResultsPane::UpdateReportDataCatenaryCurve(
 
     // adds H
     value = catenary.tension_horizontal();
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToString(value, 1, true);
     row.values.push_back(str);
 
     // adds w
     value = catenary.weight_unit().Magnitude();
-    str = helper::DoubleToFormattedString(value, 3);
+    str = helper::DoubleToString(value, 3, true);
     row.values.push_back(str);
 
     // adds H/w
     value = catenary.Constant();
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToString(value, 1, true);
     row.values.push_back(str);
 
     // adds sag
     value = catenary.Sag();
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToString(value, 1, true);
     row.values.push_back(str);
 
     // adds L
     value = catenary.Length();
-    str = helper::DoubleToFormattedString(value, 2);
+    str = helper::DoubleToString(value, 2, true);
     row.values.push_back(str);
 
     // adds Ls
     value = catenary.LengthSlack();
-    str = helper::DoubleToFormattedString(value, 2);
+    str = helper::DoubleToString(value, 2, true);
     row.values.push_back(str);
 
     // adds swing
     value = catenary.SwingAngle();
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToString(value, 1, true);
     row.values.push_back(str);
 
     // appends row to list
@@ -534,17 +534,17 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
 
     // adds Ts
     value = catenary.Tension(0);
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToString(value, 1, true);
     row.values.push_back(str);
 
     // adds Tv
     value = catenary.Tension(0, AxisDirectionType::kPositive).z();
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToString(value, 1, true);
     row.values.push_back(str);
 
     // adds A
     value = catenary.TangentAngleVertical(0, AxisDirectionType::kPositive);
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToString(value, 1, true);
     row.values.push_back(str);
 
     // adds blank
@@ -552,17 +552,17 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
 
     // adds Ts
     value = catenary.Tension(1);
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToString(value, 1, true);
     row.values.push_back(str);
 
     // adds Tv
     value = catenary.Tension(1, AxisDirectionType::kNegative).z();
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToString(value, 1, true);
     row.values.push_back(str);
 
     // adds A
     value = catenary.TangentAngleVertical(1, AxisDirectionType::kNegative);
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToString(value, 1, true);
     row.values.push_back(str);
 
     // appends row to list
@@ -646,12 +646,12 @@ void ResultsPane::UpdateReportDataLength(
 
     // adds Lu
     value = result->length_unloaded;
-    str = helper::DoubleToFormattedString(value, 2);
+    str = helper::DoubleToString(value, 2, true);
     row.values.push_back(str);
 
     // adds Ll
     value = catenary.Length();
-    str = helper::DoubleToFormattedString(value, 2);
+    str = helper::DoubleToString(value, 2, true);
     row.values.push_back(str);
 
     // appends row to list
@@ -738,27 +738,27 @@ void ResultsPane::UpdateReportDataSagTension(
 
     // adds Wv
     value = result->weight_unit.z();
-    str = helper::DoubleToFormattedString(value, 3);
+    str = helper::DoubleToString(value, 3, true);
     row.values.push_back(str);
 
     // adds Wt
     value = result->weight_unit.y();
-    str = helper::DoubleToFormattedString(value, 3);
+    str = helper::DoubleToString(value, 3, true);
     row.values.push_back(str);
 
     // adds Wr
     value = result->weight_unit.Magnitude();
-    str = helper::DoubleToFormattedString(value, 3);
+    str = helper::DoubleToString(value, 3, true);
     row.values.push_back(str);
 
     // adds H
     value = result->tension_horizontal;
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToString(value, 1, true);
     row.values.push_back(str);
 
     // adds H/w
     value = result->tension_horizontal / result->weight_unit.Magnitude();
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToString(value, 1, true);
     row.values.push_back(str);
 
     // appends row to list
@@ -830,12 +830,12 @@ void ResultsPane::UpdateReportDataTensionDistribution(
 
     // adds Hs
     value = result->tension_horizontal_shell;
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToString(value, 1, true);
     row.values.push_back(str);
 
     // adds Hc
     value = result->tension_horizontal_core;
-    str = helper::DoubleToFormattedString(value, 1);
+    str = helper::DoubleToString(value, 1, true);
     row.values.push_back(str);
 
     // appends row to list

@@ -176,9 +176,9 @@ void ProfilePlotPane::OnMouse(wxMouseEvent& event) {
 
   // logs to status bar
   std::string str = "X="
-                    + helper::DoubleToFormattedString(point_data.x, 2)
+                    + helper::DoubleToString(point_data.x, 2, true)
                     + "   Y="
-                    + helper::DoubleToFormattedString(point_data.y, 2);
+                    + helper::DoubleToString(point_data.y, 2, true);
 
   status_bar_log::SetText(str, 1);
 }
@@ -249,7 +249,7 @@ void ProfilePlotPane::UpdateDatasetDimensions(const Catenary3d& catenary) {
 
   text = new Text2d();
   text->angle = 0;
-  text->message = helper::DoubleToFormattedString(spacing.x(), 2);
+  text->message = helper::DoubleToString(spacing.x(), 2, true);
   text->offset = Point2d<int>(0, 5);
   text->point = point;
   text->position = Text2d::BoundaryPosition::kCenterLower;
@@ -270,7 +270,7 @@ void ProfilePlotPane::UpdateDatasetDimensions(const Catenary3d& catenary) {
 
     text = new Text2d();
     text->angle = 0;
-    text->message = helper::DoubleToFormattedString(spacing.y(), 2);
+    text->message = helper::DoubleToString(spacing.y(), 2, true);
     text->offset = Point2d<int>(5, 0);
     text->point = point;
     text->position = Text2d::BoundaryPosition::kLeftCenter;
@@ -289,7 +289,7 @@ void ProfilePlotPane::UpdateDatasetDimensions(const Catenary3d& catenary) {
 
     text = new Text2d();
     text->angle = 0;
-    text->message = helper::DoubleToFormattedString(spacing.y(), 2);
+    text->message = helper::DoubleToString(spacing.y(), 2, true);
     text->offset = Point2d<int>(-5, 0);
     text->point = point;
     text->position = Text2d::BoundaryPosition::kRightCenter;
@@ -315,7 +315,7 @@ void ProfilePlotPane::UpdateDatasetDimensions(const Catenary3d& catenary) {
 
   text = new Text2d();
   text->angle = 0;
-  text->message = helper::DoubleToFormattedString(line->p0.y - line->p1.y, 2);
+  text->message = helper::DoubleToString(line->p0.y - line->p1.y, 2, true);
   text->offset = Point2d<int>(5, 0);
   text->point = point;
   text->position = Text2d::BoundaryPosition::kLeftCenter;

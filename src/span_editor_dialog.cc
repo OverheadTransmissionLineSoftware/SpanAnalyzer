@@ -615,12 +615,12 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
     // updates textctrls
     textctrl = XRCCTRL(*this, "textctrl_span_spacing_horizontal",
                        wxTextCtrl);
-    str = helper::DoubleToFormattedString(spacing_span.x(), 1);
+    str = helper::DoubleToString(spacing_span.x(), 1, true);
     textctrl->SetValue(str);
 
     textctrl = XRCCTRL(*this, "textctrl_span_spacing_vertical",
                        wxTextCtrl);
-    str = helper::DoubleToFormattedString(spacing_span.z(), 1);
+    str = helper::DoubleToString(spacing_span.z(), 1, true);
     textctrl->SetValue(str);
   }
 }

@@ -388,7 +388,7 @@ void AnalysisController::RunAnalysis() {
   // stops timer and logs
   timer.Stop();
   message = "Analysis time = "
-            + helper::DoubleToFormattedString(timer.Duration(), 3) + "s.";
+            + helper::DoubleToString(timer.Duration(), 3, true) + "s.";
   wxLogVerbose(message.c_str());
 
   // notifies user of any errors

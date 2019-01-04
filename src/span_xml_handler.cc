@@ -55,7 +55,7 @@ wxXmlNode* SpanXmlHandler::CreateNode(
   node_element = Vector3dXmlHandler::CreateNode(span.spacing_attachments,
                                                 "spacing_attachments",
                                                 attribute,
-                                                1);
+                                                6);
   node_root->AddChild(node_element);
 
   // returns node
