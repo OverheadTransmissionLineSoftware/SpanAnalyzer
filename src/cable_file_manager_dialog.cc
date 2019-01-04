@@ -312,6 +312,8 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
   cable.component_core.load_limit_polynomial_loadstrain = 0;
   cable.component_core.modulus_compression_elastic_area = 0;
   cable.component_core.modulus_tension_elastic_area = 0;
+  cable.component_core.scale_polynomial_x = 0.01;
+  cable.component_core.scale_polynomial_y = 1;
 
   cable.component_shell.capacity_heat = 0;
   cable.component_shell.coefficient_expansion_linear_thermal = 0;
@@ -319,6 +321,8 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
   cable.component_shell.load_limit_polynomial_loadstrain = 0;
   cable.component_shell.modulus_compression_elastic_area = 0;
   cable.component_shell.modulus_tension_elastic_area = 0;
+  cable.component_shell.scale_polynomial_x = 0.01;
+  cable.component_shell.scale_polynomial_y = 1;
 
   // lets user edit cable file
   // ensures that the cable name is unique

@@ -209,6 +209,13 @@ int FileHandler::LoadCable(const std::string& filepath,
     coefficients->push_back(0);
   }
 
+  // sets polynomial scaling factors
+  cable.component_core.scale_polynomial_x = 0.01;
+  cable.component_core.scale_polynomial_y = 1;
+
+  cable.component_shell.scale_polynomial_x = 0.01;
+  cable.component_shell.scale_polynomial_y = 1;
+
   // resets statusbar
   status_bar_log::PopText(0);
 
