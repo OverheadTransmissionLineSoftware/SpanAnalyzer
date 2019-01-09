@@ -171,12 +171,14 @@ int FileHandler::LoadCable(const std::string& filepath,
       units_file,
       units::UnitStyle::kDifferent,
       units::UnitStyle::kConsistent,
+      true,
       cable);
 
   // converts unit systems if the file doesn't match applicaton config
   units::UnitSystem units_config = wxGetApp().config()->units;
   if (units_file != units_config) {
-    CableUnitConverter::ConvertUnitSystem(units_file, units_config, cable);
+    CableUnitConverter::ConvertUnitSystem(units_file, units_config,
+                                          true, cable);
   }
 
   // adds any missing polynomial coefficients
@@ -352,6 +354,7 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
   CableUnitConverter::ConvertUnitStyle(units,
                                        units::UnitStyle::kConsistent,
                                        units::UnitStyle::kDifferent,
+                                       true,
                                        cable_converted);
 
   // generates an xml node

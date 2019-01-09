@@ -272,6 +272,7 @@ void EditPane::EditSpan(const wxTreeItemId& id) {
   SpanUnitConverter::ConvertUnitStyle(wxGetApp().config()->units,
                                       units::UnitStyle::kConsistent,
                                       units::UnitStyle::kDifferent,
+                                      true,
                                       span);
 
   // gets referenced objects and makes sure that they exist
@@ -306,6 +307,7 @@ void EditPane::EditSpan(const wxTreeItemId& id) {
   SpanUnitConverter::ConvertUnitStyle(wxGetApp().config()->units,
                                       units::UnitStyle::kDifferent,
                                       units::UnitStyle::kConsistent,
+                                      true,
                                       span);
 
   // updates document

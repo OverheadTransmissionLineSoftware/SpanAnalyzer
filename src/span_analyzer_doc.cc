@@ -37,8 +37,8 @@ void SpanAnalyzerDoc::ConvertUnitStyle(const units::UnitSystem& system,
   // converts spans
   for (auto it = spans_.begin(); it != spans_.end(); it++) {
     Span& span = *it;
-    SpanUnitConverter::ConvertUnitStyle(system, style_from,
-                                        style_to, span);
+    SpanUnitConverter::ConvertUnitStyle(system, style_from, style_to,
+                                        true, span);
   }
 
   // clears commands in the processor
@@ -55,7 +55,7 @@ void SpanAnalyzerDoc::ConvertUnitSystem(const units::UnitSystem& system_from,
   // converts spans
   for (auto it = spans_.begin(); it != spans_.end(); it++) {
     Span& span = *it;
-    SpanUnitConverter::ConvertUnitSystem(system_from, system_to, span);
+    SpanUnitConverter::ConvertUnitSystem(system_from, system_to, true, span);
   }
 
   // clears commands in the processor

@@ -254,6 +254,7 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
       CableUnitConverter::ConvertUnitSystem(
           units_before,
           config->units,
+          true,
           cablefile->cable);
     }
 

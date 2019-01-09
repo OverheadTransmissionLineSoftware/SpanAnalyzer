@@ -9,15 +9,20 @@ void SpanUnitConverter::ConvertUnitStyle(
     const units::UnitSystem& system,
     const units::UnitStyle& style_from,
     const units::UnitStyle& style_to,
+    const bool& is_recursive,
     Span& span) {
-  // converts line cable
-  LineCableUnitConverter::ConvertUnitStyle(system, style_from, style_to,
-                                           span.linecable);
+  // triggers member variable converters
+  if (is_recursive == true) {
+    // converts line cable
+    LineCableUnitConverter::ConvertUnitStyle(system, style_from, style_to,
+                                             is_recursive, span.linecable);
+  }
 }
 
 void SpanUnitConverter::ConvertUnitSystem(
     const units::UnitSystem& system_from,
     const units::UnitSystem& system_to,
+    const bool& is_recursive,
     Span& span) {
   if (system_to == units::UnitSystem::kMetric) {
     // converts spacing-attachments
@@ -46,7 +51,10 @@ void SpanUnitConverter::ConvertUnitSystem(
         units::LengthConversionType::kMetersToFeet));
   }
 
-  // converts line cable
-  LineCableUnitConverter::ConvertUnitSystem(system_from, system_to,
-                                            span.linecable);
+  // triggers member variable converters
+  if (is_recursive == true) {
+    // converts line cable
+    LineCableUnitConverter::ConvertUnitSystem(system_from, system_to,
+                                              is_recursive, span.linecable);
+  }
 }

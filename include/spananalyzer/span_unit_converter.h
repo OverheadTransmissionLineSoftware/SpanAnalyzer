@@ -12,10 +12,11 @@
 ///
 /// This class converts a span between unit systems as well as unit styles.
 ///
-/// All child objects that this class owns/stores will be converted. The objects
-/// that are referenced will not be converted, such as:
-///  - Cable
-///  - WeatherLoadCase
+/// \par RECURSION
+///
+/// This class supports optionally invoking member variable converters,
+/// depending on whether the entire set of data needs converted or just a
+/// portion of it.
 class SpanUnitConverter {
  public:
   /// \brief Converts the span between unit styles.
@@ -25,6 +26,8 @@ class SpanUnitConverter {
   ///   The unit style to convert from.
   /// \param[in] style_to
   ///   The unit style to convert to.
+  /// \param[in] is_recursive
+  ///   An indicator that determines if member variable converters are invoked.
   /// \param[in,out] span
   ///   The span to be converted.
   /// The 'different' style units are as follows:
@@ -34,6 +37,7 @@ class SpanUnitConverter {
   static void ConvertUnitStyle(const units::UnitSystem& system,
                                const units::UnitStyle& style_from,
                                const units::UnitStyle& style_to,
+                               const bool& is_recursive,
                                Span& span);
 
   /// \brief Converts the span between unit systems.
@@ -41,12 +45,15 @@ class SpanUnitConverter {
   ///   The unit system to convert from.
   /// \param[in] system_to
   ///   The unit system to convert to.
+  /// \param[in] is_recursive
+  ///   An indicator that determines if member variable converters are invoked.
   /// \param[in,out] span
   ///   The span to be converted.
   /// This function requires that the span is in a 'consistent' unit
   /// style.
   static void ConvertUnitSystem(const units::UnitSystem& system_from,
                                 const units::UnitSystem& system_to,
+                                const bool& is_recursive,
                                 Span& span);
 };
 

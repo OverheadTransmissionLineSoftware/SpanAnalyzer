@@ -245,6 +245,7 @@ void CableFileManagerDialog::OnButtonEdit(wxCommandEvent& event) {
       units_,
       units::UnitStyle::kConsistent,
       units::UnitStyle::kDifferent,
+      true,
       cablefile.cable);
 
   // lets user edit cable file
@@ -273,6 +274,7 @@ void CableFileManagerDialog::OnButtonEdit(wxCommandEvent& event) {
       units_,
       units::UnitStyle::kDifferent,
       units::UnitStyle::kConsistent,
+      true,
       cablefile.cable);
 
   // saves cable to filesystem
@@ -347,10 +349,11 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
 
   // converts units to consistent unit style
   CableUnitConverter::ConvertUnitStyle(
-    units_,
-    units::UnitStyle::kDifferent,
-    units::UnitStyle::kConsistent,
-    cablefile.cable);
+      units_,
+      units::UnitStyle::kDifferent,
+      units::UnitStyle::kConsistent,
+      true,
+      cablefile.cable);
 
   // gets filepath to save cable
   wxFileDialog dialog_file(this, "Save Cable File", "", ".cable",
