@@ -53,16 +53,16 @@ bool SpanAnalyzerDocXmlHandler::ParseNode(
   }
 
   // gets version attribute
-  wxString version;
-  if (root->GetAttribute("version", &version) == false) {
+  const int kVersion = Version(root);
+  if (kVersion == -1) {
     message = FileAndLineNumber(filepath, root) +
-              " Version attribute is missing. Aborting node parse.";
+              " Version attribute is missing or invalid. Aborting node parse.";
     wxLogError(message);
     return false;
   }
 
   // sends to proper parsing function
-  if (version == "1") {
+  if (kVersion == 1) {
     return ParseNodeV1(root, filepath, cablefiles, weathercases, doc);
   } else {
     message = FileAndLineNumber(filepath, root) +
