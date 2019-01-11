@@ -4,18 +4,41 @@
 #include "spananalyzer/span_unit_converter.h"
 
 #include "appcommon/units/line_cable_unit_converter.h"
+#include "wx/wx.h"
 
-void SpanUnitConverter::ConvertUnitStyle(
+bool SpanUnitConverter::ConvertUnitStyleToConsistent(
+    const int& version,
     const units::UnitSystem& system,
-    const units::UnitStyle& style_from,
-    const units::UnitStyle& style_to,
+    const bool& is_recursive,
+    Span& span) {
+  bool status = true;
+
+  // sends to proper converter function
+  if (version == 0) {
+    // points to latest converter version
+    ConvertUnitStyleToConsistentV1(system, is_recursive, span);
+  } else if (version == 1) {
+    ConvertUnitStyleToConsistentV1(system, is_recursive, span);
+  } else {
+    wxString message = " Invalid version number. Aborting conversion.";
+    wxLogError(message);
+    status = false;
+  }
+
+  return status;
+}
+
+void SpanUnitConverter::ConvertUnitStyleToDifferent(
+    const units::UnitSystem& system,
     const bool& is_recursive,
     Span& span) {
   // triggers member variable converters
   if (is_recursive == true) {
     // converts line cable
-    LineCableUnitConverter::ConvertUnitStyle(system, style_from, style_to,
-                                             is_recursive, span.linecable);
+    LineCableUnitConverter::ConvertUnitStyleToDifferent(
+        system,
+        is_recursive,
+        span.linecable);
   }
 }
 
@@ -56,5 +79,20 @@ void SpanUnitConverter::ConvertUnitSystem(
     // converts line cable
     LineCableUnitConverter::ConvertUnitSystem(system_from, system_to,
                                               is_recursive, span.linecable);
+  }
+}
+
+void SpanUnitConverter::ConvertUnitStyleToConsistentV1(
+    const units::UnitSystem& system,
+    const bool& is_recursive,
+    Span& span) {
+  // triggers member variable converters
+  if (is_recursive == true) {
+    // converts line cable
+    LineCableUnitConverter::ConvertUnitStyleToConsistent(
+        0,
+        system,
+        is_recursive,
+        span.linecable);
   }
 }

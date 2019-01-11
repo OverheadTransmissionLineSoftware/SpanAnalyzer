@@ -188,10 +188,9 @@ void WeatherLoadCaseManagerDialog::OnButtonAdd(wxCommandEvent& event) {
   wxBusyCursor cursor;
 
   // converts weathercase to consistent unit style
-  WeatherLoadCaseUnitConverter::ConvertUnitStyle(
+  WeatherLoadCaseUnitConverter::ConvertUnitStyleToConsistent(
+      0,
       *units_,
-      units::UnitStyle::kDifferent,
-      units::UnitStyle::kConsistent,
       weathercase);
 
   // adds weathercase to set
@@ -299,10 +298,9 @@ void WeatherLoadCaseManagerDialog::OnListBoxDoubleClick(wxCommandEvent& event) {
   auto iter_weathercase = std::next(weathercases_modified_.begin(),
                                     index_selected_);
   WeatherLoadCase* weathercase = *iter_weathercase;
-  WeatherLoadCaseUnitConverter::ConvertUnitStyle(*units_,
-                                                 units::UnitStyle::kConsistent,
-                                                 units::UnitStyle::kDifferent,
-                                                 *weathercase);
+  WeatherLoadCaseUnitConverter::ConvertUnitStyleToDifferent(
+      *units_,
+      *weathercase);
 
   // lets user edit weathercase
   // ensures that the weathercase name is unique
@@ -326,10 +324,9 @@ void WeatherLoadCaseManagerDialog::OnListBoxDoubleClick(wxCommandEvent& event) {
   wxBusyCursor cursor;
 
   // converts weathercase to consistent unit style
-  WeatherLoadCaseUnitConverter::ConvertUnitStyle(
+  WeatherLoadCaseUnitConverter::ConvertUnitStyleToConsistent(
+      0,
       *units_,
-      units::UnitStyle::kDifferent,
-      units::UnitStyle::kConsistent,
       *weathercase);
 
   // saves weathercase to modified cases

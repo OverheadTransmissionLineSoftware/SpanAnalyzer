@@ -268,12 +268,10 @@ void EditPane::EditSpan(const wxTreeItemId& id) {
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
   Span span = *(data->iter());
 
-  // converts span to different unit style
-  SpanUnitConverter::ConvertUnitStyle(wxGetApp().config()->units,
-                                      units::UnitStyle::kConsistent,
-                                      units::UnitStyle::kDifferent,
-                                      true,
-                                      span);
+  // converts span to 'different' unit style
+  SpanUnitConverter::ConvertUnitStyleToDifferent(wxGetApp().config()->units,
+                                                 true,
+                                                 span);
 
   // gets referenced objects and makes sure that they exist
   const std::list<CableFile*>& cablefiles = wxGetApp().data()->cablefiles;
@@ -303,12 +301,11 @@ void EditPane::EditSpan(const wxTreeItemId& id) {
 
   wxLogVerbose("Editing span.");
 
-  // converts span to consistent unit style
-  SpanUnitConverter::ConvertUnitStyle(wxGetApp().config()->units,
-                                      units::UnitStyle::kDifferent,
-                                      units::UnitStyle::kConsistent,
-                                      true,
-                                      span);
+  // converts span to 'consistent' unit style
+  SpanUnitConverter::ConvertUnitStyleToConsistent(0,
+                                                  wxGetApp().config()->units,
+                                                  true,
+                                                  span);
 
   // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());

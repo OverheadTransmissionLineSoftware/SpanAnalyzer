@@ -35,10 +35,16 @@ void SpanAnalyzerDoc::ConvertUnitStyle(const units::UnitSystem& system,
   }
 
   // converts spans
-  for (auto it = spans_.begin(); it != spans_.end(); it++) {
-    Span& span = *it;
-    SpanUnitConverter::ConvertUnitStyle(system, style_from, style_to,
-                                        true, span);
+  if (style_to == units::UnitStyle::kConsistent) {
+    for (auto it = spans_.begin(); it != spans_.end(); it++) {
+      Span& span = *it;
+      SpanUnitConverter::ConvertUnitStyleToConsistent(0, system, true, span);
+    }
+  } else if (style_to == units::UnitStyle::kDifferent) {
+    for (auto it = spans_.begin(); it != spans_.end(); it++) {
+      Span& span = *it;
+      SpanUnitConverter::ConvertUnitStyleToDifferent(system, true, span);
+    }
   }
 
   // clears commands in the processor

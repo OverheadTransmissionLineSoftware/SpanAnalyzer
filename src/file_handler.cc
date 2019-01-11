@@ -80,10 +80,10 @@ int FileHandler::LoadAppData(const std::string& filepath,
   for (auto iter = data.weathercases.begin();
        iter != data.weathercases.end(); iter++) {
     WeatherLoadCase* weathercase = *iter;
-    WeatherLoadCaseUnitConverter::ConvertUnitStyle(
+    const int version = CableXmlHandler::Version(root);
+    WeatherLoadCaseUnitConverter::ConvertUnitStyleToConsistent(
+        version,
         units_file,
-        units::UnitStyle::kDifferent,
-        units::UnitStyle::kConsistent,
         *weathercase);
   }
 
@@ -167,10 +167,10 @@ int FileHandler::LoadCable(const std::string& filepath,
   const bool status_node = CableXmlHandler::ParseNode(root, filepath, cable);
 
   // converts units to consistent style
-  CableUnitConverter::ConvertUnitStyle(
+  const int version = CableXmlHandler::Version(root);
+  CableUnitConverter::ConvertUnitStyleToConsistent(
+      version,
       units_file,
-      units::UnitStyle::kDifferent,
-      units::UnitStyle::kConsistent,
       true,
       cable);
 
@@ -292,14 +292,12 @@ void FileHandler::SaveAppData(const std::string& filepath,
   // cables are stored in individual files, and are not included in the app
   // data file
 
-  // converts weathercases to different unit style
+  // converts weathercases to 'different' unit style
   for (auto iter = data.weathercases.begin();
         iter != data.weathercases.end(); iter++) {
     WeatherLoadCase* weathercase = *iter;
-    WeatherLoadCaseUnitConverter::ConvertUnitStyle(
+    WeatherLoadCaseUnitConverter::ConvertUnitStyleToDifferent(
         units,
-        units::UnitStyle::kConsistent,
-        units::UnitStyle::kDifferent,
         *weathercase);
   }
 
@@ -327,14 +325,13 @@ void FileHandler::SaveAppData(const std::string& filepath,
     wxLogError("File didn't save");
   }
 
-  // converts weathercases to different unit style
+  // converts weathercases to 'consistent' unit style
   for (auto iter = data.weathercases.begin();
         iter != data.weathercases.end(); iter++) {
     WeatherLoadCase* weathercase = *iter;
-    WeatherLoadCaseUnitConverter::ConvertUnitStyle(
+    WeatherLoadCaseUnitConverter::ConvertUnitStyleToConsistent(
+        0,
         units,
-        units::UnitStyle::kDifferent,
-        units::UnitStyle::kConsistent,
         *weathercase);
   }
 
@@ -351,11 +348,10 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
 
   // creates a copy of the cable and converts to different unit style
   Cable cable_converted = cable;
-  CableUnitConverter::ConvertUnitStyle(units,
-                                       units::UnitStyle::kConsistent,
-                                       units::UnitStyle::kDifferent,
-                                       true,
-                                       cable_converted);
+  CableUnitConverter::ConvertUnitStyleToDifferent(
+      units,
+      true,
+      cable_converted);
 
   // generates an xml node
   wxXmlNode* root = CableXmlHandler::CreateNode(cable_converted, "", units);

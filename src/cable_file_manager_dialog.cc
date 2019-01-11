@@ -241,10 +241,8 @@ void CableFileManagerDialog::OnButtonEdit(wxCommandEvent& event) {
   CableFile cablefile = **iter;
 
   // converts units to different unit style
-  CableUnitConverter::ConvertUnitStyle(
+  CableUnitConverter::ConvertUnitStyleToDifferent(
       units_,
-      units::UnitStyle::kConsistent,
-      units::UnitStyle::kDifferent,
       true,
       cablefile.cable);
 
@@ -270,10 +268,9 @@ void CableFileManagerDialog::OnButtonEdit(wxCommandEvent& event) {
   wxBusyCursor cursor;
 
   // converts units to consistent unit style
-  CableUnitConverter::ConvertUnitStyle(
+  CableUnitConverter::ConvertUnitStyleToConsistent(
+      0,
       units_,
-      units::UnitStyle::kDifferent,
-      units::UnitStyle::kConsistent,
       true,
       cablefile.cable);
 
@@ -348,10 +345,9 @@ void CableFileManagerDialog::OnButtonNew(wxCommandEvent& event) {
   wxBusyCursor cursor;
 
   // converts units to consistent unit style
-  CableUnitConverter::ConvertUnitStyle(
+  CableUnitConverter::ConvertUnitStyleToConsistent(
+      0,
       units_,
-      units::UnitStyle::kDifferent,
-      units::UnitStyle::kConsistent,
       true,
       cablefile.cable);
 
