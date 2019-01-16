@@ -73,19 +73,9 @@ int FileHandler::LoadAppData(const std::string& filepath,
   }
 
   // parses the xml node to populate data object
+  // data is converted to 'consistent' units while being parsed
   const bool status_node = SpanAnalyzerDataXmlHandler::ParseNode(
       root, filepath, units_file, data);
-
-  // converts weathercases to consistent unit style
-  for (auto iter = data.weathercases.begin();
-       iter != data.weathercases.end(); iter++) {
-    WeatherLoadCase* weathercase = *iter;
-    const int version = CableXmlHandler::Version(root);
-    WeatherLoadCaseUnitConverter::ConvertUnitStyleToConsistent(
-        version,
-        units_file,
-        *weathercase);
-  }
 
   // converts unit systems if the file doesn't match applicaton config
   if (units_file != wxGetApp().config()->units) {
@@ -164,12 +154,10 @@ int FileHandler::LoadCable(const std::string& filepath,
   }
 
   // parses the xml node to populate cable object
-  const bool status_node = CableXmlHandler::ParseNode(root, filepath, cable);
-
-  // converts units to consistent style
-  const int version = CableXmlHandler::Version(root);
-  CableUnitConverter::ConvertUnitStyleToConsistent(
-      version,
+  // cable is converted to 'consistent' units while being parsed
+  const bool status_node = CableXmlHandler::ParseNode(
+      root,
+      filepath,
       units_file,
       true,
       cable);

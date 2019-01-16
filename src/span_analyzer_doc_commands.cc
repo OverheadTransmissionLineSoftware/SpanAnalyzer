@@ -38,6 +38,8 @@ bool SpanCommand::CreateSpanFromXml(const wxXmlNode* node, Span& span) {
 
   // parses node into span
   const bool status_node = SpanXmlHandler::ParseNode(node, "",
+                                                     units::UnitSystem::kNull,
+                                                     false,
                                                      &data->cablefiles,
                                                      &data->weathercases,
                                                      span);

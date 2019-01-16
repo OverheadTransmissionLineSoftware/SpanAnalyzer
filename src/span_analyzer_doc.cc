@@ -249,7 +249,7 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
       wxGetApp().data()->cablefiles;
 
   const bool status_node = SpanAnalyzerDocXmlHandler::ParseNode(
-      root, filename, &cablefiles, &weathercases, *this);
+      root, filename, units_file, true, &cablefiles, &weathercases, *this);
   if (status_node == false) {
     // notifies user of error
     message = GetFilename() + "  --  "

@@ -167,6 +167,8 @@ bool SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
         const bool status_node = WeatherLoadCaseXmlHandler::ParseNode(
             sub_node,
             filepath,
+            units,
+            true,
             *weathercase);
         if (status_node == false) {
           status = false;
