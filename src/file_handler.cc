@@ -290,7 +290,8 @@ void FileHandler::SaveAppData(const std::string& filepath,
   }
 
   // generates an xml node
-  wxXmlNode* root = SpanAnalyzerDataXmlHandler::CreateNode(data, units);
+  wxXmlNode* root = SpanAnalyzerDataXmlHandler::CreateNode(
+      data, units, units::UnitStyle::kDifferent);
 
   // gets the units
   if (units == units::UnitSystem::kImperial) {
@@ -342,7 +343,8 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
       cable_converted);
 
   // generates an xml node
-  wxXmlNode* root = CableXmlHandler::CreateNode(cable_converted, "", units);
+  wxXmlNode* root = CableXmlHandler::CreateNode(cable_converted, "", units,
+                                                units::UnitStyle::kDifferent);
 
   // gets the units and adds attribute
   if (units == units::UnitSystem::kImperial) {

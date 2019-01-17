@@ -25,17 +25,20 @@
 /// \par UNIT ATTRIBUTES
 ///
 /// This class supports attributing the child XML nodes for various unit
-/// systems.
+/// systems and styles.
 class SpanAnalyzerDataXmlHandler : public XmlHandler {
  public:
   /// \brief Creates an XML node for a span analyzer data object.
   /// \param[in] data
   ///   The data.
-  /// \param[in] units
+  /// \param[in] system_units
   ///   The unit system, which is used for attributing child XML nodes.
+  /// \param[in] system_style
+  ///   The unit style, which is used for attributing child XML nodes.
   /// \return An XML node for the document.
   static wxXmlNode* CreateNode(const SpanAnalyzerData& data,
-                               const units::UnitSystem& units);
+                               const units::UnitSystem& system_units,
+                               const units::UnitStyle& style_units);
 
   /// \brief Parses an XML node and populates a data object.
   /// \param[in] root

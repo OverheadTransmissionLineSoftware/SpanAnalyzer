@@ -117,7 +117,8 @@ wxXmlNode* SpanCommand::SaveSpanToXml(const Span& span) {
 
   // gets unit system and returns xml node
   units::UnitSystem units = wxGetApp().config()->units;
-  return SpanXmlHandler::CreateNode(span_modified, "", units);;
+  return SpanXmlHandler::CreateNode(span_modified, "", units,
+                                    units::UnitStyle::kConsistent);;
 }
 
 bool SpanCommand::Undo() {

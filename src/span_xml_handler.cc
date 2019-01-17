@@ -11,7 +11,8 @@
 wxXmlNode* SpanXmlHandler::CreateNode(
     const Span& span,
     const std::string& name,
-    const units::UnitSystem& units) {
+    const units::UnitSystem& system_units,
+    const units::UnitStyle& style_units) {
   // variables used to create XML node
   wxXmlNode* node_root = nullptr;
   wxXmlNode* node_element = nullptr;
@@ -44,14 +45,15 @@ wxXmlNode* SpanXmlHandler::CreateNode(
   node_root->AddChild(node_element);
 
   // creates linecable node and adds to parent node
-  node_element = LineCableXmlHandler::CreateNode(span.linecable, "", units,
+  node_element = LineCableXmlHandler::CreateNode(span.linecable, "",
+                                                 system_units, style_units,
                                                  nullptr);
   node_root->AddChild(node_element);
 
   // creates catenary geometry node and adds to parent node
-  if (units == units::UnitSystem::kImperial) {
+  if (system_units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "ft");
-  } else if (units == units::UnitSystem::kMetric) {
+  } else if (system_units == units::UnitSystem::kMetric) {
     attribute = wxXmlAttribute("units", "m");
   }
   node_element = Vector3dXmlHandler::CreateNode(span.spacing_attachments,

@@ -11,7 +11,8 @@
 
 wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
     const SpanAnalyzerData& data,
-    const units::UnitSystem& units) {
+    const units::UnitSystem& system_units,
+    const units::UnitStyle& style_units) {
   // variables used to create XML node
   wxXmlNode* node_root = nullptr;
   wxXmlNode* node_element = nullptr;
@@ -46,7 +47,8 @@ wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
        iter != data.weathercases.cend(); iter++) {
     const WeatherLoadCase* weathercase = *iter;
     wxXmlNode* sub_node =
-        WeatherLoadCaseXmlHandler::CreateNode(*weathercase, "", units);
+        WeatherLoadCaseXmlHandler::CreateNode(*weathercase, "", system_units,
+                                              style_units);
     node_element->AddChild(sub_node);
   }
 

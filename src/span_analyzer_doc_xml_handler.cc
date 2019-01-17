@@ -28,7 +28,8 @@ wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
     const Span& span = *iter;
 
     // creates span node and adds to root
-    node_element->AddChild(SpanXmlHandler::CreateNode(span, "", units));
+    node_element->AddChild(SpanXmlHandler::CreateNode(
+        span, "", units, units::UnitStyle::kDifferent));
   }
   node_root->AddChild(node_element);
 
