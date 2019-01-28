@@ -44,7 +44,7 @@ build-release/*
 # doxygen generated files #
 ###########################
 *.log
-docs/html/*
+docs/doxygen/html/*
 
 # oclint generated files #
 ##########################
