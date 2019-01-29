@@ -1,65 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cable version="1" units="Imperial">
-  <name>ACSR Drake</name>
-  <area_physical units="in^2">0.7264</area_physical>
-  <diameter units="in">1.108</diameter>
-  <weight_unit units="lbs/ft">1.094</weight_unit>
-  <strength_rated units="lbs">31500</strength_rated>
-  <temperature_properties_components units="deg F">70</temperature_properties_components>
-  <absorptivity units="">0.5</absorptivity>
-  <emissivity units="">0.5</emissivity>
-  <resistances_ac>
-    <resistance_point>
-      <resistance units="ohm/mi">0.1166</resistance>
-      <temperature units="deg F">77</temperature>
-    </resistance_point>
-    <resistance_point>
-      <resistance units="ohm/mi">0.139</resistance>
-      <temperature units="deg F">167</temperature>
-    </resistance_point>
-  </resistances_ac>
-  <cable_component version="2" name="shell">
-    <capacity_heat units="W-s/ft-degF">180.2</capacity_heat>
-    <coefficient_expansion_linear_thermal units="/100degF">0.00128</coefficient_expansion_linear_thermal>
-    <modulus_compression_elastic units="lbs/in^2/100">0</modulus_compression_elastic>
-    <modulus_tension_elastic units="lbs/in^2/100">64000</modulus_tension_elastic>
-    <coefficients name="stress-strain">
-      <coefficient units="lbs/in^2/100">-1213</coefficient>
-      <coefficient units="lbs/in^2/100">44308.1</coefficient>
-      <coefficient units="lbs/in^2/100">-14004.4</coefficient>
-      <coefficient units="lbs/in^2/100">-37618</coefficient>
-      <coefficient units="lbs/in^2/100">30676</coefficient>
-    </coefficients>
-    <limit_polynomial_stress-strain units="lbs/in^2/100">146.6</limit_polynomial_stress-strain>
-    <coefficients name="creep">
-      <coefficient units="lbs/in^2/100">-544.8</coefficient>
-      <coefficient units="lbs/in^2/100">21426.8</coefficient>
-      <coefficient units="lbs/in^2/100">-18842.2</coefficient>
-      <coefficient units="lbs/in^2/100">5495</coefficient>
-      <coefficient units="lbs/in^2/100">0</coefficient>
-    </coefficients>
-    <limit_polynomial_creep units="lbs/in^2/100">146.6</limit_polynomial_creep>
-  </cable_component>
-  <cable_component version="2" name="core">
-    <capacity_heat units="W-s/ft-degF">41.3</capacity_heat>
-    <coefficient_expansion_linear_thermal units="/100degF">0.00064</coefficient_expansion_linear_thermal>
-    <modulus_compression_elastic units="lbs/in^2/100">0</modulus_compression_elastic>
-    <modulus_tension_elastic units="lbs/in^2/100">37000</modulus_tension_elastic>
-    <coefficients name="stress-strain">
-      <coefficient units="lbs/in^2/100">-69.3</coefficient>
-      <coefficient units="lbs/in^2/100">38629</coefficient>
-      <coefficient units="lbs/in^2/100">3998.1</coefficient>
-      <coefficient units="lbs/in^2/100">-45713</coefficient>
-      <coefficient units="lbs/in^2/100">27892</coefficient>
-    </coefficients>
-    <limit_polynomial_stress-strain units="lbs/in^2/100">162.7</limit_polynomial_stress-strain>
-    <coefficients name="creep">
-      <coefficient units="lbs/in^2/100">47.1</coefficient>
-      <coefficient units="lbs/in^2/100">36211.3</coefficient>
-      <coefficient units="lbs/in^2/100">12201.4</coefficient>
-      <coefficient units="lbs/in^2/100">-72392</coefficient>
-      <coefficient units="lbs/in^2/100">46338</coefficient>
-    </coefficients>
-    <limit_polynomial_creep units="lbs/in^2/100">162.7</limit_polynomial_creep>
-  </cable_component>
-</cable>
+<cable_file version="1" units="Imperial">
+  <cable version="1">
+    <name>ACSR Drake</name>
+    <area_physical units="in^2">0.7264</area_physical>
+    <diameter units="in">1.108</diameter>
+    <weight_unit units="lbs/ft">1.094</weight_unit>
+    <strength_rated units="lbs">31500</strength_rated>
+    <temperature_properties_components units="deg F">70</temperature_properties_components>
+    <absorptivity units="">0.5</absorptivity>
+    <emissivity units="">0.5</emissivity>
+    <resistances_ac>
+      <resistance_point>
+        <resistance units="ohm/mi">0.1166</resistance>
+        <temperature units="deg F">77</temperature>
+      </resistance_point>
+      <resistance_point>
+        <resistance units="ohm/mi">0.139</resistance>
+        <temperature units="deg F">167</temperature>
+      </resistance_point>
+    </resistances_ac>
+    <cable_component version="2" name="shell">
+      <capacity_heat units="W-s/ft-degF">180.2</capacity_heat>
+      <coefficient_expansion_linear_thermal units="/100degF">0.00128</coefficient_expansion_linear_thermal>
+      <modulus_compression_elastic units="lbs/in^2/100">0</modulus_compression_elastic>
+      <modulus_tension_elastic units="lbs/in^2/100">64000</modulus_tension_elastic>
+      <coefficients name="stress-strain">
+        <coefficient units="lbs/in^2/100">-1213</coefficient>
+        <coefficient units="lbs/in^2/100">44308.1</coefficient>
+        <coefficient units="lbs/in^2/100">-14004.4</coefficient>
+        <coefficient units="lbs/in^2/100">-37618</coefficient>
+        <coefficient units="lbs/in^2/100">30676</coefficient>
+      </coefficients>
+      <limit_polynomial_stress-strain units="lbs/in^2/100">146.6</limit_polynomial_stress-strain>
+      <coefficients name="creep">
+        <coefficient units="lbs/in^2/100">-544.8</coefficient>
+        <coefficient units="lbs/in^2/100">21426.8</coefficient>
+        <coefficient units="lbs/in^2/100">-18842.2</coefficient>
+        <coefficient units="lbs/in^2/100">5495</coefficient>
+        <coefficient units="lbs/in^2/100">0</coefficient>
+      </coefficients>
+      <limit_polynomial_creep units="lbs/in^2/100">146.6</limit_polynomial_creep>
+    </cable_component>
+    <cable_component version="2" name="core">
+      <capacity_heat units="W-s/ft-degF">41.3</capacity_heat>
+      <coefficient_expansion_linear_thermal units="/100degF">0.00064</coefficient_expansion_linear_thermal>
+      <modulus_compression_elastic units="lbs/in^2/100">0</modulus_compression_elastic>
+      <modulus_tension_elastic units="lbs/in^2/100">37000</modulus_tension_elastic>
+      <coefficients name="stress-strain">
+        <coefficient units="lbs/in^2/100">-69.3</coefficient>
+        <coefficient units="lbs/in^2/100">38629</coefficient>
+        <coefficient units="lbs/in^2/100">3998.1</coefficient>
+        <coefficient units="lbs/in^2/100">-45713</coefficient>
+        <coefficient units="lbs/in^2/100">27892</coefficient>
+      </coefficients>
+      <limit_polynomial_stress-strain units="lbs/in^2/100">162.7</limit_polynomial_stress-strain>
+      <coefficients name="creep">
+        <coefficient units="lbs/in^2/100">47.1</coefficient>
+        <coefficient units="lbs/in^2/100">36211.3</coefficient>
+        <coefficient units="lbs/in^2/100">12201.4</coefficient>
+        <coefficient units="lbs/in^2/100">-72392</coefficient>
+        <coefficient units="lbs/in^2/100">46338</coefficient>
+      </coefficients>
+      <limit_polynomial_creep units="lbs/in^2/100">162.7</limit_polynomial_creep>
+    </cable_component>
+  </cable>
+</cable_file>

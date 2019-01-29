@@ -114,6 +114,7 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <ClCompile Include="..\..\src\analysis_filter_manager_dialog.cc" />
     <ClCompile Include="..\..\src\analysis_filter_xml_handler.cc" />
     <ClCompile Include="..\..\src\cable_file_manager_dialog.cc" />
+    <ClCompile Include="..\..\src\cable_file_xml_handler.cc" />
     <ClCompile Include="..\..\src\cable_plot_options_dialog.cc" />
     <ClCompile Include="..\..\src\cable_plot_pane.cc" />
     <ClCompile Include="..\..\src\edit_pane.cc" />
@@ -235,6 +236,7 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <ClInclude Include="..\..\include\spananalyzer\analysis_filter_manager_dialog.h" />
     <ClInclude Include="..\..\include\spananalyzer\analysis_filter_xml_handler.h" />
     <ClInclude Include="..\..\include\spananalyzer\cable_file_manager_dialog.h" />
+    <ClInclude Include="..\..\include\spananalyzer\cable_file_xml_handler.h" />
     <ClInclude Include="..\..\include\spananalyzer\cable_plot_options_dialog.h" />
     <ClInclude Include="..\..\include\spananalyzer\cable_plot_pane.h" />
     <ClInclude Include="..\..\include\spananalyzer\edit_pane.h" />

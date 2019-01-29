@@ -7,11 +7,11 @@
 #include "appcommon/units/weather_load_case_unit_converter.h"
 #include "appcommon/widgets/error_message_dialog.h"
 #include "appcommon/widgets/status_bar_log.h"
-#include "appcommon/xml/cable_xml_handler.h"
 #include "wx/dir.h"
 #include "wx/filename.h"
 #include "wx/xml/xml.h"
 
+#include "spananalyzer/cable_file_xml_handler.h"
 #include "spananalyzer/span_analyzer_app.h"
 #include "spananalyzer/span_analyzer_config_xml_handler.h"
 #include "spananalyzer/span_analyzer_data_xml_handler.h"
@@ -125,7 +125,7 @@ int FileHandler::LoadCable(const std::string& filepath,
 
   // checks for valid xml root
   const wxXmlNode* root = doc.GetRoot();
-  if (root->GetName() != "cable") {
+  if (root->GetName() != "cable_file") {
     message = filepath + "  --  "
               "Cable file contains an invalid xml root. Aborting.";
     wxLogError(message.c_str());
@@ -155,7 +155,7 @@ int FileHandler::LoadCable(const std::string& filepath,
 
   // parses the xml node to populate cable object
   // cable is converted to 'consistent' units while being parsed
-  const bool status_node = CableXmlHandler::ParseNode(
+  const bool status_node = CableFileXmlHandler::ParseNode(
       root,
       filepath,
       units_file,
@@ -343,15 +343,8 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
       cable_converted);
 
   // generates an xml node
-  wxXmlNode* root = CableXmlHandler::CreateNode(cable_converted, "", units,
-                                                units::UnitStyle::kDifferent);
-
-  // gets the units and adds attribute
-  if (units == units::UnitSystem::kImperial) {
-    root->AddAttribute("units", "Imperial");
-  } else if (units == units::UnitSystem::kMetric) {
-    root->AddAttribute("units", "Metric");
-  }
+  wxXmlNode* root = CableFileXmlHandler::CreateNode(
+      cable_converted, "", units, units::UnitStyle::kDifferent);
 
   // creates any directories that are needed
   wxFileName filename(filepath);

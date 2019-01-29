@@ -219,6 +219,9 @@
     <ClCompile Include="..\..\external\AppCommon\src\widgets\log_pane.cc">
       <Filter>Common Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\cable_file_xml_handler.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\test\test.spananalyzer">
@@ -570,6 +573,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\spananalyzer\weather_load_case_manager_dialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\spananalyzer\cable_file_xml_handler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

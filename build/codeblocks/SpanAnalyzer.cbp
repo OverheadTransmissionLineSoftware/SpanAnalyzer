@@ -284,6 +284,9 @@
 		<Unit filename="../../include/spananalyzer/cable_file_manager_dialog.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
+		<Unit filename="../../include/spananalyzer/cable_file_xml_handler.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
 		<Unit filename="../../include/spananalyzer/cable_plot_options_dialog.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
@@ -512,6 +515,9 @@
 			<Option virtualFolder="Source Files/" />
 		</Unit>
 		<Unit filename="../../src/cable_file_manager_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/cable_file_xml_handler.cc">
 			<Option virtualFolder="Source Files/" />
 		</Unit>
 		<Unit filename="../../src/cable_plot_options_dialog.cc">
