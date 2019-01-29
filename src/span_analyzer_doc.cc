@@ -412,16 +412,6 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
   // generates an xml node
   wxXmlNode* root = SpanAnalyzerDocXmlHandler::CreateNode(*this, units);
 
-  // adds unit attribute to xml node
-  // this attribute should be added at this step vs the xml handler because
-  // the attribute describes all values in the file, and is consistent
-  // with how the FileHandler functions work
-  if (units == units::UnitSystem::kImperial) {
-    root->AddAttribute("units", "Imperial");
-  } else if (units == units::UnitSystem::kMetric) {
-    root->AddAttribute("units", "Metric");
-  }
-
   // creates an XML document and saves to stream
   wxXmlDocument doc_xml;
   doc_xml.SetRoot(root);

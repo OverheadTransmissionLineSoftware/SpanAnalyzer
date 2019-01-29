@@ -23,6 +23,12 @@ wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
   node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "span_analyzer_data");
   node_root->AddAttribute("version", "1");
 
+  if (system_units == units::UnitSystem::kImperial) {
+    node_root->AddAttribute("units", "Imperial");
+  } else if (system_units == units::UnitSystem::kMetric) {
+    node_root->AddAttribute("units", "Metric");
+  }
+
   // adds child nodes for struct parameters
 
   // creates cable directory node

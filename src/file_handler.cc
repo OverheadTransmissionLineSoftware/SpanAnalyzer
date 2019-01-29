@@ -293,13 +293,6 @@ void FileHandler::SaveAppData(const std::string& filepath,
   wxXmlNode* root = SpanAnalyzerDataXmlHandler::CreateNode(
       data, units, units::UnitStyle::kDifferent);
 
-  // gets the units
-  if (units == units::UnitSystem::kImperial) {
-    root->AddAttribute("units", "Imperial");
-  } else if (units == units::UnitSystem::kMetric) {
-    root->AddAttribute("units", "Metric");
-  }
-
   // creates any directories that are needed
   wxFileName filename(filepath);
   if (filename.DirExists() == false) {

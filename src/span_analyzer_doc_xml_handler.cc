@@ -18,6 +18,12 @@ wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
   node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "span_analyzer_doc");
   node_root->AddAttribute("version", "1");
 
+  if (units == units::UnitSystem::kImperial) {
+    node_root->AddAttribute("units", "Imperial");
+  } else if (units == units::UnitSystem::kMetric) {
+    node_root->AddAttribute("units", "Metric");
+  }
+
   // adds child nodes for parameters
 
   // creates spans node
