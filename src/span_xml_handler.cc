@@ -50,7 +50,7 @@ wxXmlNode* SpanXmlHandler::CreateNode(
                                                  nullptr);
   node_root->AddChild(node_element);
 
-  // creates catenary geometry node and adds to parent node
+  // creates spacing-attachments geometry node and adds to parent node
   if (system_units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "ft");
   } else if (system_units == units::UnitSystem::kMetric) {
@@ -59,7 +59,8 @@ wxXmlNode* SpanXmlHandler::CreateNode(
   node_element = Vector3dXmlHandler::CreateNode(span.spacing_attachments,
                                                 "spacing_attachments",
                                                 attribute,
-                                                6);
+                                                3,
+                                                true);
   node_root->AddChild(node_element);
 
   // returns node

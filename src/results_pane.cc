@@ -410,22 +410,22 @@ void ResultsPane::UpdateReportDataCatenaryCurve(
 
     // adds sag
     value = catenary.Sag();
-    str = helper::DoubleToString(value, 1, true);
+    str = helper::DoubleToString(value, 2, true);
     row.values.push_back(str);
 
     // adds L
     value = catenary.Length();
-    str = helper::DoubleToString(value, 2, true);
+    str = helper::DoubleToString(value, 3, true);
     row.values.push_back(str);
 
     // adds Ls
     value = catenary.LengthSlack();
-    str = helper::DoubleToString(value, 2, true);
+    str = helper::DoubleToString(value, 3, true);
     row.values.push_back(str);
 
     // adds swing
     value = catenary.SwingAngle();
-    str = helper::DoubleToString(value, 1, true);
+    str = helper::DoubleToString(value, 2, true);
     row.values.push_back(str);
 
     // appends row to list
@@ -544,7 +544,7 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
 
     // adds A
     value = catenary.TangentAngleVertical(0, AxisDirectionType::kPositive);
-    str = helper::DoubleToString(value, 1, true);
+    str = helper::DoubleToString(value, 2, true);
     row.values.push_back(str);
 
     // adds blank
@@ -562,7 +562,7 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
 
     // adds A
     value = catenary.TangentAngleVertical(1, AxisDirectionType::kNegative);
-    str = helper::DoubleToString(value, 1, true);
+    str = helper::DoubleToString(value, 2, true);
     row.values.push_back(str);
 
     // appends row to list
@@ -646,12 +646,12 @@ void ResultsPane::UpdateReportDataLength(
 
     // adds Lu
     value = result->length_unloaded;
-    str = helper::DoubleToString(value, 2, true);
+    str = helper::DoubleToString(value, 3, true);
     row.values.push_back(str);
 
     // adds Ll
     value = catenary.Length();
-    str = helper::DoubleToString(value, 2, true);
+    str = helper::DoubleToString(value, 3, true);
     row.values.push_back(str);
 
     // appends row to list
