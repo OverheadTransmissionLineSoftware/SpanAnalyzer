@@ -15,6 +15,7 @@
 
 #include "spananalyzer/analysis_controller.h"
 #include "spananalyzer/span.h"
+#include "spananalyzer/span_analyzer_data.h"
 
 /// \par OVERVIEW
 ///
@@ -27,6 +28,7 @@ class UpdateHint : public wxObject {
     kAnalysisFilterGroupSelect,
     kAnalysisFilterSelect,
     kCablesEdit,
+    kConstraintsEdit,
     kPreferencesEdit,
     kSpansEdit,
     kViewSelect,
@@ -74,6 +76,11 @@ class UpdateHint : public wxObject {
 /// calculations and store the generated results for the selected span. The
 /// results can be accessed via public functions.
 ///
+/// \par CONSTRAINT FILTER GROUP
+///
+/// The document keeps track of the constraints that apply to the span being
+/// analyzed. A filter group is updated every time an analysis is run.
+///
 /// \par APPLICATION DATA
 ///
 /// There is application data that this document does not own. This data can be
@@ -114,6 +121,10 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return Success status.
   bool AppendSpan(const Span& span);
 
+  /// \brief Gets the cable constraints that apply to the active span.
+  /// \return The cable constraints for the active span.
+  std::list<const CableConstraint*> Constraints() const;
+
   /// \brief Converts the document between unit styles.
   /// \param[in] system
   ///   The unit system.
@@ -141,6 +152,10 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return Success status.
   /// This function may trigger an update if it matches the selected span.
   bool DeleteSpan(const int& index);
+
+  /// \brief Gets the filter group for the constraints.
+  /// \return The filter group for the constraints.
+  const AnalysisFilterGroup* FilterGroupConstraints() const;
 
   /// \brief Gets the index of the span.
   /// \param[in] span
@@ -269,9 +284,16 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \brief Updates the analysis controller with the activated span index.
   void SyncAnalysisController();
 
+  /// \brief Updates the constraint filter group.
+  void UpdateFilterGroupConstraints();
+
   /// \var controller_analysis_
   ///   The analysis controller, which generates sag-tension results.
   mutable AnalysisController controller_analysis_;
+
+  /// \var group_filters_constraint_
+  ///   The analysis filters for the applicable constraints.
+  mutable AnalysisFilterGroup group_filters_constraint_;
 
   /// \var hardware_
   ///   The hardware that the span connects to. This helps suppress validation

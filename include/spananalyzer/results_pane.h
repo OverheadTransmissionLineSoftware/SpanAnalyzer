@@ -22,6 +22,7 @@ class ResultsPane : public wxPanel {
   enum class ReportType {
     kCatenary,
     kCatenaryEndpoints,
+    kConstraint,
     kLength,
     kSagTension,
     kTensionDistribution,
@@ -59,6 +60,13 @@ class ResultsPane : public wxPanel {
   ///   The event.
   void OnListCtrlSelect(wxListEvent& event);
 
+  /// \brief Gets a list of filtered results.
+  /// \return The filtered results.
+  std::list<const SagTensionAnalysisResult*> Results();
+
+  /// \brief Toggles the filter group controls.
+  void ToggleFilterGroupControls();
+
   /// \brief Updates the filter group choice control.
   void UpdateFilterGroupChoice();
 
@@ -68,35 +76,25 @@ class ResultsPane : public wxPanel {
   /// \brief Updates the report data.
   void UpdateReportData();
 
+  /// \brief Updates the report data with constraint results.
+  void UpdateReportDataConstraint();
+
   /// \brief Updates the report data with catenary results.
-  /// \param[in] results
-  ///   The filtered results from the document.
-  void UpdateReportDataCatenaryCurve(
-      const std::list<const SagTensionAnalysisResult*>* results);
+  void UpdateReportDataCatenaryCurve();
 
   /// \brief Updates the report data with catenary endpoint results.
-  /// \param[in] results
-  ///   The filtered results from the document.
-  void UpdateReportDataCatenaryEndpoints(
-      const std::list<const SagTensionAnalysisResult*>* results);
+  void UpdateReportDataCatenaryEndpoints();
 
   /// \brief Updates the report data with length results.
-  /// \param[in] results
-  ///   The filtered results from the document.
-  void UpdateReportDataLength(
-      const std::list<const SagTensionAnalysisResult*>* results);
+  void UpdateReportDataLength();
 
   /// \brief Updates the report data with sag-tension results.
-  /// \param[in] results
-  ///   The filtered results from the document.
-  void UpdateReportDataSagTension(
-      const std::list<const SagTensionAnalysisResult*>* results);
+  void UpdateReportDataSagTension();
 
   /// \brief Updates the report data with tension distribution results.
   /// \param[in] results
   ///   The filtered results from the document.
-  void UpdateReportDataTensionDistribution(
-      const std::list<const SagTensionAnalysisResult*>* results);
+  void UpdateReportDataTensionDistribution();
 
   /// \var data_
   ///   The report data.

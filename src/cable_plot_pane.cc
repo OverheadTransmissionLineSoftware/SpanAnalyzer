@@ -97,6 +97,11 @@ void CablePlotPane::Update(wxObject* hint) {
     UpdatePlotRenderers();
     UpdatePlotScaling();
     view_->OnDraw(&dc_buf);
+  } else if (hint_update->type() == UpdateHint::Type::kConstraintsEdit) {
+    UpdatePlotDatasets();
+    UpdatePlotRenderers();
+    UpdatePlotScaling();
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == UpdateHint::Type::kPreferencesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();

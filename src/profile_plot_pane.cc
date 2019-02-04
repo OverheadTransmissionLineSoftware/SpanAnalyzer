@@ -95,6 +95,10 @@ void ProfilePlotPane::Update(wxObject* hint) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
     view_->OnDraw(&dc_buf);
+  } else if (hint_update->type() == UpdateHint::Type::kConstraintsEdit) {
+    UpdatePlotDatasets();
+    UpdatePlotRenderers();
+    view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == UpdateHint::Type::kPreferencesEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();

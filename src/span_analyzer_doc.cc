@@ -27,6 +27,31 @@ bool SpanAnalyzerDoc::AppendSpan(const Span& span) {
   return true;
 }
 
+std::list<const CableConstraint*> SpanAnalyzerDoc::Constraints() const {
+  std::list<const CableConstraint*> constraints_filtered;
+
+  // gets reference data
+  const std::list<CableConstraint>& constraints =
+      wxGetApp().data()->constraints;
+  const Span* span = SpanActivated();
+
+  if (span == nullptr) {
+    return constraints_filtered;
+  }
+
+  // searches for constraints that apply
+  for (auto iter = constraints.cbegin(); iter != constraints.cend(); iter++) {
+    const CableConstraint* constraint = &(*iter);
+
+    if ((constraint->note == "") ||
+        (constraint->note == span->linecable.cable()->name)) {
+      constraints_filtered.push_back(constraint);
+    }
+  }
+
+  return constraints_filtered;
+}
+
 void SpanAnalyzerDoc::ConvertUnitStyle(const units::UnitSystem& system,
                                        const units::UnitStyle& style_from,
                                        const units::UnitStyle& style_to) {
@@ -93,6 +118,10 @@ bool SpanAnalyzerDoc::DeleteSpan(const int& index) {
   SyncAnalysisController();
 
   return true;
+}
+
+const AnalysisFilterGroup* SpanAnalyzerDoc::FilterGroupConstraints() const {
+  return &group_filters_constraint_;
 }
 
 int SpanAnalyzerDoc::IndexSpan(const Span* span) {
@@ -293,6 +322,7 @@ bool SpanAnalyzerDoc::ModifySpan(const int& index, const Span& span) {
   // runs analysis if necessary
   if (index == index_activated_) {
     controller_analysis_.RunAnalysis();
+    UpdateFilterGroupConstraints();
   }
 
   return true;
@@ -371,6 +401,9 @@ bool SpanAnalyzerDoc::OnCreate(const wxString& path, long flags) {
 
   line_structure.set_station(1000);
   line_structures_.push_back(line_structure);
+
+  // initializes constraint filter group
+  group_filters_constraint_.name = "Constraint";
 
   // calls base class function
   return wxDocument::OnCreate(path, flags);
@@ -518,5 +551,23 @@ void SpanAnalyzerDoc::SyncAnalysisController() {
   if (span != controller_analysis_.span()) {
     controller_analysis_.set_span(span);
     controller_analysis_.RunAnalysis();
+    UpdateFilterGroupConstraints();
+  }
+}
+
+void SpanAnalyzerDoc::UpdateFilterGroupConstraints() {
+  group_filters_constraint_.filters.clear();
+
+  // gets constraints that apply to activated span
+  const std::list<const CableConstraint*> constraints = Constraints();
+
+  // creates an analysis filter group from the constraints
+  for (auto iter = constraints.cbegin(); iter != constraints.cend(); iter++) {
+    const CableConstraint* constraint = *iter;
+    AnalysisFilter filter;
+    filter.condition = constraint->condition;
+    filter.weathercase = constraint->case_weather;
+
+    group_filters_constraint_.filters.push_back(filter);
   }
 }

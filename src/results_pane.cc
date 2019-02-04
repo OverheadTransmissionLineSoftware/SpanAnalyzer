@@ -12,8 +12,8 @@
 #include "spananalyzer/span_analyzer_view.h"
 
 BEGIN_EVENT_TABLE(ResultsPane, wxPanel)
-  EVT_CHOICE(XRCID("choice_report"), ResultsPane::OnChoiceReport)
   EVT_CHOICE(XRCID("choice_filter_group"), ResultsPane::OnChoiceFilterGroup)
+  EVT_CHOICE(XRCID("choice_report"), ResultsPane::OnChoiceReport)
   EVT_LIST_ITEM_SELECTED(wxID_ANY, ResultsPane::OnListCtrlSelect)
 END_EVENT_TABLE()
 
@@ -28,6 +28,7 @@ ResultsPane::ResultsPane(wxWindow* parent, wxView* view) {
   type_report_ = ReportType::kSagTension;
 
   wxChoice* choice = XRCCTRL(*this, "choice_report", wxChoice);
+  choice->Append("Constraint");
   choice->Append("Sag-Tension");
   choice->Append("Tension Distribution");
   choice->Append("Catenary - Curve");
@@ -46,6 +47,11 @@ ResultsPane::ResultsPane(wxWindow* parent, wxView* view) {
   sizer->Add(table_, 1, wxEXPAND);
 
   this->Fit();
+
+  // sets an initial report to display
+  type_report_ = ReportType::kConstraint;
+  ToggleFilterGroupControls();
+  UpdateFilterGroupSelected();
 }
 
 ResultsPane::~ResultsPane() {
@@ -68,6 +74,9 @@ void ResultsPane::Update(wxObject* hint) {
   } else if (hint_update->type() == UpdateHint::Type::kAnalysisFilterSelect) {
     // do nothing
   } else if (hint_update->type() == UpdateHint::Type::kCablesEdit) {
+    UpdateReportData();
+    table_->Refresh();
+  } else if (hint_update->type() == UpdateHint::Type::kConstraintsEdit) {
     UpdateReportData();
     table_->Refresh();
   } else if (hint_update->type() == UpdateHint::Type::kPreferencesEdit) {
@@ -105,7 +114,9 @@ void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
   wxString str = choice->GetStringSelection();
 
   // updates report type
-  if (str == "Sag-Tension") {
+  if (str == "Constraint") {
+    type_report_ = ReportType::kConstraint;
+  } else if (str == "Sag-Tension") {
     type_report_ = ReportType::kSagTension;
   } else if (str == "Tension Distribution") {
     type_report_ = ReportType::kTensionDistribution;
@@ -118,6 +129,12 @@ void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
   } else {
     return;
   }
+
+  // toggles the filter choice
+  ToggleFilterGroupControls();
+
+  // updates the selected filter group
+  UpdateFilterGroupSelected();
 
   // this update only affects this pane, so a view update is not sent
   // updates the report data and table
@@ -184,6 +201,52 @@ void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
   view_->GetDocument()->UpdateAllViews(nullptr, &hint);
 }
 
+std::list<const SagTensionAnalysisResult*> ResultsPane::Results() {
+  // gets view display information
+  SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);
+  const AnalysisFilterGroup* group_filters = view->group_filters();
+
+  // gets filters
+  const std::list<AnalysisFilter>* filters = nullptr;
+  if (group_filters != nullptr) {
+    filters = &group_filters->filters;
+  }
+
+  // creates a list of results depending on filter
+  const SpanAnalyzerDoc* doc =
+      dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
+  std::list<const SagTensionAnalysisResult*> results;
+
+  if (filters != nullptr) {
+    for (auto iter = filters->cbegin(); iter != filters->cend(); iter++) {
+      const AnalysisFilter& filter = *iter;
+      const int index = view->IndexWeathercase(filter);
+      const SagTensionAnalysisResult* result = doc->Result(index,
+                                                           filter.condition);
+      if (result != nullptr) {
+        results.push_back(result);
+      }
+    }
+  }
+
+  return results;
+}
+
+void ResultsPane::ToggleFilterGroupControls() {
+  // gets controls
+  wxStaticText* text = XRCCTRL(*this, "statictext_filter_group", wxStaticText);
+  wxChoice* choice = XRCCTRL(*this, "choice_filter_group", wxChoice);
+
+  // disables/enables based on report type
+  if (type_report_ == ReportType::kConstraint) {
+    text->Hide();
+    choice->Hide();
+  } else {
+    text->Show();
+    choice->Show();
+  }
+}
+
 void ResultsPane::UpdateFilterGroupChoice() {
   // gets choice control
   wxChoice* choice = XRCCTRL(*this, "choice_filter_group", wxChoice);
@@ -216,20 +279,29 @@ void ResultsPane::UpdateFilterGroupSelected() {
   SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);
   view->set_group_filters(nullptr);
 
-  // searches the choice control to see if a filter group is selected
-  wxChoice* choice = XRCCTRL(*this, "choice_filter_group", wxChoice);
-  std::string str_selection = choice->GetStringSelection();
-
-  // gets filter groups from app data
-  const std::list<AnalysisFilterGroup>& groups_filter =
-       wxGetApp().data()->groups_filters;
+  // selects filter group based on report type
   const AnalysisFilterGroup* group = nullptr;
-  for (auto iter = groups_filter.cbegin(); iter != groups_filter.cend();
-       iter++) {
-    const AnalysisFilterGroup& group_temp = *iter;
-    if (group_temp.name == str_selection) {
-      group = &group_temp;
-      break;
+  if (type_report_ == ReportType::kConstraint) {
+    // gets filter group from the doc
+    const SpanAnalyzerDoc* doc =
+        dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
+    group = doc->FilterGroupConstraints();
+  } else {
+    // gets filter group from the app data
+    // searches the choice control to see if a filter group is selected
+    wxChoice* choice = XRCCTRL(*this, "choice_filter_group", wxChoice);
+    std::string str_selection = choice->GetStringSelection();
+
+    // gets filter groups from app data
+    const std::list<AnalysisFilterGroup>& groups_filter =
+         wxGetApp().data()->groups_filters;
+    for (auto iter = groups_filter.cbegin(); iter != groups_filter.cend();
+         iter++) {
+      const AnalysisFilterGroup& group_temp = *iter;
+      if (group_temp.name == str_selection) {
+        group = &group_temp;
+        break;
+      }
     }
   }
 
@@ -249,54 +321,171 @@ void ResultsPane::UpdateFilterGroupSelected() {
 void ResultsPane::UpdateReportData() {
   wxLogVerbose("Updating report table data.");
 
-  // gets view display information
-  SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);
-  const AnalysisFilterGroup* group_filters = view->group_filters();
-
-  // gets filters
-  const std::list<AnalysisFilter>* filters = nullptr;
-  if (group_filters != nullptr) {
-    filters = &group_filters->filters;
-  }
-
-  // creates a list of results depending on filter
-  const SpanAnalyzerDoc* doc =
-      dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
-  std::list<const SagTensionAnalysisResult*> results;
-
-  if (filters != nullptr) {
-    for (auto iter = filters->cbegin(); iter != filters->cend(); iter++) {
-      const AnalysisFilter& filter = *iter;
-      const int index = view->IndexWeathercase(filter);
-      const SagTensionAnalysisResult* result = doc->Result(index,
-                                                           filter.condition);
-      if (result != nullptr) {
-        results.push_back(result);
-      }
-    }
-  }
-
   // selects based on report type
   if (type_report_ == ReportType::kCatenary) {
-    UpdateReportDataCatenaryCurve(&results);
+    UpdateReportDataCatenaryCurve();
   } else if (type_report_ == ReportType::kCatenaryEndpoints) {
-    UpdateReportDataCatenaryEndpoints(&results);
+    UpdateReportDataCatenaryEndpoints();
+  } else if (type_report_ == ReportType::kConstraint) {
+    UpdateReportDataConstraint();
   } else if (type_report_ == ReportType::kLength) {
-    UpdateReportDataLength(&results);
+    UpdateReportDataLength();
   } else if (type_report_ == ReportType::kSagTension) {
-    UpdateReportDataSagTension(&results);
+    UpdateReportDataSagTension();
   } else if (type_report_ == ReportType::kTensionDistribution) {
-    UpdateReportDataTensionDistribution(&results);
+    UpdateReportDataTensionDistribution();
   }
 
   // resets view filter index if no data is present
-  if (results.empty() == true) {
+  if (data_.rows.empty() == true) {
+    SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);
     view->set_index_filter(-1);
   }
 }
 
-void ResultsPane::UpdateReportDataCatenaryCurve(
-    const std::list<const SagTensionAnalysisResult*>* results) {
+void ResultsPane::UpdateReportDataConstraint() {
+  // initializes data
+  data_.headers.clear();
+  data_.rows.clear();
+
+  // fills column headers
+  ReportColumnHeader header;
+  header.title = "Weathercase";
+  header.format = wxLIST_FORMAT_LEFT;
+  header.width = 200;
+  data_.headers.push_back(header);
+
+  header.title = "Condition";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Type";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Limit";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Actual";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  header.title = "Usage";
+  header.format = wxLIST_FORMAT_CENTER;
+  header.width = wxLIST_AUTOSIZE;
+  data_.headers.push_back(header);
+
+  // gets the selected span from the document
+  const SpanAnalyzerDoc* doc =
+      dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
+  const Span* span = doc->SpanActivated();
+
+  // gets filtered constraints
+  const std::list<const CableConstraint*>& constraints = doc->Constraints();
+
+  // gets filtered results
+  const std::list<const SagTensionAnalysisResult*>& results = Results();
+
+  // checks if results has any data
+  if (results.empty() == true) {
+    return;
+  }
+
+  // fills each row with data
+  const int kSize = constraints.size();
+  for (int i = 0; i < kSize; i++) {
+    // gets constraint
+    const CableConstraint* constraint = *std::next(constraints.cbegin(), i);
+
+    // gets result
+    const SagTensionAnalysisResult* result = *std::next(results.cbegin(), i);
+
+    // creates a report row, which will be filled out by each result
+    ReportRow row;
+
+    // gets the weathercase string
+    const std::string& str_weathercase = result->weathercase->description;
+
+    // gets condition string
+    std::string str_condition;
+    if (result->condition == CableConditionType::kCreep) {
+      str_condition = "Creep";
+    } else if (result->condition == CableConditionType::kInitial) {
+      str_condition = "Initial";
+    } else if (result->condition == CableConditionType::kLoad) {
+      str_condition = "Load";
+    }
+
+    // creates a catenary to calculate results
+    Catenary3d catenary;
+    catenary.set_spacing_endpoints(span->spacing_attachments);
+    catenary.set_tension_horizontal(result->tension_horizontal);
+    catenary.set_weight_unit(result->weight_unit);
+
+    double value;
+    std::string str;
+
+    // adds weathercase
+    row.values.push_back(str_weathercase);
+
+    // adds condition
+    row.values.push_back(str_condition);
+
+    // adds type
+    if (constraint->type_limit ==
+        CableConstraint::LimitType::kCatenaryConstant) {
+      row.values.push_back("H/w");
+    } else if (constraint->type_limit ==
+        CableConstraint::LimitType::kHorizontalTension) {
+      row.values.push_back("Horizontal");
+    } else if (constraint->type_limit == CableConstraint::LimitType::kLength) {
+      row.values.push_back("Length");
+    } else if (constraint->type_limit == CableConstraint::LimitType::kSag) {
+      row.values.push_back("Sag");
+    } else if (constraint->type_limit ==
+        CableConstraint::LimitType::kSupportTension) {
+      row.values.push_back("Support");
+    }
+
+    // adds limit
+    value = constraint->limit;
+    str = helper::DoubleToString(value, 2, true);
+    row.values.push_back(str);
+
+    // adds actual
+    if (constraint->type_limit ==CableConstraint::LimitType::kCatenaryConstant) {
+      value = catenary.Constant();
+    } else if (constraint->type_limit ==
+        CableConstraint::LimitType::kHorizontalTension) {
+      value = catenary.tension_horizontal();
+    } else if (constraint->type_limit == CableConstraint::LimitType::kLength) {
+      value = catenary.Length();
+    } else if (constraint->type_limit == CableConstraint::LimitType::kSag) {
+      value = catenary.Sag();
+    } else if (constraint->type_limit ==
+        CableConstraint::LimitType::kSupportTension) {
+      value = catenary.TensionMax();
+    }
+
+    str = helper::DoubleToString(value, 2, true);
+    row.values.push_back(str);
+
+    // adds usage
+    value = 100 * (value / constraint->limit);
+    str = helper::DoubleToString(value, 2, true);
+    row.values.push_back(str);
+
+    // appends row to list
+    data_.rows.push_back(row);
+  }
+}
+
+void ResultsPane::UpdateReportDataCatenaryCurve() {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
@@ -348,8 +537,11 @@ void ResultsPane::UpdateReportDataCatenaryCurve(
   header.width = wxLIST_AUTOSIZE;
   data_.headers.push_back(header);
 
+  // gets filtered results
+  const std::list<const SagTensionAnalysisResult*>& results = Results();
+
   // checks if results has any data
-  if (results->empty() == true) {
+  if (results.empty() == true) {
     return;
   }
 
@@ -359,7 +551,7 @@ void ResultsPane::UpdateReportDataCatenaryCurve(
   const Span* span = doc->SpanActivated();
 
   // fills each row with data
-  for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
+  for (auto iter = results.cbegin(); iter != results.cend(); iter++) {
     const SagTensionAnalysisResult* result = *iter;
 
     // creates a report row, which will be filled out by each result
@@ -433,8 +625,7 @@ void ResultsPane::UpdateReportDataCatenaryCurve(
   }
 }
 
-void ResultsPane::UpdateReportDataCatenaryEndpoints(
-    const std::list<const SagTensionAnalysisResult*>* results) {
+void ResultsPane::UpdateReportDataCatenaryEndpoints() {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
@@ -486,8 +677,11 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
   header.width = wxLIST_AUTOSIZE;
   data_.headers.push_back(header);
 
+  // gets filtered results
+  const std::list<const SagTensionAnalysisResult*>& results = Results();
+
   // checks if results has any data
-  if (results->empty() == true) {
+  if (results.empty() == true) {
     return;
   }
 
@@ -498,7 +692,7 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
   const Span* span = doc->SpanActivated();
 
   // fills each row with data
-  for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
+  for (auto iter = results.cbegin(); iter != results.cend(); iter++) {
     const SagTensionAnalysisResult* result = *iter;
 
     // creates a report row, which will be filled out by each result
@@ -570,8 +764,7 @@ void ResultsPane::UpdateReportDataCatenaryEndpoints(
   }
 }
 
-void ResultsPane::UpdateReportDataLength(
-    const std::list<const SagTensionAnalysisResult*>* results) {
+void ResultsPane::UpdateReportDataLength() {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
@@ -598,8 +791,11 @@ void ResultsPane::UpdateReportDataLength(
   header.width = wxLIST_AUTOSIZE;
   data_.headers.push_back(header);
 
+  // gets filtered results
+  const std::list<const SagTensionAnalysisResult*>& results = Results();
+
   // checks if results has any data
-  if (results->empty() == true) {
+  if (results.empty() == true) {
     return;
   }
 
@@ -610,7 +806,7 @@ void ResultsPane::UpdateReportDataLength(
   const Span* span = doc->SpanActivated();
 
   // fills each row with data
-  for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
+  for (auto iter = results.cbegin(); iter != results.cend(); iter++) {
     const SagTensionAnalysisResult* result = *iter;
 
     // creates a report row, which will be filled out by each result
@@ -659,8 +855,7 @@ void ResultsPane::UpdateReportDataLength(
   }
 }
 
-void ResultsPane::UpdateReportDataSagTension(
-    const std::list<const SagTensionAnalysisResult*>* results) {
+void ResultsPane::UpdateReportDataSagTension() {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
@@ -702,13 +897,16 @@ void ResultsPane::UpdateReportDataSagTension(
   header.width = wxLIST_AUTOSIZE;
   data_.headers.push_back(header);
 
+  // gets filtered results
+  const std::list<const SagTensionAnalysisResult*>& results = Results();
+
   // checks if results has any data
-  if (results->empty() == true) {
+  if (results.empty() == true) {
     return;
   }
 
   // fills each row with data
-  for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
+  for (auto iter = results.cbegin(); iter != results.cend(); iter++) {
     const SagTensionAnalysisResult* result = *iter;
 
     // creates a report row, which will be filled out by each result
@@ -766,8 +964,7 @@ void ResultsPane::UpdateReportDataSagTension(
   }
 }
 
-void ResultsPane::UpdateReportDataTensionDistribution(
-    const std::list<const SagTensionAnalysisResult*>* results) {
+void ResultsPane::UpdateReportDataTensionDistribution() {
   // initializes data
   data_.headers.clear();
   data_.rows.clear();
@@ -794,13 +991,16 @@ void ResultsPane::UpdateReportDataTensionDistribution(
   header.width = wxLIST_AUTOSIZE;
   data_.headers.push_back(header);
 
+  // gets filtered results
+  const std::list<const SagTensionAnalysisResult*>& results = Results();
+
   // checks if results has any data
-  if (results->empty() == true) {
+  if (results.empty() == true) {
     return;
   }
 
   // fills each row with data
-  for (auto iter = results->cbegin(); iter != results->cend(); iter++) {
+  for (auto iter = results.cbegin(); iter != results.cend(); iter++) {
     const SagTensionAnalysisResult* result = *iter;
 
     // creates a report row, which will be filled out by each result

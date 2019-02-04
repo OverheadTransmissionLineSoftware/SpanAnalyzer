@@ -184,6 +184,15 @@ void SpanAnalyzerFrame::OnMenuEditConstraints(wxCommandEvent& event) {
     FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
                              wxGetApp().config()->units);
   }
+
+  // updates document/views
+  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
+  if (doc != nullptr) {
+    doc->RunAnalysis();
+
+    UpdateHint hint(UpdateHint::Type::kConstraintsEdit);
+    doc->UpdateAllViews(nullptr, &hint);
+  }
 }
 
 void SpanAnalyzerFrame::OnMenuEditWeathercases(

@@ -103,6 +103,8 @@ void EditPane::Update(wxObject* hint) {
     // do nothing
   } else if (hint_update->type() == UpdateHint::Type::kCablesEdit) {
     // do nothing
+  } else if (hint_update->type() == UpdateHint::Type::kConstraintsEdit) {
+    // do nothing
   } else if (hint_update->type() == UpdateHint::Type::kPreferencesEdit) {
     // do nothing
   } else if (hint_update->type() == UpdateHint::Type::kSpansEdit) {
