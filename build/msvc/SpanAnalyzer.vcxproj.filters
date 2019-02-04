@@ -222,6 +222,12 @@
     <ClCompile Include="..\..\src\cable_file_xml_handler.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\cable_constraint_editor_dialog.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cable_constraint_manager_dialog.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\test\test.spananalyzer">
@@ -379,6 +385,12 @@
     </None>
     <None Include="..\..\test\appdata.xml">
       <Filter>Test</Filter>
+    </None>
+    <None Include="..\..\res\xrc\cable_constraint_editor_dialog.xrc">
+      <Filter>Resource Files\XRC</Filter>
+    </None>
+    <None Include="..\..\res\xrc\cable_constraint_manager_dialog.xrc">
+      <Filter>Resource Files\XRC</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -576,6 +588,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\spananalyzer\cable_file_xml_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\spananalyzer\cable_constraint_editor_dialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\spananalyzer\cable_constraint_manager_dialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

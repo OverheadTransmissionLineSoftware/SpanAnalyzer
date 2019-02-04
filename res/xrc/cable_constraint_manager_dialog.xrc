@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<resource version="2.5.3.0">
+	<object class="wxDialog" name="cable_constraint_manager_dialog">
+		<style>wxDEFAULT_DIALOG_STYLE</style>
+		<title>Cable Constraint Manager</title>
+    <object class="wxPanel" name="cable_constraint_manager_panel">
+      <style>wxTAB_TRAVERSAL</style>
+      <object class="wxBoxSizer">
+        <orient>wxVERTICAL</orient>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxALL|wxEXPAND</flag>
+          <border>5</border>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL|wxEXPAND</flag>
+              <border>5</border>
+              <object class="wxListCtrl" name="listctrl">
+                <size>700,400</size>
+                <style>wxLC_SINGLE_SEL|wxLC_REPORT|wxLC_HRULES|wxLC_VRULES</style>
+                <object class="listcol">
+                  <align>wxLIST_FORMAT_LEFT</align>
+                  <text>Cable</text>
+                  <width>200</width>
+                </object>
+                <object class="listcol">
+                  <align>wxLIST_FORMAT_LEFT</align>
+                  <text>Weathercase</text>
+                  <width>200</width>
+                </object>
+                <object class="listcol">
+                  <align>wxLIST_FORMAT_LEFT</align>
+                  <text>Condition</text>
+                  <width>100</width>
+                </object>
+                <object class="listcol">
+                  <align>wxLIST_FORMAT_LEFT</align>
+                  <text>Type</text>
+                  <width>100</width>
+                </object>
+                <object class="listcol">
+                  <align>wxLIST_FORMAT_LEFT</align>
+                  <text>Limit</text>
+                  <width>100</width>
+                </object>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALIGN_CENTER</flag>
+              <border>0</border>
+              <object class="wxSpinButton" name="spinbutton">
+                <style>wxSP_VERTICAL</style>
+              </object>
+            </object>
+          </object>
+        </object>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxALL|wxEXPAND</flag>
+          <border>5</border>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="button_add">
+                <label>Add</label>
+                <default>1</default>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="button_delete">
+                <label>Delete</label>
+                <default>0</default>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="button_edit">
+                <label>Edit</label>
+                <default>0</default>
+              </object>
+            </object>
+          </object>
+        </object>
+        <object class="sizeritem">
+          <option>0</option>
+          <flag>wxALIGN_RIGHT</flag>
+          <border>5</border>
+          <object class="wxBoxSizer">
+            <orient>wxHORIZONTAL</orient>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="wxID_CANCEL">
+                <label>Cancel</label>
+                <default>0</default>
+              </object>
+            </object>
+            <object class="sizeritem">
+              <option>0</option>
+              <flag>wxALL</flag>
+              <border>5</border>
+              <object class="wxButton" name="wxID_OK">
+                <label>OK</label>
+                <default>1</default>
+              </object>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+	</object>
+</resource>
+
