@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<span_analyzer_data version="1" units="Imperial">
+<span_analyzer_data version="2" units="Imperial">
   <cables></cables>
   <weather_load_cases>
     <weather_load_case version="1">
@@ -255,6 +255,14 @@
       <temperature_cable units="deg F">0.00</temperature_cable>
     </weather_load_case>
   </weather_load_cases>
+  <cable_constraints>
+    <cable_constraint version="2">
+      <limit type="HorizontalTension" units="lbs">7875.000</limit>
+      <weather_load_case>0-0-30</weather_load_case>
+      <condition>Initial</condition>
+      <note>ACSR Drake</note>
+    </cable_constraint>
+  </cable_constraints>
   <analysis_filter_groups>
     <analysis_filter_group name="Structural">
       <analysis_filter version="1">

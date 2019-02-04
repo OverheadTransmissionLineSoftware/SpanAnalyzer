@@ -62,6 +62,11 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   ///   The event.
   void OnMenuEditCables(wxCommandEvent& event);
 
+  /// \brief Handles the edit->constraints menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuEditConstraints(wxCommandEvent& event);
+
   /// \brief Handles the edit->edit weather cases menu click event.
   /// \param[in] event
   ///   The event.

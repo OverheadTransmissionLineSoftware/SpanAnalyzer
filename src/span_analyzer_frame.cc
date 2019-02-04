@@ -10,6 +10,7 @@
 #include "wx/xrc/xmlres.h"
 
 #include "spananalyzer/analysis_filter_manager_dialog.h"
+#include "spananalyzer/cable_constraint_manager_dialog.h"
 #include "spananalyzer/cable_file_manager_dialog.h"
 #include "spananalyzer/file_handler.h"
 #include "spananalyzer/preferences_dialog.h"
@@ -57,6 +58,7 @@ bool DocumentFileDropTarget::OnDropFiles(wxCoord x, wxCoord y,
 BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxDocParentFrame)
   EVT_MENU(XRCID("menuitem_edit_analysisfilters"), SpanAnalyzerFrame::OnMenuEditAnalysisFilters)
   EVT_MENU(XRCID("menuitem_edit_cables"), SpanAnalyzerFrame::OnMenuEditCables)
+  EVT_MENU(XRCID("menuitem_edit_constraints"), SpanAnalyzerFrame::OnMenuEditConstraints)
   EVT_MENU(XRCID("menuitem_edit_weathercases"), SpanAnalyzerFrame::OnMenuEditWeathercases)
   EVT_MENU(XRCID("menuitem_file_pagesetup"), SpanAnalyzerFrame::OnMenuFilePageSetup)
   EVT_MENU(XRCID("menuitem_file_preferences"), SpanAnalyzerFrame::OnMenuFilePreferences)
@@ -159,6 +161,28 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
 
     UpdateHint hint(UpdateHint::Type::kCablesEdit);
     doc->UpdateAllViews(nullptr, &hint);
+  }
+}
+
+void SpanAnalyzerFrame::OnMenuEditConstraints(wxCommandEvent& event) {
+  // gets application data
+  SpanAnalyzerData* data = wxGetApp().data();
+
+  // shows an editor
+  CableConstraintManagerDialog dialog(
+      this,
+      &data->cablefiles,
+      &data->weathercases,
+      wxGetApp().config()->units,
+      &data->constraints);
+  if (dialog.ShowModal() == wxID_OK) {
+    wxBusyCursor cursor;
+
+    wxLogVerbose("Updating constraints.");
+
+    // saves application data
+    FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
+                             wxGetApp().config()->units);
   }
 }
 
