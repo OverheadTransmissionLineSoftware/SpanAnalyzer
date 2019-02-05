@@ -299,8 +299,10 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
   }
 
   // updates views
-  UpdateHint hint(UpdateHint::Type::kPreferencesEdit);
-  doc->UpdateAllViews(nullptr, &hint);
+  if (doc != nullptr) {
+    UpdateHint hint(UpdateHint::Type::kPreferencesEdit);
+    doc->UpdateAllViews(nullptr, &hint);
+  }
 }
 
 void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {
