@@ -392,6 +392,9 @@
     <None Include="..\..\res\xrc\cable_constraint_manager_dialog.xrc">
       <Filter>Resource Files\XRC</Filter>
     </None>
+    <None Include="..\..\res\help\interface\constraints.html">
+      <Filter>Resource Files\Help</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\res\icon.ico">

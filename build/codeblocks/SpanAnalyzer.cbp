@@ -395,6 +395,9 @@
 		<Unit filename="../../res/help/interface/application_files.html">
 			<Option virtualFolder="Resource Files/Help/" />
 		</Unit>
+		<Unit filename="../../res/help/interface/constraints.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
 		<Unit filename="../../res/help/interface/editing_cables.html">
 			<Option virtualFolder="Resource Files/Help/" />
 		</Unit>

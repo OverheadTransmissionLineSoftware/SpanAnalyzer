@@ -155,6 +155,7 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <None Include="..\..\res\help\interface\analysis_filters.html" />
     <None Include="..\..\res\help\interface\analyzing_a_span.html" />
     <None Include="..\..\res\help\interface\application_files.html" />
+    <None Include="..\..\res\help\interface\constraints.html" />
     <None Include="..\..\res\help\interface\editing_cables.html" />
     <None Include="..\..\res\help\interface\editing_spans.html" />
     <None Include="..\..\res\help\interface\editing_weathercases.html" />

@@ -43,6 +43,12 @@
   </li>
   <li>
     <object type="text/sitemap">
+      <param name="Name" value="Constraints"></param>
+      <param name="Local" value="constraints.html"></param>
+    </object>
+  </li>
+  <li>
+    <object type="text/sitemap">
       <param name="Name" value="Reports"></param>
       <param name="Local" value="reports.html"></param>
     </object>
