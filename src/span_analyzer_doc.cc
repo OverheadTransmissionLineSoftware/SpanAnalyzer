@@ -43,6 +43,12 @@ std::list<const CableConstraint*> SpanAnalyzerDoc::Constraints() const {
   for (auto iter = constraints.cbegin(); iter != constraints.cend(); iter++) {
     const CableConstraint* constraint = &(*iter);
 
+    // avoids null reference
+    if (span->linecable.cable() == nullptr) {
+      continue;
+    }
+
+    // checks for a match
     if ((constraint->note == "") ||
         (constraint->note == span->linecable.cable()->name)) {
       constraints_filtered.push_back(constraint);
