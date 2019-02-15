@@ -16,7 +16,7 @@ wxXmlNode* SpanAnalyzerDocXmlHandler::CreateNode(
 
   // creates a node for the root
   node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "span_analyzer_doc");
-  node_root->AddAttribute("version", "1");
+  node_root->AddAttribute("version", "2");
 
   if (units == units::UnitSystem::kImperial) {
     node_root->AddAttribute("units", "Imperial");
@@ -73,6 +73,9 @@ bool SpanAnalyzerDocXmlHandler::ParseNode(
   // sends to proper parsing function
   if (kVersion == 1) {
     return ParseNodeV1(root, filepath, units, convert, cablefiles, weathercases,
+                       doc);
+  } else if (kVersion == 2) {
+    return ParseNodeV2(root, filepath, units, convert, cablefiles, weathercases,
                        doc);
   } else {
     message = FileAndLineNumber(filepath, root) +
@@ -135,4 +138,17 @@ bool SpanAnalyzerDocXmlHandler::ParseNodeV1(
   }
 
   return status;
+}
+
+bool SpanAnalyzerDocXmlHandler::ParseNodeV2(
+    const wxXmlNode* root,
+    const std::string& filepath,
+    const units::UnitSystem& units,
+    const bool& convert,
+    const std::list<CableFile*>* cablefiles,
+    const std::list<WeatherLoadCase*>* weathercases,
+    SpanAnalyzerDoc& doc) {
+  // parsing method is identical to version 1
+  return ParseNodeV1(root, filepath, units, convert, cablefiles, weathercases,
+                     doc);
 }

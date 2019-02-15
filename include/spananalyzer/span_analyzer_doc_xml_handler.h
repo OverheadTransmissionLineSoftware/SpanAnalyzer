@@ -109,6 +109,38 @@ class SpanAnalyzerDocXmlHandler : public XmlHandler {
                           const std::list<CableFile*>* cablefiles,
                           const std::list<WeatherLoadCase*>* weathercases,
                           SpanAnalyzerDoc& doc);
+
+  /// \brief Parses a version 2 XML node and populates a document.
+  /// \param[in] root
+  ///   The XML root node for the document.
+  /// \param[in] filepath
+  ///   The filepath that the xml node was loaded from. This is for logging
+  ///   purposes only and can be left blank.
+  /// \param[in] units
+  ///   The unit system. If no conversion is being done this will be ignored.
+  /// \param[in] convert
+  ///   A flag that determines if the unit style is converted to 'consistent'.
+  /// \param[in] cablefiles
+  ///   A list of cable files that is matched against a cable description. If
+  ///   found, a pointer will be set to the matching cable.
+  /// \param[in] weathercases
+  ///   A list of weathercases that is matched against a weathercase
+  ///   description. If found, a pointer will be set to the matching
+  ///   weathercase.
+  /// \param[out] doc
+  ///   The document that is populated.
+  /// \return The status of the xml node parse. If any errors are encountered
+  ///   false is returned.
+  /// All errors are logged to the active application log target. Critical
+  /// errors cause the parsing to abort. Non-critical errors set the object
+  /// property to an invalid state (if applicable).
+  static bool ParseNodeV2(const wxXmlNode* root,
+                          const std::string& filepath,
+                          const units::UnitSystem& units,
+                          const bool& convert,
+                          const std::list<CableFile*>* cablefiles,
+                          const std::list<WeatherLoadCase*>* weathercases,
+                          SpanAnalyzerDoc& doc);
 };
 
 #endif  // SPANANALYZER_SPAN_ANALYZER_DOC_XML_HANDLER_H_
