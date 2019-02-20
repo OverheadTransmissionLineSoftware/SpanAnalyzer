@@ -55,6 +55,7 @@ bool SpanCommand::CreateSpanFromXml(const wxXmlNode* node, Span& span) {
 
 bool SpanCommand::Do() {
   bool status = false;
+  UpdateHint hint(UpdateHint::Type::kSpansEdit);
 
   // clears undo node so it's ready to cache the existing state
   if (node_undo_ != nullptr) {
@@ -72,9 +73,15 @@ bool SpanCommand::Do() {
     const Span& span = *std::next(doc_->spans().cbegin(), index_);
     node_undo_ = SaveSpanToXml(span);
     status = DoDelete();
+
+    // sets update hint
+    hint.set_name_command(SpanCommand::kNameDelete);
   } else if (name == kNameInsert) {
     // does command
     status = DoInsert(node_do_);
+
+    // sets update hint
+    hint.set_name_command(SpanCommand::kNameInsert);
   } else if (name == kNameModify) {
     // caches span to xml and then does command
     if (doc_->IsValidIndex(index_, false) == false) {
@@ -84,12 +91,21 @@ bool SpanCommand::Do() {
     const Span& span = *std::next(doc_->spans().cbegin(), index_);
     node_undo_ = SaveSpanToXml(span);
     status = DoModify(node_do_);
+
+    // sets update hint
+    hint.set_name_command(SpanCommand::kNameModify);
   } else if (name == kNameMoveDown) {
     // does command
     status = DoMoveDown();
+
+    // sets update hint
+    hint.set_name_command(SpanCommand::kNameMoveDown);
   } else if (name == kNameMoveUp) {
     // does command
     status = DoMoveUp();
+
+    // sets update hint
+    hint.set_name_command(SpanCommand::kNameMoveUp);
   } else {
     status = false;
 
@@ -100,7 +116,7 @@ bool SpanCommand::Do() {
   // checks if command succeeded
   if (status == true) {
     // posts a view update
-    UpdateHint hint(UpdateHint::Type::kSpansEdit);
+    hint.set_index_span(index_);
     doc_->UpdateAllViews(nullptr, &hint);
   } else {
     // logs error
@@ -123,19 +139,25 @@ wxXmlNode* SpanCommand::SaveSpanToXml(const Span& span) {
 
 bool SpanCommand::Undo() {
   bool status = false;
+  UpdateHint hint(UpdateHint::Type::kSpansEdit);
 
   // selects based on command name
   const std::string name = GetName();
   if (name == kNameDelete) {
     status = DoInsert(node_undo_);
+    hint.set_name_command(SpanCommand::kNameInsert);
   } else if (name == kNameInsert) {
     status = DoDelete();
+    hint.set_name_command(SpanCommand::kNameDelete);
   } else if (name == kNameModify) {
     status = DoModify(node_undo_);
+    hint.set_name_command(SpanCommand::kNameModify);
   } else if (name == kNameMoveDown) {
     status = DoMoveUp();
+    hint.set_name_command(SpanCommand::kNameMoveUp);
   } else if (name == kNameMoveUp) {
     status = DoMoveDown();
+    hint.set_name_command(SpanCommand::kNameMoveDown);
   } else {
     status = false;
 
@@ -146,7 +168,7 @@ bool SpanCommand::Undo() {
   // checks if command succeeded
   if (status == true) {
     // posts a view update
-    UpdateHint hint(UpdateHint::Type::kSpansEdit);
+    hint.set_index_span(index_);
     doc_->UpdateAllViews(nullptr, &hint);
   } else {
     // logs error

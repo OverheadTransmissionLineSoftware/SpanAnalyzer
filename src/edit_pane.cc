@@ -135,6 +135,8 @@ void EditPane::ActivateSpan(const wxTreeItemId& id) {
 
   // posts a view update
   UpdateHint hint(UpdateHint::Type::kSpansEdit);
+  hint.set_index_span(index);
+  hint.set_name_command("Activate Span");
   doc->UpdateAllViews(nullptr, &hint);
 
   // updates treectrl focus
@@ -237,6 +239,7 @@ void EditPane::DeactivateSpan(const wxTreeItemId& id) {
 
   // posts a view update
   UpdateHint hint(UpdateHint::Type::kSpansEdit);
+  hint.set_name_command("Deactivate Span");
   doc->UpdateAllViews(nullptr, &hint);
 
   // updates treectrl focus

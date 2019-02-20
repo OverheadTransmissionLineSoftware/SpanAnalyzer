@@ -24,6 +24,7 @@ class UpdateHint : public wxObject {
  public:
   /// This enum class contains types of update hints.
   enum class Type {
+    kNull,
     kAnalysisFilterGroupEdit,
     kAnalysisFilterGroupSelect,
     kAnalysisFilterSelect,
@@ -36,10 +37,40 @@ class UpdateHint : public wxObject {
   };
 
   /// \brief Default Constructor.
-  UpdateHint() {}
+  UpdateHint() {
+    index_span_ = -1;
+    name_command_ = "";
+    type_ = UpdateHint::Type::kNull;
+  }
 
   /// \brief Alternate constructor.
-  UpdateHint(Type hint) {type_ = hint;}
+  /// \param[in] type
+  ///   The hint type.
+  UpdateHint(const Type& type) {
+    index_span_ = -1;
+    name_command_ = "";
+    type_ = type;
+  }
+
+  /// \brief Gets the span index.
+  /// \return The span index.
+  int index_span() const {return index_span_;}
+
+  /// \brief Gets the command name.
+  /// \return The command name.
+  std::string name_command() const {return name_command_;}
+
+  /// \brief Sets the span index.
+  /// \param[in] index_span
+  ///   The span index.
+  void set_index_span(const int& index_span) {index_span_ = index_span;}
+
+  /// \brief Sets the command name.
+  /// \param[in] name_command
+  ///   The command name.
+  void set_name_command(const std::string& name_command) {
+    name_command_ = name_command;
+  }
 
   /// \brief Sets the hint type.
   /// \param[in] type
@@ -51,6 +82,15 @@ class UpdateHint : public wxObject {
   const Type& type() const {return type_;}
 
  private:
+  /// \var index_span_
+  ///   The span index. This is used when the edit pane is updating.
+  int index_span_;
+
+  /// \var name_command_
+  ///   The command name. This is used when the edit pane is updating, and
+  ///   should match one of the span command names.
+  std::string name_command_;
+
   /// \var type_
   ///   The hint type.
   Type type_;
