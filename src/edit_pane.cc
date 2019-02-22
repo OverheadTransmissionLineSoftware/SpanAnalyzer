@@ -717,7 +717,7 @@ void EditPane::UpdateTreeCtrlSpanItems(const UpdateHint* hint) {
   wxTreeItemId root = treectrl_->GetRootItem();
 
   // updates treectrl
-  if (hint == nullptr) {
+  if ((hint == nullptr) || (hint->name_command() == "")) {
     // rebuilds treectrl
 
     // clears treectrl
@@ -733,6 +733,9 @@ void EditPane::UpdateTreeCtrlSpanItems(const UpdateHint* hint) {
       data->set_iter(iter);
       treectrl_->SetItemData(item, data);
     }
+
+    // expands treectrl root
+    treectrl_->Expand(root);
   } else {
     // partially updates treectrl
 
