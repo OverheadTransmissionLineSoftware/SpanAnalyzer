@@ -94,10 +94,6 @@ void ResultsPane::Update(wxObject* hint) {
 void ResultsPane::OnChoiceFilterGroup(wxCommandEvent& event) {
   // not creating busy cursor to avoid cursor flicker
 
-  // gets weathercase set from application data
-  wxChoice* choice = XRCCTRL(*this, "choice_filter_group", wxChoice);
-  wxString str_selection = choice->GetStringSelection();
-
   // updates the selected/cached weathercases
   UpdateFilterGroupSelected();
 
@@ -145,8 +141,6 @@ void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
 void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
   // not creating busy cursor to avoid cursor flicker
 
-  wxLogVerbose("Updating displayed analysis filter index.");
-
   // gets view
   SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);
 
@@ -161,7 +155,7 @@ void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
   // from the table
   const long index_unsorted = table_->IndexReportRow(index_selected);
 
-  // gets the selected-sorted-unfiltered index
+  // gets the selected-unsorted-unfiltered index
   // this will account for any invalid results that were left out of the table
   // this is done by comparing the weathercase/condition combination
 
@@ -192,6 +186,11 @@ void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
       break;
     }
   }
+
+  // logs
+  std::string message = "Selecting analysis filter at index "
+                      + std::to_string(index_document) + ".";
+  wxLogVerbose(message.c_str());
 
   // updates view index
   view->set_index_filter(index_document);
@@ -273,7 +272,7 @@ void ResultsPane::UpdateFilterGroupChoice() {
 }
 
 void ResultsPane::UpdateFilterGroupSelected() {
-  wxLogVerbose("Updating displayed analysis filters.");
+  wxLogVerbose("Updating analysis filters.");
 
   // initializes filters cached in view
   SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);

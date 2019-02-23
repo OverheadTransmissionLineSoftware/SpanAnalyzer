@@ -57,6 +57,8 @@ void ProfilePlotPane::Update(wxObject* hint) {
     return;
   }
 
+  wxLogVerbose("Updating profile plot.");
+
   // gets a buffered dc to prevent flickering
   wxClientDC dc(this);
   wxBufferedDC dc_buf(&dc, bitmap_buffer_);
@@ -327,8 +329,6 @@ void ProfilePlotPane::UpdateDatasetDimensions(const Catenary3d& catenary) {
 }
 
 void ProfilePlotPane::UpdatePlotDatasets() {
-  wxLogVerbose("Updating profile plot dataset.");
-
   ClearDataSets();
 
   // gets view settings
@@ -372,8 +372,6 @@ void ProfilePlotPane::UpdatePlotDatasets() {
 }
 
 void ProfilePlotPane::UpdatePlotRenderers() {
-  wxLogVerbose("Updating profile plot renderers.");
-
   // clears existing renderers
   plot_.ClearRenderers();
 

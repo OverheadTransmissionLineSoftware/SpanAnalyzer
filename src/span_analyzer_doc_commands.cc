@@ -201,6 +201,11 @@ bool SpanCommand::DoDelete() {
     return false;
   }
 
+  // logs
+  std::string message = "Deleting span at index " + std::to_string(index_)
+                      + ".";
+  wxLogVerbose(message.c_str());
+
   // deletes from document
   return doc_->DeleteSpan(index_);
 }
@@ -215,6 +220,11 @@ bool SpanCommand::DoInsert(const wxXmlNode* node) {
   // builds span from xml node
   Span span;
   CreateSpanFromXml(node, span);
+
+  // logs
+  std::string message = "Inserting span at index " + std::to_string(index_)
+                      + ".";
+  wxLogVerbose(message.c_str());
 
   // inserts span to document
   return doc_->InsertSpan(index_, span);
@@ -234,6 +244,11 @@ bool SpanCommand::DoModify(const wxXmlNode* node) {
     return false;
   }
 
+  // logs
+  std::string message = "Modifying span at index " + std::to_string(index_)
+                      + ".";
+  wxLogVerbose(message.c_str());
+
   // modifies the document
   return doc_->ModifySpan(index_, span);
 }
@@ -246,6 +261,11 @@ bool SpanCommand::DoMoveDown() {
     wxLogError("Invalid index. Aborting move down command.");
     return false;
   }
+
+  // logs
+  std::string message = "Moving span down to index "
+                        + std::to_string(index_ + 1) + ".";
+  wxLogVerbose(message.c_str());
 
   // swaps the spans in the document
   bool status = doc_->MoveSpan(index_, index_ + 2);
@@ -263,6 +283,11 @@ bool SpanCommand::DoMoveUp() {
     wxLogError("Invalid index. Aborting move up command.");
     return false;
   }
+
+  // logs
+  std::string message = "Moving span up to index "
+                        + std::to_string(index_ - 1) + ".";
+  wxLogVerbose(message.c_str());
 
   // swaps the spans in the document
   bool status = doc_->MoveSpan(index_, index_ - 1);

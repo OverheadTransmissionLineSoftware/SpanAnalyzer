@@ -126,14 +126,19 @@ void EditPane::ActivateSpan(const wxTreeItemId& id) {
     return;
   }
 
-  wxLogVerbose("Activating span.");
-
-  // updates document
+  // gets span index
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
   SpanTreeItemData* data =
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
   auto iter = data->iter();
   const int index = doc->IndexSpan(&(*iter));
+
+  // logs
+  std::string message = "Activating span at index " + std::to_string(index)
+                      + ".";
+  wxLogVerbose(message.c_str());
+
+  // updates document
   doc->set_index_activated(index);
 
   // posts a view update
@@ -184,8 +189,6 @@ void EditPane::AddSpan() {
     return;
   }
 
-  wxLogVerbose("Adding span.");
-
   // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
 
@@ -209,8 +212,6 @@ void EditPane::CopySpan(const wxTreeItemId& id) {
   // copies span and updates name
   Span span = *(data->iter());
   span.name = NameVersioned(span.name);
-
-  wxLogVerbose("Copying span.");
 
   // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
@@ -255,8 +256,6 @@ void EditPane::DeleteSpan(const wxTreeItemId& id) {
   // gets tree item data
   SpanTreeItemData* data =
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
-
-  wxLogVerbose("Deleting span.");
 
   // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
@@ -307,8 +306,6 @@ void EditPane::EditSpan(const wxTreeItemId& id) {
   if (dialog.ShowModal() != wxID_OK) {
     return;
   }
-
-  wxLogVerbose("Editing span.");
 
   // converts span to 'consistent' unit style
   SpanUnitConverter::ConvertUnitStyleToConsistent(0,
@@ -396,8 +393,6 @@ void EditPane::MoveSpanDown(const wxTreeItemId& id) {
   SpanTreeItemData* data =
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
 
-  wxLogVerbose("Moving spans.");
-
   // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
   const int index = std::distance(doc->spans().cbegin(), data->iter());
@@ -421,8 +416,6 @@ void EditPane::MoveSpanUp(const wxTreeItemId& id) {
   // gets tree item data
   SpanTreeItemData* data =
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
-
-  wxLogVerbose("Moving spans.");
 
   // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());

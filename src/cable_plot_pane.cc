@@ -58,6 +58,8 @@ void CablePlotPane::Update(wxObject* hint) {
     return;
   }
 
+  wxLogVerbose("Updating cable elongation model plot.");
+
   // gets a buffered dc to prevent flickering
   wxClientDC dc(this);
   wxBufferedDC dc_buf(&dc, bitmap_buffer_);
@@ -354,8 +356,6 @@ void CablePlotPane::UpdateDataSetMarker(
 }
 
 void CablePlotPane::UpdatePlotDatasets() {
-  wxLogVerbose("Updating cable elongation model plot datasets.");
-
   ClearDataSets();
 
   // gets view settings
@@ -416,8 +416,6 @@ void CablePlotPane::UpdatePlotDatasets() {
 }
 
 void CablePlotPane::UpdatePlotRenderers() {
-  wxLogVerbose("Updating cable elongation model plot renderers.");
-
   // clears existing renderers
   plot_.ClearRenderers();
 
