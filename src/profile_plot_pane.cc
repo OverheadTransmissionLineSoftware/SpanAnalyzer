@@ -183,10 +183,56 @@ void ProfilePlotPane::OnMouse(wxMouseEvent& event) {
   // logs to status bar
   std::string str = "X="
                     + helper::DoubleToString(point_data.x, 2, true)
-                    + "   Y="
+                    + "   Z="
                     + helper::DoubleToString(point_data.y, 2, true);
 
   status_bar_log::SetText(str, 1);
+}
+
+void ProfilePlotPane::RenderAfter(wxDC& dc) {
+  const wxRect& rect = GetClientRect();
+  wxString str;
+  wxSize size_text;
+  wxPoint pos_text;
+  wxPoint point_start;
+  wxPoint point_end;
+  const int kLengthAxis = 40;
+
+  // sets up dc for lines and text
+  dc.SetBackgroundMode(wxPENSTYLE_TRANSPARENT);
+  dc.SetTextForeground(*wxWHITE);
+  dc.SetPen(*wxWHITE_PEN);
+
+  // gets a start point (axis intersection) that is offset from the borders
+  point_start = rect.GetBottomLeft();
+  point_start.x += 20;
+  point_start.y -= 20;
+
+  // draws horizontal axis
+  point_end = point_start;
+  point_end.x += kLengthAxis;
+  dc.DrawLine(point_start.x, point_start.y, point_end.x, point_end.y);
+  dc.DrawLine(point_end.x, point_end.y, point_end.x - 5, point_end.y - 4);
+  dc.DrawLine(point_end.x, point_end.y, point_end.x - 5, point_end.y + 4);
+
+  str = "X";
+  size_text = dc.GetTextExtent(str);
+  pos_text.x = point_start.x + (kLengthAxis / 2) - (size_text.x / 2);
+  pos_text.y = point_start.y + 3;
+  dc.DrawText(str, pos_text);
+
+  // draws vertical axis
+  point_end = point_start;
+  point_end.y -= kLengthAxis;
+  dc.DrawLine(point_start.x, point_start.y, point_end.x, point_end.y);
+  dc.DrawLine(point_end.x, point_end.y, point_end.x - 4, point_end.y + 5);
+  dc.DrawLine(point_end.x, point_end.y, point_end.x + 4, point_end.y + 5);
+
+  str = "Z";
+  size_text = dc.GetTextExtent(str);
+  pos_text.x = point_start.x - 5 - size_text.x;
+  pos_text.y = point_start.y - (kLengthAxis / 2) - (size_text.y / 2);
+  dc.DrawText(str, pos_text);
 }
 
 void ProfilePlotPane::UpdateDatasetCatenary(const Catenary3d& catenary) {
