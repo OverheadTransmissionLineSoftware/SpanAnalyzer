@@ -141,6 +141,11 @@ void ResultsPane::OnChoiceReport(wxCommandEvent& event) {
 void ResultsPane::OnListCtrlSelect(wxListEvent& event) {
   // not creating busy cursor to avoid cursor flicker
 
+  // checks if the report table is refreshing
+  if (table_->IsRefreshing() == true) {
+    return;
+  }
+
   // gets view
   SpanAnalyzerView* view = dynamic_cast<SpanAnalyzerView*>(view_);
 
