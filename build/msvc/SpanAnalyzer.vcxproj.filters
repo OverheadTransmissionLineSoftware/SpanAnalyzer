@@ -228,6 +228,12 @@
     <ClCompile Include="..\..\src\cable_constraint_manager_dialog.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\plan_plot_options_dialog.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\plan_plot_pane.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\test\test.spananalyzer">
@@ -394,6 +400,9 @@
     </None>
     <None Include="..\..\res\help\interface\constraints.html">
       <Filter>Resource Files\Help</Filter>
+    </None>
+    <None Include="..\..\res\xrc\plan_plot_options_dialog.xrc">
+      <Filter>Resource Files\XRC</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -597,6 +606,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\spananalyzer\cable_constraint_manager_dialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\spananalyzer\plan_plot_options_dialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\spananalyzer\plan_plot_pane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

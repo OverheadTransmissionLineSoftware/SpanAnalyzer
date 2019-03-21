@@ -305,6 +305,12 @@
 		<Unit filename="../../include/spananalyzer/file_handler.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
+		<Unit filename="../../include/spananalyzer/plan_plot_options_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/spananalyzer/plan_plot_pane.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
 		<Unit filename="../../include/spananalyzer/preferences_dialog.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
@@ -499,6 +505,9 @@
 		<Unit filename="../../res/xrc/edit_pane.xrc">
 			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
+		<Unit filename="../../res/xrc/plan_plot_options_dialog.xrc">
+			<Option virtualFolder="Resource Files/XRC/" />
+		</Unit>
 		<Unit filename="../../res/xrc/preferences_dialog.xrc">
 			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
@@ -551,6 +560,12 @@
 			<Option virtualFolder="Source Files/" />
 		</Unit>
 		<Unit filename="../../src/file_handler.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/plan_plot_options_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/plan_plot_pane.cc">
 			<Option virtualFolder="Source Files/" />
 		</Unit>
 		<Unit filename="../../src/preferences_dialog.cc">

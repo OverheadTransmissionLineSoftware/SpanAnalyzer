@@ -121,6 +121,8 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <ClCompile Include="..\..\src\cable_plot_pane.cc" />
     <ClCompile Include="..\..\src\edit_pane.cc" />
     <ClCompile Include="..\..\src\file_handler.cc" />
+    <ClCompile Include="..\..\src\plan_plot_options_dialog.cc" />
+    <ClCompile Include="..\..\src\plan_plot_pane.cc" />
     <ClCompile Include="..\..\src\preferences_dialog.cc" />
     <ClCompile Include="..\..\src\profile_plot_options_dialog.cc" />
     <ClCompile Include="..\..\src\profile_plot_pane.cc" />
@@ -188,6 +190,7 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     </None>
     <None Include="..\..\res\xrc\cable_plot_options_dialog.xrc" />
     <None Include="..\..\res\xrc\edit_pane.xrc" />
+    <None Include="..\..\res\xrc\plan_plot_options_dialog.xrc" />
     <None Include="..\..\res\xrc\preferences_dialog.xrc" />
     <None Include="..\..\res\xrc\profile_plot_options_dialog.xrc" />
     <None Include="..\..\res\xrc\results_pane.xrc" />
@@ -248,6 +251,8 @@ XCOPY ..\..\res\help\*.htb .\Release\res /y</Command>
     <ClInclude Include="..\..\include\spananalyzer\cable_plot_pane.h" />
     <ClInclude Include="..\..\include\spananalyzer\edit_pane.h" />
     <ClInclude Include="..\..\include\spananalyzer\file_handler.h" />
+    <ClInclude Include="..\..\include\spananalyzer\plan_plot_options_dialog.h" />
+    <ClInclude Include="..\..\include\spananalyzer\plan_plot_pane.h" />
     <ClInclude Include="..\..\include\spananalyzer\preferences_dialog.h" />
     <ClInclude Include="..\..\include\spananalyzer\profile_plot_options_dialog.h" />
     <ClInclude Include="..\..\include\spananalyzer\profile_plot_pane.h" />

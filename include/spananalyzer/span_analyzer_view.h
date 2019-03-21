@@ -11,6 +11,7 @@
 
 #include "spananalyzer/cable_plot_pane.h"
 #include "spananalyzer/edit_pane.h"
+#include "spananalyzer/plan_plot_pane.h"
 #include "spananalyzer/profile_plot_pane.h"
 #include "spananalyzer/results_pane.h"
 #include "spananalyzer/span_analyzer_data.h"
@@ -166,6 +167,10 @@ class SpanAnalyzerView : public wxView {
   /// \var pane_edit_
   ///   The edit pane.
   EditPane* pane_edit_;
+
+  /// \var pane_plan_
+  ///   The plan plot pane.
+  PlanPlotPane* pane_plan_;
 
   /// \var pane_profile_
   ///   The profile plot pane.
