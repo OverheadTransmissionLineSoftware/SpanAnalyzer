@@ -58,11 +58,16 @@ set (SPANANALYZER_SRC_FILES
   ${SPANANALYZER_SOURCE_DIR}/src/analysis_filter_editor_dialog.cc
   ${SPANANALYZER_SOURCE_DIR}/src/analysis_filter_manager_dialog.cc
   ${SPANANALYZER_SOURCE_DIR}/src/analysis_filter_xml_handler.cc
+  ${SPANANALYZER_SOURCE_DIR}/src/cable_constraint_editor_dialog.cc
+  ${SPANANALYZER_SOURCE_DIR}/src/cable_constraint_manager_dialog.cc
   ${SPANANALYZER_SOURCE_DIR}/src/cable_file_manager_dialog.cc
+  ${SPANANALYZER_SOURCE_DIR}/src/cable_file_xml_handler.cc
   ${SPANANALYZER_SOURCE_DIR}/src/cable_plot_options_dialog.cc
   ${SPANANALYZER_SOURCE_DIR}/src/cable_plot_pane.cc
   ${SPANANALYZER_SOURCE_DIR}/src/edit_pane.cc
   ${SPANANALYZER_SOURCE_DIR}/src/file_handler.cc
+  ${SPANANALYZER_SOURCE_DIR}/src/plan_plot_options_dialog.cc
+  ${SPANANALYZER_SOURCE_DIR}/src/plan_plot_pane.cc
   ${SPANANALYZER_SOURCE_DIR}/src/preferences_dialog.cc
   ${SPANANALYZER_SOURCE_DIR}/src/profile_plot_options_dialog.cc
   ${SPANANALYZER_SOURCE_DIR}/src/profile_plot_pane.cc
@@ -90,9 +95,12 @@ set (SPANANALYZER_RESOURCE_FILES
   ${SPANANALYZER_SOURCE_DIR}/external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc
   ${SPANANALYZER_SOURCE_DIR}/res/xrc/analysis_filter_editor_dialog.xrc
   ${SPANANALYZER_SOURCE_DIR}/res/xrc/analysis_filter_manager_dialog.xrc
+  ${SPANANALYZER_SOURCE_DIR}/res/xrc/cable_constraint_editor_dialog.xrc
+  ${SPANANALYZER_SOURCE_DIR}/res/xrc/cable_constraint_manager_dialog.xrc
   ${SPANANALYZER_SOURCE_DIR}/res/xrc/cable_file_manager_dialog.xrc
   ${SPANANALYZER_SOURCE_DIR}/res/xrc/cable_plot_options_dialog.xrc
   ${SPANANALYZER_SOURCE_DIR}/res/xrc/edit_pane.xrc
+  ${SPANANALYZER_SOURCE_DIR}/res/xrc/plan_plot_options_dialog.xrc
   ${SPANANALYZER_SOURCE_DIR}/res/xrc/preferences_dialog.xrc
   ${SPANANALYZER_SOURCE_DIR}/res/xrc/profile_plot_options_dialog.xrc
   ${SPANANALYZER_SOURCE_DIR}/res/xrc/results_pane.xrc
