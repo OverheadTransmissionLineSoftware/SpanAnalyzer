@@ -159,6 +159,10 @@ bool SpanAnalyzerApp::OnInit() {
   config_.options_plot_cable.color_shell = *wxBLUE;
   config_.options_plot_cable.color_total = *wxYELLOW;
   config_.options_plot_cable.thickness_line = 1;
+  config_.options_plot_plan.color_catenary = *wxCYAN;
+  config_.options_plot_plan.scale_horizontal = 1;
+  config_.options_plot_plan.scale_vertical = 10;
+  config_.options_plot_plan.thickness_line = 1;
   config_.options_plot_profile.color_catenary = *wxCYAN;
   config_.options_plot_profile.scale_horizontal = 1;
   config_.options_plot_profile.scale_vertical = 10;
