@@ -25,7 +25,10 @@
 					<Add library="libotlsmodels_based.a" />
 				</Linker>
 				<ExtraCommands>
-					<Add before="../../external/wxWidgets/build-debug/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_constraint_editor_dialog.xrc ../../res/xrc/cable_constraint_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
+					<Add before="../../external/wxWidgets/build-debug/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_constraint_editor_dialog.xrc ../../res/xrc/cable_constraint_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/plan_plot_options_dialog.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
+					<Add after="zip -j ../../res/help/calculations.htb ../../res/help/calculations/*" />
+					<Add after="zip -j ../../res/help/interface.htb ../../res/help/interface/*" />
+					<Add after="zip -j ../../res/help/overview.htb ../../res/help/overview/*" />
 					<Add after="mkdir -p debug/res" />
 					<Add after="cp ../../res/help/*.htb debug/res/" />
 				</ExtraCommands>
@@ -49,7 +52,10 @@
 					<Add library="libotlsmodels_base.a" />
 				</Linker>
 				<ExtraCommands>
-					<Add before="../../external/wxWidgets/build-release/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_constraint_editor_dialog.xrc ../../res/xrc/cable_constraint_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
+					<Add before="../../external/wxWidgets/build-release/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_constraint_editor_dialog.xrc ../../res/xrc/cable_constraint_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/plan_plot_options_dialog.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
+					<Add after="zip -j ../../res/help/calculations.htb ../../res/help/calculations/*" />
+					<Add after="zip -j ../../res/help/interface.htb ../../res/help/interface/*" />
+					<Add after="zip -j ../../res/help/overview.htb ../../res/help/overview/*" />
 					<Add after="mkdir -p release/res" />
 					<Add after="cp ../../res/help/*.htb release/res/" />
 				</ExtraCommands>

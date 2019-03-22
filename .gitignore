@@ -56,6 +56,7 @@ build/codeblocks/debug/res/*
 build/codeblocks/release/res/*
 build/msvc/Debug/res/*
 build/msvc/Release/res/*
+res/help/*.htb
 res/resources.cc
 
 # generated executables #
