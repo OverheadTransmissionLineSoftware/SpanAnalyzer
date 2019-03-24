@@ -52,7 +52,7 @@ class PlanPlotPane : public PlotPane2d {
   /// \param[in] dc
   ///   The device context.
   /// This method draws axis labels in the bottom left corner of the plot.
-  virtual void RenderAfter(wxDC& dc) override;
+  void RenderAfter(wxDC& dc) override;
 
   /// \brief Updates a catenary dataset.
   /// \param[in] catenary

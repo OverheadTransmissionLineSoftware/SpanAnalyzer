@@ -22,7 +22,7 @@ wxXmlNode* SpanAnalyzerConfigXmlHandler::CreateNode(
   node_root->AddAttribute("version", "2");
 
   // adds child nodes for struct parameters
-  
+
   // creates log level node
   title = "level_log";
   if (config.level_log == wxLOG_Message) {
