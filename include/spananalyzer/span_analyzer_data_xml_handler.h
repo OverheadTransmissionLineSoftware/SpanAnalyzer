@@ -33,7 +33,7 @@ class SpanAnalyzerDataXmlHandler : public XmlHandler {
   ///   The data.
   /// \param[in] system_units
   ///   The unit system, which is used for attributing child XML nodes.
-  /// \param[in] system_style
+  /// \param[in] style_units
   ///   The unit style, which is used for attributing child XML nodes.
   /// \return An XML node for the document.
   static wxXmlNode* CreateNode(const SpanAnalyzerData& data,

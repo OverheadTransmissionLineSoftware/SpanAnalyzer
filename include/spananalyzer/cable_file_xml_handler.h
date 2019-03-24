@@ -37,14 +37,14 @@
 class CableFileXmlHandler : public XmlHandler {
  public:
   /// \brief Creates an XML node for a cable file.
-  /// \param[in] span
-  ///   The span.
+  /// \param[in] cable
+  ///   The cable.
   /// \param[in] name
   ///   The name of the XML node. This will be an attribute for the created
   ///   node. If empty, no attribute will be created.
   /// \param[in] system_units
   ///   The unit system, which is used for attributing child XML nodes.
-  /// \param[in] system_style
+  /// \param[in] style_units
   ///   The unit style, which is used for attributing child XML nodes.
   /// \return An XML node for the span.
   static wxXmlNode* CreateNode(const Cable& cable,

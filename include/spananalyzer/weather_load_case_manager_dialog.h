@@ -19,6 +19,12 @@
 class WeatherLoadCaseManagerDialog : public wxDialog {
  public:
   /// \brief Constructor.
+  /// \param[in] parent
+  ///   The parent window.
+  /// \param[in] units
+  ///   The unit system.
+  /// \param[in,out] weathercases
+  ///   The weathercases to be managed.
   WeatherLoadCaseManagerDialog(
       wxWindow* parent,
       const units::UnitSystem& units,

@@ -47,6 +47,8 @@ class DocumentFileDropTarget : public wxFileDropTarget {
 class SpanAnalyzerFrame : public wxDocParentFrame {
  public:
   /// \brief Constructor.
+  /// \param[in] manager
+  ///   The document manager.
   SpanAnalyzerFrame(wxDocManager* manager);
 
   /// \brief Destructor.

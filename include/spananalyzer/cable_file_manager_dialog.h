@@ -21,6 +21,12 @@
 class CableFileManagerDialog : public wxDialog {
  public:
   /// \brief Constructor.
+  /// \param[in] parent
+  ///   The parent window.
+  /// \param[in] units
+  ///   The unit system.
+  /// \param[in,out] cablefiles
+  ///   The cable files to be managed.
   CableFileManagerDialog(wxWindow* parent,
                          const units::UnitSystem& units,
                          std::list<CableFile*>* cablefiles);

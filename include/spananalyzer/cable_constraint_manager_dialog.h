@@ -24,8 +24,10 @@ class CableConstraintManagerDialog : public wxDialog {
   ///   The application cable files.
   /// \param[in] weathercases
   ///   The application weathercases.
+  /// \param[in] units
+  ///   The unit system.
   /// \param[in,out] constraints
-  ///   The filter groups to be managed.
+  ///   The cable constraints to be managed.
   CableConstraintManagerDialog(wxWindow* parent,
                                const std::list<CableFile*>* cablefiles,
                                const std::list<WeatherLoadCase*>* weathercases,

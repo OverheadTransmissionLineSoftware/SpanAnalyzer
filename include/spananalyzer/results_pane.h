@@ -92,8 +92,6 @@ class ResultsPane : public wxPanel {
   void UpdateReportDataSagTension();
 
   /// \brief Updates the report data with tension distribution results.
-  /// \param[in] results
-  ///   The filtered results from the document.
   void UpdateReportDataTensionDistribution();
 
   /// \var data_
