@@ -7,11 +7,11 @@
 #include "appcommon/units/weather_load_case_unit_converter.h"
 #include "appcommon/widgets/error_message_dialog.h"
 #include "appcommon/widgets/status_bar_log.h"
-#include "appcommon/xml/cable_xml_handler.h"
 #include "wx/dir.h"
 #include "wx/filename.h"
 #include "wx/xml/xml.h"
 
+#include "spananalyzer/cable_file_xml_handler.h"
 #include "spananalyzer/span_analyzer_app.h"
 #include "spananalyzer/span_analyzer_config_xml_handler.h"
 #include "spananalyzer/span_analyzer_data_xml_handler.h"
@@ -73,19 +73,9 @@ int FileHandler::LoadAppData(const std::string& filepath,
   }
 
   // parses the xml node to populate data object
+  // data is converted to 'consistent' units while being parsed
   const bool status_node = SpanAnalyzerDataXmlHandler::ParseNode(
       root, filepath, units_file, data);
-
-  // converts weathercases to consistent unit style
-  for (auto iter = data.weathercases.begin();
-       iter != data.weathercases.end(); iter++) {
-    WeatherLoadCase* weathercase = *iter;
-    WeatherLoadCaseUnitConverter::ConvertUnitStyle(
-        units_file,
-        units::UnitStyle::kDifferent,
-        units::UnitStyle::kConsistent,
-        *weathercase);
-  }
 
   // converts unit systems if the file doesn't match applicaton config
   if (units_file != wxGetApp().config()->units) {
@@ -135,7 +125,7 @@ int FileHandler::LoadCable(const std::string& filepath,
 
   // checks for valid xml root
   const wxXmlNode* root = doc.GetRoot();
-  if (root->GetName() != "cable") {
+  if (root->GetName() != "cable_file") {
     message = filepath + "  --  "
               "Cable file contains an invalid xml root. Aborting.";
     wxLogError(message.c_str());
@@ -164,19 +154,19 @@ int FileHandler::LoadCable(const std::string& filepath,
   }
 
   // parses the xml node to populate cable object
-  const bool status_node = CableXmlHandler::ParseNode(root, filepath, cable);
-
-  // converts units to consistent style
-  CableUnitConverter::ConvertUnitStyle(
+  // cable is converted to 'consistent' units while being parsed
+  const bool status_node = CableFileXmlHandler::ParseNode(
+      root,
+      filepath,
       units_file,
-      units::UnitStyle::kDifferent,
-      units::UnitStyle::kConsistent,
+      true,
       cable);
 
   // converts unit systems if the file doesn't match applicaton config
   units::UnitSystem units_config = wxGetApp().config()->units;
   if (units_file != units_config) {
-    CableUnitConverter::ConvertUnitSystem(units_file, units_config, cable);
+    CableUnitConverter::ConvertUnitSystem(units_file, units_config,
+                                          true, cable);
   }
 
   // adds any missing polynomial coefficients
@@ -208,6 +198,13 @@ int FileHandler::LoadCable(const std::string& filepath,
   for (int i = 0; i < num_needed; i++) {
     coefficients->push_back(0);
   }
+
+  // sets polynomial scaling factors
+  cable.component_core.scale_polynomial_x = 0.01;
+  cable.component_core.scale_polynomial_y = 1;
+
+  cable.component_shell.scale_polynomial_x = 0.01;
+  cable.component_shell.scale_polynomial_y = 1;
 
   // resets statusbar
   status_bar_log::PopText(0);
@@ -283,26 +280,18 @@ void FileHandler::SaveAppData(const std::string& filepath,
   // cables are stored in individual files, and are not included in the app
   // data file
 
-  // converts weathercases to different unit style
+  // converts weathercases to 'different' unit style
   for (auto iter = data.weathercases.begin();
         iter != data.weathercases.end(); iter++) {
     WeatherLoadCase* weathercase = *iter;
-    WeatherLoadCaseUnitConverter::ConvertUnitStyle(
+    WeatherLoadCaseUnitConverter::ConvertUnitStyleToDifferent(
         units,
-        units::UnitStyle::kConsistent,
-        units::UnitStyle::kDifferent,
         *weathercase);
   }
 
   // generates an xml node
-  wxXmlNode* root = SpanAnalyzerDataXmlHandler::CreateNode(data, units);
-
-  // gets the units
-  if (units == units::UnitSystem::kImperial) {
-    root->AddAttribute("units", "Imperial");
-  } else if (units == units::UnitSystem::kMetric) {
-    root->AddAttribute("units", "Metric");
-  }
+  wxXmlNode* root = SpanAnalyzerDataXmlHandler::CreateNode(
+      data, units, units::UnitStyle::kDifferent);
 
   // creates any directories that are needed
   wxFileName filename(filepath);
@@ -318,14 +307,13 @@ void FileHandler::SaveAppData(const std::string& filepath,
     wxLogError("File didn't save");
   }
 
-  // converts weathercases to different unit style
+  // converts weathercases to 'consistent' unit style
   for (auto iter = data.weathercases.begin();
         iter != data.weathercases.end(); iter++) {
     WeatherLoadCase* weathercase = *iter;
-    WeatherLoadCaseUnitConverter::ConvertUnitStyle(
+    WeatherLoadCaseUnitConverter::ConvertUnitStyleToConsistent(
+        0,
         units,
-        units::UnitStyle::kDifferent,
-        units::UnitStyle::kConsistent,
         *weathercase);
   }
 
@@ -342,20 +330,14 @@ void FileHandler::SaveCable(const std::string& filepath, const Cable& cable,
 
   // creates a copy of the cable and converts to different unit style
   Cable cable_converted = cable;
-  CableUnitConverter::ConvertUnitStyle(units,
-                                       units::UnitStyle::kConsistent,
-                                       units::UnitStyle::kDifferent,
-                                       cable_converted);
+  CableUnitConverter::ConvertUnitStyleToDifferent(
+      units,
+      true,
+      cable_converted);
 
   // generates an xml node
-  wxXmlNode* root = CableXmlHandler::CreateNode(cable_converted, "", units);
-
-  // gets the units and adds attribute
-  if (units == units::UnitSystem::kImperial) {
-    root->AddAttribute("units", "Imperial");
-  } else if (units == units::UnitSystem::kMetric) {
-    root->AddAttribute("units", "Metric");
-  }
+  wxXmlNode* root = CableFileXmlHandler::CreateNode(
+      cable_converted, "", units, units::UnitStyle::kDifferent);
 
   // creates any directories that are needed
   wxFileName filename(filepath);

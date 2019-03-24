@@ -47,6 +47,9 @@ EditPane::EditPane(wxWindow* parent, wxView* view) {
   // loads dialog from virtual xrc file system
   wxXmlResource::Get()->LoadPanel(this, parent, "edit_pane");
 
+  // initializes
+  index_bold_ = -1;
+
   // saves view reference
   view_ = view;
 
@@ -103,10 +106,12 @@ void EditPane::Update(wxObject* hint) {
     // do nothing
   } else if (hint_update->type() == UpdateHint::Type::kCablesEdit) {
     // do nothing
+  } else if (hint_update->type() == UpdateHint::Type::kConstraintsEdit) {
+    // do nothing
   } else if (hint_update->type() == UpdateHint::Type::kPreferencesEdit) {
     // do nothing
   } else if (hint_update->type() == UpdateHint::Type::kSpansEdit) {
-    UpdateTreeCtrlSpanItems();
+    UpdateTreeCtrlSpanItems(hint_update);
   } else if (hint_update->type() == UpdateHint::Type::kWeathercasesEdit) {
     // do nothing
   }
@@ -121,18 +126,25 @@ void EditPane::ActivateSpan(const wxTreeItemId& id) {
     return;
   }
 
-  wxLogVerbose("Activating span.");
-
-  // updates document
+  // gets span index
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
   SpanTreeItemData* data =
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
   auto iter = data->iter();
   const int index = doc->IndexSpan(&(*iter));
+
+  // logs
+  std::string message = "Activating span at index " + std::to_string(index)
+                      + ".";
+  wxLogVerbose(message.c_str());
+
+  // updates document
   doc->set_index_activated(index);
 
   // posts a view update
   UpdateHint hint(UpdateHint::Type::kSpansEdit);
+  hint.set_index_span(index);
+  hint.set_name_command("Activate Span");
   doc->UpdateAllViews(nullptr, &hint);
 
   // updates treectrl focus
@@ -177,8 +189,6 @@ void EditPane::AddSpan() {
     return;
   }
 
-  wxLogVerbose("Adding span.");
-
   // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
 
@@ -202,8 +212,6 @@ void EditPane::CopySpan(const wxTreeItemId& id) {
   // copies span and updates name
   Span span = *(data->iter());
   span.name = NameVersioned(span.name);
-
-  wxLogVerbose("Copying span.");
 
   // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
@@ -235,6 +243,8 @@ void EditPane::DeactivateSpan(const wxTreeItemId& id) {
 
   // posts a view update
   UpdateHint hint(UpdateHint::Type::kSpansEdit);
+  hint.set_index_span(index_bold_);
+  hint.set_name_command("Deactivate Span");
   doc->UpdateAllViews(nullptr, &hint);
 
   // updates treectrl focus
@@ -246,8 +256,6 @@ void EditPane::DeleteSpan(const wxTreeItemId& id) {
   // gets tree item data
   SpanTreeItemData* data =
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
-
-  wxLogVerbose("Deleting span.");
 
   // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
@@ -268,11 +276,10 @@ void EditPane::EditSpan(const wxTreeItemId& id) {
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
   Span span = *(data->iter());
 
-  // converts span to different unit style
-  SpanUnitConverter::ConvertUnitStyle(wxGetApp().config()->units,
-                                      units::UnitStyle::kConsistent,
-                                      units::UnitStyle::kDifferent,
-                                      span);
+  // converts span to 'different' unit style
+  SpanUnitConverter::ConvertUnitStyleToDifferent(wxGetApp().config()->units,
+                                                 true,
+                                                 span);
 
   // gets referenced objects and makes sure that they exist
   const std::list<CableFile*>& cablefiles = wxGetApp().data()->cablefiles;
@@ -300,13 +307,11 @@ void EditPane::EditSpan(const wxTreeItemId& id) {
     return;
   }
 
-  wxLogVerbose("Editing span.");
-
-  // converts span to consistent unit style
-  SpanUnitConverter::ConvertUnitStyle(wxGetApp().config()->units,
-                                      units::UnitStyle::kDifferent,
-                                      units::UnitStyle::kConsistent,
-                                      span);
+  // converts span to 'consistent' unit style
+  SpanUnitConverter::ConvertUnitStyleToConsistent(0,
+                                                  wxGetApp().config()->units,
+                                                  true,
+                                                  span);
 
   // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
@@ -354,10 +359,27 @@ void EditPane::InitializeTreeCtrl() {
   wxTreeItemId root = treectrl_->GetRootItem();
 
   // adds items for all spans in document
-  UpdateTreeCtrlSpanItems();
+  UpdateTreeCtrlSpanItems(nullptr);
 
   // expands to show all spans
   treectrl_->Expand(root);
+}
+
+wxTreeItemId EditPane::InsertTreeCtrlItem(const int& index) {
+  SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
+  auto iter = std::next(doc->spans().cbegin(), index);
+  const Span& span = *iter;
+
+  // inserts
+  wxTreeItemId item = treectrl_->InsertItem(treectrl_->GetRootItem(), index,
+                                            span.name);
+
+  // adds item data
+  SpanTreeItemData* data = new SpanTreeItemData();
+  data->set_iter(iter);
+  treectrl_->SetItemData(item, data);
+
+  return item;
 }
 
 void EditPane::MoveSpanDown(const wxTreeItemId& id) {
@@ -370,8 +392,6 @@ void EditPane::MoveSpanDown(const wxTreeItemId& id) {
   // gets tree item data
   SpanTreeItemData* data =
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
-
-  wxLogVerbose("Moving spans.");
 
   // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
@@ -396,8 +416,6 @@ void EditPane::MoveSpanUp(const wxTreeItemId& id) {
   // gets tree item data
   SpanTreeItemData* data =
       dynamic_cast<SpanTreeItemData*>(treectrl_->GetItemData(id));
-
-  wxLogVerbose("Moving spans.");
 
   // updates document
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
@@ -656,35 +674,94 @@ void EditPane::OnItemMenu(wxTreeEvent& event) {
   event.Skip();
 }
 
-/// This method deletes the treectrl items and re-inserts them. The treectrl
-/// item focus is not set.
-void EditPane::UpdateTreeCtrlSpanItems() {
+void EditPane::UpdateTreeCtrlBoldItem() {
+  wxTreeItemId root = treectrl_->GetRootItem();
+  wxTreeItemIdValue cookie;
+
+  // unbolds existing selection
+  if (0 <= index_bold_) {
+    wxTreeItemId item_unbold = treectrl_->GetFirstChild(root, cookie);
+    for (int i = 0; i < index_bold_; i++) {
+      item_unbold = treectrl_->GetNextSibling(item_unbold);
+    }
+
+    treectrl_->SetItemBold(item_unbold, false);
+  }
+
+  // bolds new selection
+  SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
+  if (0 <= doc->index_activated()) {
+    wxTreeItemId item_bold = treectrl_->GetFirstChild(root, cookie);
+    for (int i = 0; i < doc->index_activated(); i++) {
+      item_bold = treectrl_->GetNextSibling(item_bold);
+    }
+
+    treectrl_->SetItemBold(item_bold, true);
+    index_bold_ = doc->index_activated();
+  }
+}
+
+void EditPane::UpdateTreeCtrlSpanItems(const UpdateHint* hint) {
   treectrl_->Freeze();
 
   // gets information from document and treectrl
   SpanAnalyzerDoc* doc = dynamic_cast<SpanAnalyzerDoc*>(view_->GetDocument());
   const std::list<Span>& spans = doc->spans();
-  const Span* span_activated = doc->SpanActivated();
-
   wxTreeItemId root = treectrl_->GetRootItem();
-  treectrl_->DeleteChildren(root);
 
-  // iterates over all spans in the document
-  for (auto iter = spans.cbegin(); iter != spans.cend(); iter++) {
-    const Span* span = &(*iter);
+  // updates treectrl
+  if ((hint == nullptr) || (hint->name_command() == "")) {
+    // rebuilds treectrl
 
-    // creates treectrl item
-    wxTreeItemId item = treectrl_->AppendItem(root, span->name);
+    // clears treectrl
+    treectrl_->DeleteChildren(root);
 
-    SpanTreeItemData* data = new SpanTreeItemData();
-    data->set_iter(iter);
-    treectrl_->SetItemData(item, data);
+    // repopulates treectrl
+    for (auto iter = spans.cbegin(); iter != spans.cend(); iter++) {
+      const Span* span = &(*iter);
 
-    // adjusts bold for activated and non-activated span
-    if (span == span_activated) {
-      treectrl_->SetItemBold(item, true);
-    } else {
-      treectrl_->SetItemBold(item, false);
+      wxTreeItemId item = treectrl_->AppendItem(root, span->name);
+
+      SpanTreeItemData* data = new SpanTreeItemData();
+      data->set_iter(iter);
+      treectrl_->SetItemData(item, data);
+    }
+
+    // expands treectrl root
+    treectrl_->Expand(root);
+  } else {
+    // partially updates treectrl
+
+    // gets the treectrl item that matches the index
+    wxTreeItemIdValue cookie;
+    wxTreeItemId item = treectrl_->GetFirstChild(root, cookie);
+
+    for (int i = 0; i < hint->index_span(); i++) {
+      item = treectrl_->GetNextSibling(item);
+    }
+
+    // modifies existing treectrl items
+    if (hint->name_command() == "Activate Span") {
+      UpdateTreeCtrlBoldItem();
+    } else if (hint->name_command() == "Deactivate Span") {
+      UpdateTreeCtrlBoldItem();
+    } else if (hint->name_command() == SpanCommand::kNameDelete) {
+      treectrl_->Delete(item);
+    } else if (hint->name_command() == SpanCommand::kNameInsert) {
+      InsertTreeCtrlItem(hint->index_span());
+    } else if (hint->name_command() == SpanCommand::kNameModify) {
+      const Span& span = *std::next(spans.cbegin(), hint->index_span());
+      treectrl_->SetItemText(item, span.name);
+    } else if (hint->name_command() == SpanCommand::kNameMoveDown) {
+      wxTreeItemId item_prev = treectrl_->GetPrevSibling(item);
+      treectrl_->Delete(item_prev);
+      InsertTreeCtrlItem(hint->index_span());
+      UpdateTreeCtrlBoldItem();
+    } else if (hint->name_command() == SpanCommand::kNameMoveUp) {
+      wxTreeItemId item_next = treectrl_->GetNextSibling(item);
+      treectrl_->Delete(item_next);
+      InsertTreeCtrlItem(hint->index_span());
+      UpdateTreeCtrlBoldItem();
     }
   }
 

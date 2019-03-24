@@ -58,6 +58,8 @@ void CablePlotPane::Update(wxObject* hint) {
     return;
   }
 
+  wxLogVerbose("Updating cable elongation model plot.");
+
   // gets a buffered dc to prevent flickering
   wxClientDC dc(this);
   wxBufferedDC dc_buf(&dc, bitmap_buffer_);
@@ -93,6 +95,11 @@ void CablePlotPane::Update(wxObject* hint) {
     UpdatePlotScaling();
     view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == UpdateHint::Type::kCablesEdit) {
+    UpdatePlotDatasets();
+    UpdatePlotRenderers();
+    UpdatePlotScaling();
+    view_->OnDraw(&dc_buf);
+  } else if (hint_update->type() == UpdateHint::Type::kConstraintsEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
     UpdatePlotScaling();
@@ -186,9 +193,9 @@ void CablePlotPane::OnMouse(wxMouseEvent& event) {
 
   // logs to status bar
   std::string str = "X="
-                    + helper::DoubleToFormattedString(point_data.x, 5)
+                    + helper::DoubleToString(point_data.x, 5, true)
                     + "   Y="
-                    + helper::DoubleToFormattedString(point_data.y, 2);
+                    + helper::DoubleToString(point_data.y, 2, true);
 
   status_bar_log::SetText(str, 1);
 }
@@ -227,7 +234,7 @@ void CablePlotPane::UpdateDataSetAxes(
 
   text = new Text2d();
   text->angle = 0;
-  text->message = helper::DoubleToFormattedString(x_min, 2);
+  text->message = helper::DoubleToString(x_min, 2, true);
   text->offset = Point2d<int>(5, -5);
   text->point.x = x_min;
   text->point.y = 0;
@@ -236,7 +243,7 @@ void CablePlotPane::UpdateDataSetAxes(
 
   text = new Text2d();
   text->angle = 0;
-  text->message = helper::DoubleToFormattedString(x_max, 2);
+  text->message = helper::DoubleToString(x_max, 2, true);
   text->offset = Point2d<int>(0, -5);
   text->point.x = x_max;
   text->point.y = 0;
@@ -255,7 +262,7 @@ void CablePlotPane::UpdateDataSetAxes(
 
   text = new Text2d();
   text->angle = 0;
-  text->message = helper::DoubleToFormattedString(y_min, 0) + " ";
+  text->message = helper::DoubleToString(y_min, 0, true) + " ";
   text->offset = Point2d<int>(-5, 5);
   text->point.x = 0;
   text->point.y = y_min;
@@ -264,7 +271,7 @@ void CablePlotPane::UpdateDataSetAxes(
 
   text = new Text2d();
   text->angle = 0;
-  text->message = helper::DoubleToFormattedString(y_max, 0) + " ";
+  text->message = helper::DoubleToString(y_max, 0, true) + " ";
   text->offset = Point2d<int>(-5, 0);
   text->point.x = 0;
   text->point.y = y_max;
@@ -349,8 +356,6 @@ void CablePlotPane::UpdateDataSetMarker(
 }
 
 void CablePlotPane::UpdatePlotDatasets() {
-  wxLogVerbose("Updating cable elongation model plot datasets.");
-
   ClearDataSets();
 
   // gets view settings
@@ -411,8 +416,6 @@ void CablePlotPane::UpdatePlotDatasets() {
 }
 
 void CablePlotPane::UpdatePlotRenderers() {
-  wxLogVerbose("Updating cable elongation model plot renderers.");
-
   // clears existing renderers
   plot_.ClearRenderers();
 

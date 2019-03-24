@@ -27,6 +27,37 @@ bool SpanAnalyzerDoc::AppendSpan(const Span& span) {
   return true;
 }
 
+std::list<const CableConstraint*> SpanAnalyzerDoc::Constraints() const {
+  std::list<const CableConstraint*> constraints_filtered;
+
+  // gets reference data
+  const std::list<CableConstraint>& constraints =
+      wxGetApp().data()->constraints;
+  const Span* span = SpanActivated();
+
+  if (span == nullptr) {
+    return constraints_filtered;
+  }
+
+  // searches for constraints that apply
+  for (auto iter = constraints.cbegin(); iter != constraints.cend(); iter++) {
+    const CableConstraint* constraint = &(*iter);
+
+    // avoids null reference
+    if (span->linecable.cable() == nullptr) {
+      continue;
+    }
+
+    // checks for a match
+    if ((constraint->note == "") ||
+        (constraint->note == span->linecable.cable()->name)) {
+      constraints_filtered.push_back(constraint);
+    }
+  }
+
+  return constraints_filtered;
+}
+
 void SpanAnalyzerDoc::ConvertUnitStyle(const units::UnitSystem& system,
                                        const units::UnitStyle& style_from,
                                        const units::UnitStyle& style_to) {
@@ -35,10 +66,16 @@ void SpanAnalyzerDoc::ConvertUnitStyle(const units::UnitSystem& system,
   }
 
   // converts spans
-  for (auto it = spans_.begin(); it != spans_.end(); it++) {
-    Span& span = *it;
-    SpanUnitConverter::ConvertUnitStyle(system, style_from,
-                                        style_to, span);
+  if (style_to == units::UnitStyle::kConsistent) {
+    for (auto it = spans_.begin(); it != spans_.end(); it++) {
+      Span& span = *it;
+      SpanUnitConverter::ConvertUnitStyleToConsistent(0, system, true, span);
+    }
+  } else if (style_to == units::UnitStyle::kDifferent) {
+    for (auto it = spans_.begin(); it != spans_.end(); it++) {
+      Span& span = *it;
+      SpanUnitConverter::ConvertUnitStyleToDifferent(system, true, span);
+    }
   }
 
   // clears commands in the processor
@@ -55,7 +92,7 @@ void SpanAnalyzerDoc::ConvertUnitSystem(const units::UnitSystem& system_from,
   // converts spans
   for (auto it = spans_.begin(); it != spans_.end(); it++) {
     Span& span = *it;
-    SpanUnitConverter::ConvertUnitSystem(system_from, system_to, span);
+    SpanUnitConverter::ConvertUnitSystem(system_from, system_to, true, span);
   }
 
   // clears commands in the processor
@@ -87,6 +124,10 @@ bool SpanAnalyzerDoc::DeleteSpan(const int& index) {
   SyncAnalysisController();
 
   return true;
+}
+
+const AnalysisFilterGroup* SpanAnalyzerDoc::FilterGroupConstraints() const {
+  return &group_filters_constraint_;
 }
 
 int SpanAnalyzerDoc::IndexSpan(const Span* span) {
@@ -243,7 +284,7 @@ wxInputStream& SpanAnalyzerDoc::LoadObject(wxInputStream& stream) {
       wxGetApp().data()->cablefiles;
 
   const bool status_node = SpanAnalyzerDocXmlHandler::ParseNode(
-      root, filename, &cablefiles, &weathercases, *this);
+      root, filename, units_file, true, &cablefiles, &weathercases, *this);
   if (status_node == false) {
     // notifies user of error
     message = GetFilename() + "  --  "
@@ -287,6 +328,7 @@ bool SpanAnalyzerDoc::ModifySpan(const int& index, const Span& span) {
   // runs analysis if necessary
   if (index == index_activated_) {
     controller_analysis_.RunAnalysis();
+    UpdateFilterGroupConstraints();
   }
 
   return true;
@@ -366,6 +408,9 @@ bool SpanAnalyzerDoc::OnCreate(const wxString& path, long flags) {
   line_structure.set_station(1000);
   line_structures_.push_back(line_structure);
 
+  // initializes constraint filter group
+  group_filters_constraint_.name = "Constraint";
+
   // calls base class function
   return wxDocument::OnCreate(path, flags);
 }
@@ -405,16 +450,6 @@ wxOutputStream& SpanAnalyzerDoc::SaveObject(wxOutputStream& stream) {
 
   // generates an xml node
   wxXmlNode* root = SpanAnalyzerDocXmlHandler::CreateNode(*this, units);
-
-  // adds unit attribute to xml node
-  // this attribute should be added at this step vs the xml handler because
-  // the attribute describes all values in the file, and is consistent
-  // with how the FileHandler functions work
-  if (units == units::UnitSystem::kImperial) {
-    root->AddAttribute("units", "Imperial");
-  } else if (units == units::UnitSystem::kMetric) {
-    root->AddAttribute("units", "Metric");
-  }
 
   // creates an XML document and saves to stream
   wxXmlDocument doc_xml;
@@ -522,5 +557,23 @@ void SpanAnalyzerDoc::SyncAnalysisController() {
   if (span != controller_analysis_.span()) {
     controller_analysis_.set_span(span);
     controller_analysis_.RunAnalysis();
+    UpdateFilterGroupConstraints();
+  }
+}
+
+void SpanAnalyzerDoc::UpdateFilterGroupConstraints() {
+  group_filters_constraint_.filters.clear();
+
+  // gets constraints that apply to activated span
+  const std::list<const CableConstraint*> constraints = Constraints();
+
+  // creates an analysis filter group from the constraints
+  for (auto iter = constraints.cbegin(); iter != constraints.cend(); iter++) {
+    const CableConstraint* constraint = *iter;
+    AnalysisFilter filter;
+    filter.condition = constraint->condition;
+    filter.weathercase = constraint->case_weather;
+
+    group_filters_constraint_.filters.push_back(filter);
   }
 }

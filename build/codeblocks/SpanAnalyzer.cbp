@@ -25,7 +25,10 @@
 					<Add library="libotlsmodels_based.a" />
 				</Linker>
 				<ExtraCommands>
-					<Add before="../../external/wxWidgets/build-debug/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
+					<Add before="../../external/wxWidgets/build-debug/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_constraint_editor_dialog.xrc ../../res/xrc/cable_constraint_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/plan_plot_options_dialog.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
+					<Add after="zip -j ../../res/help/calculations.htb ../../res/help/calculations/*" />
+					<Add after="zip -j ../../res/help/interface.htb ../../res/help/interface/*" />
+					<Add after="zip -j ../../res/help/overview.htb ../../res/help/overview/*" />
 					<Add after="mkdir -p debug/res" />
 					<Add after="cp ../../res/help/*.htb debug/res/" />
 				</ExtraCommands>
@@ -49,7 +52,10 @@
 					<Add library="libotlsmodels_base.a" />
 				</Linker>
 				<ExtraCommands>
-					<Add before="../../external/wxWidgets/build-release/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
+					<Add before="../../external/wxWidgets/build-release/utils/wxrc/wxrc -v -c -o ../../res/resources.cc ../../external/AppCommon/res/xrc/cable_editor_dialog.xrc ../../external/AppCommon/res/xrc/error_message_dialog.xrc ../../external/AppCommon/res/xrc/weather_load_case_editor_dialog.xrc ../../res/xrc/analysis_filter_editor_dialog.xrc ../../res/xrc/analysis_filter_manager_dialog.xrc ../../res/xrc/cable_constraint_editor_dialog.xrc ../../res/xrc/cable_constraint_manager_dialog.xrc ../../res/xrc/cable_file_manager_dialog.xrc ../../res/xrc/cable_plot_options_dialog.xrc ../../res/xrc/edit_pane.xrc ../../res/xrc/plan_plot_options_dialog.xrc ../../res/xrc/preferences_dialog.xrc ../../res/xrc/profile_plot_options_dialog.xrc ../../res/xrc/results_pane.xrc ../../res/xrc/span_analyzer_menubar.xrc ../../res/xrc/span_editor_dialog.xrc ../../res/xrc/weather_load_case_manager_dialog.xrc" />
+					<Add after="zip -j ../../res/help/calculations.htb ../../res/help/calculations/*" />
+					<Add after="zip -j ../../res/help/interface.htb ../../res/help/interface/*" />
+					<Add after="zip -j ../../res/help/overview.htb ../../res/help/overview/*" />
 					<Add after="mkdir -p release/res" />
 					<Add after="cp ../../res/help/*.htb release/res/" />
 				</ExtraCommands>
@@ -281,7 +287,16 @@
 		<Unit filename="../../include/spananalyzer/analysis_filter_xml_handler.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
+		<Unit filename="../../include/spananalyzer/cable_constraint_editor_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/spananalyzer/cable_constraint_manager_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
 		<Unit filename="../../include/spananalyzer/cable_file_manager_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/spananalyzer/cable_file_xml_handler.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
 		<Unit filename="../../include/spananalyzer/cable_plot_options_dialog.h">
@@ -294,6 +309,12 @@
 			<Option virtualFolder="Header Files/" />
 		</Unit>
 		<Unit filename="../../include/spananalyzer/file_handler.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/spananalyzer/plan_plot_options_dialog.h">
+			<Option virtualFolder="Header Files/" />
+		</Unit>
+		<Unit filename="../../include/spananalyzer/plan_plot_pane.h">
 			<Option virtualFolder="Header Files/" />
 		</Unit>
 		<Unit filename="../../include/spananalyzer/preferences_dialog.h">
@@ -386,6 +407,9 @@
 		<Unit filename="../../res/help/interface/application_files.html">
 			<Option virtualFolder="Resource Files/Help/" />
 		</Unit>
+		<Unit filename="../../res/help/interface/constraints.html">
+			<Option virtualFolder="Resource Files/Help/" />
+		</Unit>
 		<Unit filename="../../res/help/interface/editing_cables.html">
 			<Option virtualFolder="Resource Files/Help/" />
 		</Unit>
@@ -472,6 +496,12 @@
 		<Unit filename="../../res/xrc/analysis_filter_manager_dialog.xrc">
 			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
+		<Unit filename="../../res/xrc/cable_constraint_editor_dialog.xrc">
+			<Option virtualFolder="Resource Files/XRC/" />
+		</Unit>
+		<Unit filename="../../res/xrc/cable_constraint_manager_dialog.xrc">
+			<Option virtualFolder="Resource Files/XRC/" />
+		</Unit>
 		<Unit filename="../../res/xrc/cable_file_manager_dialog.xrc">
 			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
@@ -479,6 +509,9 @@
 			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../res/xrc/edit_pane.xrc">
+			<Option virtualFolder="Resource Files/XRC/" />
+		</Unit>
+		<Unit filename="../../res/xrc/plan_plot_options_dialog.xrc">
 			<Option virtualFolder="Resource Files/XRC/" />
 		</Unit>
 		<Unit filename="../../res/xrc/preferences_dialog.xrc">
@@ -511,7 +544,16 @@
 		<Unit filename="../../src/analysis_filter_xml_handler.cc">
 			<Option virtualFolder="Source Files/" />
 		</Unit>
+		<Unit filename="../../src/cable_constraint_editor_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/cable_constraint_manager_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
 		<Unit filename="../../src/cable_file_manager_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/cable_file_xml_handler.cc">
 			<Option virtualFolder="Source Files/" />
 		</Unit>
 		<Unit filename="../../src/cable_plot_options_dialog.cc">
@@ -524,6 +566,12 @@
 			<Option virtualFolder="Source Files/" />
 		</Unit>
 		<Unit filename="../../src/file_handler.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/plan_plot_options_dialog.cc">
+			<Option virtualFolder="Source Files/" />
+		</Unit>
+		<Unit filename="../../src/plan_plot_pane.cc">
 			<Option virtualFolder="Source Files/" />
 		</Unit>
 		<Unit filename="../../src/preferences_dialog.cc">

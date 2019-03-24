@@ -204,14 +204,14 @@ void SpanEditorDialog::SetValidators() {
   wxTextCtrl* textctrl = nullptr;
 
   // constraint limit
-  precision = 1;
+  precision = 2;
   style = wxNUM_VAL_NO_TRAILING_ZEROES;
   textctrl = XRCCTRL(*this, "textctrl_constraint_limit", wxTextCtrl);
   textctrl->SetValidator(
       wxFloatingPointValidator<double>(precision, nullptr, style));
 
   // line section spacing-horizontal
-  precision = 1;
+  precision = 2;
   style = wxNUM_VAL_NO_TRAILING_ZEROES;
   textctrl = XRCCTRL(*this, "textctrl_line_section_spacing_horizontal",
                      wxTextCtrl);
@@ -219,7 +219,7 @@ void SpanEditorDialog::SetValidators() {
       wxFloatingPointValidator<double>(precision, nullptr, style));
 
   // line section spacing-vertical
-  precision = 1;
+  precision = 2;
   style = wxNUM_VAL_NO_TRAILING_ZEROES;
   textctrl = XRCCTRL(*this, "textctrl_line_section_spacing_vertical",
                      wxTextCtrl);
@@ -227,7 +227,7 @@ void SpanEditorDialog::SetValidators() {
       wxFloatingPointValidator<double>(precision, nullptr, style));
 
   // span spacing-horizontal
-  precision = 1;
+  precision = 2;
   style = wxNUM_VAL_NO_TRAILING_ZEROES;
   textctrl = XRCCTRL(*this, "textctrl_span_spacing_horizontal",
                      wxTextCtrl);
@@ -235,7 +235,7 @@ void SpanEditorDialog::SetValidators() {
       wxFloatingPointValidator<double>(precision, nullptr, style));
 
   // span spacing-vertical
-  precision = 1;
+  precision = 2;
   style = wxNUM_VAL_NO_TRAILING_ZEROES;
   textctrl = XRCCTRL(*this, "textctrl_span_spacing_vertical",
                      wxTextCtrl);
@@ -529,7 +529,7 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
 
   // transfers constraint limit
   textctrl = XRCCTRL(*this, "textctrl_constraint_limit", wxTextCtrl);
-  str = wxString::FromDouble(span_modified_.linecable.constraint().limit, 1);
+  str = wxString::FromDouble(span_modified_.linecable.constraint().limit, 2);
   textctrl->SetValue(str);
 
   // transfers constraint weathercase
@@ -576,14 +576,14 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
                      wxTextCtrl);
   str = wxString::FromDouble(
       span_modified_.linecable.spacing_attachments_ruling_span().x(),
-      1);
+      2);
   textctrl->SetValue(str);
 
   textctrl = XRCCTRL(*this, "textctrl_line_section_spacing_vertical",
                       wxTextCtrl);
   str = wxString::FromDouble(
       span_modified_.linecable.spacing_attachments_ruling_span().z(),
-      1);
+      2);
   textctrl->SetValue(str);
 
   // transfers span geometry
@@ -615,12 +615,12 @@ void SpanEditorDialog::TransferCustomDataToWindow() {
     // updates textctrls
     textctrl = XRCCTRL(*this, "textctrl_span_spacing_horizontal",
                        wxTextCtrl);
-    str = helper::DoubleToFormattedString(spacing_span.x(), 1);
+    str = helper::DoubleToString(spacing_span.x(), 2, true);
     textctrl->SetValue(str);
 
     textctrl = XRCCTRL(*this, "textctrl_span_spacing_vertical",
                        wxTextCtrl);
-    str = helper::DoubleToFormattedString(spacing_span.z(), 1);
+    str = helper::DoubleToString(spacing_span.z(), 2, true);
     textctrl->SetValue(str);
   }
 }

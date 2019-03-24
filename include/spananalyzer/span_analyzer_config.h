@@ -38,6 +38,28 @@ struct CablePlotOptions {
 
 /// \par OVERVIEW
 ///
+/// This class has the options for the PlanPlotPane.
+struct PlanPlotOptions {
+ public:
+  /// \var color_catenary
+  ///   The catenary color.
+  wxColour color_catenary;
+
+  /// \var scale_horizontal
+  ///   The horizontal scale factor.
+  int scale_horizontal;
+
+  /// \var scale_vertical
+  ///   The vertical scale factor.
+  int scale_vertical;
+
+  /// \var thickness_line
+  ///   The line thickness.
+  int thickness_line;
+};
+
+/// \par OVERVIEW
+///
 /// This class has the options for the ProfilePlotPane.
 struct ProfilePlotOptions {
  public:
@@ -87,6 +109,10 @@ struct SpanAnalyzerConfig {
   /// \var options_plot_cable
   ///   The cable elongation model plot pane options.
   CablePlotOptions options_plot_cable;
+
+  /// \var options_plot_plan
+  ///   The plan plot pane options.
+  PlanPlotOptions options_plot_plan;
 
   /// \var options_plot_profile
   ///   The profile plot pane options.

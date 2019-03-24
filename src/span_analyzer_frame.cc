@@ -10,6 +10,7 @@
 #include "wx/xrc/xmlres.h"
 
 #include "spananalyzer/analysis_filter_manager_dialog.h"
+#include "spananalyzer/cable_constraint_manager_dialog.h"
 #include "spananalyzer/cable_file_manager_dialog.h"
 #include "spananalyzer/file_handler.h"
 #include "spananalyzer/preferences_dialog.h"
@@ -57,6 +58,7 @@ bool DocumentFileDropTarget::OnDropFiles(wxCoord x, wxCoord y,
 BEGIN_EVENT_TABLE(SpanAnalyzerFrame, wxDocParentFrame)
   EVT_MENU(XRCID("menuitem_edit_analysisfilters"), SpanAnalyzerFrame::OnMenuEditAnalysisFilters)
   EVT_MENU(XRCID("menuitem_edit_cables"), SpanAnalyzerFrame::OnMenuEditCables)
+  EVT_MENU(XRCID("menuitem_edit_constraints"), SpanAnalyzerFrame::OnMenuEditConstraints)
   EVT_MENU(XRCID("menuitem_edit_weathercases"), SpanAnalyzerFrame::OnMenuEditWeathercases)
   EVT_MENU(XRCID("menuitem_file_pagesetup"), SpanAnalyzerFrame::OnMenuFilePageSetup)
   EVT_MENU(XRCID("menuitem_file_preferences"), SpanAnalyzerFrame::OnMenuFilePreferences)
@@ -162,6 +164,37 @@ void SpanAnalyzerFrame::OnMenuEditCables(wxCommandEvent& event) {
   }
 }
 
+void SpanAnalyzerFrame::OnMenuEditConstraints(wxCommandEvent& event) {
+  // gets application data
+  SpanAnalyzerData* data = wxGetApp().data();
+
+  // shows an editor
+  CableConstraintManagerDialog dialog(
+      this,
+      &data->cablefiles,
+      &data->weathercases,
+      wxGetApp().config()->units,
+      &data->constraints);
+  if (dialog.ShowModal() == wxID_OK) {
+    wxBusyCursor cursor;
+
+    wxLogVerbose("Updating constraints.");
+
+    // saves application data
+    FileHandler::SaveAppData(wxGetApp().config()->filepath_data, *data,
+                             wxGetApp().config()->units);
+  }
+
+  // updates document/views
+  SpanAnalyzerDoc* doc = wxGetApp().GetDocument();
+  if (doc != nullptr) {
+    doc->RunAnalysis();
+
+    UpdateHint hint(UpdateHint::Type::kConstraintsEdit);
+    doc->UpdateAllViews(nullptr, &hint);
+  }
+}
+
 void SpanAnalyzerFrame::OnMenuEditWeathercases(
     wxCommandEvent& event) {
   // gets application data
@@ -254,6 +287,7 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
       CableUnitConverter::ConvertUnitSystem(
           units_before,
           config->units,
+          true,
           cablefile->cable);
     }
 
@@ -265,8 +299,10 @@ void SpanAnalyzerFrame::OnMenuFilePreferences(wxCommandEvent& event) {
   }
 
   // updates views
-  UpdateHint hint(UpdateHint::Type::kPreferencesEdit);
-  doc->UpdateAllViews(nullptr, &hint);
+  if (doc != nullptr) {
+    UpdateHint hint(UpdateHint::Type::kPreferencesEdit);
+    doc->UpdateAllViews(nullptr, &hint);
+  }
 }
 
 void SpanAnalyzerFrame::OnMenuHelpAbout(wxCommandEvent& event) {

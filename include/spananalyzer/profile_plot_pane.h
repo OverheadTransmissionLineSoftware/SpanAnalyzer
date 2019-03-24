@@ -48,6 +48,12 @@ class ProfilePlotPane : public PlotPane2d {
   ///   The event.
   void OnMouse(wxMouseEvent& event);
 
+  /// \brief Renders content after (on top of) the plot.
+  /// \param[in] dc
+  ///   The device context.
+  /// This method draws axis labels in the bottom left corner of the plot.
+  void RenderAfter(wxDC& dc) override;
+
   /// \brief Updates a catenary dataset.
   /// \param[in] catenary
   ///   The catenary.

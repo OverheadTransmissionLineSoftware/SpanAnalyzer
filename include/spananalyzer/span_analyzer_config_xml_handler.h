@@ -62,6 +62,23 @@ class SpanAnalyzerConfigXmlHandler : public XmlHandler {
   static bool ParseNodeV1(const wxXmlNode* root,
                           const std::string& filepath,
                           SpanAnalyzerConfig& config);
+
+  /// \brief Parses a version 2 XML node and populates the config settings.
+  /// \param[in] root
+  ///   The XML root node for the config settings.
+  /// \param[in] filepath
+  ///   The filepath that the xml node was loaded from. This is for logging
+  ///   purposes only and can be left blank.
+  /// \param[out] config
+  ///   The config settings that are populated.
+  /// \return The status of the xml node parse. If any errors are encountered
+  ///   false is returned.
+  /// All errors are logged to the active application log target. Critical
+  /// errors cause the parsing to abort. Non-critical errors set the object
+  /// property to an invalid state (if applicable).
+  static bool ParseNodeV2(const wxXmlNode* root,
+                          const std::string& filepath,
+                          SpanAnalyzerConfig& config);
 };
 
 #endif  // SPANANALYZER_SPAN_ANALYZER_CONFIG_XML_HANDLER_H_

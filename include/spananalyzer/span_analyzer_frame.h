@@ -47,6 +47,8 @@ class DocumentFileDropTarget : public wxFileDropTarget {
 class SpanAnalyzerFrame : public wxDocParentFrame {
  public:
   /// \brief Constructor.
+  /// \param[in] manager
+  ///   The document manager.
   SpanAnalyzerFrame(wxDocManager* manager);
 
   /// \brief Destructor.
@@ -61,6 +63,11 @@ class SpanAnalyzerFrame : public wxDocParentFrame {
   /// \param[in] event
   ///   The event.
   void OnMenuEditCables(wxCommandEvent& event);
+
+  /// \brief Handles the edit->constraints menu click event.
+  /// \param[in] event
+  ///   The event.
+  void OnMenuEditConstraints(wxCommandEvent& event);
 
   /// \brief Handles the edit->edit weather cases menu click event.
   /// \param[in] event

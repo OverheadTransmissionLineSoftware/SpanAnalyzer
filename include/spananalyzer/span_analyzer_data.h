@@ -71,6 +71,11 @@ struct SpanAnalyzerData {
   /// reference the data. This list has ownership of the pointers.
   std::list<CableFile*> cablefiles;
 
+  /// \var constraints
+  ///   The cable constraints. The note parameter is used to keep track of
+  ///   the specific cable the constraint is mapped to.
+  std::list<CableConstraint> constraints;
+
   /// \var groups_filters
   ///   The analysis filter groups.
   std::list<AnalysisFilterGroup> groups_filters;

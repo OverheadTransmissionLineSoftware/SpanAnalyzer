@@ -45,6 +45,8 @@ wxRect SpanAnalyzerView::GraphicsPlotRect() const {
   if (notebook_plot_->GetSelection() == 0) {
     return pane_profile_->GetClientRect();
   } else if (notebook_plot_->GetSelection() == 1) {
+    return pane_plan_->GetClientRect();
+  } else if (notebook_plot_->GetSelection() == 2) {
     return pane_cable_->GetClientRect();
   } else {
     return wxRect();
@@ -151,6 +153,9 @@ bool SpanAnalyzerView::OnCreate(wxDocument *doc, long flags) {
   pane_profile_ = new ProfilePlotPane(notebook_plot_, this);
   notebook_plot_->AddPage(pane_profile_, "Profile");
 
+  pane_plan_ = new PlanPlotPane(notebook_plot_, this);
+  notebook_plot_->AddPage(pane_plan_, "Plan");
+
   pane_cable_ = new CablePlotPane(notebook_plot_, this);
   notebook_plot_->AddPage(pane_cable_, "Cable");
 
@@ -210,6 +215,8 @@ void SpanAnalyzerView::OnDraw(wxDC *dc) {
   if (notebook_plot_->GetSelection() == 0) {
     pane = pane_profile_;
   } else if (notebook_plot_->GetSelection() == 1) {
+    pane = pane_plan_;
+  } else if (notebook_plot_->GetSelection() == 2) {
     pane = pane_cable_;
   }
 
@@ -242,6 +249,8 @@ void SpanAnalyzerView::OnNotebookPageChange(wxBookCtrlEvent& event) {
   if (index_page == 0) {
     pane_profile_->Update(&hint);
   } else if (index_page == 1) {
+    pane_plan_->Update(&hint);
+  } else if (index_page == 2) {
     pane_cable_->Update(&hint);
   } else {
     wxLogError("Invalid page selection");
@@ -308,6 +317,8 @@ void SpanAnalyzerView::OnUpdate(wxView* sender, wxObject* hint) {
   if (index_page == 0) {
     pane_profile_->Update(hint);
   } else if (index_page == 1) {
+    pane_plan_->Update(hint);
+  } else if (index_page == 2) {
     pane_cable_->Update(hint);
   }
 

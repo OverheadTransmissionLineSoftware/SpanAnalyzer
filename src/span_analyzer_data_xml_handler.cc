@@ -3,6 +3,7 @@
 
 #include "spananalyzer/span_analyzer_data_xml_handler.h"
 
+#include "appcommon/xml/cable_constraint_xml_handler.h"
 #include "appcommon/xml/weather_load_case_xml_handler.h"
 #include "wx/filename.h"
 
@@ -11,7 +12,8 @@
 
 wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
     const SpanAnalyzerData& data,
-    const units::UnitSystem& units) {
+    const units::UnitSystem& system_units,
+    const units::UnitStyle& style_units) {
   // variables used to create XML node
   wxXmlNode* node_root = nullptr;
   wxXmlNode* node_element = nullptr;
@@ -20,7 +22,13 @@ wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
 
   // creates a node for the root
   node_root = new wxXmlNode(wxXML_ELEMENT_NODE, "span_analyzer_data");
-  node_root->AddAttribute("version", "1");
+  node_root->AddAttribute("version", "2");
+
+  if (system_units == units::UnitSystem::kImperial) {
+    node_root->AddAttribute("units", "Imperial");
+  } else if (system_units == units::UnitSystem::kMetric) {
+    node_root->AddAttribute("units", "Metric");
+  }
 
   // adds child nodes for struct parameters
 
@@ -46,7 +54,23 @@ wxXmlNode* SpanAnalyzerDataXmlHandler::CreateNode(
        iter != data.weathercases.cend(); iter++) {
     const WeatherLoadCase* weathercase = *iter;
     wxXmlNode* sub_node =
-        WeatherLoadCaseXmlHandler::CreateNode(*weathercase, "", units);
+        WeatherLoadCaseXmlHandler::CreateNode(*weathercase, "", system_units,
+                                              style_units);
+    node_element->AddChild(sub_node);
+  }
+
+  node_root->AddChild(node_element);
+
+  // creates cable-constraints node
+  title = "cable_constraints";
+  node_element = new wxXmlNode(wxXML_ELEMENT_NODE, title);
+
+  for (auto iter = data.constraints.cbegin();
+       iter != data.constraints.cend(); iter++) {
+    const CableConstraint& constraint = *iter;
+    wxXmlNode* sub_node =
+        CableConstraintXmlHandler::CreateNode(constraint, "", system_units,
+                                              style_units);
     node_element->AddChild(sub_node);
   }
 
@@ -97,17 +121,19 @@ bool SpanAnalyzerDataXmlHandler::ParseNode(const wxXmlNode* root,
   }
 
   // gets version attribute
-  wxString version;
-  if (root->GetAttribute("version", &version) == false) {
+  const int kVersion = Version(root);
+  if (kVersion == -1) {
     message = FileAndLineNumber(filepath, root) +
-              " Version attribute is missing. Aborting node parse.";
+              " Version attribute is missing or invalid. Aborting node parse.";
     wxLogError(message);
     return false;
   }
 
   // sends to proper parsing function
-  if (version == "1") {
+  if (kVersion == 1) {
     return ParseNodeV1(root, filepath, units, data);
+  } else if (kVersion == 2) {
+    return ParseNodeV2(root, filepath, units, data);
   } else {
     message = FileAndLineNumber(filepath, root) +
               " Invalid version number. Aborting node parse.";
@@ -167,6 +193,8 @@ bool SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
         const bool status_node = WeatherLoadCaseXmlHandler::ParseNode(
             sub_node,
             filepath,
+            units,
+            true,
             *weathercase);
         if (status_node == false) {
           status = false;
@@ -174,6 +202,140 @@ bool SpanAnalyzerDataXmlHandler::ParseNodeV1(const wxXmlNode* root,
 
         // adds to container
         data.weathercases.push_back(weathercase);
+
+        sub_node = sub_node->GetNext();
+      }
+    } else if (title == "analysis_filter_groups") {
+      // gets node for weather load case
+      wxXmlNode* sub_node = node->GetChildren();
+      while (sub_node != nullptr) {
+        // creates a new analysis filter group
+        AnalysisFilterGroup group;
+        group.name = sub_node->GetAttribute("name");
+
+        // gets node for individual analysis filters
+        wxXmlNode* node_filter = sub_node->GetChildren();
+        while (node_filter != nullptr) {
+          // creates an analysis filter and parses
+          AnalysisFilter filter;
+          const bool status_node = AnalysisFilterXmlHandler::ParseNode(
+              node_filter,
+              filepath,
+              &data.weathercases,
+              filter);
+          if (status_node == false) {
+            status = false;
+          }
+
+          // adds to container
+          group.filters.push_back(filter);
+
+          node_filter = node_filter->GetNext();
+        }
+
+        // adds filter group
+        data.groups_filters.push_back(group);
+
+        sub_node = sub_node->GetNext();
+      }
+    } else {
+      message = FileAndLineNumber(filepath, node)
+                + "XML node isn't recognized.";
+      wxLogError(message);
+      status = false;
+    }
+
+    node = node->GetNext();
+  }
+
+  return status;
+}
+
+bool SpanAnalyzerDataXmlHandler::ParseNodeV2(const wxXmlNode* root,
+                                             const std::string& filepath,
+                                             const units::UnitSystem& units,
+                                             SpanAnalyzerData& data) {
+  bool status = true;
+  wxString message;
+
+  // evaluates each child node
+  const wxXmlNode* node = root->GetChildren();
+  while (node != nullptr) {
+    const wxString title = node->GetName();
+    const wxString content = ParseElementNodeWithContent(node);
+
+    if (title == "cables") {
+      // gets node for cable file
+      wxXmlNode* sub_node = node->GetChildren();
+      while (sub_node != nullptr) {
+        CableFile* cablefile = new CableFile();
+
+        // gets filepath
+        cablefile->filepath = ParseElementNodeWithContent(sub_node);
+
+        // loads cable file
+        // filehandler function handles all logging
+        const int status_node =  FileHandler::LoadCable(cablefile->filepath,
+                                                         units,
+                                                         cablefile->cable);
+
+        // adds to container if no file errors were encountered
+        if ((status_node == 0) || (status_node == 1)) {
+          data.cablefiles.push_back(cablefile);
+        } else {
+          message = FileAndLineNumber(filepath, sub_node)
+                    + "Invalid cable file. Skipping.";
+          wxLogError(message);
+          status = false;
+
+          delete cablefile;
+        }
+
+        sub_node = sub_node->GetNext();
+      }
+    } else if (title == "weather_load_cases") {
+      // gets node for weather load case
+      wxXmlNode* sub_node = node->GetChildren();
+      while (sub_node != nullptr) {
+        // creates a weathercase and parses
+        WeatherLoadCase* weathercase = new WeatherLoadCase();
+        const bool status_node = WeatherLoadCaseXmlHandler::ParseNode(
+            sub_node,
+            filepath,
+            units,
+            true,
+            *weathercase);
+        if (status_node == false) {
+          status = false;
+        }
+
+        // adds to container
+        data.weathercases.push_back(weathercase);
+
+        sub_node = sub_node->GetNext();
+      }
+    } else if (title == "cable_constraints") {
+      // gets a list of const weathercase pointers
+      std::list<const WeatherLoadCase*> weathercases;
+      for (auto iter = data.weathercases.cbegin();
+           iter != data.weathercases.cend(); iter++) {
+        const WeatherLoadCase* weathercase = *iter;
+        weathercases.push_back(weathercase);
+      }
+
+      // gets node for constraint
+      wxXmlNode* sub_node = node->GetChildren();
+      while (sub_node != nullptr) {
+        // creates a constraint and parses
+        CableConstraint constraint;
+        const bool status_node = CableConstraintXmlHandler::ParseNode(
+            sub_node, filepath, units, true, &weathercases, constraint);
+        if (status_node == false) {
+          status = false;
+        }
+
+        // adds to container
+        data.constraints.push_back(constraint);
 
         sub_node = sub_node->GetNext();
       }

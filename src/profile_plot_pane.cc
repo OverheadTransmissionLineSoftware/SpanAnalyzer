@@ -57,6 +57,8 @@ void ProfilePlotPane::Update(wxObject* hint) {
     return;
   }
 
+  wxLogVerbose("Updating profile plot.");
+
   // gets a buffered dc to prevent flickering
   wxClientDC dc(this);
   wxBufferedDC dc_buf(&dc, bitmap_buffer_);
@@ -92,6 +94,10 @@ void ProfilePlotPane::Update(wxObject* hint) {
     UpdatePlotRenderers();
     view_->OnDraw(&dc_buf);
   } else if (hint_update->type() == UpdateHint::Type::kCablesEdit) {
+    UpdatePlotDatasets();
+    UpdatePlotRenderers();
+    view_->OnDraw(&dc_buf);
+  } else if (hint_update->type() == UpdateHint::Type::kConstraintsEdit) {
     UpdatePlotDatasets();
     UpdatePlotRenderers();
     view_->OnDraw(&dc_buf);
@@ -176,11 +182,57 @@ void ProfilePlotPane::OnMouse(wxMouseEvent& event) {
 
   // logs to status bar
   std::string str = "X="
-                    + helper::DoubleToFormattedString(point_data.x, 2)
-                    + "   Y="
-                    + helper::DoubleToFormattedString(point_data.y, 2);
+                    + helper::DoubleToString(point_data.x, 2, true)
+                    + "   Z="
+                    + helper::DoubleToString(point_data.y, 2, true);
 
   status_bar_log::SetText(str, 1);
+}
+
+void ProfilePlotPane::RenderAfter(wxDC& dc) {
+  const wxRect& rect = GetClientRect();
+  wxString str;
+  wxSize size_text;
+  wxPoint pos_text;
+  wxPoint point_start;
+  wxPoint point_end;
+  const int kLengthAxis = 40;
+
+  // sets up dc for lines and text
+  dc.SetBackgroundMode(wxPENSTYLE_TRANSPARENT);
+  dc.SetTextForeground(*wxWHITE);
+  dc.SetPen(*wxWHITE_PEN);
+
+  // gets a start point (axis intersection) that is offset from the borders
+  point_start = rect.GetBottomLeft();
+  point_start.x += 20;
+  point_start.y -= 20;
+
+  // draws horizontal axis
+  point_end = point_start;
+  point_end.x += kLengthAxis;
+  dc.DrawLine(point_start.x, point_start.y, point_end.x, point_end.y);
+  dc.DrawLine(point_end.x, point_end.y, point_end.x - 5, point_end.y - 4);
+  dc.DrawLine(point_end.x, point_end.y, point_end.x - 5, point_end.y + 4);
+
+  str = "X";
+  size_text = dc.GetTextExtent(str);
+  pos_text.x = point_start.x + (kLengthAxis / 2) - (size_text.x / 2);
+  pos_text.y = point_start.y + 3;
+  dc.DrawText(str, pos_text);
+
+  // draws vertical axis
+  point_end = point_start;
+  point_end.y -= kLengthAxis;
+  dc.DrawLine(point_start.x, point_start.y, point_end.x, point_end.y);
+  dc.DrawLine(point_end.x, point_end.y, point_end.x - 4, point_end.y + 5);
+  dc.DrawLine(point_end.x, point_end.y, point_end.x + 4, point_end.y + 5);
+
+  str = "Z";
+  size_text = dc.GetTextExtent(str);
+  pos_text.x = point_start.x - 5 - size_text.x;
+  pos_text.y = point_start.y - (kLengthAxis / 2) - (size_text.y / 2);
+  dc.DrawText(str, pos_text);
 }
 
 void ProfilePlotPane::UpdateDatasetCatenary(const Catenary3d& catenary) {
@@ -249,7 +301,7 @@ void ProfilePlotPane::UpdateDatasetDimensions(const Catenary3d& catenary) {
 
   text = new Text2d();
   text->angle = 0;
-  text->message = helper::DoubleToFormattedString(spacing.x(), 2);
+  text->message = helper::DoubleToString(spacing.x(), 2, true);
   text->offset = Point2d<int>(0, 5);
   text->point = point;
   text->position = Text2d::BoundaryPosition::kCenterLower;
@@ -270,7 +322,7 @@ void ProfilePlotPane::UpdateDatasetDimensions(const Catenary3d& catenary) {
 
     text = new Text2d();
     text->angle = 0;
-    text->message = helper::DoubleToFormattedString(spacing.y(), 2);
+    text->message = helper::DoubleToString(spacing.y(), 2, true);
     text->offset = Point2d<int>(5, 0);
     text->point = point;
     text->position = Text2d::BoundaryPosition::kLeftCenter;
@@ -289,7 +341,7 @@ void ProfilePlotPane::UpdateDatasetDimensions(const Catenary3d& catenary) {
 
     text = new Text2d();
     text->angle = 0;
-    text->message = helper::DoubleToFormattedString(spacing.y(), 2);
+    text->message = helper::DoubleToString(spacing.y(), 2, true);
     text->offset = Point2d<int>(-5, 0);
     text->point = point;
     text->position = Text2d::BoundaryPosition::kRightCenter;
@@ -315,7 +367,7 @@ void ProfilePlotPane::UpdateDatasetDimensions(const Catenary3d& catenary) {
 
   text = new Text2d();
   text->angle = 0;
-  text->message = helper::DoubleToFormattedString(line->p0.y - line->p1.y, 2);
+  text->message = helper::DoubleToString(line->p0.y - line->p1.y, 2, true);
   text->offset = Point2d<int>(5, 0);
   text->point = point;
   text->position = Text2d::BoundaryPosition::kLeftCenter;
@@ -323,8 +375,6 @@ void ProfilePlotPane::UpdateDatasetDimensions(const Catenary3d& catenary) {
 }
 
 void ProfilePlotPane::UpdatePlotDatasets() {
-  wxLogVerbose("Updating profile plot dataset.");
-
   ClearDataSets();
 
   // gets view settings
@@ -368,8 +418,6 @@ void ProfilePlotPane::UpdatePlotDatasets() {
 }
 
 void ProfilePlotPane::UpdatePlotRenderers() {
-  wxLogVerbose("Updating profile plot renderers.");
-
   // clears existing renderers
   plot_.ClearRenderers();
 

@@ -15,6 +15,7 @@
 
 #include "spananalyzer/analysis_controller.h"
 #include "spananalyzer/span.h"
+#include "spananalyzer/span_analyzer_data.h"
 
 /// \par OVERVIEW
 ///
@@ -23,10 +24,12 @@ class UpdateHint : public wxObject {
  public:
   /// This enum class contains types of update hints.
   enum class Type {
+    kNull,
     kAnalysisFilterGroupEdit,
     kAnalysisFilterGroupSelect,
     kAnalysisFilterSelect,
     kCablesEdit,
+    kConstraintsEdit,
     kPreferencesEdit,
     kSpansEdit,
     kViewSelect,
@@ -34,10 +37,40 @@ class UpdateHint : public wxObject {
   };
 
   /// \brief Default Constructor.
-  UpdateHint() {}
+  UpdateHint() {
+    index_span_ = -1;
+    name_command_ = "";
+    type_ = UpdateHint::Type::kNull;
+  }
 
   /// \brief Alternate constructor.
-  UpdateHint(Type hint) {type_ = hint;}
+  /// \param[in] type
+  ///   The hint type.
+  UpdateHint(const Type& type) {
+    index_span_ = -1;
+    name_command_ = "";
+    type_ = type;
+  }
+
+  /// \brief Gets the span index.
+  /// \return The span index.
+  int index_span() const {return index_span_;}
+
+  /// \brief Gets the command name.
+  /// \return The command name.
+  std::string name_command() const {return name_command_;}
+
+  /// \brief Sets the span index.
+  /// \param[in] index_span
+  ///   The span index.
+  void set_index_span(const int& index_span) {index_span_ = index_span;}
+
+  /// \brief Sets the command name.
+  /// \param[in] name_command
+  ///   The command name.
+  void set_name_command(const std::string& name_command) {
+    name_command_ = name_command;
+  }
 
   /// \brief Sets the hint type.
   /// \param[in] type
@@ -49,6 +82,15 @@ class UpdateHint : public wxObject {
   const Type& type() const {return type_;}
 
  private:
+  /// \var index_span_
+  ///   The span index. This is used when the edit pane is updating.
+  int index_span_;
+
+  /// \var name_command_
+  ///   The command name. This is used when the edit pane is updating, and
+  ///   should match one of the span command names.
+  std::string name_command_;
+
   /// \var type_
   ///   The hint type.
   Type type_;
@@ -73,6 +115,11 @@ class UpdateHint : public wxObject {
 /// The document uses an analysis controller to handle the sag-tension
 /// calculations and store the generated results for the selected span. The
 /// results can be accessed via public functions.
+///
+/// \par CONSTRAINT FILTER GROUP
+///
+/// The document keeps track of the constraints that apply to the span being
+/// analyzed. A filter group is updated every time an analysis is run.
 ///
 /// \par APPLICATION DATA
 ///
@@ -114,6 +161,10 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return Success status.
   bool AppendSpan(const Span& span);
 
+  /// \brief Gets the cable constraints that apply to the active span.
+  /// \return The cable constraints for the active span.
+  std::list<const CableConstraint*> Constraints() const;
+
   /// \brief Converts the document between unit styles.
   /// \param[in] system
   ///   The unit system.
@@ -141,6 +192,10 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \return Success status.
   /// This function may trigger an update if it matches the selected span.
   bool DeleteSpan(const int& index);
+
+  /// \brief Gets the filter group for the constraints.
+  /// \return The filter group for the constraints.
+  const AnalysisFilterGroup* FilterGroupConstraints() const;
 
   /// \brief Gets the index of the span.
   /// \param[in] span
@@ -269,9 +324,16 @@ class SpanAnalyzerDoc : public wxDocument {
   /// \brief Updates the analysis controller with the activated span index.
   void SyncAnalysisController();
 
+  /// \brief Updates the constraint filter group.
+  void UpdateFilterGroupConstraints();
+
   /// \var controller_analysis_
   ///   The analysis controller, which generates sag-tension results.
   mutable AnalysisController controller_analysis_;
+
+  /// \var group_filters_constraint_
+  ///   The analysis filters for the applicable constraints.
+  mutable AnalysisFilterGroup group_filters_constraint_;
 
   /// \var hardware_
   ///   The hardware that the span connects to. This helps suppress validation

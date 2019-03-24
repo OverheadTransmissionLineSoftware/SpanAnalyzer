@@ -6,10 +6,13 @@
 #include "appcommon/xml/line_cable_xml_handler.h"
 #include "appcommon/xml/vector_xml_handler.h"
 
+#include "spananalyzer/span_unit_converter.h"
+
 wxXmlNode* SpanXmlHandler::CreateNode(
     const Span& span,
     const std::string& name,
-    const units::UnitSystem& units) {
+    const units::UnitSystem& system_units,
+    const units::UnitStyle& style_units) {
   // variables used to create XML node
   wxXmlNode* node_root = nullptr;
   wxXmlNode* node_element = nullptr;
@@ -42,20 +45,22 @@ wxXmlNode* SpanXmlHandler::CreateNode(
   node_root->AddChild(node_element);
 
   // creates linecable node and adds to parent node
-  node_element = LineCableXmlHandler::CreateNode(span.linecable, "", units,
+  node_element = LineCableXmlHandler::CreateNode(span.linecable, "",
+                                                 system_units, style_units,
                                                  nullptr);
   node_root->AddChild(node_element);
 
-  // creates catenary geometry node and adds to parent node
-  if (units == units::UnitSystem::kImperial) {
+  // creates spacing-attachments geometry node and adds to parent node
+  if (system_units == units::UnitSystem::kImperial) {
     attribute = wxXmlAttribute("units", "ft");
-  } else if (units == units::UnitSystem::kMetric) {
+  } else if (system_units == units::UnitSystem::kMetric) {
     attribute = wxXmlAttribute("units", "m");
   }
   node_element = Vector3dXmlHandler::CreateNode(span.spacing_attachments,
                                                 "spacing_attachments",
                                                 attribute,
-                                                1);
+                                                3,
+                                                true);
   node_root->AddChild(node_element);
 
   // returns node
@@ -65,6 +70,8 @@ wxXmlNode* SpanXmlHandler::CreateNode(
 bool SpanXmlHandler::ParseNode(
     const wxXmlNode* root,
     const std::string& filepath,
+    const units::UnitSystem& units,
+    const bool& convert,
     const std::list<CableFile*>* cablefiles,
     const std::list<WeatherLoadCase*>* weathercases,
     Span& span) {
@@ -79,17 +86,18 @@ bool SpanXmlHandler::ParseNode(
   }
 
   // gets version attribute
-  wxString version;
-  if (root->GetAttribute("version", &version) == false) {
+  const int kVersion = Version(root);
+  if (kVersion == -1) {
     message = FileAndLineNumber(filepath, root) +
-              " Version attribute is missing. Aborting node parse.";
+              " Version attribute is missing or invalid. Aborting node parse.";
     wxLogError(message);
     return false;
   }
 
   // sends to proper parsing function
-  if (version == "1") {
-    return ParseNodeV1(root, filepath, cablefiles, weathercases, span);
+  if (kVersion == 1) {
+    return ParseNodeV1(root, filepath, units, convert, cablefiles, weathercases,
+                       span);
   } else {
     message = FileAndLineNumber(filepath, root) +
               " Invalid version number. Aborting node parse.";
@@ -101,6 +109,8 @@ bool SpanXmlHandler::ParseNode(
 bool SpanXmlHandler::ParseNodeV1(
     const wxXmlNode* root,
     const std::string& filepath,
+    const units::UnitSystem& units,
+    const bool& convert,
     const std::list<CableFile*>* cablefiles,
     const std::list<WeatherLoadCase*>* weathercases,
     Span& span) {
@@ -149,7 +159,7 @@ bool SpanXmlHandler::ParseNodeV1(
       }
 
       const bool status_node = LineCableXmlHandler::ParseNode(
-          node, filepath, &cables, nullptr, &weathercases_const,
+          node, filepath, units, convert, &cables, nullptr, &weathercases_const,
           span.linecable);
       if (status_node == false) {
         status = false;
@@ -168,6 +178,11 @@ bool SpanXmlHandler::ParseNodeV1(
     }
 
     node = node->GetNext();
+  }
+
+  // converts unit style to 'consistent' if needed
+  if (convert == true) {
+    SpanUnitConverter::ConvertUnitStyleToConsistent(1, units, false, span);
   }
 
   return status;
