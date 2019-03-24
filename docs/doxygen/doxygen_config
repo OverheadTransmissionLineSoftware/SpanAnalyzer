@@ -743,12 +743,71 @@ WARN_LOGFILE           = "./doxygen.log"
 # spaces.
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ../include/spananalyzer \
-			                   ../src \
-												 ../external/AppCommon/include/appcommon/units \
-												 ../external/AppCommon/include/appcommon/xml \
-												 ../external/AppCommon/src/units \
-												 ../external/AppCommon/src/xml
+INPUT                  = \
+		../../include/spananalyzer \
+		../../src \
+		../../external/AppCommon/include/appcommon/editors/cable_editor_dialog.h \
+		../../external/AppCommon/include/appcommon/editors/weather_load_case_editor_dialog.h \
+		../../external/AppCommon/include/appcommon/graphics/circle_data_set_2d.h \
+		../../external/AppCommon/include/appcommon/graphics/circle_renderer_2d.h \
+		../../external/AppCommon/include/appcommon/graphics/data_set_2d.h \
+		../../external/AppCommon/include/appcommon/graphics/line_data_set_2d.h \
+		../../external/AppCommon/include/appcommon/graphics/line_renderer_2d.h \
+		../../external/AppCommon/include/appcommon/graphics/plot_2d.h \
+		../../external/AppCommon/include/appcommon/graphics/plot_axis.h \
+		../../external/AppCommon/include/appcommon/graphics/plot_pane_2d.h \
+		../../external/AppCommon/include/appcommon/graphics/point_data_set_2d.h \
+		../../external/AppCommon/include/appcommon/graphics/point_renderer_2d.h \
+		../../external/AppCommon/include/appcommon/graphics/renderer_2d.h \
+		../../external/AppCommon/include/appcommon/graphics/text_data_set_2d.h \
+		../../external/AppCommon/include/appcommon/graphics/text_renderer_2d.h \
+		../../external/AppCommon/include/appcommon/units/cable_constraint_unit_converter.h \
+		../../external/AppCommon/include/appcommon/units/cable_unit_converter.h \
+		../../external/AppCommon/include/appcommon/units/line_cable_unit_converter.h \
+		../../external/AppCommon/include/appcommon/units/weather_load_case_unit_converter.h \
+		../../external/AppCommon/include/appcommon/widgets/error_message_dialog.h \
+		../../external/AppCommon/include/appcommon/widgets/log_pane.h \
+		../../external/AppCommon/include/appcommon/widgets/report_table.h \
+		../../external/AppCommon/include/appcommon/widgets/status_bar_log.h \
+		../../external/AppCommon/include/appcommon/widgets/timer.h \
+		../../external/AppCommon/include/appcommon/xml/cable_constraint_xml_handler.h \
+		../../external/AppCommon/include/appcommon/xml/cable_xml_handler.h \
+		../../external/AppCommon/include/appcommon/xml/color_xml_handler.h \
+		../../external/AppCommon/include/appcommon/xml/line_cable_xml_handler.h \
+		../../external/AppCommon/include/appcommon/xml/vector_xml_handler.h \
+		../../external/AppCommon/include/appcommon/xml/weather_load_case_xml_handler.h \
+		../../external/AppCommon/include/appcommon/xml/xml_handler.h \
+		../../external/AppCommon/src/editors/cable_editor_dialog.cc \
+		../../external/AppCommon/src/editors/weather_load_case_editor_dialog.cc \
+		../../external/AppCommon/src/graphics/circle_data_set_2d.cc \
+		../../external/AppCommon/src/graphics/circle_renderer_2d.cc \
+		../../external/AppCommon/src/graphics/data_set_2d.cc \
+		../../external/AppCommon/src/graphics/line_data_set_2d.cc \
+		../../external/AppCommon/src/graphics/line_renderer_2d.cc \
+		../../external/AppCommon/src/graphics/plot_2d.cc \
+		../../external/AppCommon/src/graphics/plot_axis.cc \
+		../../external/AppCommon/src/graphics/plot_pane_2d.cc \
+		../../external/AppCommon/src/graphics/point_data_set_2d.cc \
+		../../external/AppCommon/src/graphics/point_renderer_2d.cc \
+		../../external/AppCommon/src/graphics/renderer_2d.cc \
+		../../external/AppCommon/src/graphics/text_data_set_2d.cc \
+		../../external/AppCommon/src/graphics/text_renderer_2d.cc \
+		../../external/AppCommon/src/units/cable_constraint_unit_converter.cc \
+		../../external/AppCommon/src/units/cable_unit_converter.cc \
+		../../external/AppCommon/src/units/line_cable_unit_converter.cc \
+		../../external/AppCommon/src/units/weather_load_case_unit_converter.cc \
+		../../external/AppCommon/src/widgets/error_message_dialog.cc \
+		../../external/AppCommon/src/widgets/log_pane.cc \
+		../../external/AppCommon/src/widgets/report_table.cc \
+		../../external/AppCommon/src/widgets/status_bar_log.cc \
+		../../external/AppCommon/src/widgets/timer.cc \
+		../../external/AppCommon/src/xml/cable_constraint_xml_handler.cc \
+		../../external/AppCommon/src/xml/cable_xml_handler.cc \
+		../../external/AppCommon/src/xml/color_xml_handler.cc \
+		../../external/AppCommon/src/xml/line_cable_xml_handler.cc \
+		../../external/AppCommon/src/xml/vector_xml_handler.cc \
+		../../external/AppCommon/src/xml/weather_load_case_xml_handler.cc \
+		../../external/AppCommon/src/xml/xml_handler.cc \
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
